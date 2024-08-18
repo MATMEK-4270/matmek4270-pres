@@ -1,0 +1,492 @@
+[
+  {
+    "objectID": "analysis.html#recap---finite-differencing-of-exponential-decay",
+    "href": "analysis.html#recap---finite-differencing-of-exponential-decay",
+    "title": "Analysis of exponential decay models",
+    "section": "Recap - Finite differencing of exponential decay",
+    "text": "Recap - Finite differencing of exponential decay\n\n\n\n\n\n\n\n\n\nThe ordinary differential equation\n\n\n\\[\nu'(t) = -au(t),\\quad u(0)=I, \\quad y \\in (0, T]\n\\] where \\(a&gt;0\\) is a constant.\n\n\n\nSolve the ODE by finite difference methods:\n\nDiscretize in time:\n\\[0 = t_0 &lt; t_1 &lt; t_2 &lt; \\cdots &lt; t_{N_t-1} &lt; t_{N_t} = T\\]\nSatisfy the ODE at \\(N_t\\) discrete time steps:\n\\[\n\\begin{align}\nu'(t_n) &= -a u(t_n), \\quad &n\\in [1, \\ldots, N_t], \\text{ or} \\\\\nu'(t_{n+\\scriptstyle\\frac{1}{2}}) &= -a u(t_{n+\\scriptstyle\\frac{1}{2}}), \\quad &n\\in [0, \\ldots, N_t-1]\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "analysis.html#finite-difference-algorithms",
+    "href": "analysis.html#finite-difference-algorithms",
+    "title": "Analysis of exponential decay models",
+    "section": "Finite difference algorithms",
+    "text": "Finite difference algorithms\n\nDiscretization by a generic \\(\\theta\\)-rule\n\n\\[\\frac{u^n-u^{n-1}}{\\triangle t} = -(1-\\theta)au^{n-1} - \\theta u^n\\]\n\\[\\begin{cases}\n  \\theta = 0 \\quad &\\text{Forward Euler} \\\\\n  \\theta = 1 \\quad &\\text{Backward Euler} \\\\\n  \\theta = 1/2 \\quad &\\text{Crank-Nicolson}\n  \\end{cases}\n\\]\nNote \\(u^n = u(t_n)\\)\n\nSolve recursively: Set \\(u^0 = I\\) and then\n\n\\[u^n = \\frac{1-(1-\\theta)a \\triangle t}{1+\\theta a \\triangle t}u^{n-1} \\quad \\text{for } n&gt;0\\]"
+  },
+  {
+    "objectID": "analysis.html#analysis-of-finite-difference-equations",
+    "href": "analysis.html#analysis-of-finite-difference-equations",
+    "title": "Analysis of exponential decay models",
+    "section": "Analysis of finite difference equations",
+    "text": "Analysis of finite difference equations\nModel: \\[\nu'(t) = -au(t),\\quad u(0)=I\n\\]\nMethod:\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}u^n\n\\]\n\n\n\n\n\n\nProblem setting\n\n\nHow good is this method? Is it safe to use it?"
+  },
+  {
+    "objectID": "analysis.html#encouraging-numerical-solutions---backwards-euler",
+    "href": "analysis.html#encouraging-numerical-solutions---backwards-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "Encouraging numerical solutions - Backwards Euler",
+    "text": "Encouraging numerical solutions - Backwards Euler\n\\(I=1\\), \\(a=2\\), \\(\\theta =1\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+  },
+  {
+    "objectID": "analysis.html#discouraging-numerical-solutions---crank-nicolson",
+    "href": "analysis.html#discouraging-numerical-solutions---crank-nicolson",
+    "title": "Analysis of exponential decay models",
+    "section": "Discouraging numerical solutions - Crank-Nicolson",
+    "text": "Discouraging numerical solutions - Crank-Nicolson\n\\(I=1\\), \\(a=2\\), \\(\\theta=0.5\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+  },
+  {
+    "objectID": "analysis.html#discouraging-numerical-solutions---forward-euler",
+    "href": "analysis.html#discouraging-numerical-solutions---forward-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "Discouraging numerical solutions - Forward Euler",
+    "text": "Discouraging numerical solutions - Forward Euler\n\\(I=1\\), \\(a=2\\), \\(\\theta=0\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+  },
+  {
+    "objectID": "analysis.html#summary-of-observations",
+    "href": "analysis.html#summary-of-observations",
+    "title": "Analysis of exponential decay models",
+    "section": "Summary of observations",
+    "text": "Summary of observations\nThe characteristics of the displayed curves can be summarized as follows:\n\nThe Backward Euler scheme always gives a monotone solution, lying above the exact solution.\nThe Crank-Nicolson scheme gives the most accurate results, but for \\(\\Delta t=1.25\\) the solution oscillates.\nThe Forward Euler scheme gives a growing, oscillating solution for \\(\\Delta t=1.25\\); a decaying, oscillating solution for \\(\\Delta t=0.75\\); a strange solution \\(u^n=0\\) for \\(n\\geq 1\\) when \\(\\Delta t=0.5\\); and a solution seemingly as accurate as the one by the Backward Euler scheme for \\(\\Delta t = 0.1\\), but the curve lies below the exact solution.\nSmall enough \\(\\Delta t\\) gives stable and accurate solution for all methods!"
+  },
+  {
+    "objectID": "analysis.html#problem-setting-1",
+    "href": "analysis.html#problem-setting-1",
+    "title": "Analysis of exponential decay models",
+    "section": "Problem setting",
+    "text": "Problem setting\n\n\n\n\n\n\nWe ask the question\n\n\n\nUnder what circumstances, i.e., values of the input data \\(I\\), \\(a\\), and \\(\\Delta t\\) will the Forward Euler and Crank-Nicolson schemes result in undesired oscillatory solutions?\n\nTechniques of investigation:\n\nNumerical experiments\nMathematical analysis\n\nAnother question to be raised is\n\nHow does \\(\\Delta t\\) impact the error in the numerical solution?"
+  },
+  {
+    "objectID": "analysis.html#exact-numerical-solution",
+    "href": "analysis.html#exact-numerical-solution",
+    "title": "Analysis of exponential decay models",
+    "section": "Exact numerical solution",
+    "text": "Exact numerical solution\nFor the simple exponential decay problem we are lucky enough to have an exact numerical solution\n\\[\nu^{n} = IA^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nSuch a formula for the exact discrete solution is unusual to obtain in practice, but very handy for our analysis here.\n\n\n\n\n\n\nNote\n\n\nAn exact dicrete solution fulfills a discrete equation (without round-off errors), whereas an exact solution fulfills the original mathematical equation."
+  },
+  {
+    "objectID": "analysis.html#stability",
+    "href": "analysis.html#stability",
+    "title": "Analysis of exponential decay models",
+    "section": "Stability",
+    "text": "Stability\nSince \\(u^n=I A^n\\),\n\n\\(A &lt; 0\\) gives a factor \\((-1)^n\\) and oscillatory solutions\n\\(|A|&gt;1\\) gives growing solutions\nRecall: the exact solution is monotone and decaying\nIf these qualitative properties are not met, we say that the numerical solution is unstable\n\n\nFor stability we need\n\\[\nA &gt; 0 \\quad \\text{ and } \\quad |A| \\le 1\n\\]"
+  },
+  {
+    "objectID": "analysis.html#computation-of-stability-in-this-problem",
+    "href": "analysis.html#computation-of-stability-in-this-problem",
+    "title": "Analysis of exponential decay models",
+    "section": "Computation of stability in this problem",
+    "text": "Computation of stability in this problem\n\\(A &lt; 0\\) if\n\\[\n\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} &lt; 0\n\\]\nTo avoid oscillatory solutions we must have \\(A&gt; 0\\)\n\n\\[\n\\Delta t &lt; \\frac{1}{(1-\\theta)a}, \\theta &lt; 1\n\\]\n\nAlways fulfilled for Backward Euler (\\(\\theta=1 \\rightarrow 1 &lt; 1+a \\Delta t\\) always true)\n\\(\\Delta t \\leq 1/a\\) for Forward Euler (\\(\\theta=0\\))\n\\(\\Delta t \\leq 2/a\\) for Crank-Nicolson (\\(\\theta = 0.5\\))"
+  },
+  {
+    "objectID": "analysis.html#computation-of-stability-in-this-problem-1",
+    "href": "analysis.html#computation-of-stability-in-this-problem-1",
+    "title": "Analysis of exponential decay models",
+    "section": "Computation of stability in this problem",
+    "text": "Computation of stability in this problem\n\\(|A|\\leq 1\\) means \\(-1\\leq A\\leq 1\\)\n\\[\n-1\\leq\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} \\leq 1\n\\]\n\\(-1\\) is the critical limit (because \\(A\\le 1\\) is always satisfied):\nAlways fulfilled for Backward Euler (\\(\\theta=0\\)) and Crank-Nicolson (\\(\\theta=0.5\\)). For forward Euler or simply \\(\\theta &lt; 0.5\\) we have\n\\[\n\\Delta t \\leq \\frac{2}{(1-2\\theta)a},\\quad\n\\]\nand thus \\(\\Delta t \\leq 2/a\\) for stability of the Forward Euler (\\(\\theta=0\\)) method"
+  },
+  {
+    "objectID": "analysis.html#explanation-of-problems-with-forward-euler",
+    "href": "analysis.html#explanation-of-problems-with-forward-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "Explanation of problems with Forward Euler",
+    "text": "Explanation of problems with Forward Euler\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(a\\Delta t= 2\\cdot 1.25=2.5\\) and \\(A=-1.5\\): oscillations and growth\n\\(a\\Delta t = 2\\cdot 0.75=1.5\\) and \\(A=-0.5\\): oscillations and decay\n\\(\\Delta t=0.5\\) and \\(A=0\\): \\(u^n=0\\) for \\(n&gt;0\\)\nSmaller \\(\\Delta t\\): qualitatively correct solution"
+  },
+  {
+    "objectID": "analysis.html#explanation-of-problems-with-crank-nicolson",
+    "href": "analysis.html#explanation-of-problems-with-crank-nicolson",
+    "title": "Analysis of exponential decay models",
+    "section": "Explanation of problems with Crank-Nicolson",
+    "text": "Explanation of problems with Crank-Nicolson\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\Delta t=1.25\\) and \\(A=-0.25\\): oscillatory solution\n\nNever any growing solution"
+  },
+  {
+    "objectID": "analysis.html#summary-of-stability",
+    "href": "analysis.html#summary-of-stability",
+    "title": "Analysis of exponential decay models",
+    "section": "Summary of stability",
+    "text": "Summary of stability\n\nForward Euler is conditionally stable\n\n\\(\\Delta t &lt; 2/a\\) for avoiding growth\n\\(\\Delta t\\leq 1/a\\) for avoiding oscillations\n\nThe Crank-Nicolson is unconditionally stable wrt growth and conditionally stable wrt oscillations\n\n\\(\\Delta t &lt; 2/a\\) for avoiding oscillations\n\nBackward Euler is unconditionally stable"
+  },
+  {
+    "objectID": "analysis.html#comparing-amplification-factors",
+    "href": "analysis.html#comparing-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Comparing amplification factors",
+    "text": "Comparing amplification factors\n\\(u^{n+1}\\) is an amplification \\(A\\) of \\(u^n\\):\n\\[\nu^{n+1} = Au^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nThe exact solution is also an amplification:\n\\[\n\\begin{align}\nu(t_{n+1}) &= e^{-a(t_n+\\Delta t)} \\\\\nu(t_{n+1}) &= e^{-a \\Delta t} e^{-a t_n} \\\\\nu(t_{n+1} &= A_e u(t_n), \\quad A_e = e^{-a\\Delta t}\n\\end{align}\n\\]\nA possible measure of accuracy: \\(A_e - A\\)"
+  },
+  {
+    "objectID": "intro.html#hans-petter-langtangen-1962-2016",
+    "href": "intro.html#hans-petter-langtangen-1962-2016",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Hans Petter Langtangen 1962-2016",
+    "text": "Hans Petter Langtangen 1962-2016\n\n\n\n\n\n\n\n\n\n\n2011-2015 Editor-In-Chief SIAM J of Scientific Computing\nAuthor of 13 published books on scientific computing\nProfessor of Mechanics, University of Oslo 1998\nDeveloped INF5620 (which became IN5270 and now MAT-MEK4270)\nMemorial page"
+  },
+  {
+    "objectID": "intro.html#a-little-bit-about-myself",
+    "href": "intro.html#a-little-bit-about-myself",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "A little bit about myself",
+    "text": "A little bit about myself\n\n\nProfessor of mechanics (2019-)\nPhD in mathematical modelling of turbulent combustion\nNorwegian Defence Research Establishment (2007-2012)\nComputational Fluid Dynamics\nHigh Performance Computing\nSpectral methods"
+  },
+  {
+    "objectID": "intro.html#principal-developer-of-shenfun",
+    "href": "intro.html#principal-developer-of-shenfun",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Principal developer of Shenfun",
+    "text": "Principal developer of Shenfun\nHigh performance computing platform for solving PDEs by the spectral Galerkin method. Written in Python (Cython). https://github.com/spectralDNS/shenfun"
+  },
+  {
+    "objectID": "intro.html#mat-mek4270-in-a-nutshell",
+    "href": "intro.html#mat-mek4270-in-a-nutshell",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "MAT-MEK4270 in a nutshell",
+    "text": "MAT-MEK4270 in a nutshell\n\nNumerical methods for partial differential equations (PDEs)\nHow to solve the equations, not why\nHow do we solve a PDE in practice?\nHow do we trust the answer?\nIs the numerical scheme stable? accurate? consistent?\nFocus on programming (github, python, testing code)\nIN5670 -&gt; IN5270 -&gt; MAT-MEK4270 - Lots of old material"
+  },
+  {
+    "objectID": "intro.html#syllabus",
+    "href": "intro.html#syllabus",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Syllabus",
+    "text": "Syllabus\n\n\n\n\n\n\nImportant stuff\n\n\nLecture notes\n\n\n\n\n\n\n\n\n\nAlso important stuff, but less so as I will try to put all really important stuff in the lecture notes\n\n\n\nLangtangen, Finite Difference Computing with exponential decay - Chapters 1 and 2.\nLangtangen and Linge, Finite Difference Computing with PDEs - Parts of chapters 1 and 2.\nLangtangen and Mardal, Introduction to Numerical Methods for Variational Problems"
+  },
+  {
+    "objectID": "intro.html#two-major-approaches",
+    "href": "intro.html#two-major-approaches",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Two major approaches",
+    "text": "Two major approaches\n\n\nFinite differences\n\\[\n\\frac{du(t)}{dt} \\approx \\frac{u(t+\\Delta t) - u(t)}{\\Delta t}\n\\]\n\nApproximate in points\nUniform grid\nTaylor expansions\n\n\nVariational methods\n\\[\n\\int_{\\Omega} u'' v d\\Omega = -\\int_{\\Omega} u' v' d\\Omega + \\int_{\\Gamma} u'v d\\Gamma\n\\]\n\nApproximate weakly\nFinite element method\nLeast squares method\nGalerkin method\n\n\n\nWe will use both approaches to first consider function approximations and then the approximation of equations."
+  },
+  {
+    "objectID": "intro.html#required-software-skills",
+    "href": "intro.html#required-software-skills",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Required software skills",
+    "text": "Required software skills\n\nOur software platform: Python, Jupyter notebooks\nImportant Python packages: numpy, scipy, matplotlib, sympy, shenfun, …\nAnaconda Python, conda environments"
+  },
+  {
+    "objectID": "intro.html#assumedideal-background",
+    "href": "intro.html#assumedideal-background",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Assumed/ideal background",
+    "text": "Assumed/ideal background\n\nIN1900: Python programming, solution of ODEs\nSome experience with finite difference methods\nSome analytical and numerical knowledge of PDEs\nMuch experience with calculus and linear algebra\nMuch experience with programming of mathematical problems\nExperience with mathematical modeling with PDEs (from physics, mechanics, geophysics, or …)"
+  },
+  {
+    "objectID": "intro.html#exponential-decay-model",
+    "href": "intro.html#exponential-decay-model",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Exponential decay model",
+    "text": "Exponential decay model\n\n\n\n\n\n\nODE problem\n\n\n\\[\nu'=-au,\\quad u(0)=I,\\ t\\in (0,T]\n\\]\nwhere \\(a&gt;0\\) is a constant and \\(u(t)\\) is the time-dependent solution.\n\n\n\n\nWe study first a simple 1D ODE, because this will lead us to the building blocks that we need for solving PDEs!\nWe can more easily study the concepts of stability, accuracy, convergence and consistency.\n\n\nSee Langtangen, Finite Difference Computing - Chapter 1"
+  },
+  {
+    "objectID": "intro.html#what-to-learn-in-the-start-up-example",
+    "href": "intro.html#what-to-learn-in-the-start-up-example",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "What to learn in the start-up example",
+    "text": "What to learn in the start-up example\n\nHow to think when constructing finite difference methods, with special focus on the Forward Euler, Backward Euler, and Crank-Nicolson (midpoint) schemes\nHow to formulate a computational algorithm and translate it into Python code\nHow to plot the solutions\nHow to compute numerical errors and convergence rates\nHow to analyse the numerical solution"
+  },
+  {
+    "objectID": "intro.html#finite-difference-methods",
+    "href": "intro.html#finite-difference-methods",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Finite difference methods",
+    "text": "Finite difference methods\n\nThe finite difference method is the simplest method for solving differential equations\nSatisfy the equations in discrete points, not continuously\nFast to learn, derive, and implement\nA very useful tool to know, even if you aim at using the finite element or the finite volume method"
+  },
+  {
+    "objectID": "intro.html#topics-in-the-first-intro-to-the-finite-difference-method",
+    "href": "intro.html#topics-in-the-first-intro-to-the-finite-difference-method",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Topics in the first intro to the finite difference method",
+    "text": "Topics in the first intro to the finite difference method\n\nHow to think about finite difference discretization\nKey concepts:\n\nmesh\nmesh function\nfinite difference approximations\n\nThe Forward Euler, Backward Euler, and Crank-Nicolson methods\nFinite difference operator notation\nHow to derive an algorithm and implement it in Python\nHow to test the implementation"
+  },
+  {
+    "objectID": "intro.html#the-steps-in-the-finite-difference-method",
+    "href": "intro.html#the-steps-in-the-finite-difference-method",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "The steps in the finite difference method",
+    "text": "The steps in the finite difference method\nSolving a differential equation by a finite difference method consists of four steps:\n\ndiscretizing the domain,\nfulfilling the equation at discrete time points,\nreplacing derivatives by finite differences,\nsolve the discretized problem. (Often with a recursive algorithm in 1D)"
+  },
+  {
+    "objectID": "intro.html#step-1-discretizing-the-domain",
+    "href": "intro.html#step-1-discretizing-the-domain",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Step 1: Discretizing the domain",
+    "text": "Step 1: Discretizing the domain\nThe time domain \\([0,T]\\) is represented by a mesh: a finite number of \\(N_t+1\\) points\n\\[\n0 = t_0 &lt; t_1 &lt; t_2 &lt; \\cdots &lt; t_{N_t-1} &lt; t_{N_t} = T\n\\]\n\nWe seek the solution \\(u\\) at the mesh points: \\(u(t_n)\\), \\(n=1,2,\\ldots,N_t\\).\nNote: \\(u^0\\) is known as \\(I\\).\nNotational short-form for the numerical approximation to \\(u(t_n)\\): \\(u^n\\)\nIn the differential equation: \\(u(t)\\) is the exact solution\nIn the numerical method and implementation: \\(u^n\\) is the numerical approximation"
+  },
+  {
+    "objectID": "intro.html#step-1-discretizing-the-domain-1",
+    "href": "intro.html#step-1-discretizing-the-domain-1",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Step 1: Discretizing the domain",
+    "text": "Step 1: Discretizing the domain\n\\(u^n\\) is a mesh function, defined at the mesh points \\(t_n\\), \\(n=0,\\ldots,N_t\\) only."
+  },
+  {
+    "objectID": "intro.html#what-about-a-mesh-function-between-the-mesh-points",
+    "href": "intro.html#what-about-a-mesh-function-between-the-mesh-points",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "What about a mesh function between the mesh points?",
+    "text": "What about a mesh function between the mesh points?\nCan extend the mesh function to yield values between mesh points by linear interpolation:\n\\[\n\\begin{equation}\nu(t) \\approx u^n + \\frac{u^{n+1}-u^n}{t_{n+1}-t_n}(t - t_n)\n\\end{equation}\n\\]"
+  },
+  {
+    "objectID": "intro.html#step-2-fulfilling-the-equation-at-discrete-time-points",
+    "href": "intro.html#step-2-fulfilling-the-equation-at-discrete-time-points",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Step 2: Fulfilling the equation at discrete time points",
+    "text": "Step 2: Fulfilling the equation at discrete time points\n\nThe ODE holds for all \\(t\\in (0,T]\\) (infinite no of points)\nIdea: let the ODE be valid at the mesh points only (finite no of points)\n\n\\[\nu'(t_n) = -au(t_n),\\quad n=1,\\ldots,N_t\n\\]"
+  },
+  {
+    "objectID": "intro.html#step-3-replacing-derivatives-by-finite-differences",
+    "href": "intro.html#step-3-replacing-derivatives-by-finite-differences",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Step 3: Replacing derivatives by finite differences",
+    "text": "Step 3: Replacing derivatives by finite differences\nNow it is time for the finite difference approximations of derivatives:\n\\[\nu'(t_n) \\approx \\frac{u^{n+1}-u^{n}}{t_{n+1}-t_n}\n\\]"
+  },
+  {
+    "objectID": "intro.html#step-3-replacing-derivatives-by-finite-differences-1",
+    "href": "intro.html#step-3-replacing-derivatives-by-finite-differences-1",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Step 3: Replacing derivatives by finite differences",
+    "text": "Step 3: Replacing derivatives by finite differences\nInserting the finite difference approximation in\n\\[\nu'(t_n) = -au(t_n)\n\\]\ngives\n\\[\n\\begin{equation}\n\\frac{u^{n+1}-u^{n}}{t_{n+1}-t_n} = -au^{n},\\quad n=0,1,\\ldots,N_t-1\n\\end{equation}\n\\]\n(Known as discrete equation, or discrete problem, or finite difference method/scheme)"
+  },
+  {
+    "objectID": "intro.html#step-4-formulating-a-recursive-algorithm",
+    "href": "intro.html#step-4-formulating-a-recursive-algorithm",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Step 4: Formulating a recursive algorithm",
+    "text": "Step 4: Formulating a recursive algorithm\nHow can we actually compute the \\(u^n\\) values?\n\ngiven \\(u^0=I\\)\ncompute \\(u^1\\) from \\(u^0\\)\ncompute \\(u^2\\) from \\(u^1\\)\ncompute \\(u^3\\) from \\(u^2\\) (and so forth)\n\nIn general: we have \\(u^n\\) and seek \\(u^{n+1}\\)\n\n\n\n\n\n\nThe Forward Euler scheme\n\n\nSolve wrt \\(u^{n+1}\\) to get the computational formula: \\[\nu^{n+1} = u^n - a(t_{n+1} -t_n)u^n\n\\]"
+  },
+  {
+    "objectID": "intro.html#let-us-apply-the-scheme-by-hand",
+    "href": "intro.html#let-us-apply-the-scheme-by-hand",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Let us apply the scheme by hand",
+    "text": "Let us apply the scheme by hand\nAssume constant time spacing: \\(\\Delta t = t_{n+1}-t_n=\\mbox{const}\\) such that \\(u^{n+1} = u^n (1- a \\Delta t)\\)\n\\[\n\\begin{align*}\nu^0 &= I,\\\\\nu^1 & = I(1-a\\Delta t),\\\\\nu^2 & = I(1-a\\Delta t)^2,\\\\\n&\\vdots\\\\\nu^{N_t} &= I(1-a\\Delta t)^{N_t}\n\\end{align*}\n\\]\nOoops - we can find the numerical solution by hand (in this simple example)! No need for a computer (yet)…"
+  },
+  {
+    "objectID": "intro.html#a-backward-difference",
+    "href": "intro.html#a-backward-difference",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "A backward difference",
+    "text": "A backward difference\nHere is another finite difference approximation to the derivative (backward difference):\n\\[\nu'(t_n) \\approx \\frac{u^{n}-u^{n-1}}{t_{n}-t_{n-1}}\n\\]"
+  },
+  {
+    "objectID": "intro.html#the-backward-euler-scheme",
+    "href": "intro.html#the-backward-euler-scheme",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "The Backward Euler scheme",
+    "text": "The Backward Euler scheme\nInserting the finite difference approximation in \\(u'(t_n)=-au(t_n)\\) yields the Backward Euler (BE) scheme:\n\\[\n\\frac{u^{n}-u^{n-1}}{t_{n}-t_{n-1}} = -a u^n\n\\]\nSolve with respect to the unknown \\(u^{n+1}\\):\n\\[\nu^{n+1} = \\frac{1}{1+ a(t_{n+1}-t_n)} u^n\n\\]\n\n\n\n\n\n\nNote\n\n\nWe use \\(u^{n+1}\\) as unknown and rename \\(u^n \\longrightarrow u^{n+1}\\) and \\(u^{n-1} \\longrightarrow u^{n}\\)"
+  },
+  {
+    "objectID": "intro.html#a-centered-difference",
+    "href": "intro.html#a-centered-difference",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "A centered difference",
+    "text": "A centered difference\nCentered differences are better approximations than forward or backward differences."
+  },
+  {
+    "objectID": "intro.html#the-crank-nicolson-scheme-ideas",
+    "href": "intro.html#the-crank-nicolson-scheme-ideas",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "The Crank-Nicolson scheme; ideas",
+    "text": "The Crank-Nicolson scheme; ideas\nIdea 1: let the ODE hold at \\(t_{n+\\scriptstyle\\frac{1}{2}}\\). With \\(N_t+1\\) points, that is \\(N_t\\) equations for \\(n=0, 1, \\ldots N_t-1\\)\n\\[\nu'(t_{n+\\scriptstyle\\frac{1}{2}}) = -au(t_{n+\\scriptstyle\\frac{1}{2}})\n\\]\nIdea 2: approximate \\(u'(t_{n+\\scriptstyle\\frac{1}{2}})\\) by a centered difference\n\\[\nu'(t_{n+\\scriptstyle\\frac{1}{2}}) \\approx \\frac{u^{n+1}-u^n}{t_{n+1}-t_n}\n\\]\nProblem: \\(u(t_{n+\\scriptstyle\\frac{1}{2}})\\) is not defined, only \\(u^n=u(t_n)\\) and \\(u^{n+1}=u(t_{n+1})\\)\n\nSolution (linear interpolation):\n\\[\nu(t_{n+\\scriptstyle\\frac{1}{2}}) \\approx \\frac{1}{2} (u^n + u^{n+1})\n\\]"
+  },
+  {
+    "objectID": "intro.html#the-crank-nicolson-scheme-result",
+    "href": "intro.html#the-crank-nicolson-scheme-result",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "The Crank-Nicolson scheme; result",
+    "text": "The Crank-Nicolson scheme; result\nResult:\n\\[\n\\frac{u^{n+1}-u^n}{t_{n+1}-t_n} = -a\\frac{1}{2} (u^n + u^{n+1})\n\\]\nSolve wrt to \\(u^{n+1}\\):\n\\[\nu^{n+1} = \\frac{1-\\frac{1}{2} a(t_{n+1}-t_n)}{1 + \\frac{1}{2} a(t_{n+1}-t_n)}u^n\n\\] This is a Crank-Nicolson (CN) scheme or a midpoint or centered scheme."
+  },
+  {
+    "objectID": "intro.html#the-unifying-theta-rule",
+    "href": "intro.html#the-unifying-theta-rule",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "The unifying \\(\\theta\\)-rule",
+    "text": "The unifying \\(\\theta\\)-rule\nThe Forward Euler, Backward Euler, and Crank-Nicolson schemes can be formulated as one scheme with a varying parameter \\(\\theta\\):\n\\[\n\\frac{u^{n+1}-u^{n}}{t_{n+1}-t_n} = -a (\\theta u^{n+1} + (1-\\theta) u^{n})\n\\]\n\n\\(\\theta =0\\): Forward Euler\n\\(\\theta =1\\): Backward Euler\n\\(\\theta =1/2\\): Crank-Nicolson\nWe may alternatively choose any \\(\\theta\\in [0,1]\\).\n\n\\(u^n\\) is known, solve for \\(u^{n+1}\\):\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a(t_{n+1}-t_n)}{1 + \\theta a(t_{n+1}-t_n)} u^n\n\\]"
+  },
+  {
+    "objectID": "intro.html#constant-time-step",
+    "href": "intro.html#constant-time-step",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Constant time step",
+    "text": "Constant time step\nVery common assumption (not important, but exclusively used for simplicity hereafter): constant time step \\(t_{n+1}-t_n\\equiv\\Delta t\\)\nSummary of schemes for constant time step \\[\n\\begin{align}\nu^{n+1} &= (1 - a\\Delta t )u^n  \\quad (\\hbox{FE}) \\\\\nu^{n+1} &= \\frac{1}{1+ a\\Delta t} u^n  \\quad (\\hbox{BE}) \\\\\nu^{n+1} &= \\frac{1-\\frac{1}{2} a\\Delta t}{1 + \\frac{1}{2} a\\Delta t} u^n \\quad (\\hbox{CN})\\\\\nu^{n+1} &= \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}u^n \\quad (\\theta-\\hbox{rule})\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "intro.html#implementation-1",
+    "href": "intro.html#implementation-1",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Implementation",
+    "text": "Implementation\nModel:\n\\[\nu'(t) = -au(t),\\quad t\\in (0,T], \\quad u(0)=I\n\\]\nNumerical method:\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}u^n\n\\]\nfor \\(\\theta\\in [0,1]\\). Note\n\n\\(\\theta=0\\) gives Forward Euler\n\\(\\theta=1\\) gives Backward Euler\n\\(\\theta=1/2\\) gives Crank-Nicolson"
+  },
+  {
+    "objectID": "intro.html#requirements-of-a-program",
+    "href": "intro.html#requirements-of-a-program",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Requirements of a program",
+    "text": "Requirements of a program\n\nCompute the numerical solution \\(u^n\\), \\(n=1,2,\\ldots,N_t\\)\nDisplay the numerical and exact solution \\(u_{e}(t)=e^{-at}\\)\nBring evidence to a correct implementation (verification)\nCompare the numerical and the exact solution in a plot\nCompute the error \\(u_{e}(t_n) - u^n\\)\nIf wanted, compute the convergence rate of the numerical scheme"
+  },
+  {
+    "objectID": "intro.html#algorithm",
+    "href": "intro.html#algorithm",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Algorithm",
+    "text": "Algorithm\n\nStore \\(u^n\\), \\(n=0,1,\\ldots,N_t\\) in an array \\(\\boldsymbol{u}\\).\nAlgorithm:\n\ninitialize \\(u^0\\)\nfor \\(t=t_n\\), \\(n=1,2,\\ldots,N_t\\): compute \\(u^n\\) using the \\(\\theta\\)-rule formula"
+  },
+  {
+    "objectID": "intro.html#in-python",
+    "href": "intro.html#in-python",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "In Python",
+    "text": "In Python\nimport numpy as np\ndef solver(I, a, T, dt, theta):\n    \"\"\"Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt.\"\"\"\n    Nt = int(T/dt)            # no of time intervals\n    T = Nt*dt                 # adjust T to fit time step dt\n    u = np.zeros(Nt+1)           # array of u[n] values\n    t = np.linspace(0, T, Nt+1)  # time mesh\n    u[0] = I                  # assign initial condition\n    for n in range(0, Nt):    # n=0,1,...,Nt-1\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n    return u, t\n\nu, t = solver(I=1, a=2, T=8, dt=0.8, theta=1)\n# Write out a table of t and u values:\nfor i in range(len(t)):\n    print(f't={t[i]:6.3f} u={u[i]:g}')"
+  },
+  {
+    "objectID": "intro.html#in-python-1",
+    "href": "intro.html#in-python-1",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "In Python",
+    "text": "In Python\n\nimport numpy as np\ndef solver(I, a, T, dt, theta):\n    \"\"\"Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt.\"\"\"\n    Nt = int(T/dt)            # no of time intervals\n    T = Nt*dt                 # adjust T to fit time step dt\n    u = np.zeros(Nt+1)           # array of u[n] values\n    t = np.linspace(0, T, Nt+1)  # time mesh\n    u[0] = I                  # assign initial condition\n    for n in range(0, Nt):    # n=0,1,...,Nt-1\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n    return u, t\n\nu, t = solver(I=1, a=2, T=8, dt=0.8, theta=1)\n# Write out a table of t and u values:\nfor i in range(len(t)):\n    print(f't={t[i]:6.3f} u={u[i]:g}')\n\nt= 0.000 u=1\nt= 0.800 u=0.384615\nt= 1.600 u=0.147929\nt= 2.400 u=0.0568958\nt= 3.200 u=0.021883\nt= 4.000 u=0.00841653\nt= 4.800 u=0.00323713\nt= 5.600 u=0.00124505\nt= 6.400 u=0.000478865\nt= 7.200 u=0.000184179\nt= 8.000 u=7.0838e-05"
+  },
+  {
+    "objectID": "intro.html#challenge",
+    "href": "intro.html#challenge",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Challenge!",
+    "text": "Challenge!\nVectorize the code!\n\n\n\n\n\n\nVectorization\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\n\nFor example, you have three arrays\n\\[\n\\boldsymbol{u} = (u_i)_{i=0}^N, \\boldsymbol{v} = (v_i)_{i=0}^N, \\boldsymbol{w} = (w_i)_{i=0}^N\n\\]\nNow compute\n\\[\nw_i = u_i \\cdot v_i, \\quad \\forall \\, i=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "intro.html#challenge-1",
+    "href": "intro.html#challenge-1",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Challenge!",
+    "text": "Challenge!\nVectorize the code!\n\n\n\n\n\n\nVectorization\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\nRegular (scalar) implementation:\n\nN = 1000\nu = np.random.random(N)\nv = np.random.random(N)\nw = np.zeros(N)\n\nfor i in range(N):\n    w[i] = u[i] * v[i]\n\nVectorized:\n\nw[:] = u * v\n\nNumpy is heavily vectorized! So much so that mult, add, div, etc are vectorized by default!"
+  },
+  {
+    "objectID": "intro.html#challenge-2",
+    "href": "intro.html#challenge-2",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Challenge!",
+    "text": "Challenge!\nVectorize the code!\n\n\n\n\n\n\nVectorization\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\n\n\n\n\n\n\nVectorization warning\n\n\nPretty much all the code you will see and get access to in this course will be vectorized!"
+  },
+  {
+    "objectID": "intro.html#vectorizing-the-decay-solver",
+    "href": "intro.html#vectorizing-the-decay-solver",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Vectorizing the decay solver",
+    "text": "Vectorizing the decay solver\nGet rid of the for-loop!\nu[0] = I                  # assign initial condition\nfor n in range(0, Nt):    # n=0,1,...,Nt-1\n    u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nHow? Difficult because it is a recursive update and not regular elementwise multiplication. But remember\n\\[\nA = (1 - (1- \\theta) a  \\Delta t)/(1 + \\theta \\Delta t a)\n\\]\n\\[\n\\begin{align*}\nu^1 & = A u^0,\\\\\nu^2 & = A u^1,\\\\\n&\\vdots\\\\\nu^{N_t} &= A u^{N_t-1}\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "intro.html#vectorized-code",
+    "href": "intro.html#vectorized-code",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Vectorized code",
+    "text": "Vectorized code\nu[0] = I                  # assign initial condition\nfor n in range(0, Nt):    # n=0,1,...,Nt-1\n    u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\nCan be implemented as\n\nu[0] = I                  # assign initial condition\nu[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\nu[:] = np.cumprod(u)     \n\n\nbecause\n\\[\nu^n = A^n u^0, \\quad \\text{since }\n\\begin{cases}\nu^1 & = A u^0,\\\\\nu^2 & = A u^1 = A^2 u^0,\\\\\n&\\vdots\\\\\nu^{N_t} &= A u^{N_t-1} = A^{N_t} u^0\n\\end{cases}\n\\]\n\nnp.cumprod([1, 2, 2, 2])\n\narray([1, 2, 4, 8])"
+  },
+  {
+    "objectID": "intro.html#why-vectorization",
+    "href": "intro.html#why-vectorization",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Why vectorization?",
+    "text": "Why vectorization?\n\nPython for-loops are slow!\nPython for-loops usually requires more lines of code.\n\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n    return u\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n    return u\n\nI, a, T, dt, theta = 1, 2, 8, 0.8, 1\nu, t = solver(I, a, T, dt, theta)\n\nassert np.allclose(f0(u.copy(), I, theta, a, dt), \n                   f1(u.copy(), I, theta, a, dt))\n\n\nLets try some timings!"
+  },
+  {
+    "objectID": "intro.html#why-vectorization-timings",
+    "href": "intro.html#why-vectorization-timings",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Why vectorization? Timings",
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.82 µs ± 631 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.19 µs ± 204 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
+  },
+  {
+    "objectID": "intro.html#longer-array-timings",
+    "href": "intro.html#longer-array-timings",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Longer array timings",
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.13 µs ± 516 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.3 µs ± 986 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.7 µs ± 1.48 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 215 µs ± 14.9 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+  },
+  {
+    "objectID": "intro.html#plot-the-solution",
+    "href": "intro.html#plot-the-solution",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Plot the solution",
+    "text": "Plot the solution\n\nimport matplotlib.pyplot as plt \nI, a, T, dt, theta = 1, 2, 8, 0.8, 1\nu, t = solver(I, a, T, dt, theta)\nfig = plt.figure(figsize=(6, 4))\nax = fig.gca()\nax.plot(t, u)"
+  },
+  {
+    "objectID": "intro.html#plot-the-solution-1",
+    "href": "intro.html#plot-the-solution-1",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Plot the solution",
+    "text": "Plot the solution\nAdd legends, titles, exact solution, etc. Make the plot nice:-)\n\nu_exact = lambda t, I, a: I*np.exp(-a*t)\nI, a, T = 1., 2., 8.\nu, t = solver(I=I, a=a, T=T, dt=0.8, theta=1)\nte = np.linspace(0, T, 1000)\nue = u_exact(te, I, a)\nfig = plt.figure(figsize=(6, 4))\nplt.plot(t, u, 'bs-', te, ue, 'r')\nplt.title('Decay')\nplt.legend(['numerical', 'exact'])\nplt.xlabel('Time'), plt.ylabel('u(t)');"
+  },
+  {
+    "objectID": "intro.html#plotly-is-a-very-good-alternative",
+    "href": "intro.html#plotly-is-a-very-good-alternative",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Plotly is a very good alternative",
+    "text": "Plotly is a very good alternative\n\nimport plotly.express as px\npfig = px.line(x=t, y=u, labels={'x': 'Time', 'y': 'u(t)'}, \n               width=600, height=400, title='Decay',\n               template=\"simple_white\")\npfig.show()"
+  },
+  {
+    "objectID": "intro.html#verifying-the-implementation",
+    "href": "intro.html#verifying-the-implementation",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Verifying the implementation",
+    "text": "Verifying the implementation\n\nVerification = bring evidence that the program works\nFind suitable test problems\nMake function for each test problem\nLater: put the verification tests in a professional testing framework"
+  },
+  {
+    "objectID": "intro.html#comparison-with-exact-numerical-solution",
+    "href": "intro.html#comparison-with-exact-numerical-solution",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Comparison with exact numerical solution",
+    "text": "Comparison with exact numerical solution\n\n\n\n\n\n\nWhat is exact?\n\n\nThere is a difference between exact numerical solution and exact solution!\n\n\n\nRepeated use of the \\(\\theta\\)-rule gives exact numerical solution: \\[\n\\begin{align*}\nu^0 &= I,\\\\\nu^1 &= Au^0 = AI\\\\\nu^n &= A^nu^{n-1} = A^nI\n\\end{align*}\n\\]\nExact solution on the other hand:\n\\[\nu(t) = \\exp(-a t), \\quad u(t_n) = \\exp(-a t_n)\n\\]"
+  },
+  {
+    "objectID": "intro.html#making-a-test-based-on-an-exact-numerical-solution",
+    "href": "intro.html#making-a-test-based-on-an-exact-numerical-solution",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Making a test based on an exact numerical solution",
+    "text": "Making a test based on an exact numerical solution\nThe exact discrete solution is\n\\[\nu^n = IA^n\n\\]\nTest if your solver gives\n\\[\n\\max_n |u^n - IA^n| &lt; \\epsilon\\sim 10^{-15}\n\\]\nfor a few precalculated steps.\n\n\n\n\n\n\nTip\n\n\nMake sure you understand what \\(n\\) in \\(u^n\\) and in \\(A^n\\) means! \\(n\\) is not used as a power in \\(u^n\\), but it is a power in \\(A^n\\)!"
+  },
+  {
+    "objectID": "intro.html#run-a-few-numerical-steps-by-hand",
+    "href": "intro.html#run-a-few-numerical-steps-by-hand",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Run a few numerical steps by hand",
+    "text": "Run a few numerical steps by hand\nUse a calculator (\\(I=0.1\\), \\(\\theta=0.8\\), \\(\\Delta t =0.8\\)):\n\\[\nA\\equiv \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a \\Delta t} = 0.298245614035\n\\]\n\\[\n\\begin{align*}\nu^1 &= AI=0.0298245614035,\\\\\nu^2 &= Au^1= 0.00889504462912,\\\\\nu^3 &=Au^2= 0.00265290804728\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "intro.html#the-test-based-on-exact-numerical-solution",
+    "href": "intro.html#the-test-based-on-exact-numerical-solution",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "The test based on exact numerical solution",
+    "text": "The test based on exact numerical solution\n\ndef test_solver_three_steps(solver):\n    \"\"\"Compare three steps with known manual computations.\"\"\"\n    theta = 0.8\n    a = 2\n    I = 0.1\n    dt = 0.8\n    u_by_hand = np.array([I,\n                          0.0298245614035,\n                          0.00889504462912,\n                          0.00265290804728])\n\n    Nt = 3  # number of time steps\n    u, t = solver(I=I, a=a, T=Nt*dt, dt=dt, theta=theta)\n    tol = 1E-14  # tolerance for comparing floats\n    diff = abs(u - u_by_hand).max()\n    success = diff &lt; tol\n    assert success, diff\n\ntest_solver_three_steps(solver)\n\n\n\n\n\n\n\nNote\n\n\nWe do not use the exact solution because the numerical solution will not equal the exact!"
+  },
+  {
+    "objectID": "intro.html#quantifying-the-error",
+    "href": "intro.html#quantifying-the-error",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Quantifying the error",
+    "text": "Quantifying the error\nComputing the norm of the error\n\n\\(e^n = u^n - u_e(t_n)\\) is a mesh function\nUsually we want one number for the error\nUse a norm of \\(e^n\\)\n\nNorms of a function \\(f(t)\\):\n\\[\n\\begin{align}\n||f||_{L^2} &= \\left( \\int_0^T f(t)^2 dt\\right)^{1/2} \\\\\n||f||_{L^1} &= \\int_0^T |f(t)| dt \\\\\n||f||_{L^\\infty} &= \\max_{t\\in [0,T]}|f(t)|\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "intro.html#norms-of-mesh-functions",
+    "href": "intro.html#norms-of-mesh-functions",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Norms of mesh functions",
+    "text": "Norms of mesh functions\n\nProblem: \\(f^n =f(t_n)\\) is a mesh function and hence not defined for all \\(t\\). How to integrate \\(f^n\\)?\nIdea: Apply a numerical integration rule, using only the mesh points of the mesh function.\n\nThe Trapezoidal rule:\n\\[\n||f^n|| = \\left(\\Delta t\\left(\\scriptstyle\\frac{1}{2}(f^0)^2 + \\scriptstyle\\frac{1}{2}(f^{N_t})^2\n+ \\sum_{n=1}^{N_t-1} (f^n)^2\\right)\\right)^{1/2}\n\\]\nCommon simplification yields the \\(\\ell^2\\) norm of a mesh function:\n\\[\n||f^n||_{\\ell^2} = \\left(\\Delta t\\sum_{n=0}^{N_t} (f^n)^2\\right)^{1/2}\n\\]"
+  },
+  {
+    "objectID": "intro.html#norms---notice",
+    "href": "intro.html#norms---notice",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Norms - notice!",
+    "text": "Norms - notice!\n\nThe continuous norms use capital \\(L^2, L^1, L^\\infty{}\\)\nThe discrete norm uses lowercase \\(\\ell^2, \\ell^1, \\ell^{\\infty}\\)"
+  },
+  {
+    "objectID": "intro.html#implementation-of-the-error-norm",
+    "href": "intro.html#implementation-of-the-error-norm",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Implementation of the error norm",
+    "text": "Implementation of the error norm\n\\[\nE = ||e^n||_{\\ell^2}  = \\sqrt{\\Delta t\\sum_{n=0}^{N_t} (e^n)^2}\n\\]\nPython with vectorization:\n\nu_exact = lambda t, I, a: I*np.exp(-a*t)\nI, a, T, dt, theta = 1., 2., 8., 0.8, 1\nu, t = solver(I, a, T, dt, theta)\nen = u_exact(t, I, a) - u\nE = np.sqrt(dt*np.sum(en**2))\nprint(f'Errornorm = {E}')\n\nErrornorm = 0.1953976935916231"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Presentations for MATMEK-4270",
+    "section": "",
+    "text": "Algorithms and implementations for exponential decay models\nAnalysis of exponential decay models"
+  }
+]
