@@ -95,7 +95,9 @@ High performance computing platform for solving PDEs by the spectral Galerkin me
 
 ::: {.callout-important appearance="default"}
 ## Important stuff
-   [Lecture notes](https://matmek-4270.github.io/matmek4270-book/intro.html)
+   * [Lecture notes](https://matmek-4270.github.io/matmek4270-book/intro.html)
+   * [Presentations (including this one)](https://matmek-4270.github.io/matmek4270-pres)
+   * [Github organization MATMEK-4270](https://github.com/MATMEK-4270)
 :::
 
 ::: {.callout-warning appearance="simple"}

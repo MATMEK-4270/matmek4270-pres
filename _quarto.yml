@@ -1,4 +1,4 @@
 project:
   title: "MATMEK-4270 presentations"
   type: website
-  output-dir: docs
+  output-dir: _build
