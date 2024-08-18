@@ -2,15 +2,15 @@
 title: "Algorithms and implementations for exponential decay models"
 subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
+
 format:
   revealjs: 
     slide-number: true
     preview-links: auto
     css: styles.css
-    embed-resources: true
+    embed-resources: false
 pandoc:
   to: revealjs
-  output-file: introduction.html
   standalone: false
   wrap: none
   default-image-extension: png
@@ -19,6 +19,7 @@ pandoc:
     url: >-
       https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   slide-level: 2
+
 ---
 
 
