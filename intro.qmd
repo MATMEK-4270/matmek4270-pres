@@ -791,7 +791,7 @@ Python code for the norm:
 ```{python}
 #| echo : true
 u_exact = lambda t, I, a: I*np.exp(-a*t)
-I, a, T, dt, theta = 1., 2., 8., 0.8, 1
+I, a, T, dt, theta = 1., 2., 8., 0.2, 1
 u, t = solver(I, a, T, dt, theta)
 en = u_exact(t, I, a) - u
 E = np.sqrt(dt*np.sum(en**2))
