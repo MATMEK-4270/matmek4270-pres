@@ -406,7 +406,7 @@
   </script>
 
 </head>
-<body class="quarto-light">
+<body class="cython quarto-light">
   <div class="reveal">
     <div class="slides">
 
@@ -462,7 +462,7 @@ Prof.&nbsp;Mikael Mortensen, University of Oslo
 <div>
 
 </div>
-<div class="quarto-layout-panel" data-layout-ncol="3" height="300">
+<div class="quarto-layout-panel" height="300" data-layout-ncol="3">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
 <p><img data-src="https://raw.githack.com/spectralDNS/spectralutilities/master/figures/strong_scaling_pencil_col.png"></p>
@@ -639,7 +639,7 @@ u'=-au,\quad u(0)=I,\ t\in (0,T]
 <li>Fast to learn, derive, and implement</li>
 <li>A very useful tool to know, even if you aim at using the finite element or the finite volume method</li>
 </ul>
-<div id="089ab74a" class="cell" data-execution_count="1">
+<div id="bdb47def" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -692,7 +692,7 @@ u'=-au,\quad u(0)=I,\ t\in (0,T]
 <section id="step-1-discretizing-the-domain-1" class="slide level2 smaller">
 <h2>Step 1: Discretizing the domain</h2>
 <p><span class="math inline">\(u^n\)</span> is a mesh function, defined at the mesh points <span class="math inline">\(t_n\)</span>, <span class="math inline">\(n=0,\ldots,N_t\)</span> only.</p>
-<div id="9de2de8d" class="cell" data-execution_count="2">
+<div id="d4a2432d" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -710,7 +710,7 @@ u'=-au,\quad u(0)=I,\ t\in (0,T]
 u(t) \approx u^n + \frac{u^{n+1}-u^n}{t_{n+1}-t_n}(t - t_n)
 \end{equation}
 \]</span></p>
-<div id="64bf7762" class="cell" data-execution_count="3">
+<div id="fdd975a6" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -953,7 +953,7 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 </section>
 <section id="in-python-1" class="slide level2 smaller">
 <h2>In Python</h2>
-<div id="cdc52afa" class="cell" data-execution_count="4">
+<div id="a12601c7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a></a><span class="kw">def</span> solver(I, a, T, dt, theta):</span>
 <span id="cb2-3"><a></a>    <span class="co">"""Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt."""</span></span>
@@ -1029,7 +1029,7 @@ w_i = u_i \cdot v_i, \quad \forall \, i=0, 1, \ldots, N
 </div>
 </div>
 <p>Regular (scalar) implementation:</p>
-<div id="c88844f3" class="cell" data-execution_count="5">
+<div id="1c47af37" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>N <span class="op">=</span> <span class="dv">1000</span></span>
 <span id="cb4-2"><a></a>u <span class="op">=</span> np.random.random(N)</span>
 <span id="cb4-3"><a></a>v <span class="op">=</span> np.random.random(N)</span>
@@ -1039,7 +1039,7 @@ w_i = u_i \cdot v_i, \quad \forall \, i=0, 1, \ldots, N
 <span id="cb4-7"><a></a>    w[i] <span class="op">=</span> u[i] <span class="op">*</span> v[i]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vectorized:</p>
-<div id="e8341480" class="cell" data-execution_count="6">
+<div id="98e90576" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>w[:] <span class="op">=</span> u <span class="op">*</span> v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Numpy is heavily vectorized! So much so that mult, add, div, etc are vectorized by default!</p>
@@ -1117,9 +1117,9 @@ u^2 &amp; = A u^1 = A^2 u^0,\\
 u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 \end{cases}
 \]</span></p>
-<div id="0494146f" class="cell" data-execution_count="7">
+<div id="e412ca24" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>np.cumprod([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="53">
+<div class="cell-output cell-output-display" data-execution_count="119">
 <pre><code>array([1, 2, 4, 8])</code></pre>
 </div>
 </div>
@@ -1131,7 +1131,7 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <li>Python for-loops are slow!</li>
 <li>Python for-loops usually requires more lines of code.</li>
 </ul>
-<div id="a2571edb" class="cell" data-execution_count="8">
+<div id="e8d38061" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">def</span> f0(u, I, theta, a, dt):</span>
 <span id="cb11-2"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                  </span>
 <span id="cb11-3"><a></a>    u[<span class="dv">1</span>:] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)</span>
@@ -1156,7 +1156,7 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 </section>
 <section id="why-vectorization-timings" class="slide level2 smaller">
 <h2>Why vectorization? Timings</h2>
-<div id="e15a427f" class="cell" data-execution_count="9">
+<div id="1aacf23e" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="kw">def</span> f0(u, I, theta, a, dt):</span>
 <span id="cb12-2"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                  </span>
 <span id="cb12-3"><a></a>    u[<span class="dv">1</span>:] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)</span>
@@ -1168,21 +1168,21 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <span id="cb12-9"><a></a>        u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)<span class="op">*</span>u[n]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lets try some timings:</p>
-<div id="805c110e" class="cell" data-execution_count="10">
+<div id="5659424d" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">1000</span> f0(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="56">
-<pre><code>&lt;TimeitResult : 1.91 µs ± 608 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="122">
+<pre><code>&lt;TimeitResult : 1.74 µs ± 625 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
 </div>
 </div>
-<div id="30622600" class="cell" data-execution_count="11">
+<div id="1f0c3ab9" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">1000</span> f1(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="57">
-<pre><code>&lt;TimeitResult : 2.18 µs ± 46.1 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="123">
+<pre><code>&lt;TimeitResult : 2.05 µs ± 127 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
 </div>
 </div>
 <div class="fragment">
 <p>Hmm. Not really what’s expected. Why? Because the array <code>u</code> is really short! Lets try a longer array</p>
-<div id="ddc9c50a" class="cell" data-execution_count="12">
+<div id="d66caaaf" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="bu">print</span>(<span class="ss">f"Length of u = </span><span class="sc">{</span>u<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Length of u = 11</code></pre>
@@ -1192,7 +1192,7 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 </section>
 <section id="longer-array-timings" class="slide level2 smaller">
 <h2>Longer array timings</h2>
-<div id="d99a6e20" class="cell" data-execution_count="13">
+<div id="8d110719" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a>dt <span class="op">=</span> dt<span class="op">/</span><span class="dv">10</span></span>
 <span id="cb19-2"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta) </span>
 <span id="cb19-3"><a></a><span class="bu">print</span>(<span class="ss">f"Length of u = </span><span class="sc">{</span>u<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1200,21 +1200,21 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <pre><code>Length of u = 101</code></pre>
 </div>
 </div>
-<div id="97a014f0" class="cell" data-execution_count="14">
+<div id="3cf70492" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f0(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="60">
-<pre><code>&lt;TimeitResult : 3.8 µs ± 692 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="126">
+<pre><code>&lt;TimeitResult : 2.83 µs ± 194 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
-<div id="9b1b0e09" class="cell" data-execution_count="15">
+<div id="ac22abad" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f1(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="61">
-<pre><code>&lt;TimeitResult : 20.6 µs ± 412 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="127">
+<pre><code>&lt;TimeitResult : 19.5 µs ± 1.3 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <div class="fragment">
 <p>Even longer array:</p>
-<div id="d700c406" class="cell" data-execution_count="16">
+<div id="304ed225" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a>dt <span class="op">=</span> dt<span class="op">/</span><span class="dv">10</span></span>
 <span id="cb25-2"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta) </span>
 <span id="cb25-3"><a></a><span class="bu">print</span>(<span class="ss">f"Length of u = </span><span class="sc">{</span>u<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1222,34 +1222,717 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <pre><code>Length of u = 1001</code></pre>
 </div>
 </div>
-<div id="60bc3992" class="cell" data-execution_count="17">
+<div id="caa90668" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f0(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="63">
-<pre><code>&lt;TimeitResult : 6.03 µs ± 2.82 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="129">
+<pre><code>&lt;TimeitResult : 3.53 µs ± 1.48 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
-<div id="8ebb72ac" class="cell" data-execution_count="18">
+<div id="35f37b34" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f1(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="64">
-<pre><code>&lt;TimeitResult : 209 µs ± 5.2 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="130">
+<pre><code>&lt;TimeitResult : 206 µs ± 3.89 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <p>Vectorized code takes the same time! Only overhead costs, not the actual computation.</p>
 </div>
 </section>
+<section id="what-else-is-there-numba" class="slide level2 smaller">
+<h2>What else is there? <a href="https://numba.pydata.org/">Numba</a></h2>
+<div id="3ed157b9" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a><span class="im">import</span> numba <span class="im">as</span> nb</span>
+<span id="cb31-2"><a></a><span class="at">@nb.jit</span></span>
+<span id="cb31-3"><a></a><span class="kw">def</span> f2(u,  I, theta, a, dt):</span>
+<span id="cb31-4"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                 </span>
+<span id="cb31-5"><a></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(u)<span class="op">-</span><span class="dv">1</span>):  </span>
+<span id="cb31-6"><a></a>        u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)<span class="op">*</span>u[n]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Time it once</p>
+<div id="b3ea1084" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f2(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="132">
+<pre><code>&lt;TimeitResult : 46.5 µs ± 111 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+</div>
+</div>
+<p>Slow because the code needs to be compiled. Try again</p>
+<div id="d6a9073b" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f2(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="133">
+<pre><code>&lt;TimeitResult : 1.16 µs ± 29 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="what-else-cython" class="slide level2 smaller">
+<h2>What else? <a href="https://cython.org/">Cython</a></h2>
+<div id="0684a735" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a></a><span class="op">%</span>load_ext cython</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The cython extension is already loaded. To reload it, use:
+  %reload_ext cython</code></pre>
+</div>
+</div>
+<div id="e6b2679e" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a></a><span class="op">%%</span>cython <span class="op">-</span>a</span>
+<span id="cb38-2"><a></a><span class="co">#cython: boundscheck=False, wraparound=False, cdivision=True</span></span>
+<span id="cb38-3"><a></a>cpdef void f3(double[::<span class="dv">1</span>] u, <span class="bu">int</span>  I, double theta, double a, double dt):</span>
+<span id="cb38-4"><a></a>    cdef <span class="bu">int</span> n</span>
+<span id="cb38-5"><a></a>    cdef <span class="bu">int</span> N <span class="op">=</span> u.shape[<span class="dv">0</span>]</span>
+<span id="cb38-6"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                 </span>
+<span id="cb38-7"><a></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, N<span class="op">-</span><span class="dv">1</span>):  </span>
+<span id="cb38-8"><a></a>        u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)<span class="op">*</span>u[n]</span>
+<span id="cb38-9"><a></a>    <span class="cf">return</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="135">
+
+<!-- Generated by Cython 3.0.10 -->
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Cython: _cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.pyx</title>
+    <style type="text/css">
+    
+body.cython { font-family: courier; font-size: 12; }
+
+.cython.tag  {  }
+.cython.line { color: #000000; margin: 0em }
+.cython.code { font-size: 9; color: #444444; display: none; margin: 0px 0px 0px 8px; border-left: 8px none; }
+
+.cython.line .run { background-color: #B0FFB0; }
+.cython.line .mis { background-color: #FFB0B0; }
+.cython.code.run  { border-left: 8px solid #B0FFB0; }
+.cython.code.mis  { border-left: 8px solid #FFB0B0; }
+
+.cython.code .py_c_api  { color: red; }
+.cython.code .py_macro_api  { color: #FF7000; }
+.cython.code .pyx_c_api  { color: #FF3000; }
+.cython.code .pyx_macro_api  { color: #FF7000; }
+.cython.code .refnanny  { color: #FFA000; }
+.cython.code .trace  { color: #FFA000; }
+.cython.code .error_goto  { color: #FFA000; }
+
+.cython.code .coerce  { color: #008000; border: 1px dotted #008000 }
+.cython.code .py_attr { color: #FF0000; font-weight: bold; }
+.cython.code .c_attr  { color: #0000FF; }
+.cython.code .py_call { color: #FF0000; font-weight: bold; }
+.cython.code .c_call  { color: #0000FF; }
+
+.cython.score-0 {background-color: #FFFFff;}
+.cython.score-1 {background-color: #FFFFe7;}
+.cython.score-2 {background-color: #FFFFd4;}
+.cython.score-3 {background-color: #FFFFc4;}
+.cython.score-4 {background-color: #FFFFb6;}
+.cython.score-5 {background-color: #FFFFaa;}
+.cython.score-6 {background-color: #FFFF9f;}
+.cython.score-7 {background-color: #FFFF96;}
+.cython.score-8 {background-color: #FFFF8d;}
+.cython.score-9 {background-color: #FFFF86;}
+.cython.score-10 {background-color: #FFFF7f;}
+.cython.score-11 {background-color: #FFFF79;}
+.cython.score-12 {background-color: #FFFF73;}
+.cython.score-13 {background-color: #FFFF6e;}
+.cython.score-14 {background-color: #FFFF6a;}
+.cython.score-15 {background-color: #FFFF66;}
+.cython.score-16 {background-color: #FFFF62;}
+.cython.score-17 {background-color: #FFFF5e;}
+.cython.score-18 {background-color: #FFFF5b;}
+.cython.score-19 {background-color: #FFFF57;}
+.cython.score-20 {background-color: #FFFF55;}
+.cython.score-21 {background-color: #FFFF52;}
+.cython.score-22 {background-color: #FFFF4f;}
+.cython.score-23 {background-color: #FFFF4d;}
+.cython.score-24 {background-color: #FFFF4b;}
+.cython.score-25 {background-color: #FFFF48;}
+.cython.score-26 {background-color: #FFFF46;}
+.cython.score-27 {background-color: #FFFF44;}
+.cython.score-28 {background-color: #FFFF43;}
+.cython.score-29 {background-color: #FFFF41;}
+.cython.score-30 {background-color: #FFFF3f;}
+.cython.score-31 {background-color: #FFFF3e;}
+.cython.score-32 {background-color: #FFFF3c;}
+.cython.score-33 {background-color: #FFFF3b;}
+.cython.score-34 {background-color: #FFFF39;}
+.cython.score-35 {background-color: #FFFF38;}
+.cython.score-36 {background-color: #FFFF37;}
+.cython.score-37 {background-color: #FFFF36;}
+.cython.score-38 {background-color: #FFFF35;}
+.cython.score-39 {background-color: #FFFF34;}
+.cython.score-40 {background-color: #FFFF33;}
+.cython.score-41 {background-color: #FFFF32;}
+.cython.score-42 {background-color: #FFFF31;}
+.cython.score-43 {background-color: #FFFF30;}
+.cython.score-44 {background-color: #FFFF2f;}
+.cython.score-45 {background-color: #FFFF2e;}
+.cython.score-46 {background-color: #FFFF2d;}
+.cython.score-47 {background-color: #FFFF2c;}
+.cython.score-48 {background-color: #FFFF2b;}
+.cython.score-49 {background-color: #FFFF2b;}
+.cython.score-50 {background-color: #FFFF2a;}
+.cython.score-51 {background-color: #FFFF29;}
+.cython.score-52 {background-color: #FFFF29;}
+.cython.score-53 {background-color: #FFFF28;}
+.cython.score-54 {background-color: #FFFF27;}
+.cython.score-55 {background-color: #FFFF27;}
+.cython.score-56 {background-color: #FFFF26;}
+.cython.score-57 {background-color: #FFFF26;}
+.cython.score-58 {background-color: #FFFF25;}
+.cython.score-59 {background-color: #FFFF24;}
+.cython.score-60 {background-color: #FFFF24;}
+.cython.score-61 {background-color: #FFFF23;}
+.cython.score-62 {background-color: #FFFF23;}
+.cython.score-63 {background-color: #FFFF22;}
+.cython.score-64 {background-color: #FFFF22;}
+.cython.score-65 {background-color: #FFFF22;}
+.cython.score-66 {background-color: #FFFF21;}
+.cython.score-67 {background-color: #FFFF21;}
+.cython.score-68 {background-color: #FFFF20;}
+.cython.score-69 {background-color: #FFFF20;}
+.cython.score-70 {background-color: #FFFF1f;}
+.cython.score-71 {background-color: #FFFF1f;}
+.cython.score-72 {background-color: #FFFF1f;}
+.cython.score-73 {background-color: #FFFF1e;}
+.cython.score-74 {background-color: #FFFF1e;}
+.cython.score-75 {background-color: #FFFF1e;}
+.cython.score-76 {background-color: #FFFF1d;}
+.cython.score-77 {background-color: #FFFF1d;}
+.cython.score-78 {background-color: #FFFF1c;}
+.cython.score-79 {background-color: #FFFF1c;}
+.cython.score-80 {background-color: #FFFF1c;}
+.cython.score-81 {background-color: #FFFF1c;}
+.cython.score-82 {background-color: #FFFF1b;}
+.cython.score-83 {background-color: #FFFF1b;}
+.cython.score-84 {background-color: #FFFF1b;}
+.cython.score-85 {background-color: #FFFF1a;}
+.cython.score-86 {background-color: #FFFF1a;}
+.cython.score-87 {background-color: #FFFF1a;}
+.cython.score-88 {background-color: #FFFF1a;}
+.cython.score-89 {background-color: #FFFF19;}
+.cython.score-90 {background-color: #FFFF19;}
+.cython.score-91 {background-color: #FFFF19;}
+.cython.score-92 {background-color: #FFFF19;}
+.cython.score-93 {background-color: #FFFF18;}
+.cython.score-94 {background-color: #FFFF18;}
+.cython.score-95 {background-color: #FFFF18;}
+.cython.score-96 {background-color: #FFFF18;}
+.cython.score-97 {background-color: #FFFF17;}
+.cython.score-98 {background-color: #FFFF17;}
+.cython.score-99 {background-color: #FFFF17;}
+.cython.score-100 {background-color: #FFFF17;}
+.cython.score-101 {background-color: #FFFF16;}
+.cython.score-102 {background-color: #FFFF16;}
+.cython.score-103 {background-color: #FFFF16;}
+.cython.score-104 {background-color: #FFFF16;}
+.cython.score-105 {background-color: #FFFF16;}
+.cython.score-106 {background-color: #FFFF15;}
+.cython.score-107 {background-color: #FFFF15;}
+.cython.score-108 {background-color: #FFFF15;}
+.cython.score-109 {background-color: #FFFF15;}
+.cython.score-110 {background-color: #FFFF15;}
+.cython.score-111 {background-color: #FFFF15;}
+.cython.score-112 {background-color: #FFFF14;}
+.cython.score-113 {background-color: #FFFF14;}
+.cython.score-114 {background-color: #FFFF14;}
+.cython.score-115 {background-color: #FFFF14;}
+.cython.score-116 {background-color: #FFFF14;}
+.cython.score-117 {background-color: #FFFF14;}
+.cython.score-118 {background-color: #FFFF13;}
+.cython.score-119 {background-color: #FFFF13;}
+.cython.score-120 {background-color: #FFFF13;}
+.cython.score-121 {background-color: #FFFF13;}
+.cython.score-122 {background-color: #FFFF13;}
+.cython.score-123 {background-color: #FFFF13;}
+.cython.score-124 {background-color: #FFFF13;}
+.cython.score-125 {background-color: #FFFF12;}
+.cython.score-126 {background-color: #FFFF12;}
+.cython.score-127 {background-color: #FFFF12;}
+.cython.score-128 {background-color: #FFFF12;}
+.cython.score-129 {background-color: #FFFF12;}
+.cython.score-130 {background-color: #FFFF12;}
+.cython.score-131 {background-color: #FFFF12;}
+.cython.score-132 {background-color: #FFFF11;}
+.cython.score-133 {background-color: #FFFF11;}
+.cython.score-134 {background-color: #FFFF11;}
+.cython.score-135 {background-color: #FFFF11;}
+.cython.score-136 {background-color: #FFFF11;}
+.cython.score-137 {background-color: #FFFF11;}
+.cython.score-138 {background-color: #FFFF11;}
+.cython.score-139 {background-color: #FFFF11;}
+.cython.score-140 {background-color: #FFFF11;}
+.cython.score-141 {background-color: #FFFF10;}
+.cython.score-142 {background-color: #FFFF10;}
+.cython.score-143 {background-color: #FFFF10;}
+.cython.score-144 {background-color: #FFFF10;}
+.cython.score-145 {background-color: #FFFF10;}
+.cython.score-146 {background-color: #FFFF10;}
+.cython.score-147 {background-color: #FFFF10;}
+.cython.score-148 {background-color: #FFFF10;}
+.cython.score-149 {background-color: #FFFF10;}
+.cython.score-150 {background-color: #FFFF0f;}
+.cython.score-151 {background-color: #FFFF0f;}
+.cython.score-152 {background-color: #FFFF0f;}
+.cython.score-153 {background-color: #FFFF0f;}
+.cython.score-154 {background-color: #FFFF0f;}
+.cython.score-155 {background-color: #FFFF0f;}
+.cython.score-156 {background-color: #FFFF0f;}
+.cython.score-157 {background-color: #FFFF0f;}
+.cython.score-158 {background-color: #FFFF0f;}
+.cython.score-159 {background-color: #FFFF0f;}
+.cython.score-160 {background-color: #FFFF0f;}
+.cython.score-161 {background-color: #FFFF0e;}
+.cython.score-162 {background-color: #FFFF0e;}
+.cython.score-163 {background-color: #FFFF0e;}
+.cython.score-164 {background-color: #FFFF0e;}
+.cython.score-165 {background-color: #FFFF0e;}
+.cython.score-166 {background-color: #FFFF0e;}
+.cython.score-167 {background-color: #FFFF0e;}
+.cython.score-168 {background-color: #FFFF0e;}
+.cython.score-169 {background-color: #FFFF0e;}
+.cython.score-170 {background-color: #FFFF0e;}
+.cython.score-171 {background-color: #FFFF0e;}
+.cython.score-172 {background-color: #FFFF0e;}
+.cython.score-173 {background-color: #FFFF0d;}
+.cython.score-174 {background-color: #FFFF0d;}
+.cython.score-175 {background-color: #FFFF0d;}
+.cython.score-176 {background-color: #FFFF0d;}
+.cython.score-177 {background-color: #FFFF0d;}
+.cython.score-178 {background-color: #FFFF0d;}
+.cython.score-179 {background-color: #FFFF0d;}
+.cython.score-180 {background-color: #FFFF0d;}
+.cython.score-181 {background-color: #FFFF0d;}
+.cython.score-182 {background-color: #FFFF0d;}
+.cython.score-183 {background-color: #FFFF0d;}
+.cython.score-184 {background-color: #FFFF0d;}
+.cython.score-185 {background-color: #FFFF0d;}
+.cython.score-186 {background-color: #FFFF0d;}
+.cython.score-187 {background-color: #FFFF0c;}
+.cython.score-188 {background-color: #FFFF0c;}
+.cython.score-189 {background-color: #FFFF0c;}
+.cython.score-190 {background-color: #FFFF0c;}
+.cython.score-191 {background-color: #FFFF0c;}
+.cython.score-192 {background-color: #FFFF0c;}
+.cython.score-193 {background-color: #FFFF0c;}
+.cython.score-194 {background-color: #FFFF0c;}
+.cython.score-195 {background-color: #FFFF0c;}
+.cython.score-196 {background-color: #FFFF0c;}
+.cython.score-197 {background-color: #FFFF0c;}
+.cython.score-198 {background-color: #FFFF0c;}
+.cython.score-199 {background-color: #FFFF0c;}
+.cython.score-200 {background-color: #FFFF0c;}
+.cython.score-201 {background-color: #FFFF0c;}
+.cython.score-202 {background-color: #FFFF0c;}
+.cython.score-203 {background-color: #FFFF0b;}
+.cython.score-204 {background-color: #FFFF0b;}
+.cython.score-205 {background-color: #FFFF0b;}
+.cython.score-206 {background-color: #FFFF0b;}
+.cython.score-207 {background-color: #FFFF0b;}
+.cython.score-208 {background-color: #FFFF0b;}
+.cython.score-209 {background-color: #FFFF0b;}
+.cython.score-210 {background-color: #FFFF0b;}
+.cython.score-211 {background-color: #FFFF0b;}
+.cython.score-212 {background-color: #FFFF0b;}
+.cython.score-213 {background-color: #FFFF0b;}
+.cython.score-214 {background-color: #FFFF0b;}
+.cython.score-215 {background-color: #FFFF0b;}
+.cython.score-216 {background-color: #FFFF0b;}
+.cython.score-217 {background-color: #FFFF0b;}
+.cython.score-218 {background-color: #FFFF0b;}
+.cython.score-219 {background-color: #FFFF0b;}
+.cython.score-220 {background-color: #FFFF0b;}
+.cython.score-221 {background-color: #FFFF0b;}
+.cython.score-222 {background-color: #FFFF0a;}
+.cython.score-223 {background-color: #FFFF0a;}
+.cython.score-224 {background-color: #FFFF0a;}
+.cython.score-225 {background-color: #FFFF0a;}
+.cython.score-226 {background-color: #FFFF0a;}
+.cython.score-227 {background-color: #FFFF0a;}
+.cython.score-228 {background-color: #FFFF0a;}
+.cython.score-229 {background-color: #FFFF0a;}
+.cython.score-230 {background-color: #FFFF0a;}
+.cython.score-231 {background-color: #FFFF0a;}
+.cython.score-232 {background-color: #FFFF0a;}
+.cython.score-233 {background-color: #FFFF0a;}
+.cython.score-234 {background-color: #FFFF0a;}
+.cython.score-235 {background-color: #FFFF0a;}
+.cython.score-236 {background-color: #FFFF0a;}
+.cython.score-237 {background-color: #FFFF0a;}
+.cython.score-238 {background-color: #FFFF0a;}
+.cython.score-239 {background-color: #FFFF0a;}
+.cython.score-240 {background-color: #FFFF0a;}
+.cython.score-241 {background-color: #FFFF0a;}
+.cython.score-242 {background-color: #FFFF0a;}
+.cython.score-243 {background-color: #FFFF0a;}
+.cython.score-244 {background-color: #FFFF0a;}
+.cython.score-245 {background-color: #FFFF0a;}
+.cython.score-246 {background-color: #FFFF09;}
+.cython.score-247 {background-color: #FFFF09;}
+.cython.score-248 {background-color: #FFFF09;}
+.cython.score-249 {background-color: #FFFF09;}
+.cython.score-250 {background-color: #FFFF09;}
+.cython.score-251 {background-color: #FFFF09;}
+.cython.score-252 {background-color: #FFFF09;}
+.cython.score-253 {background-color: #FFFF09;}
+.cython.score-254 {background-color: #FFFF09;}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.cython .hll { background-color: #ffffcc }
+.cython { background: #f8f8f8; }
+.cython .c { color: #3D7B7B; font-style: italic } /* Comment */
+.cython .err { border: 1px solid #FF0000 } /* Error */
+.cython .k { color: #008000; font-weight: bold } /* Keyword */
+.cython .o { color: #666666 } /* Operator */
+.cython .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.cython .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.cython .cp { color: #9C6500 } /* Comment.Preproc */
+.cython .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.cython .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.cython .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.cython .gd { color: #A00000 } /* Generic.Deleted */
+.cython .ge { font-style: italic } /* Generic.Emph */
+.cython .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.cython .gr { color: #E40000 } /* Generic.Error */
+.cython .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.cython .gi { color: #008400 } /* Generic.Inserted */
+.cython .go { color: #717171 } /* Generic.Output */
+.cython .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.cython .gs { font-weight: bold } /* Generic.Strong */
+.cython .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.cython .gt { color: #0044DD } /* Generic.Traceback */
+.cython .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.cython .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.cython .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.cython .kp { color: #008000 } /* Keyword.Pseudo */
+.cython .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.cython .kt { color: #B00040 } /* Keyword.Type */
+.cython .m { color: #666666 } /* Literal.Number */
+.cython .s { color: #BA2121 } /* Literal.String */
+.cython .na { color: #687822 } /* Name.Attribute */
+.cython .nb { color: #008000 } /* Name.Builtin */
+.cython .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.cython .no { color: #880000 } /* Name.Constant */
+.cython .nd { color: #AA22FF } /* Name.Decorator */
+.cython .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.cython .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.cython .nf { color: #0000FF } /* Name.Function */
+.cython .nl { color: #767600 } /* Name.Label */
+.cython .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.cython .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.cython .nv { color: #19177C } /* Name.Variable */
+.cython .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.cython .w { color: #bbbbbb } /* Text.Whitespace */
+.cython .mb { color: #666666 } /* Literal.Number.Bin */
+.cython .mf { color: #666666 } /* Literal.Number.Float */
+.cython .mh { color: #666666 } /* Literal.Number.Hex */
+.cython .mi { color: #666666 } /* Literal.Number.Integer */
+.cython .mo { color: #666666 } /* Literal.Number.Oct */
+.cython .sa { color: #BA2121 } /* Literal.String.Affix */
+.cython .sb { color: #BA2121 } /* Literal.String.Backtick */
+.cython .sc { color: #BA2121 } /* Literal.String.Char */
+.cython .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.cython .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.cython .s2 { color: #BA2121 } /* Literal.String.Double */
+.cython .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.cython .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.cython .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.cython .sx { color: #008000 } /* Literal.String.Other */
+.cython .sr { color: #A45A77 } /* Literal.String.Regex */
+.cython .s1 { color: #BA2121 } /* Literal.String.Single */
+.cython .ss { color: #19177C } /* Literal.String.Symbol */
+.cython .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.cython .fm { color: #0000FF } /* Name.Function.Magic */
+.cython .vc { color: #19177C } /* Name.Variable.Class */
+.cython .vg { color: #19177C } /* Name.Variable.Global */
+.cython .vi { color: #19177C } /* Name.Variable.Instance */
+.cython .vm { color: #19177C } /* Name.Variable.Magic */
+.cython .il { color: #666666 } /* Literal.Number.Integer.Long */
+    </style>
+
+
+<p><span style="border-bottom: solid 1px grey;">Generated by Cython 3.0.10</span></p>
+<p>
+    <span style="background-color: #FFFF00">Yellow lines</span> hint at Python interaction.<br>
+    Click on a line that starts with a "<code>+</code>" to see the C code that Cython generated for it.
+</p>
+<div class="cython"><pre class="cython line score-8" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">1</span>: <span class="c">#cython: boundscheck=False, wraparound=False, cdivision=True</span></pre>
+<pre class="cython code score-8 ">  __pyx_t_7 = <span class="pyx_c_api">__Pyx_PyDict_NewPresized</span>(0);<span class="error_goto"> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)</span>
+  <span class="refnanny">__Pyx_GOTREF</span>(__pyx_t_7);
+  if (<span class="py_c_api">PyDict_SetItem</span>(__pyx_d, __pyx_n_s_test, __pyx_t_7) &lt; 0) <span class="error_goto">__PYX_ERR(0, 1, __pyx_L1_error)</span>
+  <span class="pyx_macro_api">__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
+</pre><pre class="cython line score-151" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">2</span>: <span class="k">cpdef</span> <span class="kt">void</span> <span class="nf">f3</span><span class="p">(</span><span class="n">double</span><span class="p">[::</span><span class="mf">1</span><span class="p">]</span> <span class="n">u</span><span class="p">,</span> <span class="nb">int</span>  <span class="n">I</span><span class="p">,</span> <span class="n">double</span> <span class="n">theta</span><span class="p">,</span> <span class="n">double</span> <span class="n">a</span><span class="p">,</span> <span class="n">double</span> <span class="n">dt</span><span class="p">):</span></pre>
+<pre class="cython code score-151 ">static PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static void __pyx_f_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__Pyx_memviewslice __pyx_v_u, int __pyx_v_I, double __pyx_v_theta, double __pyx_v_a, double __pyx_v_dt, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  int __pyx_v_n;
+  int __pyx_v_N;
+/* … */
+  /* function exit code */
+  __pyx_L0:;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3 = {"f3", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  __Pyx_memviewslice __pyx_v_u = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_v_I;
+  double __pyx_v_theta;
+  double __pyx_v_a;
+  double __pyx_v_dt;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  <span class="refnanny">__Pyx_RefNannyDeclarations</span>
+  <span class="refnanny">__Pyx_RefNannySetupContext</span>("f3 (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_MACROS
+  __pyx_nargs = <span class="py_macro_api">PyTuple_GET_SIZE</span>(__pyx_args);
+  #else
+  __pyx_nargs = <span class="py_c_api">PyTuple_Size</span>(__pyx_args); if (unlikely(__pyx_nargs &lt; 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = <span class="pyx_c_api">__Pyx_KwValues_FASTCALL</span>(__pyx_args, __pyx_nargs);
+  {
+    PyObject **__pyx_pyargnames[] = {&amp;__pyx_n_s_u,&amp;__pyx_n_s_I,&amp;__pyx_n_s_theta,&amp;__pyx_n_s_a,&amp;__pyx_n_s_dt,0};
+  PyObject* values[5] = {0,0,0,0,0};
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  5: values[4] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
+        case  4: values[3] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = <span class="pyx_c_api">__Pyx_NumKwargs_FASTCALL</span>(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = <span class="pyx_c_api">__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_u)) != 0)) {
+          (void)<span class="pyx_c_api">__Pyx_Arg_NewRef_FASTCALL</span>(values[0]);
+          kw_args--;
+        }
+        else if (unlikely(<span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = <span class="pyx_c_api">__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_I)) != 0)) {
+          (void)<span class="pyx_c_api">__Pyx_Arg_NewRef_FASTCALL</span>(values[1]);
+          kw_args--;
+        }
+        else if (unlikely(<span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        else {
+          <span class="pyx_c_api">__Pyx_RaiseArgtupleInvalid</span>("f3", 1, 5, 5, 1); <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = <span class="pyx_c_api">__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_theta)) != 0)) {
+          (void)<span class="pyx_c_api">__Pyx_Arg_NewRef_FASTCALL</span>(values[2]);
+          kw_args--;
+        }
+        else if (unlikely(<span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        else {
+          <span class="pyx_c_api">__Pyx_RaiseArgtupleInvalid</span>("f3", 1, 5, 5, 2); <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = <span class="pyx_c_api">__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_a)) != 0)) {
+          (void)<span class="pyx_c_api">__Pyx_Arg_NewRef_FASTCALL</span>(values[3]);
+          kw_args--;
+        }
+        else if (unlikely(<span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        else {
+          <span class="pyx_c_api">__Pyx_RaiseArgtupleInvalid</span>("f3", 1, 5, 5, 3); <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = <span class="pyx_c_api">__Pyx_GetKwValue_FASTCALL</span>(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_dt)) != 0)) {
+          (void)<span class="pyx_c_api">__Pyx_Arg_NewRef_FASTCALL</span>(values[4]);
+          kw_args--;
+        }
+        else if (unlikely(<span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        else {
+          <span class="pyx_c_api">__Pyx_RaiseArgtupleInvalid</span>("f3", 1, 5, 5, 4); <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+        }
+      }
+      if (unlikely(kw_args &gt; 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(<span class="pyx_c_api">__Pyx_ParseOptionalKeywords</span>(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "f3") &lt; 0)) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+      }
+    } else if (unlikely(__pyx_nargs != 5)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 0);
+      values[1] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 1);
+      values[2] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 2);
+      values[3] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 3);
+      values[4] = <span class="pyx_c_api">__Pyx_Arg_FASTCALL</span>(__pyx_args, 4);
+    }
+    __pyx_v_u = <span class="pyx_c_api">__Pyx_PyObject_to_MemoryviewSlice_dc_double</span>(values[0], PyBUF_WRITABLE);<span class="error_goto"> if (unlikely(!__pyx_v_u.memview)) __PYX_ERR(0, 2, __pyx_L3_error)</span>
+    __pyx_v_I = <span class="pyx_c_api">__Pyx_PyInt_As_int</span>(values[1]); if (unlikely((__pyx_v_I == (int)-1) &amp;&amp; <span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+    __pyx_v_theta = __pyx_<span class="py_c_api">PyFloat_AsDouble</span>(values[2]); if (unlikely((__pyx_v_theta == (double)-1) &amp;&amp; <span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+    __pyx_v_a = __pyx_<span class="py_c_api">PyFloat_AsDouble</span>(values[3]); if (unlikely((__pyx_v_a == (double)-1) &amp;&amp; <span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+    __pyx_v_dt = __pyx_<span class="py_c_api">PyFloat_AsDouble</span>(values[4]); if (unlikely((__pyx_v_dt == (double)-1) &amp;&amp; <span class="py_c_api">PyErr_Occurred</span>())) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  <span class="pyx_c_api">__Pyx_RaiseArgtupleInvalid</span>("f3", 1, 5, 5, __pyx_nargs); <span class="error_goto">__PYX_ERR(0, 2, __pyx_L3_error)</span>
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      <span class="pyx_c_api">__Pyx_Arg_XDECREF_FASTCALL</span>(values[__pyx_temp]);
+    }
+  }
+  __PYX_XCLEAR_MEMVIEW(&amp;__pyx_v_u, 1);
+  <span class="pyx_c_api">__Pyx_AddTraceback</span>("_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.f3", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class="refnanny">__Pyx_RefNannyFinishContext</span>();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__pyx_self, __pyx_v_u, __pyx_v_I, __pyx_v_theta, __pyx_v_a, __pyx_v_dt);
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+
+  /* function exit code */
+  __PYX_XCLEAR_MEMVIEW(&amp;__pyx_v_u, 1);
+  {
+    Py_ssize_t __pyx_temp;
+    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+      <span class="pyx_c_api">__Pyx_Arg_XDECREF_FASTCALL</span>(values[__pyx_temp]);
+    }
+  }
+  <span class="refnanny">__Pyx_RefNannyFinishContext</span>();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_u, int __pyx_v_I, double __pyx_v_theta, double __pyx_v_a, double __pyx_v_dt) {
+  PyObject *__pyx_r = NULL;
+  <span class="pyx_macro_api">__Pyx_XDECREF</span>(__pyx_r);
+  if (unlikely(!__pyx_v_u.memview)) { <span class="pyx_c_api">__Pyx_RaiseUnboundLocalError</span>("u"); <span class="error_goto">__PYX_ERR(0, 2, __pyx_L1_error)</span> }
+  __pyx_f_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__pyx_v_u, __pyx_v_I, __pyx_v_theta, __pyx_v_a, __pyx_v_dt, 0);<span class="error_goto"> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L1_error)</span>
+  __pyx_t_1 = __Pyx_void_to_None(NULL);<span class="error_goto"> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)</span>
+  <span class="refnanny">__Pyx_GOTREF</span>(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  <span class="pyx_macro_api">__Pyx_XDECREF</span>(__pyx_t_1);
+  <span class="pyx_c_api">__Pyx_AddTraceback</span>("_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.f3", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  <span class="refnanny">__Pyx_XGIVEREF</span>(__pyx_r);
+  <span class="refnanny">__Pyx_RefNannyFinishContext</span>();
+  return __pyx_r;
+}
+/* … */
+  __pyx_tuple__20 = <span class="py_c_api">PyTuple_Pack</span>(5, __pyx_n_s_u, __pyx_n_s_I, __pyx_n_s_theta, __pyx_n_s_a, __pyx_n_s_dt);<span class="error_goto"> if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 2, __pyx_L1_error)</span>
+  <span class="refnanny">__Pyx_GOTREF</span>(__pyx_tuple__20);
+  <span class="refnanny">__Pyx_GIVEREF</span>(__pyx_tuple__20);
+/* … */
+  __pyx_t_7 = <span class="pyx_c_api">__Pyx_CyFunction_New</span>(&amp;__pyx_mdef_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3, 0, __pyx_n_s_f3, NULL, __pyx_n_s_cython_magic_56487b4d6695ae1d6d, __pyx_d, ((PyObject *)__pyx_codeobj__21));<span class="error_goto"> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 2, __pyx_L1_error)</span>
+  <span class="refnanny">__Pyx_GOTREF</span>(__pyx_t_7);
+  if (<span class="py_c_api">PyDict_SetItem</span>(__pyx_d, __pyx_n_s_f3, __pyx_t_7) &lt; 0) <span class="error_goto">__PYX_ERR(0, 2, __pyx_L1_error)</span>
+  <span class="pyx_macro_api">__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
+</pre><pre class="cython line score-0">&nbsp;<span class="">3</span>:     <span class="k">cdef</span> <span class="kt">int</span> <span class="nf">n</span></pre>
+<pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">4</span>:     <span class="k">cdef</span> <span class="kt">int</span> <span class="nf">N</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span></pre>
+<pre class="cython code score-0 ">  __pyx_v_N = (__pyx_v_u.shape[0]);
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">5</span>:     <span class="n">u</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">I</span></pre>
+<pre class="cython code score-0 ">  __pyx_t_1 = 0;
+  *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_1)) )) = __pyx_v_I;
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">6</span>:     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="n">N</span><span class="o">-</span><span class="mf">1</span><span class="p">):</span></pre>
+<pre class="cython code score-0 ">  __pyx_t_2 = (__pyx_v_N - 1);
+  __pyx_t_3 = __pyx_t_2;
+  for (__pyx_t_4 = 0; __pyx_t_4 &lt; __pyx_t_3; __pyx_t_4+=1) {
+    __pyx_v_n = __pyx_t_4;
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">7</span>:         <span class="n">u</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mf">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1</span><span class="o">-</span><span class="n">theta</span><span class="p">)</span><span class="o">*</span><span class="n">a</span><span class="o">*</span><span class="n">dt</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">1</span> <span class="o">+</span> <span class="n">theta</span><span class="o">*</span><span class="n">dt</span><span class="o">*</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="p">[</span><span class="n">n</span><span class="p">]</span></pre>
+<pre class="cython code score-0 ">    __pyx_t_1 = __pyx_v_n;
+    __pyx_t_5 = (__pyx_v_n + 1);
+    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_5)) )) = (((1.0 - (((1.0 - __pyx_v_theta) * __pyx_v_a) * __pyx_v_dt)) / (1.0 + ((__pyx_v_theta * __pyx_v_dt) * __pyx_v_a))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_1)) ))));
+  }
+</pre><pre class="cython line score-0" onclick="(function(s){s.display=s.display==='block'?'none':'block'})(this.nextElementSibling.style)">+<span class="">8</span>:     <span class="k">return</span></pre>
+<pre class="cython code score-0 ">  goto __pyx_L0;
+</pre></div>
+</div>
+</div>
+</section>
+<section id="cython-timing" class="slide level2 smaller">
+<h2>Cython timing</h2>
+<div id="b04e8ca7" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f3(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="136">
+<pre><code>&lt;TimeitResult : 1.15 µs ± 20.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+</div>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Cython and Numba are both fast!</strong></p>
+</div>
+<div class="callout-content">
+<p>Cython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Cython is very easy to use in notebooks, but requires <a href="https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html">some additional steps</a> to be compiled used as extension modules with regular python programs.</p>
+</div>
+</div>
+</div>
+</section>
 <section id="plot-the-solution" class="slide level2 smaller">
 <h2>Plot the solution</h2>
-<div id="4eda64ec" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
-<span id="cb31-2"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">8</span>, <span class="fl">0.8</span>, <span class="dv">1</span></span>
-<span id="cb31-3"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta)</span>
-<span id="cb31-4"><a></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
-<span id="cb31-5"><a></a>ax <span class="op">=</span> fig.gca()</span>
-<span id="cb31-6"><a></a>ax.plot(t, u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We will also learn about plotting. It is very important to present data in a clear and consise manner. It is very easy to generate a <em>naked</em> plot</p>
+<div id="5b104fbe" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
+<span id="cb41-2"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">8</span>, <span class="fl">0.8</span>, <span class="dv">1</span></span>
+<span id="cb41-3"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta)</span>
+<span id="cb41-4"><a></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb41-5"><a></a>ax <span class="op">=</span> fig.gca()</span>
+<span id="cb41-6"><a></a>ax.plot(t, u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="intro_files/figure-revealjs/cell-20-output-1.png" width="496" height="337"></p>
+<p><img data-src="intro_files/figure-revealjs/cell-26-output-1.png" width="496" height="337"></p>
 </figure>
 </div>
 </div>
@@ -1257,39 +1940,38 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 </section>
 <section id="plot-the-solution-1" class="slide level2 smaller">
 <h2>Plot the solution</h2>
-<p>Add legends, titles, exact solution, etc. Make the plot nice:-)</p>
-<div id="424dfac4" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
-<span id="cb32-2"><a></a>I, a, T <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span></span>
-<span id="cb32-3"><a></a>u, t <span class="op">=</span> solver(I<span class="op">=</span>I, a<span class="op">=</span>a, T<span class="op">=</span>T, dt<span class="op">=</span><span class="fl">0.8</span>, theta<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb32-4"><a></a>te <span class="op">=</span> np.linspace(<span class="dv">0</span>, T, <span class="dv">1000</span>)</span>
-<span id="cb32-5"><a></a>ue <span class="op">=</span> u_exact(te, I, a)</span>
-<span id="cb32-6"><a></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
-<span id="cb32-7"><a></a>plt.plot(t, u, <span class="st">'bs-'</span>, te, ue, <span class="st">'r'</span>)</span>
-<span id="cb32-8"><a></a>plt.title(<span class="st">'Decay'</span>)</span>
-<span id="cb32-9"><a></a>plt.legend([<span class="st">'numerical'</span>, <span class="st">'exact'</span>])</span>
-<span id="cb32-10"><a></a>plt.xlabel(<span class="st">'Time'</span>), plt.ylabel(<span class="st">'u(t)'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But you should always add legends, titles, exact solution, etc. Make the plot nice:-)</p>
+<div id="8e9baf86" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
+<span id="cb42-2"><a></a>u, t <span class="op">=</span> solver(I<span class="op">=</span>I, a<span class="op">=</span>a, T<span class="op">=</span>T, dt<span class="op">=</span><span class="fl">0.8</span>, theta<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb42-3"><a></a>te <span class="op">=</span> np.linspace(<span class="dv">0</span>, T, <span class="dv">1000</span>)</span>
+<span id="cb42-4"><a></a>ue <span class="op">=</span> u_exact(te, I, a)</span>
+<span id="cb42-5"><a></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb42-6"><a></a>plt.plot(t, u, <span class="st">'bs-'</span>, te, ue, <span class="st">'r'</span>)</span>
+<span id="cb42-7"><a></a>plt.title(<span class="st">'Decay'</span>)</span>
+<span id="cb42-8"><a></a>plt.legend([<span class="st">'numerical'</span>, <span class="st">'exact'</span>])</span>
+<span id="cb42-9"><a></a>plt.xlabel(<span class="st">'Time'</span>), plt.ylabel(<span class="st">'u(t)'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="intro_files/figure-revealjs/cell-21-output-1.png" width="515" height="376"></p>
+<p><img data-src="intro_files/figure-revealjs/cell-27-output-1.png" width="515" height="376"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
 <section id="plotly-is-a-very-good-alternative" class="slide level2">
-<h2>Plotly is a very good alternative</h2>
-<div id="6b25740b" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
-<span id="cb33-2"><a></a>pfig <span class="op">=</span> px.line(x<span class="op">=</span>t, y<span class="op">=</span>u, labels<span class="op">=</span>{<span class="st">'x'</span>: <span class="st">'Time'</span>, <span class="st">'y'</span>: <span class="st">'u(t)'</span>}, </span>
-<span id="cb33-3"><a></a>               width<span class="op">=</span><span class="dv">600</span>, height<span class="op">=</span><span class="dv">400</span>, title<span class="op">=</span><span class="st">'Decay'</span>,</span>
-<span id="cb33-4"><a></a>               template<span class="op">=</span><span class="st">"simple_white"</span>)</span>
-<span id="cb33-5"><a></a>pfig.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h2><a href="https://plotly.com/">Plotly</a> is a very good alternative</h2>
+<div id="95a585f0" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
+<span id="cb43-2"><a></a>pfig <span class="op">=</span> px.line(x<span class="op">=</span>t, y<span class="op">=</span>u, labels<span class="op">=</span>{<span class="st">'x'</span>: <span class="st">'Time'</span>, <span class="st">'y'</span>: <span class="st">'u(t)'</span>}, </span>
+<span id="cb43-3"><a></a>               width<span class="op">=</span><span class="dv">600</span>, height<span class="op">=</span><span class="dv">400</span>, title<span class="op">=</span><span class="st">'Decay'</span>,</span>
+<span id="cb43-4"><a></a>               template<span class="op">=</span><span class="st">"simple_white"</span>)</span>
+<span id="cb43-5"><a></a>pfig.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div>                            <div id="1bed3c02-1ee8-427d-a14c-0eba9c6fa78b" class="plotly-graph-div" style="height:400px; width:600px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("1bed3c02-1ee8-427d-a14c-0eba9c6fa78b")) {                    Plotly.newPlot(                        "1bed3c02-1ee8-427d-a14c-0eba9c6fa78b",                        [{"hovertemplate":"Time=%{x}\u003cbr\u003eu(t)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","line":{"color":"#1F77B4","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"","orientation":"v","showlegend":false,"x":[0.0,0.8,1.6,2.4000000000000004,3.2,4.0,4.800000000000001,5.6000000000000005,6.4,7.2,8.0],"xaxis":"x","y":[1.0,0.3846153846153846,0.14792899408284022,0.05689576695493854,0.021882987290360974,0.008416533573215758,0.003237128297390676,0.00124504934515026,0.00047886513275009995,0.00018417889721157688,7.083803738906803e-05],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"rgb(36,36,36)"},"error_y":{"color":"rgb(36,36,36)"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"baxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2d"}],"histogram":[{"marker":{"line":{"color":"white","width":0.6}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"rgb(237,237,237)"},"line":{"color":"white"}},"header":{"fill":{"color":"rgb(217,217,217)"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"colorscale":{"diverging":[[0.0,"rgb(103,0,31)"],[0.1,"rgb(178,24,43)"],[0.2,"rgb(214,96,77)"],[0.3,"rgb(244,165,130)"],[0.4,"rgb(253,219,199)"],[0.5,"rgb(247,247,247)"],[0.6,"rgb(209,229,240)"],[0.7,"rgb(146,197,222)"],[0.8,"rgb(67,147,195)"],[0.9,"rgb(33,102,172)"],[1.0,"rgb(5,48,97)"]],"sequential":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"sequentialminus":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"colorway":["#1F77B4","#FF7F0E","#2CA02C","#D62728","#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF"],"font":{"color":"rgb(36,36,36)"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","radialaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"zaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"}},"shapedefaults":{"fillcolor":"black","line":{"width":0},"opacity":0.3},"ternary":{"aaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"baxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","caxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Time"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"u(t)"}},"legend":{"tracegroupgap":0},"title":{"text":"Decay"},"height":400,"width":600},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="31627cb2-dbb2-448e-98d4-7f09fa30a903" class="plotly-graph-div" style="height:400px; width:600px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("31627cb2-dbb2-448e-98d4-7f09fa30a903")) {                    Plotly.newPlot(                        "31627cb2-dbb2-448e-98d4-7f09fa30a903",                        [{"hovertemplate":"Time=%{x}\u003cbr\u003eu(t)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","line":{"color":"#1F77B4","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"","orientation":"v","showlegend":false,"x":[0.0,0.8,1.6,2.4000000000000004,3.2,4.0,4.800000000000001,5.6000000000000005,6.4,7.2,8.0],"xaxis":"x","y":[1.0,0.3846153846153846,0.14792899408284022,0.05689576695493854,0.021882987290360974,0.008416533573215758,0.003237128297390676,0.00124504934515026,0.00047886513275009995,0.00018417889721157688,7.083803738906803e-05],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"rgb(36,36,36)"},"error_y":{"color":"rgb(36,36,36)"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"baxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2d"}],"histogram":[{"marker":{"line":{"color":"white","width":0.6}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"rgb(237,237,237)"},"line":{"color":"white"}},"header":{"fill":{"color":"rgb(217,217,217)"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"colorscale":{"diverging":[[0.0,"rgb(103,0,31)"],[0.1,"rgb(178,24,43)"],[0.2,"rgb(214,96,77)"],[0.3,"rgb(244,165,130)"],[0.4,"rgb(253,219,199)"],[0.5,"rgb(247,247,247)"],[0.6,"rgb(209,229,240)"],[0.7,"rgb(146,197,222)"],[0.8,"rgb(67,147,195)"],[0.9,"rgb(33,102,172)"],[1.0,"rgb(5,48,97)"]],"sequential":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"sequentialminus":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"colorway":["#1F77B4","#FF7F0E","#2CA02C","#D62728","#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF"],"font":{"color":"rgb(36,36,36)"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","radialaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"zaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"}},"shapedefaults":{"fillcolor":"black","line":{"width":0},"opacity":0.3},"ternary":{"aaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"baxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","caxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Time"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"u(t)"}},"legend":{"tracegroupgap":0},"title":{"text":"Decay"},"height":400,"width":600},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('1bed3c02-1ee8-427d-a14c-0eba9c6fa78b');
+var gd = document.getElementById('31627cb2-dbb2-448e-98d4-7f09fa30a903');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -1321,7 +2003,11 @@ if (outputEl) {{
 <li>Verification = bring evidence that the program works</li>
 <li>Find suitable test problems</li>
 <li>Make function for each test problem</li>
-<li>Later: put the verification tests in a professional testing framework</li>
+<li>Later: put the verification tests in a professional testing framework
+<ul>
+<li>pytest</li>
+<li>github actions</li>
+</ul></li>
 </ul>
 </section>
 <section id="comparison-with-exact-numerical-solution" class="slide level2 smaller">
@@ -1392,26 +2078,26 @@ u^3 &amp;=Au^2= 0.00265290804728
 </section>
 <section id="the-test-based-on-exact-numerical-solution" class="slide level2 smaller">
 <h2>The test based on exact numerical solution</h2>
-<div id="2a5d4832" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a><span class="kw">def</span> test_solver_three_steps(solver):</span>
-<span id="cb34-2"><a></a>    <span class="co">"""Compare three steps with known manual computations."""</span></span>
-<span id="cb34-3"><a></a>    theta <span class="op">=</span> <span class="fl">0.8</span></span>
-<span id="cb34-4"><a></a>    a <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb34-5"><a></a>    I <span class="op">=</span> <span class="fl">0.1</span></span>
-<span id="cb34-6"><a></a>    dt <span class="op">=</span> <span class="fl">0.8</span></span>
-<span id="cb34-7"><a></a>    u_by_hand <span class="op">=</span> np.array([I,</span>
-<span id="cb34-8"><a></a>                          <span class="fl">0.0298245614035</span>,</span>
-<span id="cb34-9"><a></a>                          <span class="fl">0.00889504462912</span>,</span>
-<span id="cb34-10"><a></a>                          <span class="fl">0.00265290804728</span>])</span>
-<span id="cb34-11"><a></a></span>
-<span id="cb34-12"><a></a>    Nt <span class="op">=</span> <span class="dv">3</span>  <span class="co"># number of time steps</span></span>
-<span id="cb34-13"><a></a>    u, t <span class="op">=</span> solver(I<span class="op">=</span>I, a<span class="op">=</span>a, T<span class="op">=</span>Nt<span class="op">*</span>dt, dt<span class="op">=</span>dt, theta<span class="op">=</span>theta)</span>
-<span id="cb34-14"><a></a>    tol <span class="op">=</span> <span class="fl">1E-14</span>  <span class="co"># tolerance for comparing floats</span></span>
-<span id="cb34-15"><a></a>    diff <span class="op">=</span> <span class="bu">abs</span>(u <span class="op">-</span> u_by_hand).<span class="bu">max</span>()</span>
-<span id="cb34-16"><a></a>    success <span class="op">=</span> diff <span class="op">&lt;</span> tol</span>
-<span id="cb34-17"><a></a>    <span class="cf">assert</span> success, diff</span>
-<span id="cb34-18"><a></a></span>
-<span id="cb34-19"><a></a>test_solver_three_steps(solver)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8faeb736" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a></a><span class="kw">def</span> test_solver_three_steps(solver):</span>
+<span id="cb44-2"><a></a>    <span class="co">"""Compare three steps with known manual computations."""</span></span>
+<span id="cb44-3"><a></a>    theta <span class="op">=</span> <span class="fl">0.8</span></span>
+<span id="cb44-4"><a></a>    a <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb44-5"><a></a>    I <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb44-6"><a></a>    dt <span class="op">=</span> <span class="fl">0.8</span></span>
+<span id="cb44-7"><a></a>    u_by_hand <span class="op">=</span> np.array([I,</span>
+<span id="cb44-8"><a></a>                          <span class="fl">0.0298245614035</span>,</span>
+<span id="cb44-9"><a></a>                          <span class="fl">0.00889504462912</span>,</span>
+<span id="cb44-10"><a></a>                          <span class="fl">0.00265290804728</span>])</span>
+<span id="cb44-11"><a></a></span>
+<span id="cb44-12"><a></a>    Nt <span class="op">=</span> <span class="dv">3</span>  <span class="co"># number of time steps</span></span>
+<span id="cb44-13"><a></a>    u, t <span class="op">=</span> solver(I<span class="op">=</span>I, a<span class="op">=</span>a, T<span class="op">=</span>Nt<span class="op">*</span>dt, dt<span class="op">=</span>dt, theta<span class="op">=</span>theta)</span>
+<span id="cb44-14"><a></a>    tol <span class="op">=</span> <span class="fl">1E-14</span>  <span class="co"># tolerance for comparing floats</span></span>
+<span id="cb44-15"><a></a>    diff <span class="op">=</span> <span class="bu">abs</span>(u <span class="op">-</span> u_by_hand).<span class="bu">max</span>()</span>
+<span id="cb44-16"><a></a>    success <span class="op">=</span> diff <span class="op">&lt;</span> tol</span>
+<span id="cb44-17"><a></a>    <span class="cf">assert</span> success, diff</span>
+<span id="cb44-18"><a></a></span>
+<span id="cb44-19"><a></a>test_solver_three_steps(solver)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
@@ -1473,13 +2159,13 @@ u^3 &amp;=Au^2= 0.00265290804728
 E = ||e^n||_{\ell^2}  = \sqrt{\Delta t\sum_{n=0}^{N_t} (e^n)^2}
 \]</span></p>
 <p>Python with vectorization:</p>
-<div id="f71db863" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
-<span id="cb35-2"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.8</span>, <span class="dv">1</span></span>
-<span id="cb35-3"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta)</span>
-<span id="cb35-4"><a></a>en <span class="op">=</span> u_exact(t, I, a) <span class="op">-</span> u</span>
-<span id="cb35-5"><a></a>E <span class="op">=</span> np.sqrt(dt<span class="op">*</span>np.<span class="bu">sum</span>(en<span class="op">**</span><span class="dv">2</span>))</span>
-<span id="cb35-6"><a></a><span class="bu">print</span>(<span class="ss">f'Errornorm = </span><span class="sc">{</span>E<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2faa2382" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
+<span id="cb45-2"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.8</span>, <span class="dv">1</span></span>
+<span id="cb45-3"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta)</span>
+<span id="cb45-4"><a></a>en <span class="op">=</span> u_exact(t, I, a) <span class="op">-</span> u</span>
+<span id="cb45-5"><a></a>E <span class="op">=</span> np.sqrt(dt<span class="op">*</span>np.<span class="bu">sum</span>(en<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb45-6"><a></a><span class="bu">print</span>(<span class="ss">f'Errornorm = </span><span class="sc">{</span>E<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Errornorm = 0.1953976935916231</code></pre>
 </div>
