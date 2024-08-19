@@ -847,7 +847,69 @@ print(f"Length of u = {u.shape[0]}")
 Vectorized code takes the same time! Only overhead costs, not the actual computation.
 :::
 
+## What else is there? [Numba](https://numba.pydata.org/) {.smaller}
+
+```{python}
+#| echo : true 
+import numba as nb
+@nb.jit
+def f2(u,  I, theta, a, dt):
+    u[0] = I                 
+    for n in range(0, len(u)-1):  
+        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]
+```
+
+Time it once
+```{python}
+#| echo : true
+%timeit -q -o -n 100 f2(u, I, theta, a, dt)
+```
+Slow because the code needs to be compiled. Try again
+```{python}
+#| echo : true
+%timeit -q -o -n 100 f2(u, I, theta, a, dt)
+```
+## What else? [Cython](https://cython.org/) {.smaller}
+
+```{python}
+#| echo : true
+%load_ext cython
+```
+
+```{python}
+#| echo : true
+%%cython -a
+#cython: boundscheck=False, wraparound=False, cdivision=True
+cpdef void f3(double[::1] u, int  I, double theta, double a, double dt):
+    cdef int n
+    cdef int N = u.shape[0]
+    u[0] = I                 
+    for n in range(0, N-1):  
+        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]
+    return
+```
+
+## Cython timing {.smaller}
+
+```{python}
+#| echo : true
+%timeit -q -o -n 100 f3(u, I, theta, a, dt)
+```
+
+::: {.callout-note}
+## Cython and Numba are both fast!
+
+Cython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!
+
+:::
+
+::: {.callout-note}
+Cython is very easy to use in notebooks, but requires [some additional steps](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html) to be compiled used as extension modules with regular python programs.
+:::
+
 ## Plot the solution {.smaller}
+
+We will also learn about plotting. It is very important to present data in a clear and consise manner. It is very easy to generate a *naked* plot
 
 ```{python}
 #| echo : true
@@ -861,12 +923,11 @@ ax.plot(t, u)
 
 ## Plot the solution {.smaller}
 
-Add legends, titles, exact solution, etc. Make the plot nice:-)
+But you should always add legends, titles, exact solution, etc. Make the plot nice:-)
 
 ```{python}
 #| echo : true
 u_exact = lambda t, I, a: I*np.exp(-a*t)
-I, a, T = 1., 2., 8.
 u, t = solver(I=I, a=a, T=T, dt=0.8, theta=1)
 te = np.linspace(0, T, 1000)
 ue = u_exact(te, I, a)
@@ -877,7 +938,7 @@ plt.legend(['numerical', 'exact'])
 plt.xlabel('Time'), plt.ylabel('u(t)');
 ```
 
-## Plotly is a very good alternative
+## [Plotly](https://plotly.com/) is a very good alternative
 
 ```{python}
 #| echo : true
@@ -894,6 +955,8 @@ pfig.show()
  * Find suitable test problems
  * Make function for each test problem
  * Later: put the verification tests in a professional testing framework
+    - pytest
+    - github actions
 
 
 ## Comparison with exact numerical solution {.smaller}
