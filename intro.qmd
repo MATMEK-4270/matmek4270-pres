@@ -54,9 +54,11 @@ pandoc:
 ## A little bit about myself {.smaller}
 
 ![](https://raw.githack.com/spectralDNS/spectralutilities/master/movies/RB_256_512_movie_jet.png){.absolute bottom=0 right=50 width="600" height="200"}
+![](./figures/chalmers.png){.absolute top=200 right=0}
+![](./figures/FFI_logo_eng.png){.absolute bottom=0 left=0}
 
   * Professor of mechanics (2019-)
-  * PhD in mathematical modelling of turbulent combustion
+  * PhD (Chalmers University of Technology) in mathematical modelling of turbulent combustion
   * Norwegian Defence Research Establishment (2007-2012)
   * Computational Fluid Dynamics
   * High Performance Computing
@@ -185,6 +187,7 @@ See [Langtangen, Finite Difference Computing - Chapter 1](https://link.springer.
    on the **Forward Euler**, **Backward Euler**, and **Crank-Nicolson** (midpoint) schemes
  * How to formulate a computational algorithm and translate it into
    Python code
+ * How to optimize the code for computational speed
  * How to plot the solutions
  * How to compute numerical errors and convergence rates
  * How to analyse the numerical solution
@@ -237,7 +240,7 @@ plt.plot(t, f(t)+rnd, 'ko')
 plt.legend(['Exact', 'FD']);
 ```
 
-## Topics in the first intro to the finite difference method {.smaller}
+## Topics in the first intro to the finite difference method {.smaller visibility="hidden"}
 
   * How to think about finite difference discretization
   * Key concepts:
@@ -268,6 +271,8 @@ $$
 0 = t_0 < t_1 < t_2 < \cdots < t_{N_t-1} < t_{N_t} = T
 $$
 
+![](./figures/line.png){fig-align="center"}
+
  * We seek the solution $u$ at the mesh points: $u(t_n)$, $n=1,2,\ldots,N_t$.
  * Note: $u^0$ is known as $I$.
  * Notational short-form for the numerical approximation to $u(t_n)$: $u^n$
@@ -276,7 +281,7 @@ $$
 
 ## Step 1: Discretizing the domain {.smaller}
 
-$u^n$ is a mesh function, defined at the mesh points $t_n$, $n=0,\ldots,N_t$ only.
+$u^n$ is a **mesh function**, defined at the mesh points $t_n$, $n=0,\ldots,N_t$ only.
 
 ```{python}
 #| fig-align: center
@@ -436,7 +441,7 @@ $$
  u'(t_{n+\half}) = -au(t_{n+\half})
 $$
 
-Idea 2: approximate $u'(t_{n+\half})$ by a centered difference
+Idea 2: approximate $u'(t_{n+\half})$ by a **centered difference**
 
 $$
 u'(t_{n+\half}) \approx \frac{u^{n+1}-u^n}{t_{n+1}-t_n}
@@ -531,10 +536,11 @@ for $\theta\in [0,1]$. Note
 
   * Compute the numerical solution $u^n$, $n=1,2,\ldots,N_t$
   * Display the numerical and exact solution $\uex(t)=e^{-at}$
-  * Bring evidence to a correct implementation (*verification*)
+  * Bring evidence to a correct implementation (**verification**)
   * Compare the numerical and the exact solution in a plot
-  * Compute the error $\uex (t_n) - u^n$
-  * If wanted, compute the convergence rate of the numerical scheme
+  * Quantify the error $\uex (t_n) - u^n$ using **norms**
+  * Compute the **convergence rate** of the numerical scheme
+  * (Optimize for speed)
 
 ## Python - pros and cons {chalkboard-buttons="true" visibility="hidden"}
 
@@ -544,8 +550,7 @@ for $\theta\in [0,1]$. Note
  * Store $u^n$, $n=0,1,\ldots,N_t$ in an array $\boldsymbol{u}$.
  * Algorithm:
    - initialize $u^0$
-   - for $t=t_n$, $n=1,2,\ldots,N_t$: compute $u^n$ using
-     the $\theta$-rule formula
+   - for $n=1, 2, \ldots, N_t$: compute $u^n$ using the $\theta$-rule formula
 
 ## In Python {.smaller}
 
@@ -592,9 +597,210 @@ for i in range(len(t)):
 
 ```
 
-## Challenge! {.smaller}
+## Plot the solution {.smaller}
 
-### Vectorize the code! 
+We will also learn about plotting. It is very important to present data in a clear and consise manner. It is very easy to generate a *naked* plot
+
+```{python}
+#| echo : true
+import matplotlib.pyplot as plt 
+I, a, T, dt, theta = 1, 2, 8, 0.8, 1
+u, t = solver(I, a, T, dt, theta)
+fig = plt.figure(figsize=(6, 4))
+ax = fig.gca()
+ax.plot(t, u)
+```
+
+## Plot the solution {.smaller}
+
+But you should always add legends, titles, exact solution, etc. Make the plot nice:-)
+
+```{python}
+#| echo : true
+u_exact = lambda t, I, a: I*np.exp(-a*t)
+u, t = solver(I=I, a=a, T=T, dt=0.8, theta=1)
+te = np.linspace(0, T, 1000)
+ue = u_exact(te, I, a)
+fig = plt.figure(figsize=(6, 4))
+plt.plot(t, u, 'bs-', te, ue, 'r')
+plt.title('Decay')
+plt.legend(['numerical', 'exact'])
+plt.xlabel('Time'), plt.ylabel('u(t)');
+```
+
+## [Plotly](https://plotly.com/) is a very good alternative
+
+```{python}
+#| echo : true
+import plotly.express as px
+pfig = px.line(x=t, y=u, labels={'x': 'Time', 'y': 'u(t)'}, 
+               width=600, height=400, title='Decay',
+               template="simple_white")
+pfig.show()
+```
+
+## Verifying the implementation
+
+ * Verification = bring evidence that the program works
+ * Find suitable test problems
+ * Make function for each test problem
+ * Later: put the verification tests in a professional testing framework
+    - pytest
+    - github actions
+
+
+## Comparison with exact numerical solution {.smaller}
+
+::: {.callout-note}
+## What is exact?
+
+There is a difference between exact numerical solution and exact solution!
+:::
+
+Repeated use of the $\theta$-rule gives exact numerical solution:
+$$
+\begin{align*}
+u^0 &= I,\\
+u^1 &= Au^0 = AI\\
+u^n &= A^nu^{n-1} = A^nI
+\end{align*}
+$$
+
+Exact solution on the other hand: 
+
+$$
+u(t) = \exp(-a t), \quad u(t_n) = \exp(-a t_n)
+$$
+
+
+## Making a test based on an exact numerical solution {.smaller}
+
+The exact discrete solution is
+
+$$
+u^n = IA^n
+$$
+
+Test if your solver gives
+
+$$ 
+\max_n |u^n - IA^n| < \epsilon\sim 10^{-15}
+$$
+
+for a few precalculated steps.
+
+::: {.callout-tip}
+Make sure you understand what $n$ in $u^n$ and in $A^n$ means! $n$ is not used as a power in $u^n$, but it is a power in $A^n$!
+:::
+
+## Run a few numerical steps by hand {.smaller}
+
+Use a calculator ($I=0.1$, $\theta=0.8$, $\Delta t =0.8$):
+
+$$ 
+A\equiv \frac{1 - (1-\theta) a\Delta t}{1 + \theta a \Delta t} = 0.298245614035
+$$
+
+$$
+\begin{align*}
+u^1 &= AI=0.0298245614035,\\
+u^2 &= Au^1= 0.00889504462912,\\
+u^3 &=Au^2= 0.00265290804728
+\end{align*}
+$$
+
+## The test based on exact numerical solution {.smaller}
+
+```{python}
+#| echo : true
+def test_solver_three_steps(solver):
+    """Compare three steps with known manual computations."""
+    theta = 0.8
+    a = 2
+    I = 0.1
+    dt = 0.8
+    u_by_hand = np.array([I,
+                          0.0298245614035,
+                          0.00889504462912,
+                          0.00265290804728])
+
+    Nt = 3  # number of time steps
+    u, t = solver(I=I, a=a, T=Nt*dt, dt=dt, theta=theta)
+    tol = 1E-14  # tolerance for comparing floats
+    diff = abs(u - u_by_hand).max()
+    success = diff < tol
+    assert success, diff
+
+test_solver_three_steps(solver)
+```
+
+::: {.callout-note}
+We do not use the **exact** solution because the numerical solution will not equal the exact! 
+:::
+
+## Quantifying the error {.smaller}
+
+### Computing the norm of the error 
+
+ * $e^n = u^n - u_e(t_n)$ is a **mesh function**
+ * Usually we want one number for the error
+ * Use a norm of $e^n$
+
+Norms of a function $f(t)$:
+
+$$
+\begin{align}
+||f||_{L^2} &= \left( \int_0^T f(t)^2 dt\right)^{1/2} \\
+||f||_{L^1} &= \int_0^T |f(t)| dt \\
+||f||_{L^\infty} &= \max_{t\in [0,T]}|f(t)|
+\end{align}
+$$
+
+## Norms of mesh functions {.smaller}
+
+ * Problem: $f^n =f(t_n)$ is a **mesh function** and hence not defined for all $t$. How to integrate $f^n$?
+ * Idea: Apply a numerical integration rule, using only
+   the mesh points of the mesh function.
+
+The Trapezoidal rule:
+
+$$
+||f^n|| = \left(\Delta t\left(\half(f^0)^2 + \half(f^{N_t})^2
++ \sum_{n=1}^{N_t-1} (f^n)^2\right)\right)^{1/2}
+$$
+
+Common simplification yields the $\ell^2$ norm of a mesh function:
+
+$$
+||f^n||_{\ell^2} = \left(\Delta t\sum_{n=0}^{N_t} (f^n)^2\right)^{1/2}
+$$
+
+## Norms - notice!
+
+ * The *continuous* norms use capital $L^2, L^1, L^\infty{}$
+ * The *discrete* norm uses lowercase $\ell^2, \ell^1, \ell^{\infty}$
+
+## Implementation of the error norm
+
+$$ 
+E = ||e^n||_{\ell^2}  = \sqrt{\Delta t\sum_{n=0}^{N_t} (e^n)^2}
+$$
+
+Python code for the norm:
+
+```{python}
+#| echo : true
+u_exact = lambda t, I, a: I*np.exp(-a*t)
+I, a, T, dt, theta = 1., 2., 8., 0.8, 1
+u, t = solver(I, a, T, dt, theta)
+en = u_exact(t, I, a) - u
+E = np.sqrt(dt*np.sum(en**2))
+print(f'Errornorm = {E}')
+```
+
+## How about computational speed? {.smaller}
+
+The code is naive and not very efficient. It is not vectorized!
 
 ::: {.callout-tip}
 ## Vectorization
@@ -618,9 +824,9 @@ $$
 
 :::
 
-## Challenge! {.smaller}
+## How about computational speed? {.smaller}
 
-### Vectorize the code! 
+The code is naive and not very efficient. It is not vectorized!
 
 ::: {.callout-tip}
 ## Vectorization
@@ -651,9 +857,9 @@ w[:] = u * v
 
 Numpy is heavily vectorized! So much so that mult, add, div, etc are vectorized by default!
 
-## Challenge! {.smaller}
+## How about computational speed? {.smaller}
 
-### Vectorize the code! 
+The code is naive and not very efficient. It is not vectorized!
 
 ::: {.callout-tip}
 ## Vectorization
@@ -864,11 +1070,18 @@ Time it once
 #| echo : true
 %timeit -q -o -n 100 f2(u, I, theta, a, dt)
 ```
+
+::: {.fragment}
 Slow because the code needs to be compiled. Try again
 ```{python}
 #| echo : true
 %timeit -q -o -n 100 f2(u, I, theta, a, dt)
 ```
+
+That is even faster than the vectorized code! 
+
+:::
+
 ## What else? [Cython](https://cython.org/) {.smaller}
 
 ```{python}
@@ -906,204 +1119,3 @@ Cython and Numba are both as fast as pure C. Either one can be used to speed up 
 ::: {.callout-note}
 Cython is very easy to use in notebooks, but requires [some additional steps](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html) to be compiled used as extension modules with regular python programs.
 :::
-
-## Plot the solution {.smaller}
-
-We will also learn about plotting. It is very important to present data in a clear and consise manner. It is very easy to generate a *naked* plot
-
-```{python}
-#| echo : true
-import matplotlib.pyplot as plt 
-I, a, T, dt, theta = 1, 2, 8, 0.8, 1
-u, t = solver(I, a, T, dt, theta)
-fig = plt.figure(figsize=(6, 4))
-ax = fig.gca()
-ax.plot(t, u)
-```
-
-## Plot the solution {.smaller}
-
-But you should always add legends, titles, exact solution, etc. Make the plot nice:-)
-
-```{python}
-#| echo : true
-u_exact = lambda t, I, a: I*np.exp(-a*t)
-u, t = solver(I=I, a=a, T=T, dt=0.8, theta=1)
-te = np.linspace(0, T, 1000)
-ue = u_exact(te, I, a)
-fig = plt.figure(figsize=(6, 4))
-plt.plot(t, u, 'bs-', te, ue, 'r')
-plt.title('Decay')
-plt.legend(['numerical', 'exact'])
-plt.xlabel('Time'), plt.ylabel('u(t)');
-```
-
-## [Plotly](https://plotly.com/) is a very good alternative
-
-```{python}
-#| echo : true
-import plotly.express as px
-pfig = px.line(x=t, y=u, labels={'x': 'Time', 'y': 'u(t)'}, 
-               width=600, height=400, title='Decay',
-               template="simple_white")
-pfig.show()
-```
-
-## Verifying the implementation
-
- * Verification = bring evidence that the program works
- * Find suitable test problems
- * Make function for each test problem
- * Later: put the verification tests in a professional testing framework
-    - pytest
-    - github actions
-
-
-## Comparison with exact numerical solution {.smaller}
-
-::: {.callout-note}
-## What is exact?
-
-There is a difference between exact numerical solution and exact solution!
-:::
-
-Repeated use of the $\theta$-rule gives exact numerical solution:
-$$
-\begin{align*}
-u^0 &= I,\\
-u^1 &= Au^0 = AI\\
-u^n &= A^nu^{n-1} = A^nI
-\end{align*}
-$$
-
-Exact solution on the other hand: 
-
-$$
-u(t) = \exp(-a t), \quad u(t_n) = \exp(-a t_n)
-$$
-
-
-## Making a test based on an exact numerical solution {.smaller}
-
-The exact discrete solution is
-
-$$
-u^n = IA^n
-$$
-
-Test if your solver gives
-
-$$ 
-\max_n |u^n - IA^n| < \epsilon\sim 10^{-15}
-$$
-
-for a few precalculated steps.
-
-::: {.callout-tip}
-Make sure you understand what $n$ in $u^n$ and in $A^n$ means! $n$ is not used as a power in $u^n$, but it is a power in $A^n$!
-:::
-
-## Run a few numerical steps by hand {.smaller}
-
-Use a calculator ($I=0.1$, $\theta=0.8$, $\Delta t =0.8$):
-
-$$ 
-A\equiv \frac{1 - (1-\theta) a\Delta t}{1 + \theta a \Delta t} = 0.298245614035
-$$
-
-$$
-\begin{align*}
-u^1 &= AI=0.0298245614035,\\
-u^2 &= Au^1= 0.00889504462912,\\
-u^3 &=Au^2= 0.00265290804728
-\end{align*}
-$$
-
-## The test based on exact numerical solution {.smaller}
-
-```{python}
-#| echo : true
-def test_solver_three_steps(solver):
-    """Compare three steps with known manual computations."""
-    theta = 0.8
-    a = 2
-    I = 0.1
-    dt = 0.8
-    u_by_hand = np.array([I,
-                          0.0298245614035,
-                          0.00889504462912,
-                          0.00265290804728])
-
-    Nt = 3  # number of time steps
-    u, t = solver(I=I, a=a, T=Nt*dt, dt=dt, theta=theta)
-    tol = 1E-14  # tolerance for comparing floats
-    diff = abs(u - u_by_hand).max()
-    success = diff < tol
-    assert success, diff
-
-test_solver_three_steps(solver)
-```
-
-::: {.callout-note}
-We do not use the **exact** solution because the numerical solution will not equal the exact! 
-:::
-
-## Quantifying the error {.smaller}
-
-### Computing the norm of the error 
-
- * $e^n = u^n - u_e(t_n)$ is a **mesh function**
- * Usually we want one number for the error
- * Use a norm of $e^n$
-
-Norms of a function $f(t)$:
-
-$$
-\begin{align}
-||f||_{L^2} &= \left( \int_0^T f(t)^2 dt\right)^{1/2} \\
-||f||_{L^1} &= \int_0^T |f(t)| dt \\
-||f||_{L^\infty} &= \max_{t\in [0,T]}|f(t)|
-\end{align}
-$$
-
-## Norms of mesh functions {.smaller}
-
- * Problem: $f^n =f(t_n)$ is a **mesh function** and hence not defined for all $t$. How to integrate $f^n$?
- * Idea: Apply a numerical integration rule, using only
-   the mesh points of the mesh function.
-
-The Trapezoidal rule:
-
-$$
-||f^n|| = \left(\Delta t\left(\half(f^0)^2 + \half(f^{N_t})^2
-+ \sum_{n=1}^{N_t-1} (f^n)^2\right)\right)^{1/2}
-$$
-
-Common simplification yields the $\ell^2$ norm of a mesh function:
-
-$$
-||f^n||_{\ell^2} = \left(\Delta t\sum_{n=0}^{N_t} (f^n)^2\right)^{1/2}
-$$
-
-## Norms - notice!
-
- * The *continuous* norms use capital $L^2, L^1, L^\infty{}$
- * The *discrete* norm uses lowercase $\ell^2, \ell^1, \ell^{\infty}$
-
-## Implementation of the error norm
-
-$$ 
-E = ||e^n||_{\ell^2}  = \sqrt{\Delta t\sum_{n=0}^{N_t} (e^n)^2}
-$$
-
-Python with vectorization:
-
-```{python}
-#| echo : true
-u_exact = lambda t, I, a: I*np.exp(-a*t)
-I, a, T, dt, theta = 1., 2., 8., 0.8, 1
-u, t = solver(I, a, T, dt, theta)
-en = u_exact(t, I, a) - u
-E = np.sqrt(dt*np.sum(en**2))
-print(f'Errornorm = {E}')
-```
