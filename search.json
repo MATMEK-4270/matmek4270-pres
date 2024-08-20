@@ -11,7 +11,7 @@
     "href": "analysis.html#finite-difference-algorithms",
     "title": "Analysis of exponential decay models",
     "section": "Finite difference algorithms",
-    "text": "Finite difference algorithms\n\nDiscretization by a generic \\(\\theta\\)-rule\n\n\\[\\frac{u^n-u^{n-1}}{\\triangle t} = -(1-\\theta)au^{n-1} - \\theta u^n\\]\n\\[\\begin{cases}\n  \\theta = 0 \\quad &\\text{Forward Euler} \\\\\n  \\theta = 1 \\quad &\\text{Backward Euler} \\\\\n  \\theta = 1/2 \\quad &\\text{Crank-Nicolson}\n  \\end{cases}\n\\]\nNote \\(u^n = u(t_n)\\)\n\nSolve recursively: Set \\(u^0 = I\\) and then\n\n\\[u^n = \\frac{1-(1-\\theta)a \\triangle t}{1+\\theta a \\triangle t}u^{n-1} \\quad \\text{for } n&gt;0\\]"
+    "text": "Finite difference algorithms\n\nDiscretization by a generic \\(\\theta\\)-rule\n\n\\[\n\\frac{u^{n+1}-u^{n}}{\\triangle t} = -(1-\\theta)au^{n} - \\theta u^{n+1}\n\\]\n\\[\n\\begin{cases}\n  \\theta = 0 \\quad &\\text{Forward Euler} \\\\\n  \\theta = 1 \\quad &\\text{Backward Euler} \\\\\n  \\theta = 1/2 \\quad &\\text{Crank-Nicolson}\n  \\end{cases}\n\\]\nNote \\(u^n = u(t_n)\\)\n\nSolve recursively: Set \\(u^0 = I\\) and then\n\n\\[\nu^{n+1} = \\frac{1-(1-\\theta)a \\triangle t}{1+\\theta a \\triangle t}u^{n} \\quad \\text{for } n=0, 1, \\ldots\n\\]"
   },
   {
     "objectID": "analysis.html#analysis-of-finite-difference-equations",
@@ -74,21 +74,21 @@
     "href": "analysis.html#computation-of-stability-in-this-problem",
     "title": "Analysis of exponential decay models",
     "section": "Computation of stability in this problem",
-    "text": "Computation of stability in this problem\n\\(A &lt; 0\\) if\n\\[\n\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} &lt; 0\n\\]\nTo avoid oscillatory solutions we must have \\(A&gt; 0\\)\n\n\\[\n\\Delta t &lt; \\frac{1}{(1-\\theta)a}, \\theta &lt; 1\n\\]\n\nAlways fulfilled for Backward Euler (\\(\\theta=1 \\rightarrow 1 &lt; 1+a \\Delta t\\) always true)\n\\(\\Delta t \\leq 1/a\\) for Forward Euler (\\(\\theta=0\\))\n\\(\\Delta t \\leq 2/a\\) for Crank-Nicolson (\\(\\theta = 0.5\\))"
+    "text": "Computation of stability in this problem\n\\(A &lt; 0\\) if\n\\[\n\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} &lt; 0\n\\]\nTo avoid oscillatory solutions we must have \\(A&gt; 0\\), which happens for\n\n\\[\n\\Delta t &lt; \\frac{1}{(1-\\theta)a}, \\quad \\text{for} \\, \\theta &lt; 1\n\\]\n\nAlways fulfilled for Backward Euler (\\(\\theta=1 \\rightarrow 1 &lt; 1+a \\Delta t\\) always true)\n\\(\\Delta t \\leq 1/a\\) for Forward Euler (\\(\\theta=0\\))\n\\(\\Delta t \\leq 2/a\\) for Crank-Nicolson (\\(\\theta = 0.5\\))\n\nWe get oscillatory solutions for FE when \\(\\Delta t \\le 1/a\\) and for CN when \\(\\Delta t \\le 2/a\\)"
   },
   {
     "objectID": "analysis.html#computation-of-stability-in-this-problem-1",
     "href": "analysis.html#computation-of-stability-in-this-problem-1",
     "title": "Analysis of exponential decay models",
     "section": "Computation of stability in this problem",
-    "text": "Computation of stability in this problem\n\\(|A|\\leq 1\\) means \\(-1\\leq A\\leq 1\\)\n\\[\n-1\\leq\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} \\leq 1\n\\]\n\\(-1\\) is the critical limit (because \\(A\\le 1\\) is always satisfied):\nAlways fulfilled for Backward Euler (\\(\\theta=0\\)) and Crank-Nicolson (\\(\\theta=0.5\\)). For forward Euler or simply \\(\\theta &lt; 0.5\\) we have\n\\[\n\\Delta t \\leq \\frac{2}{(1-2\\theta)a},\\quad\n\\]\nand thus \\(\\Delta t \\leq 2/a\\) for stability of the Forward Euler (\\(\\theta=0\\)) method"
+    "text": "Computation of stability in this problem\n\\(|A|\\leq 1\\) means \\(-1\\leq A\\leq 1\\)\n\\[\n-1\\leq\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} \\leq 1\n\\]\n\n\\(-1\\) is the critical limit (because \\(A\\le 1\\) is always satisfied).\n\\(-1 &lt; A\\) is always fulfilled for Backward Euler (\\(\\theta=1\\)) and Crank-Nicolson (\\(\\theta=0.5\\)).\nFor forward Euler or simply \\(\\theta &lt; 0.5\\) we have \\[\n\\Delta t \\leq \\frac{2}{(1-2\\theta)a},\\quad\n\\] and thus \\(\\Delta t \\leq 2/a\\) for stability of the forward Euler (\\(\\theta=0\\)) method"
   },
   {
     "objectID": "analysis.html#explanation-of-problems-with-forward-euler",
     "href": "analysis.html#explanation-of-problems-with-forward-euler",
     "title": "Analysis of exponential decay models",
-    "section": "Explanation of problems with Forward Euler",
-    "text": "Explanation of problems with Forward Euler\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(a\\Delta t= 2\\cdot 1.25=2.5\\) and \\(A=-1.5\\): oscillations and growth\n\\(a\\Delta t = 2\\cdot 0.75=1.5\\) and \\(A=-0.5\\): oscillations and decay\n\\(\\Delta t=0.5\\) and \\(A=0\\): \\(u^n=0\\) for \\(n&gt;0\\)\nSmaller \\(\\Delta t\\): qualitatively correct solution"
+    "section": "Explanation of problems with forward Euler",
+    "text": "Explanation of problems with forward Euler\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(a\\Delta t= 2\\cdot 1.25=2.5\\) and \\(A=-1.5\\): oscillations and growth\n\\(a\\Delta t = 2\\cdot 0.75=1.5\\) and \\(A=-0.5\\): oscillations and decay\n\\(\\Delta t=0.5\\) and \\(A=0\\): \\(u^n=0\\) for \\(n&gt;0\\)\nSmaller \\(\\Delta t\\): qualitatively correct solution"
   },
   {
     "objectID": "analysis.html#explanation-of-problems-with-crank-nicolson",
@@ -502,5 +502,117 @@
     "title": "Presentations for MATMEK-4270",
     "section": "",
     "text": "Algorithms and implementations for exponential decay models\nAnalysis of exponential decay models"
+  },
+  {
+    "objectID": "analysis.html#plotting-amplification-factors",
+    "href": "analysis.html#plotting-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Plotting amplification factors",
+    "text": "Plotting amplification factors"
+  },
+  {
+    "objectID": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
+    "href": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
+    "title": "Analysis of exponential decay models",
+    "section": "\\(p=a\\Delta t\\) is the important parameter for numerical performance",
+    "text": "\\(p=a\\Delta t\\) is the important parameter for numerical performance\n\n\\(p=a\\Delta t\\) is a dimensionless parameter\nall expressions for stability and accuracy involve \\(p\\)\nNote that \\(\\Delta t\\) alone is not so important, it is the combination with \\(a\\) through \\(p=a\\Delta t\\) that matters\n\n\n\n\n\n\n\nAnother evidence why \\(p=a\\Delta t\\) is key\n\n\nIf we scale the model by \\(\\bar t=at\\), \\(\\bar u=u/I\\), we get \\(d\\bar u/d\\bar t = -\\bar u\\), \\(\\bar u(0)=1\\) (no physical parameters!). The analysis show that \\(\\Delta \\bar t\\) is key, corresponding to \\(a\\Delta t\\) in the unscaled model."
+  },
+  {
+    "objectID": "analysis.html#series-expansion-of-amplification-factors",
+    "href": "analysis.html#series-expansion-of-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Series expansion of amplification factors",
+    "text": "Series expansion of amplification factors\nTo investigate \\(A_e - A\\) mathematically, we can Taylor expand the expression, using \\(p=a\\Delta t\\) as variable.\n\nfrom sympy import *\n# Create p as a mathematical symbol with name 'p'\np = Symbol('p', positive=True)\n# Create a mathematical expression with p\nA_e = exp(-p)\n# Find the first 6 terms of the Taylor series of A_e\nA_e.series(p, 0, 6)\n\n\\(\\displaystyle 1 - p + \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + \\frac{p^{4}}{24} - \\frac{p^{5}}{120} + O\\left(p^{6}\\right)\\)\n\n\nThis is the Taylor expansion of the exact amplification factor. How does it compare with the numerical amplification factors?"
+  },
+  {
+    "objectID": "analysis.html#numerical-amplification-factors",
+    "href": "analysis.html#numerical-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Numerical amplification factors",
+    "text": "Numerical amplification factors\nCompute the Taylor expansions of \\(A_e - A\\)\n\nfrom IPython.display import display\ntheta = Symbol('theta', positive=True)\nA = (1-(1-theta)*p)/(1+theta*p)\nFE = A_e.series(p, 0, 4) - A.subs(theta, 0).series(p, 0, 4)\nBE = A_e.series(p, 0, 4) - A.subs(theta, 1).series(p, 0, 4)\nhalf = Rational(1, 2)  # exact fraction 1/2\nCN = A_e.series(p, 0, 4) - A.subs(theta, half).series(p, 0, 4)\ndisplay(FE)\ndisplay(BE)\ndisplay(CN)\n\n\\(\\displaystyle \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{p^{2}}{2} + \\frac{5 p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\n\nForward/backward Euler have leading error \\(p^2\\), or more commonly \\(\\Delta t^2\\)\nCrank-Nicolson has leading error \\(p^3\\), or \\(\\Delta t^3\\)"
+  },
+  {
+    "objectID": "analysis.html#the-trueglobal-error-at-a-point",
+    "href": "analysis.html#the-trueglobal-error-at-a-point",
+    "title": "Analysis of exponential decay models",
+    "section": "The true/global error at a point",
+    "text": "The true/global error at a point\n\nThe error in \\(A\\) reflects the local (amplification) error when going from one time step to the next\nWhat is the global (true) error at \\(t_n\\)?\n\n\\[\ne^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n\n\\]\n\nTaylor series expansions of \\(e^n\\) simplify the expression"
+  },
+  {
+    "objectID": "analysis.html#computing-the-global-error-at-a-point",
+    "href": "analysis.html#computing-the-global-error-at-a-point",
+    "title": "Analysis of exponential decay models",
+    "section": "Computing the global error at a point",
+    "text": "Computing the global error at a point\n\nn = Symbol('n', integer=True, positive=True)\nu_e = exp(-p*n)   # I=1\nu_n = A**n        # I=1\nFE = u_e.series(p, 0, 4) - u_n.subs(theta, 0).series(p, 0, 4)\nBE = u_e.series(p, 0, 4) - u_n.subs(theta, 1).series(p, 0, 4)\nCN = u_e.series(p, 0, 4) - u_n.subs(theta, half).series(p, 0, 4)\ndisplay(simplify(FE))\ndisplay(simplify(BE))\ndisplay(simplify(CN))\n\n\\(\\displaystyle \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} - \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} + \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{n p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\nSubstitute \\(n\\) by \\(t/\\Delta t\\) and \\(p\\) by \\(a \\Delta t\\):\n\nForward and Backward Euler: leading order term \\(\\scriptstyle\\frac{1}{2}ta^2\\Delta t\\)\nCrank-Nicolson: leading order term \\(\\frac{1}{12}ta^3\\Delta t^2\\)"
+  },
+  {
+    "objectID": "analysis.html#convergence",
+    "href": "analysis.html#convergence",
+    "title": "Analysis of exponential decay models",
+    "section": "Convergence",
+    "text": "Convergence\nThe numerical scheme is convergent if the global error \\(e^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). If the error has a leading order term \\((\\Delta t)^r\\), the convergence rate is of order \\(r\\)."
+  },
+  {
+    "objectID": "analysis.html#integrated-errors",
+    "href": "analysis.html#integrated-errors",
+    "title": "Analysis of exponential decay models",
+    "section": "Integrated errors",
+    "text": "Integrated errors\nThe \\(\\ell^2\\) norm of the numerical error is computed as\n\\[\n||e^n||_{\\ell^2} = \\sqrt{\\Delta t\\sum_{n=0}^{N_t} ({u_{e}}(t_n) - u^n)^2}\n\\]\nWe can compute this using Sympy. Forward/Backward Euler has \\(e^n \\sim np^2/2\\)\n\nh, N, a, T = symbols('h,N,a,T') # h represents Delta t\nsimplify(sqrt(h * summation((n*p**2/2)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{2} h^{2} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{12}\\)\n\n\nIf we keep only the leading term in the parenthesis, we get the first order \\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{2}\\sqrt{\\frac{T^3}{3}} a^2\\Delta t\n\\]"
+  },
+  {
+    "objectID": "analysis.html#error",
+    "href": "analysis.html#error",
+    "title": "Analysis of exponential decay models",
+    "section": "Error",
+    "text": "Error"
+  },
+  {
+    "objectID": "analysis.html#crank-nicolson",
+    "href": "analysis.html#crank-nicolson",
+    "title": "Analysis of exponential decay models",
+    "section": "Crank-Nicolson",
+    "text": "Crank-Nicolson\nFor Crank-Nicolson the pointwise error is \\(e^n \\sim n p^3 / 12\\). We get\n\nsimplify(sqrt(h * summation((n*p**3/12)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{3} h^{3} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{72}\\)\n\n\nwhich is simplified to the second order accurate\n\\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{12}\\sqrt{\\frac{T^3}{3}}a^3\\Delta t^2\n\\]\n\n\n\n\n\n\nSummary of errors\n\n\nAnalysis of both the pointwise and the time-integrated true errors:\n\n1st order for Forward and Backward Euler\n2nd order for Crank-Nicolson"
+  },
+  {
+    "objectID": "analysis.html#truncation-error",
+    "href": "analysis.html#truncation-error",
+    "title": "Analysis of exponential decay models",
+    "section": "Truncation error",
+    "text": "Truncation error\n\nHow good is the discrete equation?\nPossible answer: see how well \\(u_{e}\\) fits the discrete equation\n\nConsider the forward difference equation \\[\n\\frac{u^{n+1}-u^n}{\\Delta t} = -au^n\n\\]\nInsert \\(u_{e}\\) to obtain a truncation error \\(R^n\\)\n\\[\n\\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n) = R^n \\neq 0\n\\]"
+  },
+  {
+    "objectID": "analysis.html#computation-of-the-truncation-error",
+    "href": "analysis.html#computation-of-the-truncation-error",
+    "title": "Analysis of exponential decay models",
+    "section": "Computation of the truncation error",
+    "text": "Computation of the truncation error\n\nThe residual \\(R^n\\) is the truncation error. How does \\(R^n\\) vary with \\(\\Delta t\\)?\n\nTool: Taylor expand \\(u_{e}\\) around the point where the ODE is sampled (here \\(t_n\\))\n\\[\nu_{e}(t_{n+1}) = u_{e}(t_n) + u_{e}'(t_n)\\Delta t + \\frac{1}{2}u_{e}''(t_n)\n\\Delta t^2 + \\cdots\n\\]\nInserting this Taylor series for \\(u_{e}\\) in the forward difference equation\n\\[\nR^n = \\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n)\n\\]\nto get\n\\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]"
+  },
+  {
+    "objectID": "analysis.html#the-truncation-error-forward-euler-becomes",
+    "href": "analysis.html#the-truncation-error-forward-euler-becomes",
+    "title": "Analysis of exponential decay models",
+    "section": "The truncation error forward Euler becomes",
+    "text": "The truncation error forward Euler becomes\n\\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]\nSince \\(u_{e}\\) solves the ODE \\(u_{e}'(t_n)=-au_{e}(t_n)\\), we get that \\(u_{e}'(t_n)\\) and \\(au_{e}(t_n)\\) cancel out. We are left with\n\\[\nR^n \\approx \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots\n\\]\nThis is a mathematical expression for the truncation error."
+  },
+  {
+    "objectID": "analysis.html#the-truncation-error-forward-euler",
+    "href": "analysis.html#the-truncation-error-forward-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "The truncation error forward Euler",
+    "text": "The truncation error forward Euler\nWe have \\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]\nSince \\(u_{e}\\) solves the ODE \\(u_{e}'(t_n)=-au_{e}(t_n)\\), we get that \\(u_{e}'(t_n)\\) and \\(au_{e}(t_n)\\) cancel out. We are left with leading term\n\\[\nR^n \\approx \\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nThis is a mathematical expression for the truncation error."
+  },
+  {
+    "objectID": "analysis.html#the-truncation-error-for-other-schemes",
+    "href": "analysis.html#the-truncation-error-for-other-schemes",
+    "title": "Analysis of exponential decay models",
+    "section": "The truncation error for other schemes",
+    "text": "The truncation error for other schemes\nBackward Euler:\n\\[\nR^n \\approx -\\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nCrank-Nicolson:\n\\[\nR^{n+\\scriptstyle\\frac{1}{2}} \\approx \\frac{1}{24}u_{e}'''(t_{n+\\scriptstyle\\frac{1}{2}})\\Delta t^2\n\\]"
+  },
+  {
+    "objectID": "analysis.html#consistency-stability-and-convergence",
+    "href": "analysis.html#consistency-stability-and-convergence",
+    "title": "Analysis of exponential decay models",
+    "section": "Consistency, stability, and convergence",
+    "text": "Consistency, stability, and convergence\n\nTruncation error measures the residual in the difference equations. The scheme is consistent if the truncation error goes to 0 as \\(\\Delta t\\rightarrow 0\\). Importance: the difference equations approaches the differential equation as \\(\\Delta t\\rightarrow 0\\).\nStability means that the numerical solution exhibits the same qualitative properties as the exact solution. Here: monotone, decaying function.\nConvergence implies that the true (global) error \\(e^n =u_{e}(t_n)-u^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). This is really what we want!\n\nThe Lax equivalence theorem for linear differential equations: consistency + stability is equivalent with convergence.\n(Consistency and stability is in most problems much easier to establish than convergence.)"
   }
 ]
