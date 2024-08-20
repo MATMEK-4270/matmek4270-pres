@@ -58,9 +58,12 @@ Solve the ODE by finite difference methods:
 
   * Discretization by a generic $\theta$-rule
 
-$$\frac{u^n-u^{n-1}}{\triangle t} = -(1-\theta)au^{n-1} - \theta u^n$$
+$$
+\frac{u^{n+1}-u^{n}}{\triangle t} = -(1-\theta)au^{n} - \theta u^{n+1}
+$$
 
-$$\begin{cases}
+$$
+\begin{cases}
   \theta = 0 \quad &\text{Forward Euler} \\
   \theta = 1 \quad &\text{Backward Euler} \\
   \theta = 1/2 \quad &\text{Crank-Nicolson}
@@ -71,7 +74,9 @@ Note $u^n = u(t_n)$
 
   * Solve recursively: Set $u^0 = I$ and then
 
-  $$u^n = \frac{1-(1-\theta)a \triangle t}{1+\theta a \triangle t}u^{n-1} \quad \text{for } n>0$$
+$$
+u^{n+1} = \frac{1-(1-\theta)a \triangle t}{1+\theta a \triangle t}u^{n} \quad \text{for } n=0, 1, \ldots
+$$
 
 ## Analysis of finite difference equations 
 
@@ -228,16 +233,18 @@ $$
 \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t} < 0
 $$
 
-To avoid oscillatory solutions we must have $A> 0$
+To avoid oscillatory solutions we must have $A> 0$, which happens for
 
 ::: {.fragment}
 $$
-\Delta t < \frac{1}{(1-\theta)a}, \theta < 1
+\Delta t < \frac{1}{(1-\theta)a}, \quad \text{for} \, \theta < 1
 $$
 
  * Always fulfilled for Backward Euler ($\theta=1 \rightarrow 1 < 1+a \Delta t$ always true)
  * $\Delta t \leq 1/a$ for Forward Euler ($\theta=0$)
  * $\Delta t \leq 2/a$ for Crank-Nicolson ($\theta = 0.5$)
+
+We get oscillatory solutions for FE when $\Delta t \le 1/a$ and for CN when $\Delta t \le 2/a$
 
 :::
 
@@ -249,17 +256,15 @@ $$
 -1\leq\frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t} \leq 1
 $$
 
-$-1$ is the critical limit (because $A\le 1$ is always satisfied):
-
-Always fulfilled for Backward Euler ($\theta=0$) and Crank-Nicolson ($\theta=0.5$). For forward Euler or simply $\theta < 0.5$ we have
- 
+* $-1$ is the critical limit (because $A\le 1$ is always satisfied).
+* $-1 < A$ is always fulfilled for Backward Euler ($\theta=1$) and Crank-Nicolson ($\theta=0.5$). 
+* For forward Euler or simply $\theta < 0.5$ we have
 $$
 \Delta t \leq \frac{2}{(1-2\theta)a},\quad
 $$
+and thus $\Delta t \leq 2/a$ for stability of the forward Euler ($\theta=0$) method
 
- and thus $\Delta t \leq 2/a$ for stability of the Forward Euler ($\theta=0$) method
-
-## Explanation of problems with Forward Euler  {.smaller}
+## Explanation of problems with forward Euler  {.smaller}
 
 :::: {.columns}
 
@@ -351,3 +356,247 @@ u(t_{n+1} &= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 $$
 
 A possible measure of accuracy: $A_e - A$
+
+## Plotting amplification factors 
+
+```{python}
+colors = ['g', 'r', 'b', 'm', 'k']
+markers = ['o', '^', 's', '>']
+N = 10
+adt = np.linspace(0, 3, N)  
+An = lambda t, theta: (1-(1-theta)*t)/(1+theta*t)
+for i, th in enumerate((0, 0.5, 1)):
+  plt.plot(adt, An(adt, th), colors[i], marker=markers[i])
+plt.plot(adt, np.exp(-adt), colors[3], marker=markers[3])
+plt.legend(['FE', 'CN', 'BE', 'exact'], loc='lower left')
+plt.xlabel('$a\Delta t$')
+plt.ylabel('Amplification factor');
+```
+
+## $p=a\Delta t$ is the important parameter for numerical performance
+
+ * $p=a\Delta t$ is a dimensionless parameter
+ * all expressions for stability and accuracy involve $p$
+ * Note that $\Delta t$ alone is not so important, it is the
+   combination with $a$ through $p=a\Delta t$ that matters
+
+::: {.callout-note}
+## Another evidence why $p=a\Delta t$ is key
+If we scale the model
+by $\bar t=at$, $\bar u=u/I$, we get
+$d\bar u/d\bar t = -\bar u$, $\bar u(0)=1$ (no physical parameters!).
+The analysis show that $\Delta \bar t$ is key, corresponding to
+$a\Delta t$ in the unscaled model.
+:::
+
+## Series expansion of amplification factors {.smaller}
+
+To investigate $A_e - A$ mathematically, we
+can Taylor expand the expression, using $p=a\Delta t$ as variable.
+
+```{python}
+#| echo : true
+from sympy import *
+# Create p as a mathematical symbol with name 'p'
+p = Symbol('p', positive=True)
+# Create a mathematical expression with p
+A_e = exp(-p)
+# Find the first 6 terms of the Taylor series of A_e
+A_e.series(p, 0, 6)
+```
+
+This is the Taylor expansion of the exact amplification factor. How does it compare with the numerical amplification factors?
+
+## Numerical amplification factors {.smaller}
+
+Compute the Taylor expansions of $A_e - A$
+```{python}
+#| echo : true 
+from IPython.display import display
+theta = Symbol('theta', positive=True)
+A = (1-(1-theta)*p)/(1+theta*p)
+FE = A_e.series(p, 0, 4) - A.subs(theta, 0).series(p, 0, 4)
+BE = A_e.series(p, 0, 4) - A.subs(theta, 1).series(p, 0, 4)
+half = Rational(1, 2)  # exact fraction 1/2
+CN = A_e.series(p, 0, 4) - A.subs(theta, half).series(p, 0, 4)
+display(FE)
+display(BE)
+display(CN)
+```
+* Forward/backward Euler have leading error $p^2$, or more commonly $\Delta t^2$
+* Crank-Nicolson has leading error $p^3$, or $\Delta t^3$
+
+## The true/global error at a point 
+
+ * The error in $A$ reflects the **local (amplification) error** when going from one time step to the next
+ * What is the *global (true) error* at $t_n$? 
+ 
+ $$
+ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
+ $$
+ 
+ * Taylor series expansions of $e^n$ simplify the expression
+
+## Computing the global error at a point {.smaller}
+
+```{python}
+#| echo : true
+n = Symbol('n', integer=True, positive=True)
+u_e = exp(-p*n)   # I=1
+u_n = A**n        # I=1
+FE = u_e.series(p, 0, 4) - u_n.subs(theta, 0).series(p, 0, 4)
+BE = u_e.series(p, 0, 4) - u_n.subs(theta, 1).series(p, 0, 4)
+CN = u_e.series(p, 0, 4) - u_n.subs(theta, half).series(p, 0, 4)
+display(simplify(FE))
+display(simplify(BE))
+display(simplify(CN))
+```
+
+Substitute $n$ by $t/\Delta t$ and $p$ by $a \Delta t$:
+
+ * Forward and Backward Euler: leading order term $\half ta^2\Delta t$
+ * Crank-Nicolson: leading order term $\frac{1}{12}ta^3\Delta t^2$
+
+## Convergence 
+
+The numerical scheme is convergent if the global error
+$e^n\rightarrow 0$ as $\Delta t\rightarrow 0$.
+If the error has a leading order term $(\Delta t)^r$, the
+convergence rate is of order $r$.
+
+## Integrated errors {.smaller}
+
+The $\ell^2$ norm of the numerical error is computed as
+
+$$
+||e^n||_{\ell^2} = \sqrt{\Delta t\sum_{n=0}^{N_t} ({\uex}(t_n) - u^n)^2}
+$$
+
+We can compute this using Sympy. Forward/Backward Euler has $e^n \sim np^2/2$
+
+```{python}
+#| echo : true 
+h, N, a, T = symbols('h,N,a,T') # h represents Delta t
+simplify(sqrt(h * summation((n*p**2/2)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))
+```
+
+If we keep only the leading term in the parenthesis, we get the first order
+$$
+||e^n||_{\ell^2} \approx \frac{1}{2}\sqrt{\frac{T^3}{3}} a^2\Delta t
+$$
+
+## Crank-Nicolson  {.smaller}
+
+For Crank-Nicolson the pointwise error is $e^n \sim n p^3 / 12$. We get
+
+```{python}
+#| echo : true
+simplify(sqrt(h * summation((n*p**3/12)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))
+```
+
+which is simplified to the second order accurate
+
+$$
+||e^n||_{\ell^2} \approx \frac{1}{12}\sqrt{\frac{T^3}{3}}a^3\Delta t^2
+$$
+
+
+::: {.callout-note}
+## Summary of errors
+Analysis of both the pointwise and the time-integrated true errors:
+
+  * 1st order for Forward and Backward Euler
+  * 2nd order for Crank-Nicolson
+:::
+
+## Truncation error {.smaller}
+
+ * How good is the discrete equation?
+ * Possible answer: see how well $\uex$ fits the discrete equation
+
+Consider the forward difference equation
+$$ 
+\frac{u^{n+1}-u^n}{\Delta t} = -au^n
+$$
+
+Insert $\uex$ to obtain a truncation error $R^n$
+
+$$
+\frac{\uex(t_{n+1})-\uex(t_n)}{\Delta t} + a\uex(t_n) = R^n \neq 0
+$$
+
+##  Computation of the truncation error {.smaller}
+
+* The residual $R^n$ is the **truncation error**. How does $R^n$ vary with $\Delta t$?
+
+Tool: Taylor expand $\uex$ around the point where the ODE is sampled
+(here $t_n$)
+
+$$ 
+\uex(t_{n+1}) = \uex(t_n) + \uex'(t_n)\Delta t + \frac{1}{2}\uex''(t_n)
+\Delta t^2 + \cdots
+$$
+
+Inserting this Taylor series for $\uex$ in the forward difference equation 
+
+$$
+R^n = \frac{\uex(t_{n+1})-\uex(t_n)}{\Delta t} + a\uex(t_n) 
+$$
+
+to get
+
+$$ 
+R^n = \uex'(t_n) + \frac{1}{2}\uex''(t_n)\Delta t + \ldots + a\uex(t_n)
+$$
+
+
+## The truncation error forward Euler {.smaller}
+
+We have 
+$$ 
+R^n = \uex'(t_n) + \frac{1}{2}\uex''(t_n)\Delta t + \ldots + a\uex(t_n)
+$$
+
+Since $\uex$ solves the ODE $\uex'(t_n)=-a\uex(t_n)$, we get that $\uex'(t_n)$ and $a\uex(t_n)$ cancel out. We are left with leading term
+
+$$ 
+R^n \approx \frac{1}{2}\uex''(t_n)\Delta t
+$$
+
+This is a mathematical expression for the truncation error.
+
+## The truncation error for other schemes {.smaller}
+
+Backward Euler:
+
+$$ 
+R^n \approx -\frac{1}{2}\uex''(t_n)\Delta t 
+$$
+
+Crank-Nicolson:
+
+$$
+R^{n+\half} \approx \frac{1}{24}\uex'''(t_{n+\half})\Delta t^2
+$$ 
+
+## Consistency, stability, and convergence {.smaller}
+
+  * *Truncation error* measures the residual in the difference equations.
+    The scheme is *consistent* if the truncation error goes to 0
+    as $\Delta t\rightarrow 0$. Importance: the difference equations
+    approaches the differential equation as $\Delta t\rightarrow 0$.
+
+  * *Stability* means that the numerical solution exhibits the same
+    qualitative properties as the exact solution. Here: monotone,
+    decaying function.
+
+  * *Convergence* implies that the true (global) error
+    $e^n =\uex(t_n)-u^n\rightarrow 0$ as $\Delta t\rightarrow 0$.
+    This is really what we want!
+
+The Lax equivalence theorem for *linear* differential equations:
+consistency + stability is equivalent with convergence.
+
+(Consistency and stability is in most problems
+much easier to establish than
+convergence.)
