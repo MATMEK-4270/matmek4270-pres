@@ -483,14 +483,31 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 </div>
 </div>
 </section>
+<section id="solver" class="slide level2">
+<h2>Solver</h2>
+<p>We already have a solver that we can use to experiment with. Lets run it for a range of different timesteps.</p>
+<div id="6bae71f9" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a></a><span class="kw">def</span> solver(I, a, T, dt, theta):</span>
+<span id="cb1-3"><a></a>    <span class="co">"""Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt."""</span></span>
+<span id="cb1-4"><a></a>    Nt <span class="op">=</span> <span class="bu">int</span>(T<span class="op">/</span>dt)            <span class="co"># no of time intervals</span></span>
+<span id="cb1-5"><a></a>    T <span class="op">=</span> Nt<span class="op">*</span>dt                 <span class="co"># adjust T to fit time step dt</span></span>
+<span id="cb1-6"><a></a>    u <span class="op">=</span> np.zeros(Nt<span class="op">+</span><span class="dv">1</span>)           <span class="co"># array of u[n] values</span></span>
+<span id="cb1-7"><a></a>    t <span class="op">=</span> np.linspace(<span class="dv">0</span>, T, Nt<span class="op">+</span><span class="dv">1</span>)  <span class="co"># time mesh</span></span>
+<span id="cb1-8"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                  <span class="co"># assign initial condition</span></span>
+<span id="cb1-9"><a></a>    u[<span class="dv">1</span>:] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)</span>
+<span id="cb1-10"><a></a>    u[:] <span class="op">=</span> np.cumprod(u)</span>
+<span id="cb1-11"><a></a>    <span class="cf">return</span> u, t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 <section id="encouraging-numerical-solutions---backwards-euler" class="slide level2">
 <h2>Encouraging numerical solutions - Backwards Euler</h2>
 <p><span class="math inline">\(I=1\)</span>, <span class="math inline">\(a=2\)</span>, <span class="math inline">\(\theta =1\)</span>, <span class="math inline">\(\Delta t=1.25, 0.75, 0.5, 0.1\)</span>.</p>
-<div id="655019c4" class="cell" data-execution_count="1">
+<div id="07e91cfe" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="analysis_files/figure-revealjs/cell-2-output-1.png" width="794" height="431"></p>
+<p><img data-src="analysis_files/figure-revealjs/cell-3-output-1.png" width="794" height="431"></p>
 </figure>
 </div>
 </div>
@@ -499,11 +516,11 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 <section id="discouraging-numerical-solutions---crank-nicolson" class="slide level2">
 <h2>Discouraging numerical solutions - Crank-Nicolson</h2>
 <p><span class="math inline">\(I=1\)</span>, <span class="math inline">\(a=2\)</span>, <span class="math inline">\(\theta=0.5\)</span>, <span class="math inline">\(\Delta t=1.25, 0.75, 0.5, 0.1\)</span>.</p>
-<div id="5438ba12" class="cell" data-execution_count="2">
+<div id="6f25c3fc" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="analysis_files/figure-revealjs/cell-3-output-1.png" width="802" height="431"></p>
+<p><img data-src="analysis_files/figure-revealjs/cell-4-output-1.png" width="802" height="431"></p>
 </figure>
 </div>
 </div>
@@ -512,11 +529,11 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 <section id="discouraging-numerical-solutions---forward-euler" class="slide level2">
 <h2>Discouraging numerical solutions - Forward Euler</h2>
 <p><span class="math inline">\(I=1\)</span>, <span class="math inline">\(a=2\)</span>, <span class="math inline">\(\theta=0\)</span>, <span class="math inline">\(\Delta t=1.25, 0.75, 0.5, 0.1\)</span>.</p>
-<div id="e4e67dc1" class="cell" data-execution_count="3">
+<div id="3482170e" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="analysis_files/figure-revealjs/cell-4-output-1.png" width="794" height="431"></p>
+<p><img data-src="analysis_files/figure-revealjs/cell-5-output-1.png" width="794" height="431"></p>
 </figure>
 </div>
 </div>
@@ -633,11 +650,11 @@ A &gt; 0 \quad \text{ and } \quad |A| \le 1
 <h2>Explanation of problems with forward Euler</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="a67cdd78" class="cell" data-execution_count="4">
+<div id="fdd7072a" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="analysis_files/figure-revealjs/cell-5-output-1.png" width="794" height="431"></p>
+<p><img data-src="analysis_files/figure-revealjs/cell-6-output-1.png" width="794" height="431"></p>
 </figure>
 </div>
 </div>
@@ -656,11 +673,11 @@ A &gt; 0 \quad \text{ and } \quad |A| \le 1
 <h2>Explanation of problems with Crank-Nicolson</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="fa446acb" class="cell" data-execution_count="5">
+<div id="4b4e5a25" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="analysis_files/figure-revealjs/cell-6-output-1.png" width="802" height="431"></p>
+<p><img data-src="analysis_files/figure-revealjs/cell-7-output-1.png" width="802" height="431"></p>
 </figure>
 </div>
 </div>
@@ -699,24 +716,24 @@ u^{n+1} = Au^n,\quad A = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}
 \begin{align}
 u(t_{n+1}) &amp;= e^{-a(t_n+\Delta t)} \\
 u(t_{n+1}) &amp;= e^{-a \Delta t} e^{-a t_n} \\
-u(t_{n+1} &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
+u(t_{n+1}) &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 \end{align}
 \]</span></p>
 <p>A possible measure of accuracy: <span class="math inline">\(A_e - A\)</span></p>
 </section>
 <section id="plotting-amplification-factors" class="slide level2">
 <h2>Plotting amplification factors</h2>
-<div id="69a690f3" class="cell" data-execution_count="6">
+<div id="c3254ad4" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="analysis_files/figure-revealjs/cell-7-output-1.png" width="823" height="429"></p>
+<p><img data-src="analysis_files/figure-revealjs/cell-8-output-1.png" width="823" height="429"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="padelta-t-is-the-important-parameter-for-numerical-performance" class="slide level2">
+<section id="padelta-t-is-the-important-parameter-for-numerical-performance" class="slide level2 smaller">
 <h2><span class="math inline">\(p=a\Delta t\)</span> is the important parameter for numerical performance</h2>
 <ul>
 <li><span class="math inline">\(p=a\Delta t\)</span> is a dimensionless parameter</li>
@@ -740,15 +757,15 @@ u(t_{n+1} &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 <section id="series-expansion-of-amplification-factors" class="slide level2 smaller">
 <h2>Series expansion of amplification factors</h2>
 <p>To investigate <span class="math inline">\(A_e - A\)</span> mathematically, we can Taylor expand the expression, using <span class="math inline">\(p=a\Delta t\)</span> as variable.</p>
-<div id="2ac4029c" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sympy <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb1-2"><a></a><span class="co"># Create p as a mathematical symbol with name 'p'</span></span>
-<span id="cb1-3"><a></a>p <span class="op">=</span> Symbol(<span class="st">'p'</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-4"><a></a><span class="co"># Create a mathematical expression with p</span></span>
-<span id="cb1-5"><a></a>A_e <span class="op">=</span> exp(<span class="op">-</span>p)</span>
-<span id="cb1-6"><a></a><span class="co"># Find the first 6 terms of the Taylor series of A_e</span></span>
-<span id="cb1-7"><a></a>A_e.series(p, <span class="dv">0</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="106">
+<div id="b074aa20" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> sympy <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-2"><a></a><span class="co"># Create p as a mathematical symbol with name 'p'</span></span>
+<span id="cb2-3"><a></a>p <span class="op">=</span> Symbol(<span class="st">'p'</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-4"><a></a><span class="co"># Create a mathematical expression with p</span></span>
+<span id="cb2-5"><a></a>A_e <span class="op">=</span> exp(<span class="op">-</span>p)</span>
+<span id="cb2-6"><a></a><span class="co"># Find the first 6 terms of the Taylor series of A_e</span></span>
+<span id="cb2-7"><a></a>A_e.series(p, <span class="dv">0</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="253">
 <p><span class="math inline">\(\displaystyle 1 - p + \frac{p^{2}}{2} - \frac{p^{3}}{6} + \frac{p^{4}}{24} - \frac{p^{5}}{120} + O\left(p^{6}\right)\)</span></p>
 </div>
 </div>
@@ -757,17 +774,17 @@ u(t_{n+1} &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 <section id="numerical-amplification-factors" class="slide level2 smaller">
 <h2>Numerical amplification factors</h2>
 <p>Compute the Taylor expansions of <span class="math inline">\(A_e - A\)</span></p>
-<div id="ec3becc4" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
-<span id="cb2-2"><a></a>theta <span class="op">=</span> Symbol(<span class="st">'theta'</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-3"><a></a>A <span class="op">=</span> (<span class="dv">1</span><span class="op">-</span>(<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>p)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>theta<span class="op">*</span>p)</span>
-<span id="cb2-4"><a></a>FE <span class="op">=</span> A_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> A.subs(theta, <span class="dv">0</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
-<span id="cb2-5"><a></a>BE <span class="op">=</span> A_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> A.subs(theta, <span class="dv">1</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
-<span id="cb2-6"><a></a>half <span class="op">=</span> Rational(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># exact fraction 1/2</span></span>
-<span id="cb2-7"><a></a>CN <span class="op">=</span> A_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> A.subs(theta, half).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
-<span id="cb2-8"><a></a>display(FE)</span>
-<span id="cb2-9"><a></a>display(BE)</span>
-<span id="cb2-10"><a></a>display(CN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="73e4f477" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
+<span id="cb3-2"><a></a>theta <span class="op">=</span> Symbol(<span class="st">'theta'</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-3"><a></a>A <span class="op">=</span> (<span class="dv">1</span><span class="op">-</span>(<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>p)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>theta<span class="op">*</span>p)</span>
+<span id="cb3-4"><a></a>FE <span class="op">=</span> A_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> A.subs(theta, <span class="dv">0</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<span id="cb3-5"><a></a>BE <span class="op">=</span> A_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> A.subs(theta, <span class="dv">1</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<span id="cb3-6"><a></a>half <span class="op">=</span> Rational(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># exact fraction 1/2</span></span>
+<span id="cb3-7"><a></a>CN <span class="op">=</span> A_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> A.subs(theta, half).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<span id="cb3-8"><a></a>display(FE)</span>
+<span id="cb3-9"><a></a>display(BE)</span>
+<span id="cb3-10"><a></a>display(CN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><span class="math inline">\(\displaystyle \frac{p^{2}}{2} - \frac{p^{3}}{6} + O\left(p^{4}\right)\)</span></p>
 </div>
@@ -787,7 +804,7 @@ u(t_{n+1} &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 <h2>The true/global error at a point</h2>
 <ul>
 <li>The error in <span class="math inline">\(A\)</span> reflects the <strong>local (amplification) error</strong> when going from one time step to the next</li>
-<li>What is the <em>global (true) error</em> at <span class="math inline">\(t_n\)</span>?</li>
+<li>What is the <strong>global (true) error</strong> at <span class="math inline">\(t_n\)</span>?</li>
 </ul>
 <p><span class="math display">\[
 e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
@@ -798,16 +815,16 @@ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
 </section>
 <section id="computing-the-global-error-at-a-point" class="slide level2 smaller">
 <h2>Computing the global error at a point</h2>
-<div id="2c7ab46e" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>n <span class="op">=</span> Symbol(<span class="st">'n'</span>, integer<span class="op">=</span><span class="va">True</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb3-2"><a></a>u_e <span class="op">=</span> exp(<span class="op">-</span>p<span class="op">*</span>n)   <span class="co"># I=1</span></span>
-<span id="cb3-3"><a></a>u_n <span class="op">=</span> A<span class="op">**</span>n        <span class="co"># I=1</span></span>
-<span id="cb3-4"><a></a>FE <span class="op">=</span> u_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> u_n.subs(theta, <span class="dv">0</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
-<span id="cb3-5"><a></a>BE <span class="op">=</span> u_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> u_n.subs(theta, <span class="dv">1</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
-<span id="cb3-6"><a></a>CN <span class="op">=</span> u_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> u_n.subs(theta, half).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
-<span id="cb3-7"><a></a>display(simplify(FE))</span>
-<span id="cb3-8"><a></a>display(simplify(BE))</span>
-<span id="cb3-9"><a></a>display(simplify(CN))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b502af07" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>n <span class="op">=</span> Symbol(<span class="st">'n'</span>, integer<span class="op">=</span><span class="va">True</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-2"><a></a>u_e <span class="op">=</span> exp(<span class="op">-</span>p<span class="op">*</span>n)   <span class="co"># I=1</span></span>
+<span id="cb4-3"><a></a>u_n <span class="op">=</span> A<span class="op">**</span>n        <span class="co"># I=1</span></span>
+<span id="cb4-4"><a></a>FE <span class="op">=</span> u_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> u_n.subs(theta, <span class="dv">0</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<span id="cb4-5"><a></a>BE <span class="op">=</span> u_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> u_n.subs(theta, <span class="dv">1</span>).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<span id="cb4-6"><a></a>CN <span class="op">=</span> u_e.series(p, <span class="dv">0</span>, <span class="dv">4</span>) <span class="op">-</span> u_n.subs(theta, half).series(p, <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<span id="cb4-7"><a></a>display(simplify(FE))</span>
+<span id="cb4-8"><a></a>display(simplify(BE))</span>
+<span id="cb4-9"><a></a>display(simplify(CN))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown">
 <p><span class="math inline">\(\displaystyle \frac{n p^{2}}{2} + \frac{n p^{3}}{3} - \frac{n^{2} p^{3}}{2} + O\left(p^{4}\right)\)</span></p>
 </div>
@@ -820,7 +837,7 @@ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
 </div>
 <p>Substitute <span class="math inline">\(n\)</span> by <span class="math inline">\(t/\Delta t\)</span> and <span class="math inline">\(p\)</span> by <span class="math inline">\(a \Delta t\)</span>:</p>
 <ul>
-<li>Forward and Backward Euler: leading order term <span class="math inline">\(\scriptstyle\frac{1}{2}ta^2\Delta t\)</span></li>
+<li>Forward and Backward Euler: leading order term <span class="math inline">\(\frac{1}{2} ta^2\Delta t\)</span></li>
 <li>Crank-Nicolson: leading order term <span class="math inline">\(\frac{1}{12}ta^3\Delta t^2\)</span></li>
 </ul>
 </section>
@@ -835,10 +852,10 @@ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
 ||e^n||_{\ell^2} = \sqrt{\Delta t\sum_{n=0}^{N_t} ({u_{e}}(t_n) - u^n)^2}
 \]</span></p>
 <p>We can compute this using Sympy. Forward/Backward Euler has <span class="math inline">\(e^n \sim np^2/2\)</span></p>
-<div id="b5953261" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>h, N, a, T <span class="op">=</span> symbols(<span class="st">'h,N,a,T'</span>) <span class="co"># h represents Delta t</span></span>
-<span id="cb4-2"><a></a>simplify(sqrt(h <span class="op">*</span> summation((n<span class="op">*</span>p<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span>, (n, <span class="dv">0</span>, N))).subs(p, a<span class="op">*</span>h).subs(N, T<span class="op">/</span>h))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="109">
+<div id="255e5f1c" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>h, N, a, T <span class="op">=</span> symbols(<span class="st">'h,N,a,T'</span>) <span class="co"># h represents Delta t</span></span>
+<span id="cb5-2"><a></a>simplify(sqrt(h <span class="op">*</span> summation((n<span class="op">*</span>p<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span>, (n, <span class="dv">0</span>, N))).subs(p, a<span class="op">*</span>h).subs(N, T<span class="op">/</span>h))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="256">
 <p><span class="math inline">\(\displaystyle \frac{\sqrt{6} a^{2} h^{2} \sqrt{T \left(\frac{2 T^{2}}{h^{2}} + \frac{3 T}{h} + 1\right)}}{12}\)</span></p>
 </div>
 </div>
@@ -849,9 +866,9 @@ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
 <section id="crank-nicolson" class="slide level2 smaller">
 <h2>Crank-Nicolson</h2>
 <p>For Crank-Nicolson the pointwise error is <span class="math inline">\(e^n \sim n p^3 / 12\)</span>. We get</p>
-<div id="14066164" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>simplify(sqrt(h <span class="op">*</span> summation((n<span class="op">*</span>p<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">12</span>)<span class="op">**</span><span class="dv">2</span>, (n, <span class="dv">0</span>, N))).subs(p, a<span class="op">*</span>h).subs(N, T<span class="op">/</span>h))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="110">
+<div id="1b5f2b66" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>simplify(sqrt(h <span class="op">*</span> summation((n<span class="op">*</span>p<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">12</span>)<span class="op">**</span><span class="dv">2</span>, (n, <span class="dv">0</span>, N))).subs(p, a<span class="op">*</span>h).subs(N, T<span class="op">/</span>h))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="257">
 <p><span class="math inline">\(\displaystyle \frac{\sqrt{6} a^{3} h^{3} \sqrt{T \left(\frac{2 T^{2}}{h^{2}} + \frac{3 T}{h} + 1\right)}}{72}\)</span></p>
 </div>
 </div>
@@ -941,6 +958,73 @@ R^{n+\scriptstyle\frac{1}{2}} \approx \frac{1}{24}u_{e}'''(t_{n+\scriptstyle\fra
 </ul>
 <p>The Lax equivalence theorem for <em>linear</em> differential equations: consistency + stability is equivalent with convergence.</p>
 <p>(Consistency and stability is in most problems much easier to establish than convergence.)</p>
+</section>
+<section id="numerical-computation-of-convergence-rate" class="slide level2 smaller">
+<h2>Numerical computation of convergence rate</h2>
+<p>We assume that the <span class="math inline">\(\ell^2\)</span> error norm on the mesh with level <span class="math inline">\(i\)</span> can be written as</p>
+<p><span class="math display">\[
+E_i = C (\Delta t_i)^r
+\]</span></p>
+<p>where <span class="math inline">\(C\)</span> is a constant. This way, if we have the error on two levels, then we can compute</p>
+<p><span class="math display">\[
+\frac{E_{i-1}}{E_i} = \frac{ (\Delta t_{i-1})^r}{(\Delta t_{i})^r} = \left( \frac{\Delta t_{i-1}}{ \Delta t_i} \right)^r
+\]</span></p>
+<p>and isolate <span class="math inline">\(r\)</span> by computing</p>
+<p><span class="math display">\[
+r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
+\]</span></p>
+</section>
+<section id="function-for-convergence-rate" class="slide level2 smaller">
+<h2>Function for convergence rate</h2>
+<div id="26fdbdf3" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
+<span id="cb7-2"><a></a></span>
+<span id="cb7-3"><a></a><span class="kw">def</span> l2_error(I, a, theta, dt): </span>
+<span id="cb7-4"><a></a>    u, t <span class="op">=</span> solver(I, a, T, dt, theta)</span>
+<span id="cb7-5"><a></a>    en <span class="op">=</span> u_exact(t, I, a) <span class="op">-</span> u</span>
+<span id="cb7-6"><a></a>    <span class="cf">return</span> np.sqrt(dt<span class="op">*</span>np.<span class="bu">sum</span>(en<span class="op">**</span><span class="dv">2</span>)) </span>
+<span id="cb7-7"><a></a></span>
+<span id="cb7-8"><a></a><span class="kw">def</span> convergence_rates(m, I<span class="op">=</span><span class="dv">1</span>, a<span class="op">=</span><span class="dv">2</span>, T<span class="op">=</span><span class="dv">8</span>, theta<span class="op">=</span><span class="dv">1</span>, dt<span class="op">=</span><span class="fl">1.</span>):</span>
+<span id="cb7-9"><a></a>    dt_values, E_values <span class="op">=</span> [], []</span>
+<span id="cb7-10"><a></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(m):</span>
+<span id="cb7-11"><a></a>        E <span class="op">=</span> l2_error(I, a, theta, dt)</span>
+<span id="cb7-12"><a></a>        dt_values.append(dt)</span>
+<span id="cb7-13"><a></a>        E_values.append(E)</span>
+<span id="cb7-14"><a></a>        dt <span class="op">=</span> dt<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb7-15"><a></a>    <span class="co"># Compute m-1 orders that should all be the same</span></span>
+<span id="cb7-16"><a></a>    r <span class="op">=</span> [np.log(E_values[i<span class="op">-</span><span class="dv">1</span>]<span class="op">/</span>E_values[i])<span class="op">/</span></span>
+<span id="cb7-17"><a></a>         np.log(dt_values[i<span class="op">-</span><span class="dv">1</span>]<span class="op">/</span>dt_values[i])</span>
+<span id="cb7-18"><a></a>         <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, m, <span class="dv">1</span>)]</span>
+<span id="cb7-19"><a></a>    <span class="cf">return</span> r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="test-convergence-rates" class="slide level2 smaller">
+<h2>Test convergence rates</h2>
+<p>Backward Euler:</p>
+<div id="e71edb09" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.1</span>, <span class="fl">1.</span></span>
+<span id="cb8-2"><a></a>convergence_rates(<span class="dv">4</span>, I, a, T, theta, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="259">
+<pre><code>[0.9619265651066382, 0.98003334385805, 0.9897576131285538]</code></pre>
+</div>
+</div>
+<p>Forward Euler:</p>
+<div id="6879f3b5" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.1</span>, <span class="fl">0.</span></span>
+<span id="cb10-2"><a></a>convergence_rates(<span class="dv">4</span>, I, a, T, theta, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="260">
+<pre><code>[1.0472640894307232, 1.0222599097461846, 1.0108154242259877]</code></pre>
+</div>
+</div>
+<p>Crank-Nicolson:</p>
+<div id="c985b232" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span></span>
+<span id="cb12-2"><a></a>convergence_rates(<span class="dv">4</span>, I, a, T, theta, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="261">
+<pre><code>[2.0037335266421343, 2.0009433957768175, 2.000236481071457]</code></pre>
+</div>
+</div>
+<p>All in good agreement with theory:-)</p>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">

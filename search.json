@@ -21,6 +21,13 @@
     "text": "Analysis of finite difference equations\nModel: \\[\nu'(t) = -au(t),\\quad u(0)=I\n\\]\nMethod:\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}u^n\n\\]\n\n\n\n\n\n\nProblem setting\n\n\nHow good is this method? Is it safe to use it?"
   },
   {
+    "objectID": "analysis.html#solver",
+    "href": "analysis.html#solver",
+    "title": "Analysis of exponential decay models",
+    "section": "Solver",
+    "text": "Solver\nWe already have a solver that we can use to experiment with. Lets run it for a range of different timesteps.\n\nimport numpy as np\ndef solver(I, a, T, dt, theta):\n    \"\"\"Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt.\"\"\"\n    Nt = int(T/dt)            # no of time intervals\n    T = Nt*dt                 # adjust T to fit time step dt\n    u = np.zeros(Nt+1)           # array of u[n] values\n    t = np.linspace(0, T, Nt+1)  # time mesh\n    u[0] = I                  # assign initial condition\n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n    return u, t"
+  },
+  {
     "objectID": "analysis.html#encouraging-numerical-solutions---backwards-euler",
     "href": "analysis.html#encouraging-numerical-solutions---backwards-euler",
     "title": "Analysis of exponential decay models",
@@ -109,7 +116,126 @@
     "href": "analysis.html#comparing-amplification-factors",
     "title": "Analysis of exponential decay models",
     "section": "Comparing amplification factors",
-    "text": "Comparing amplification factors\n\\(u^{n+1}\\) is an amplification \\(A\\) of \\(u^n\\):\n\\[\nu^{n+1} = Au^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nThe exact solution is also an amplification:\n\\[\n\\begin{align}\nu(t_{n+1}) &= e^{-a(t_n+\\Delta t)} \\\\\nu(t_{n+1}) &= e^{-a \\Delta t} e^{-a t_n} \\\\\nu(t_{n+1} &= A_e u(t_n), \\quad A_e = e^{-a\\Delta t}\n\\end{align}\n\\]\nA possible measure of accuracy: \\(A_e - A\\)"
+    "text": "Comparing amplification factors\n\\(u^{n+1}\\) is an amplification \\(A\\) of \\(u^n\\):\n\\[\nu^{n+1} = Au^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nThe exact solution is also an amplification:\n\\[\n\\begin{align}\nu(t_{n+1}) &= e^{-a(t_n+\\Delta t)} \\\\\nu(t_{n+1}) &= e^{-a \\Delta t} e^{-a t_n} \\\\\nu(t_{n+1}) &= A_e u(t_n), \\quad A_e = e^{-a\\Delta t}\n\\end{align}\n\\]\nA possible measure of accuracy: \\(A_e - A\\)"
+  },
+  {
+    "objectID": "analysis.html#plotting-amplification-factors",
+    "href": "analysis.html#plotting-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Plotting amplification factors",
+    "text": "Plotting amplification factors"
+  },
+  {
+    "objectID": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
+    "href": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
+    "title": "Analysis of exponential decay models",
+    "section": "\\(p=a\\Delta t\\) is the important parameter for numerical performance",
+    "text": "\\(p=a\\Delta t\\) is the important parameter for numerical performance\n\n\\(p=a\\Delta t\\) is a dimensionless parameter\nall expressions for stability and accuracy involve \\(p\\)\nNote that \\(\\Delta t\\) alone is not so important, it is the combination with \\(a\\) through \\(p=a\\Delta t\\) that matters\n\n\n\n\n\n\n\nAnother evidence why \\(p=a\\Delta t\\) is key\n\n\nIf we scale the model by \\(\\bar t=at\\), \\(\\bar u=u/I\\), we get \\(d\\bar u/d\\bar t = -\\bar u\\), \\(\\bar u(0)=1\\) (no physical parameters!). The analysis show that \\(\\Delta \\bar t\\) is key, corresponding to \\(a\\Delta t\\) in the unscaled model."
+  },
+  {
+    "objectID": "analysis.html#series-expansion-of-amplification-factors",
+    "href": "analysis.html#series-expansion-of-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Series expansion of amplification factors",
+    "text": "Series expansion of amplification factors\nTo investigate \\(A_e - A\\) mathematically, we can Taylor expand the expression, using \\(p=a\\Delta t\\) as variable.\n\nfrom sympy import *\n# Create p as a mathematical symbol with name 'p'\np = Symbol('p', positive=True)\n# Create a mathematical expression with p\nA_e = exp(-p)\n# Find the first 6 terms of the Taylor series of A_e\nA_e.series(p, 0, 6)\n\n\\(\\displaystyle 1 - p + \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + \\frac{p^{4}}{24} - \\frac{p^{5}}{120} + O\\left(p^{6}\\right)\\)\n\n\nThis is the Taylor expansion of the exact amplification factor. How does it compare with the numerical amplification factors?"
+  },
+  {
+    "objectID": "analysis.html#numerical-amplification-factors",
+    "href": "analysis.html#numerical-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Numerical amplification factors",
+    "text": "Numerical amplification factors\nCompute the Taylor expansions of \\(A_e - A\\)\n\nfrom IPython.display import display\ntheta = Symbol('theta', positive=True)\nA = (1-(1-theta)*p)/(1+theta*p)\nFE = A_e.series(p, 0, 4) - A.subs(theta, 0).series(p, 0, 4)\nBE = A_e.series(p, 0, 4) - A.subs(theta, 1).series(p, 0, 4)\nhalf = Rational(1, 2)  # exact fraction 1/2\nCN = A_e.series(p, 0, 4) - A.subs(theta, half).series(p, 0, 4)\ndisplay(FE)\ndisplay(BE)\ndisplay(CN)\n\n\\(\\displaystyle \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{p^{2}}{2} + \\frac{5 p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\n\nForward/backward Euler have leading error \\(p^2\\), or more commonly \\(\\Delta t^2\\)\nCrank-Nicolson has leading error \\(p^3\\), or \\(\\Delta t^3\\)"
+  },
+  {
+    "objectID": "analysis.html#the-trueglobal-error-at-a-point",
+    "href": "analysis.html#the-trueglobal-error-at-a-point",
+    "title": "Analysis of exponential decay models",
+    "section": "The true/global error at a point",
+    "text": "The true/global error at a point\n\nThe error in \\(A\\) reflects the local (amplification) error when going from one time step to the next\nWhat is the global (true) error at \\(t_n\\)?\n\n\\[\ne^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n\n\\]\n\nTaylor series expansions of \\(e^n\\) simplify the expression"
+  },
+  {
+    "objectID": "analysis.html#computing-the-global-error-at-a-point",
+    "href": "analysis.html#computing-the-global-error-at-a-point",
+    "title": "Analysis of exponential decay models",
+    "section": "Computing the global error at a point",
+    "text": "Computing the global error at a point\n\nn = Symbol('n', integer=True, positive=True)\nu_e = exp(-p*n)   # I=1\nu_n = A**n        # I=1\nFE = u_e.series(p, 0, 4) - u_n.subs(theta, 0).series(p, 0, 4)\nBE = u_e.series(p, 0, 4) - u_n.subs(theta, 1).series(p, 0, 4)\nCN = u_e.series(p, 0, 4) - u_n.subs(theta, half).series(p, 0, 4)\ndisplay(simplify(FE))\ndisplay(simplify(BE))\ndisplay(simplify(CN))\n\n\\(\\displaystyle \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} - \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} + \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{n p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\nSubstitute \\(n\\) by \\(t/\\Delta t\\) and \\(p\\) by \\(a \\Delta t\\):\n\nForward and Backward Euler: leading order term \\(\\frac{1}{2} ta^2\\Delta t\\)\nCrank-Nicolson: leading order term \\(\\frac{1}{12}ta^3\\Delta t^2\\)"
+  },
+  {
+    "objectID": "analysis.html#convergence",
+    "href": "analysis.html#convergence",
+    "title": "Analysis of exponential decay models",
+    "section": "Convergence",
+    "text": "Convergence\nThe numerical scheme is convergent if the global error \\(e^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). If the error has a leading order term \\((\\Delta t)^r\\), the convergence rate is of order \\(r\\)."
+  },
+  {
+    "objectID": "analysis.html#integrated-errors",
+    "href": "analysis.html#integrated-errors",
+    "title": "Analysis of exponential decay models",
+    "section": "Integrated errors",
+    "text": "Integrated errors\nThe \\(\\ell^2\\) norm of the numerical error is computed as\n\\[\n||e^n||_{\\ell^2} = \\sqrt{\\Delta t\\sum_{n=0}^{N_t} ({u_{e}}(t_n) - u^n)^2}\n\\]\nWe can compute this using Sympy. Forward/Backward Euler has \\(e^n \\sim np^2/2\\)\n\nh, N, a, T = symbols('h,N,a,T') # h represents Delta t\nsimplify(sqrt(h * summation((n*p**2/2)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{2} h^{2} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{12}\\)\n\n\nIf we keep only the leading term in the parenthesis, we get the first order \\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{2}\\sqrt{\\frac{T^3}{3}} a^2\\Delta t\n\\]"
+  },
+  {
+    "objectID": "analysis.html#crank-nicolson",
+    "href": "analysis.html#crank-nicolson",
+    "title": "Analysis of exponential decay models",
+    "section": "Crank-Nicolson",
+    "text": "Crank-Nicolson\nFor Crank-Nicolson the pointwise error is \\(e^n \\sim n p^3 / 12\\). We get\n\nsimplify(sqrt(h * summation((n*p**3/12)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{3} h^{3} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{72}\\)\n\n\nwhich is simplified to the second order accurate\n\\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{12}\\sqrt{\\frac{T^3}{3}}a^3\\Delta t^2\n\\]\n\n\n\n\n\n\nSummary of errors\n\n\nAnalysis of both the pointwise and the time-integrated true errors:\n\n1st order for Forward and Backward Euler\n2nd order for Crank-Nicolson"
+  },
+  {
+    "objectID": "analysis.html#truncation-error",
+    "href": "analysis.html#truncation-error",
+    "title": "Analysis of exponential decay models",
+    "section": "Truncation error",
+    "text": "Truncation error\n\nHow good is the discrete equation?\nPossible answer: see how well \\(u_{e}\\) fits the discrete equation\n\nConsider the forward difference equation \\[\n\\frac{u^{n+1}-u^n}{\\Delta t} = -au^n\n\\]\nInsert \\(u_{e}\\) to obtain a truncation error \\(R^n\\)\n\\[\n\\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n) = R^n \\neq 0\n\\]"
+  },
+  {
+    "objectID": "analysis.html#computation-of-the-truncation-error",
+    "href": "analysis.html#computation-of-the-truncation-error",
+    "title": "Analysis of exponential decay models",
+    "section": "Computation of the truncation error",
+    "text": "Computation of the truncation error\n\nThe residual \\(R^n\\) is the truncation error. How does \\(R^n\\) vary with \\(\\Delta t\\)?\n\nTool: Taylor expand \\(u_{e}\\) around the point where the ODE is sampled (here \\(t_n\\))\n\\[\nu_{e}(t_{n+1}) = u_{e}(t_n) + u_{e}'(t_n)\\Delta t + \\frac{1}{2}u_{e}''(t_n)\n\\Delta t^2 + \\cdots\n\\]\nInserting this Taylor series for \\(u_{e}\\) in the forward difference equation\n\\[\nR^n = \\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n)\n\\]\nto get\n\\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]"
+  },
+  {
+    "objectID": "analysis.html#the-truncation-error-forward-euler",
+    "href": "analysis.html#the-truncation-error-forward-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "The truncation error forward Euler",
+    "text": "The truncation error forward Euler\nWe have \\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]\nSince \\(u_{e}\\) solves the ODE \\(u_{e}'(t_n)=-au_{e}(t_n)\\), we get that \\(u_{e}'(t_n)\\) and \\(au_{e}(t_n)\\) cancel out. We are left with leading term\n\\[\nR^n \\approx \\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nThis is a mathematical expression for the truncation error."
+  },
+  {
+    "objectID": "analysis.html#the-truncation-error-for-other-schemes",
+    "href": "analysis.html#the-truncation-error-for-other-schemes",
+    "title": "Analysis of exponential decay models",
+    "section": "The truncation error for other schemes",
+    "text": "The truncation error for other schemes\nBackward Euler:\n\\[\nR^n \\approx -\\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nCrank-Nicolson:\n\\[\nR^{n+\\scriptstyle\\frac{1}{2}} \\approx \\frac{1}{24}u_{e}'''(t_{n+\\scriptstyle\\frac{1}{2}})\\Delta t^2\n\\]"
+  },
+  {
+    "objectID": "analysis.html#consistency-stability-and-convergence",
+    "href": "analysis.html#consistency-stability-and-convergence",
+    "title": "Analysis of exponential decay models",
+    "section": "Consistency, stability, and convergence",
+    "text": "Consistency, stability, and convergence\n\nTruncation error measures the residual in the difference equations. The scheme is consistent if the truncation error goes to 0 as \\(\\Delta t\\rightarrow 0\\). Importance: the difference equations approaches the differential equation as \\(\\Delta t\\rightarrow 0\\).\nStability means that the numerical solution exhibits the same qualitative properties as the exact solution. Here: monotone, decaying function.\nConvergence implies that the true (global) error \\(e^n =u_{e}(t_n)-u^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). This is really what we want!\n\nThe Lax equivalence theorem for linear differential equations: consistency + stability is equivalent with convergence.\n(Consistency and stability is in most problems much easier to establish than convergence.)"
+  },
+  {
+    "objectID": "analysis.html#numerical-computation-of-convergence-rate",
+    "href": "analysis.html#numerical-computation-of-convergence-rate",
+    "title": "Analysis of exponential decay models",
+    "section": "Numerical computation of convergence rate",
+    "text": "Numerical computation of convergence rate\nWe assume that the \\(\\ell^2\\) error norm on the mesh with level \\(i\\) can be written as\n\\[\nE_i = C (\\Delta t_i)^r\n\\]\nwhere \\(C\\) is a constant. This way, if we have the error on two levels, then we can compute\n\\[\n\\frac{E_{i-1}}{E_i} = \\frac{ (\\Delta t_{i-1})^r}{(\\Delta t_{i})^r} = \\left( \\frac{\\Delta t_{i-1}}{ \\Delta t_i} \\right)^r\n\\]\nand isolate \\(r\\) by computing\n\\[\nr = \\frac{\\log {\\frac{E_{i-1}}{E_i}}}{\\log {\\frac{\\Delta t_{i-1}}{\\Delta t_i}}}\n\\]"
+  },
+  {
+    "objectID": "analysis.html#function-for-convergence-rate",
+    "href": "analysis.html#function-for-convergence-rate",
+    "title": "Analysis of exponential decay models",
+    "section": "Function for convergence rate",
+    "text": "Function for convergence rate\n\nu_exact = lambda t, I, a: I*np.exp(-a*t)\n\ndef l2_error(I, a, theta, dt): \n    u, t = solver(I, a, T, dt, theta)\n    en = u_exact(t, I, a) - u\n    return np.sqrt(dt*np.sum(en**2)) \n\ndef convergence_rates(m, I=1, a=2, T=8, theta=1, dt=1.):\n    dt_values, E_values = [], []\n    for i in range(m):\n        E = l2_error(I, a, theta, dt)\n        dt_values.append(dt)\n        E_values.append(E)\n        dt = dt/2\n    # Compute m-1 orders that should all be the same\n    r = [np.log(E_values[i-1]/E_values[i])/\n         np.log(dt_values[i-1]/dt_values[i])\n         for i in range(1, m, 1)]\n    return r"
+  },
+  {
+    "objectID": "analysis.html#test-convergence-rates",
+    "href": "analysis.html#test-convergence-rates",
+    "title": "Analysis of exponential decay models",
+    "section": "Test convergence rates",
+    "text": "Test convergence rates\nBackward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 1.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[0.9619265651066382, 0.98003334385805, 0.9897576131285538]\n\n\nForward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[1.0472640894307232, 1.0222599097461846, 1.0108154242259877]\n\n\nCrank-Nicolson:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.5\nconvergence_rates(4, I, a, T, theta, dt)\n\n[2.0037335266421343, 2.0009433957768175, 2.000236481071457]\n\n\nAll in good agreement with theory:-)"
   },
   {
     "objectID": "intro.html#hans-petter-langtangen-1962-2016",
@@ -466,35 +592,35 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.34 µs ± 468 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.1 µs ± 87.5 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.6 µs ± 398 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.03 µs ± 83.4 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.86 µs ± 250 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.9 µs ± 804 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.45 µs ± 1.34 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 203 µs ± 4.98 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.77 µs ± 339 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.3 µs ± 858 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.48 µs ± 1.5 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 199 µs ± 3.97 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 45.7 µs ± 109 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.18 µs ± 16.7 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 284 µs ± 694 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.16 µs ± 14.4 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
     "href": "intro.html#what-else-cython",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else? Cython",
-    "text": "What else? Cython\n\n%load_ext cython\n\nThe cython extension is already loaded. To reload it, use:\n  %reload_ext cython\n\n\n\n%%cython -a\n#cython: boundscheck=False, wraparound=False, cdivision=True\ncpdef void f3(double[::1] u, int  I, double theta, double a, double dt):\n    cdef int n\n    cdef int N = u.shape[0]\n    u[0] = I                 \n    for n in range(0, N-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n    return\n\n\n\n\n\n    \n    Cython: _cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.pyx\n    \n\n\nGenerated by Cython 3.0.10\n\n    Yellow lines hint at Python interaction.\n    Click on a line that starts with a \"+\" to see the C code that Cython generated for it.\n\n+1: #cython: boundscheck=False, wraparound=False, cdivision=True\n  __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_t_7);\n  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_7) &lt; 0) __PYX_ERR(0, 1, __pyx_L1_error)\n  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;\n+2: cpdef void f3(double[::1] u, int  I, double theta, double a, double dt):\nstatic PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, \n#if CYTHON_METH_FASTCALL\nPyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds\n#else\nPyObject *__pyx_args, PyObject *__pyx_kwds\n#endif\n); /*proto*/\nstatic void __pyx_f_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__Pyx_memviewslice __pyx_v_u, int __pyx_v_I, double __pyx_v_theta, double __pyx_v_a, double __pyx_v_dt, CYTHON_UNUSED int __pyx_skip_dispatch) {\n  int __pyx_v_n;\n  int __pyx_v_N;\n/* … */\n  /* function exit code */\n  __pyx_L0:;\n}\n\n/* Python wrapper */\nstatic PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, \n#if CYTHON_METH_FASTCALL\nPyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds\n#else\nPyObject *__pyx_args, PyObject *__pyx_kwds\n#endif\n); /*proto*/\nstatic PyMethodDef __pyx_mdef_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3 = {\"f3\", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};\nstatic PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, \n#if CYTHON_METH_FASTCALL\nPyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds\n#else\nPyObject *__pyx_args, PyObject *__pyx_kwds\n#endif\n) {\n  __Pyx_memviewslice __pyx_v_u = { 0, 0, { 0 }, { 0 }, { 0 } };\n  int __pyx_v_I;\n  double __pyx_v_theta;\n  double __pyx_v_a;\n  double __pyx_v_dt;\n  #if !CYTHON_METH_FASTCALL\n  CYTHON_UNUSED Py_ssize_t __pyx_nargs;\n  #endif\n  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;\n  PyObject *__pyx_r = 0;\n  __Pyx_RefNannyDeclarations\n  __Pyx_RefNannySetupContext(\"f3 (wrapper)\", 0);\n  #if !CYTHON_METH_FASTCALL\n  #if CYTHON_ASSUME_SAFE_MACROS\n  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);\n  #else\n  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs &lt; 0)) return NULL;\n  #endif\n  #endif\n  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);\n  {\n    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_u,&__pyx_n_s_I,&__pyx_n_s_theta,&__pyx_n_s_a,&__pyx_n_s_dt,0};\n  PyObject* values[5] = {0,0,0,0,0};\n    if (__pyx_kwds) {\n      Py_ssize_t kw_args;\n      switch (__pyx_nargs) {\n        case  5: values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);\n        CYTHON_FALLTHROUGH;\n        case  4: values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);\n        CYTHON_FALLTHROUGH;\n        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);\n        CYTHON_FALLTHROUGH;\n        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);\n        CYTHON_FALLTHROUGH;\n        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);\n        CYTHON_FALLTHROUGH;\n        case  0: break;\n        default: goto __pyx_L5_argtuple_error;\n      }\n      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);\n      switch (__pyx_nargs) {\n        case  0:\n        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_u)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else goto __pyx_L5_argtuple_error;\n        CYTHON_FALLTHROUGH;\n        case  1:\n        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_I)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 1); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n        CYTHON_FALLTHROUGH;\n        case  2:\n        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_theta)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[2]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 2); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n        CYTHON_FALLTHROUGH;\n        case  3:\n        if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_a)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[3]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 3); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n        CYTHON_FALLTHROUGH;\n        case  4:\n        if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_dt)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[4]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 4); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n      }\n      if (unlikely(kw_args &gt; 0)) {\n        const Py_ssize_t kwd_pos_args = __pyx_nargs;\n        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, \"f3\") &lt; 0)) __PYX_ERR(0, 2, __pyx_L3_error)\n      }\n    } else if (unlikely(__pyx_nargs != 5)) {\n      goto __pyx_L5_argtuple_error;\n    } else {\n      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);\n      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);\n      values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);\n      values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);\n      values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);\n    }\n    __pyx_v_u = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_u.memview)) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_I = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_I == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_theta = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_theta == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_a = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_a == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_dt = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n  }\n  goto __pyx_L6_skip;\n  __pyx_L5_argtuple_error:;\n  __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 2, __pyx_L3_error)\n  __pyx_L6_skip:;\n  goto __pyx_L4_argument_unpacking_done;\n  __pyx_L3_error:;\n  {\n    Py_ssize_t __pyx_temp;\n    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {\n      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);\n    }\n  }\n  __PYX_XCLEAR_MEMVIEW(&__pyx_v_u, 1);\n  __Pyx_AddTraceback(\"_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.f3\", __pyx_clineno, __pyx_lineno, __pyx_filename);\n  __Pyx_RefNannyFinishContext();\n  return NULL;\n  __pyx_L4_argument_unpacking_done:;\n  __pyx_r = __pyx_pf_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__pyx_self, __pyx_v_u, __pyx_v_I, __pyx_v_theta, __pyx_v_a, __pyx_v_dt);\n  int __pyx_lineno = 0;\n  const char *__pyx_filename = NULL;\n  int __pyx_clineno = 0;\n\n  /* function exit code */\n  __PYX_XCLEAR_MEMVIEW(&__pyx_v_u, 1);\n  {\n    Py_ssize_t __pyx_temp;\n    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {\n      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);\n    }\n  }\n  __Pyx_RefNannyFinishContext();\n  return __pyx_r;\n}\n\nstatic PyObject *__pyx_pf_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_u, int __pyx_v_I, double __pyx_v_theta, double __pyx_v_a, double __pyx_v_dt) {\n  PyObject *__pyx_r = NULL;\n  __Pyx_XDECREF(__pyx_r);\n  if (unlikely(!__pyx_v_u.memview)) { __Pyx_RaiseUnboundLocalError(\"u\"); __PYX_ERR(0, 2, __pyx_L1_error) }\n  __pyx_f_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__pyx_v_u, __pyx_v_I, __pyx_v_theta, __pyx_v_a, __pyx_v_dt, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L1_error)\n  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_t_1);\n  __pyx_r = __pyx_t_1;\n  __pyx_t_1 = 0;\n  goto __pyx_L0;\n\n  /* function exit code */\n  __pyx_L1_error:;\n  __Pyx_XDECREF(__pyx_t_1);\n  __Pyx_AddTraceback(\"_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.f3\", __pyx_clineno, __pyx_lineno, __pyx_filename);\n  __pyx_r = NULL;\n  __pyx_L0:;\n  __Pyx_XGIVEREF(__pyx_r);\n  __Pyx_RefNannyFinishContext();\n  return __pyx_r;\n}\n/* … */\n  __pyx_tuple__20 = PyTuple_Pack(5, __pyx_n_s_u, __pyx_n_s_I, __pyx_n_s_theta, __pyx_n_s_a, __pyx_n_s_dt); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_tuple__20);\n  __Pyx_GIVEREF(__pyx_tuple__20);\n/* … */\n  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3, 0, __pyx_n_s_f3, NULL, __pyx_n_s_cython_magic_56487b4d6695ae1d6d, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_t_7);\n  if (PyDict_SetItem(__pyx_d, __pyx_n_s_f3, __pyx_t_7) &lt; 0) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;\n 3:     cdef int n\n+4:     cdef int N = u.shape[0]\n  __pyx_v_N = (__pyx_v_u.shape[0]);\n+5:     u[0] = I\n  __pyx_t_1 = 0;\n  *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_1)) )) = __pyx_v_I;\n+6:     for n in range(0, N-1):\n  __pyx_t_2 = (__pyx_v_N - 1);\n  __pyx_t_3 = __pyx_t_2;\n  for (__pyx_t_4 = 0; __pyx_t_4 &lt; __pyx_t_3; __pyx_t_4+=1) {\n    __pyx_v_n = __pyx_t_4;\n+7:         u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n    __pyx_t_1 = __pyx_v_n;\n    __pyx_t_5 = (__pyx_v_n + 1);\n    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_5)) )) = (((1.0 - (((1.0 - __pyx_v_theta) * __pyx_v_a) * __pyx_v_dt)) / (1.0 + ((__pyx_v_theta * __pyx_v_dt) * __pyx_v_a))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_1)) ))));\n  }\n+8:     return\n  goto __pyx_L0;"
+    "text": "What else? Cython\n\n%load_ext cython\n\n\n%%cython -a\n#cython: boundscheck=False, wraparound=False, cdivision=True\ncpdef void f3(double[::1] u, int  I, double theta, double a, double dt):\n    cdef int n\n    cdef int N = u.shape[0]\n    u[0] = I                 \n    for n in range(0, N-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n    return\n\n\n\n\n\n    \n    Cython: _cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.pyx\n    \n\n\nGenerated by Cython 3.0.10\n\n    Yellow lines hint at Python interaction.\n    Click on a line that starts with a \"+\" to see the C code that Cython generated for it.\n\n+1: #cython: boundscheck=False, wraparound=False, cdivision=True\n  __pyx_t_7 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_t_7);\n  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_7) &lt; 0) __PYX_ERR(0, 1, __pyx_L1_error)\n  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;\n+2: cpdef void f3(double[::1] u, int  I, double theta, double a, double dt):\nstatic PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, \n#if CYTHON_METH_FASTCALL\nPyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds\n#else\nPyObject *__pyx_args, PyObject *__pyx_kwds\n#endif\n); /*proto*/\nstatic void __pyx_f_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__Pyx_memviewslice __pyx_v_u, int __pyx_v_I, double __pyx_v_theta, double __pyx_v_a, double __pyx_v_dt, CYTHON_UNUSED int __pyx_skip_dispatch) {\n  int __pyx_v_n;\n  int __pyx_v_N;\n/* … */\n  /* function exit code */\n  __pyx_L0:;\n}\n\n/* Python wrapper */\nstatic PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, \n#if CYTHON_METH_FASTCALL\nPyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds\n#else\nPyObject *__pyx_args, PyObject *__pyx_kwds\n#endif\n); /*proto*/\nstatic PyMethodDef __pyx_mdef_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3 = {\"f3\", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};\nstatic PyObject *__pyx_pw_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3(PyObject *__pyx_self, \n#if CYTHON_METH_FASTCALL\nPyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds\n#else\nPyObject *__pyx_args, PyObject *__pyx_kwds\n#endif\n) {\n  __Pyx_memviewslice __pyx_v_u = { 0, 0, { 0 }, { 0 }, { 0 } };\n  int __pyx_v_I;\n  double __pyx_v_theta;\n  double __pyx_v_a;\n  double __pyx_v_dt;\n  #if !CYTHON_METH_FASTCALL\n  CYTHON_UNUSED Py_ssize_t __pyx_nargs;\n  #endif\n  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;\n  PyObject *__pyx_r = 0;\n  __Pyx_RefNannyDeclarations\n  __Pyx_RefNannySetupContext(\"f3 (wrapper)\", 0);\n  #if !CYTHON_METH_FASTCALL\n  #if CYTHON_ASSUME_SAFE_MACROS\n  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);\n  #else\n  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs &lt; 0)) return NULL;\n  #endif\n  #endif\n  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);\n  {\n    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_u,&__pyx_n_s_I,&__pyx_n_s_theta,&__pyx_n_s_a,&__pyx_n_s_dt,0};\n  PyObject* values[5] = {0,0,0,0,0};\n    if (__pyx_kwds) {\n      Py_ssize_t kw_args;\n      switch (__pyx_nargs) {\n        case  5: values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);\n        CYTHON_FALLTHROUGH;\n        case  4: values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);\n        CYTHON_FALLTHROUGH;\n        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);\n        CYTHON_FALLTHROUGH;\n        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);\n        CYTHON_FALLTHROUGH;\n        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);\n        CYTHON_FALLTHROUGH;\n        case  0: break;\n        default: goto __pyx_L5_argtuple_error;\n      }\n      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);\n      switch (__pyx_nargs) {\n        case  0:\n        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_u)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[0]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else goto __pyx_L5_argtuple_error;\n        CYTHON_FALLTHROUGH;\n        case  1:\n        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_I)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[1]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 1); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n        CYTHON_FALLTHROUGH;\n        case  2:\n        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_theta)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[2]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 2); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n        CYTHON_FALLTHROUGH;\n        case  3:\n        if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_a)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[3]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 3); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n        CYTHON_FALLTHROUGH;\n        case  4:\n        if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_dt)) != 0)) {\n          (void)__Pyx_Arg_NewRef_FASTCALL(values[4]);\n          kw_args--;\n        }\n        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n        else {\n          __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, 4); __PYX_ERR(0, 2, __pyx_L3_error)\n        }\n      }\n      if (unlikely(kw_args &gt; 0)) {\n        const Py_ssize_t kwd_pos_args = __pyx_nargs;\n        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, \"f3\") &lt; 0)) __PYX_ERR(0, 2, __pyx_L3_error)\n      }\n    } else if (unlikely(__pyx_nargs != 5)) {\n      goto __pyx_L5_argtuple_error;\n    } else {\n      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);\n      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);\n      values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);\n      values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);\n      values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);\n    }\n    __pyx_v_u = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_u.memview)) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_I = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_I == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_theta = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_theta == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_a = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_a == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n    __pyx_v_dt = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_dt == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L3_error)\n  }\n  goto __pyx_L6_skip;\n  __pyx_L5_argtuple_error:;\n  __Pyx_RaiseArgtupleInvalid(\"f3\", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 2, __pyx_L3_error)\n  __pyx_L6_skip:;\n  goto __pyx_L4_argument_unpacking_done;\n  __pyx_L3_error:;\n  {\n    Py_ssize_t __pyx_temp;\n    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {\n      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);\n    }\n  }\n  __PYX_XCLEAR_MEMVIEW(&__pyx_v_u, 1);\n  __Pyx_AddTraceback(\"_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.f3\", __pyx_clineno, __pyx_lineno, __pyx_filename);\n  __Pyx_RefNannyFinishContext();\n  return NULL;\n  __pyx_L4_argument_unpacking_done:;\n  __pyx_r = __pyx_pf_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__pyx_self, __pyx_v_u, __pyx_v_I, __pyx_v_theta, __pyx_v_a, __pyx_v_dt);\n  int __pyx_lineno = 0;\n  const char *__pyx_filename = NULL;\n  int __pyx_clineno = 0;\n\n  /* function exit code */\n  __PYX_XCLEAR_MEMVIEW(&__pyx_v_u, 1);\n  {\n    Py_ssize_t __pyx_temp;\n    for (__pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {\n      __Pyx_Arg_XDECREF_FASTCALL(values[__pyx_temp]);\n    }\n  }\n  __Pyx_RefNannyFinishContext();\n  return __pyx_r;\n}\n\nstatic PyObject *__pyx_pf_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_u, int __pyx_v_I, double __pyx_v_theta, double __pyx_v_a, double __pyx_v_dt) {\n  PyObject *__pyx_r = NULL;\n  __Pyx_XDECREF(__pyx_r);\n  if (unlikely(!__pyx_v_u.memview)) { __Pyx_RaiseUnboundLocalError(\"u\"); __PYX_ERR(0, 2, __pyx_L1_error) }\n  __pyx_f_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_f3(__pyx_v_u, __pyx_v_I, __pyx_v_theta, __pyx_v_a, __pyx_v_dt, 0); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 2, __pyx_L1_error)\n  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_t_1);\n  __pyx_r = __pyx_t_1;\n  __pyx_t_1 = 0;\n  goto __pyx_L0;\n\n  /* function exit code */\n  __pyx_L1_error:;\n  __Pyx_XDECREF(__pyx_t_1);\n  __Pyx_AddTraceback(\"_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38.f3\", __pyx_clineno, __pyx_lineno, __pyx_filename);\n  __pyx_r = NULL;\n  __pyx_L0:;\n  __Pyx_XGIVEREF(__pyx_r);\n  __Pyx_RefNannyFinishContext();\n  return __pyx_r;\n}\n/* … */\n  __pyx_tuple__20 = PyTuple_Pack(5, __pyx_n_s_u, __pyx_n_s_I, __pyx_n_s_theta, __pyx_n_s_a, __pyx_n_s_dt); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_tuple__20);\n  __Pyx_GIVEREF(__pyx_tuple__20);\n/* … */\n  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_54_cython_magic_56487b4d6695ae1d6d1ee138204b704501527e38_1f3, 0, __pyx_n_s_f3, NULL, __pyx_n_s_cython_magic_56487b4d6695ae1d6d, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_GOTREF(__pyx_t_7);\n  if (PyDict_SetItem(__pyx_d, __pyx_n_s_f3, __pyx_t_7) &lt; 0) __PYX_ERR(0, 2, __pyx_L1_error)\n  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;\n 3:     cdef int n\n+4:     cdef int N = u.shape[0]\n  __pyx_v_N = (__pyx_v_u.shape[0]);\n+5:     u[0] = I\n  __pyx_t_1 = 0;\n  *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_1)) )) = __pyx_v_I;\n+6:     for n in range(0, N-1):\n  __pyx_t_2 = (__pyx_v_N - 1);\n  __pyx_t_3 = __pyx_t_2;\n  for (__pyx_t_4 = 0; __pyx_t_4 &lt; __pyx_t_3; __pyx_t_4+=1) {\n    __pyx_v_n = __pyx_t_4;\n+7:         u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n    __pyx_t_1 = __pyx_v_n;\n    __pyx_t_5 = (__pyx_v_n + 1);\n    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_5)) )) = (((1.0 - (((1.0 - __pyx_v_theta) * __pyx_v_a) * __pyx_v_dt)) / (1.0 + ((__pyx_v_theta * __pyx_v_dt) * __pyx_v_a))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_u.data) + __pyx_t_1)) ))));\n  }\n+8:     return\n  goto __pyx_L0;"
   },
   {
     "objectID": "intro.html#cython-timing",
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.23 µs ± 61.8 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.34 µs ± 394 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
     "objectID": "index.html",
@@ -502,117 +628,5 @@
     "title": "Presentations for MATMEK-4270",
     "section": "",
     "text": "Algorithms and implementations for exponential decay models\nAnalysis of exponential decay models"
-  },
-  {
-    "objectID": "analysis.html#plotting-amplification-factors",
-    "href": "analysis.html#plotting-amplification-factors",
-    "title": "Analysis of exponential decay models",
-    "section": "Plotting amplification factors",
-    "text": "Plotting amplification factors"
-  },
-  {
-    "objectID": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
-    "href": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
-    "title": "Analysis of exponential decay models",
-    "section": "\\(p=a\\Delta t\\) is the important parameter for numerical performance",
-    "text": "\\(p=a\\Delta t\\) is the important parameter for numerical performance\n\n\\(p=a\\Delta t\\) is a dimensionless parameter\nall expressions for stability and accuracy involve \\(p\\)\nNote that \\(\\Delta t\\) alone is not so important, it is the combination with \\(a\\) through \\(p=a\\Delta t\\) that matters\n\n\n\n\n\n\n\nAnother evidence why \\(p=a\\Delta t\\) is key\n\n\nIf we scale the model by \\(\\bar t=at\\), \\(\\bar u=u/I\\), we get \\(d\\bar u/d\\bar t = -\\bar u\\), \\(\\bar u(0)=1\\) (no physical parameters!). The analysis show that \\(\\Delta \\bar t\\) is key, corresponding to \\(a\\Delta t\\) in the unscaled model."
-  },
-  {
-    "objectID": "analysis.html#series-expansion-of-amplification-factors",
-    "href": "analysis.html#series-expansion-of-amplification-factors",
-    "title": "Analysis of exponential decay models",
-    "section": "Series expansion of amplification factors",
-    "text": "Series expansion of amplification factors\nTo investigate \\(A_e - A\\) mathematically, we can Taylor expand the expression, using \\(p=a\\Delta t\\) as variable.\n\nfrom sympy import *\n# Create p as a mathematical symbol with name 'p'\np = Symbol('p', positive=True)\n# Create a mathematical expression with p\nA_e = exp(-p)\n# Find the first 6 terms of the Taylor series of A_e\nA_e.series(p, 0, 6)\n\n\\(\\displaystyle 1 - p + \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + \\frac{p^{4}}{24} - \\frac{p^{5}}{120} + O\\left(p^{6}\\right)\\)\n\n\nThis is the Taylor expansion of the exact amplification factor. How does it compare with the numerical amplification factors?"
-  },
-  {
-    "objectID": "analysis.html#numerical-amplification-factors",
-    "href": "analysis.html#numerical-amplification-factors",
-    "title": "Analysis of exponential decay models",
-    "section": "Numerical amplification factors",
-    "text": "Numerical amplification factors\nCompute the Taylor expansions of \\(A_e - A\\)\n\nfrom IPython.display import display\ntheta = Symbol('theta', positive=True)\nA = (1-(1-theta)*p)/(1+theta*p)\nFE = A_e.series(p, 0, 4) - A.subs(theta, 0).series(p, 0, 4)\nBE = A_e.series(p, 0, 4) - A.subs(theta, 1).series(p, 0, 4)\nhalf = Rational(1, 2)  # exact fraction 1/2\nCN = A_e.series(p, 0, 4) - A.subs(theta, half).series(p, 0, 4)\ndisplay(FE)\ndisplay(BE)\ndisplay(CN)\n\n\\(\\displaystyle \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{p^{2}}{2} + \\frac{5 p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\n\nForward/backward Euler have leading error \\(p^2\\), or more commonly \\(\\Delta t^2\\)\nCrank-Nicolson has leading error \\(p^3\\), or \\(\\Delta t^3\\)"
-  },
-  {
-    "objectID": "analysis.html#the-trueglobal-error-at-a-point",
-    "href": "analysis.html#the-trueglobal-error-at-a-point",
-    "title": "Analysis of exponential decay models",
-    "section": "The true/global error at a point",
-    "text": "The true/global error at a point\n\nThe error in \\(A\\) reflects the local (amplification) error when going from one time step to the next\nWhat is the global (true) error at \\(t_n\\)?\n\n\\[\ne^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n\n\\]\n\nTaylor series expansions of \\(e^n\\) simplify the expression"
-  },
-  {
-    "objectID": "analysis.html#computing-the-global-error-at-a-point",
-    "href": "analysis.html#computing-the-global-error-at-a-point",
-    "title": "Analysis of exponential decay models",
-    "section": "Computing the global error at a point",
-    "text": "Computing the global error at a point\n\nn = Symbol('n', integer=True, positive=True)\nu_e = exp(-p*n)   # I=1\nu_n = A**n        # I=1\nFE = u_e.series(p, 0, 4) - u_n.subs(theta, 0).series(p, 0, 4)\nBE = u_e.series(p, 0, 4) - u_n.subs(theta, 1).series(p, 0, 4)\nCN = u_e.series(p, 0, 4) - u_n.subs(theta, half).series(p, 0, 4)\ndisplay(simplify(FE))\ndisplay(simplify(BE))\ndisplay(simplify(CN))\n\n\\(\\displaystyle \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} - \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} + \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{n p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\nSubstitute \\(n\\) by \\(t/\\Delta t\\) and \\(p\\) by \\(a \\Delta t\\):\n\nForward and Backward Euler: leading order term \\(\\scriptstyle\\frac{1}{2}ta^2\\Delta t\\)\nCrank-Nicolson: leading order term \\(\\frac{1}{12}ta^3\\Delta t^2\\)"
-  },
-  {
-    "objectID": "analysis.html#convergence",
-    "href": "analysis.html#convergence",
-    "title": "Analysis of exponential decay models",
-    "section": "Convergence",
-    "text": "Convergence\nThe numerical scheme is convergent if the global error \\(e^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). If the error has a leading order term \\((\\Delta t)^r\\), the convergence rate is of order \\(r\\)."
-  },
-  {
-    "objectID": "analysis.html#integrated-errors",
-    "href": "analysis.html#integrated-errors",
-    "title": "Analysis of exponential decay models",
-    "section": "Integrated errors",
-    "text": "Integrated errors\nThe \\(\\ell^2\\) norm of the numerical error is computed as\n\\[\n||e^n||_{\\ell^2} = \\sqrt{\\Delta t\\sum_{n=0}^{N_t} ({u_{e}}(t_n) - u^n)^2}\n\\]\nWe can compute this using Sympy. Forward/Backward Euler has \\(e^n \\sim np^2/2\\)\n\nh, N, a, T = symbols('h,N,a,T') # h represents Delta t\nsimplify(sqrt(h * summation((n*p**2/2)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{2} h^{2} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{12}\\)\n\n\nIf we keep only the leading term in the parenthesis, we get the first order \\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{2}\\sqrt{\\frac{T^3}{3}} a^2\\Delta t\n\\]"
-  },
-  {
-    "objectID": "analysis.html#error",
-    "href": "analysis.html#error",
-    "title": "Analysis of exponential decay models",
-    "section": "Error",
-    "text": "Error"
-  },
-  {
-    "objectID": "analysis.html#crank-nicolson",
-    "href": "analysis.html#crank-nicolson",
-    "title": "Analysis of exponential decay models",
-    "section": "Crank-Nicolson",
-    "text": "Crank-Nicolson\nFor Crank-Nicolson the pointwise error is \\(e^n \\sim n p^3 / 12\\). We get\n\nsimplify(sqrt(h * summation((n*p**3/12)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{3} h^{3} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{72}\\)\n\n\nwhich is simplified to the second order accurate\n\\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{12}\\sqrt{\\frac{T^3}{3}}a^3\\Delta t^2\n\\]\n\n\n\n\n\n\nSummary of errors\n\n\nAnalysis of both the pointwise and the time-integrated true errors:\n\n1st order for Forward and Backward Euler\n2nd order for Crank-Nicolson"
-  },
-  {
-    "objectID": "analysis.html#truncation-error",
-    "href": "analysis.html#truncation-error",
-    "title": "Analysis of exponential decay models",
-    "section": "Truncation error",
-    "text": "Truncation error\n\nHow good is the discrete equation?\nPossible answer: see how well \\(u_{e}\\) fits the discrete equation\n\nConsider the forward difference equation \\[\n\\frac{u^{n+1}-u^n}{\\Delta t} = -au^n\n\\]\nInsert \\(u_{e}\\) to obtain a truncation error \\(R^n\\)\n\\[\n\\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n) = R^n \\neq 0\n\\]"
-  },
-  {
-    "objectID": "analysis.html#computation-of-the-truncation-error",
-    "href": "analysis.html#computation-of-the-truncation-error",
-    "title": "Analysis of exponential decay models",
-    "section": "Computation of the truncation error",
-    "text": "Computation of the truncation error\n\nThe residual \\(R^n\\) is the truncation error. How does \\(R^n\\) vary with \\(\\Delta t\\)?\n\nTool: Taylor expand \\(u_{e}\\) around the point where the ODE is sampled (here \\(t_n\\))\n\\[\nu_{e}(t_{n+1}) = u_{e}(t_n) + u_{e}'(t_n)\\Delta t + \\frac{1}{2}u_{e}''(t_n)\n\\Delta t^2 + \\cdots\n\\]\nInserting this Taylor series for \\(u_{e}\\) in the forward difference equation\n\\[\nR^n = \\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n)\n\\]\nto get\n\\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]"
-  },
-  {
-    "objectID": "analysis.html#the-truncation-error-forward-euler-becomes",
-    "href": "analysis.html#the-truncation-error-forward-euler-becomes",
-    "title": "Analysis of exponential decay models",
-    "section": "The truncation error forward Euler becomes",
-    "text": "The truncation error forward Euler becomes\n\\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]\nSince \\(u_{e}\\) solves the ODE \\(u_{e}'(t_n)=-au_{e}(t_n)\\), we get that \\(u_{e}'(t_n)\\) and \\(au_{e}(t_n)\\) cancel out. We are left with\n\\[\nR^n \\approx \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots\n\\]\nThis is a mathematical expression for the truncation error."
-  },
-  {
-    "objectID": "analysis.html#the-truncation-error-forward-euler",
-    "href": "analysis.html#the-truncation-error-forward-euler",
-    "title": "Analysis of exponential decay models",
-    "section": "The truncation error forward Euler",
-    "text": "The truncation error forward Euler\nWe have \\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]\nSince \\(u_{e}\\) solves the ODE \\(u_{e}'(t_n)=-au_{e}(t_n)\\), we get that \\(u_{e}'(t_n)\\) and \\(au_{e}(t_n)\\) cancel out. We are left with leading term\n\\[\nR^n \\approx \\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nThis is a mathematical expression for the truncation error."
-  },
-  {
-    "objectID": "analysis.html#the-truncation-error-for-other-schemes",
-    "href": "analysis.html#the-truncation-error-for-other-schemes",
-    "title": "Analysis of exponential decay models",
-    "section": "The truncation error for other schemes",
-    "text": "The truncation error for other schemes\nBackward Euler:\n\\[\nR^n \\approx -\\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nCrank-Nicolson:\n\\[\nR^{n+\\scriptstyle\\frac{1}{2}} \\approx \\frac{1}{24}u_{e}'''(t_{n+\\scriptstyle\\frac{1}{2}})\\Delta t^2\n\\]"
-  },
-  {
-    "objectID": "analysis.html#consistency-stability-and-convergence",
-    "href": "analysis.html#consistency-stability-and-convergence",
-    "title": "Analysis of exponential decay models",
-    "section": "Consistency, stability, and convergence",
-    "text": "Consistency, stability, and convergence\n\nTruncation error measures the residual in the difference equations. The scheme is consistent if the truncation error goes to 0 as \\(\\Delta t\\rightarrow 0\\). Importance: the difference equations approaches the differential equation as \\(\\Delta t\\rightarrow 0\\).\nStability means that the numerical solution exhibits the same qualitative properties as the exact solution. Here: monotone, decaying function.\nConvergence implies that the true (global) error \\(e^n =u_{e}(t_n)-u^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). This is really what we want!\n\nThe Lax equivalence theorem for linear differential equations: consistency + stability is equivalent with convergence.\n(Consistency and stability is in most problems much easier to establish than convergence.)"
   }
 ]
