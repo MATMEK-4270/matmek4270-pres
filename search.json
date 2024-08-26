@@ -88,7 +88,7 @@
     "href": "vibration.html#mathematical-analysis",
     "title": "A simple vibration problem",
     "section": "Mathematical analysis",
-    "text": "Mathematical analysis\nThe exact solution to the continuous vibration equation is\n\\[\nu_e(t) = I \\cos (\\omega t)\n\\]\nThe key to study the numerical solution is knowing that linear difference equations like\n\\[\nu^{n+1} = (2-\\Delta t^2\\omega^2) u^n - u^{n-1}\n\\]\nadmit solutions of the form\n\\[\nu^{n+1} = A u^n  \\quad \\text{or} \\quad u^n = A^n I\n\\]\nwhere \\(I\\) is an initial condition. This is a recursion relation exactly like the one used for the exponential decay model."
+    "text": "Mathematical analysis\nThe exact solution to the continuous vibration equation is\n\\[\nu_e(t) = I \\cos (\\omega t)\n\\]\nThe key to study the numerical solution is knowing that linear difference equations like\n\\[\nu^{n+1} = (2-\\Delta t^2\\omega^2) u^n - u^{n-1}\n\\]\nadmit solutions of the form\n\\[\nu^{n+1} = A u^n  \\quad \\text{or} \\quad u^n = A^n I\n\\]\nwhere \\(I\\) is an initial condition. This is a recurrence relation like the one used for the exponential decay. Note that \\(u^n\\) may be computed recursively\n\ndef u(n, I=2., A=0.5):\n  if n &gt; 0:\n    return A * u(n-1, I, A)\n  return I\nprint(u(0), u(1), u(2), u(3))\n\n2.0 1.0 0.5 0.25"
   },
   {
     "objectID": "vibration.html#exact-discrete-solution",
