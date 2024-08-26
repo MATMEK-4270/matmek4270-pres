@@ -1,241 +1,276 @@
 [
   {
-    "objectID": "analysis.html#recap---finite-differencing-of-exponential-decay",
-    "href": "analysis.html#recap---finite-differencing-of-exponential-decay",
-    "title": "Analysis of exponential decay models",
-    "section": "Recap - Finite differencing of exponential decay",
-    "text": "Recap - Finite differencing of exponential decay\n\n\n\n\n\n\n\n\n\nThe ordinary differential equation\n\n\n\\[\nu'(t) = -au(t),\\quad u(0)=I, \\quad y \\in (0, T]\n\\] where \\(a&gt;0\\) is a constant.\n\n\n\nSolve the ODE by finite difference methods:\n\nDiscretize in time:\n\\[0 = t_0 &lt; t_1 &lt; t_2 &lt; \\cdots &lt; t_{N_t-1} &lt; t_{N_t} = T\\]\nSatisfy the ODE at \\(N_t\\) discrete time steps:\n\\[\n\\begin{align}\nu'(t_n) &= -a u(t_n), \\quad &n\\in [1, \\ldots, N_t], \\text{ or} \\\\\nu'(t_{n+\\scriptstyle\\frac{1}{2}}) &= -a u(t_{n+\\scriptstyle\\frac{1}{2}}), \\quad &n\\in [0, \\ldots, N_t-1]\n\\end{align}\n\\]"
+    "objectID": "vibration.html#a-simple-vibration-problem",
+    "href": "vibration.html#a-simple-vibration-problem",
+    "title": "A simple vibration problem",
+    "section": "A simple vibration problem",
+    "text": "A simple vibration problem\n\n\n\nThe vibration equation is given as\n\\[\nu^{\\prime\\prime}(t) + \\omega^2u(t) = 0,\\quad u(0)=I,\\ u^{\\prime}(0)=0,\\ t\\in (0,T]\n\\]\nand the exact solution is:\n\\[\nu(t) = I\\cos (\\omega t)\n\\]\n\n\\(u(t)\\) oscillates with constant amplitude \\(I\\) and (angular) frequency \\(\\omega\\).\nPeriod: \\(P=2\\pi/\\omega\\). The period is the time between two neighboring peaks in the cosine function."
   },
   {
-    "objectID": "analysis.html#finite-difference-algorithms",
-    "href": "analysis.html#finite-difference-algorithms",
-    "title": "Analysis of exponential decay models",
-    "section": "Finite difference algorithms",
-    "text": "Finite difference algorithms\n\nDiscretization by a generic \\(\\theta\\)-rule\n\n\\[\n\\frac{u^{n+1}-u^{n}}{\\triangle t} = -(1-\\theta)au^{n} - \\theta u^{n+1}\n\\]\n\\[\n\\begin{cases}\n  \\theta = 0 \\quad &\\text{Forward Euler} \\\\\n  \\theta = 1 \\quad &\\text{Backward Euler} \\\\\n  \\theta = 1/2 \\quad &\\text{Crank-Nicolson}\n  \\end{cases}\n\\]\nNote \\(u^n = u(t_n)\\)\n\nSolve recursively: Set \\(u^0 = I\\) and then\n\n\\[\nu^{n+1} = \\frac{1-(1-\\theta)a \\triangle t}{1+\\theta a \\triangle t}u^{n} \\quad \\text{for } n=0, 1, \\ldots\n\\]"
+    "objectID": "vibration.html#a-centered-finite-difference-scheme-step-1-and-2",
+    "href": "vibration.html#a-centered-finite-difference-scheme-step-1-and-2",
+    "title": "A simple vibration problem",
+    "section": "A centered finite difference scheme; step 1 and 2",
+    "text": "A centered finite difference scheme; step 1 and 2\n\nStrategy: follow the four steps of the finite difference method.\nStep 1: Introduce a time mesh, here uniform on \\([0,T]\\): \\[\nt_n=n\\Delta t, \\quad n=0, 1, \\ldots, N_t\n\\]\n\n\n\nStep 2: Let the ODE be satisfied at each mesh point minus 2 boundary conditions:\n\n\\[\nu^{\\prime\\prime}(t_n) + \\omega^2u(t_n) = 0,\\quad n=2,\\ldots,N_t\n\\]"
   },
   {
-    "objectID": "analysis.html#analysis-of-finite-difference-equations",
-    "href": "analysis.html#analysis-of-finite-difference-equations",
-    "title": "Analysis of exponential decay models",
-    "section": "Analysis of finite difference equations",
-    "text": "Analysis of finite difference equations\nModel: \\[\nu'(t) = -au(t),\\quad u(0)=I\n\\]\nMethod:\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}u^n\n\\]\n\n\n\n\n\n\nProblem setting\n\n\nHow good is this method? Is it safe to use it?"
+    "objectID": "vibration.html#a-centered-finite-difference-scheme-step-3",
+    "href": "vibration.html#a-centered-finite-difference-scheme-step-3",
+    "title": "A simple vibration problem",
+    "section": "A centered finite difference scheme; step 3",
+    "text": "A centered finite difference scheme; step 3\nStep 3: Approximate derivative(s) by finite difference approximation(s). Very common (standard!) formula for \\(u^{\\prime\\prime}\\):\n\\[\nu^{\\prime\\prime}(t_n) \\approx \\frac{u^{n+1}-2u^n + u^{n-1}}{\\Delta t^2}\n\\]\n\nInsert into vibration ODE:\n\\[\n\\frac{u^{n+1}-2u^n + u^{n-1}}{\\Delta t^2} = -\\omega^2 u^n\n\\]"
   },
   {
-    "objectID": "analysis.html#solver",
-    "href": "analysis.html#solver",
-    "title": "Analysis of exponential decay models",
-    "section": "Solver",
-    "text": "Solver\nWe already have a solver that we can use to experiment with. Lets run it for a range of different timesteps.\n\nimport numpy as np\ndef solver(I, a, T, dt, theta):\n    \"\"\"Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt.\"\"\"\n    Nt = int(T/dt)            # no of time intervals\n    T = Nt*dt                 # adjust T to fit time step dt\n    u = np.zeros(Nt+1)           # array of u[n] values\n    t = np.linspace(0, T, Nt+1)  # time mesh\n    u[0] = I                  # assign initial condition\n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n    return u, t"
+    "objectID": "vibration.html#a-centered-finite-difference-scheme-step-4",
+    "href": "vibration.html#a-centered-finite-difference-scheme-step-4",
+    "title": "A simple vibration problem",
+    "section": "A centered finite difference scheme; step 4",
+    "text": "A centered finite difference scheme; step 4\nStep 4: Formulate the computational algorithm. Assume \\(u^{n-1}\\) and \\(u^n\\) are known, solve for unknown \\(u^{n+1}\\):\n\\[\nu^{n+1} = 2u^n - u^{n-1} - \\Delta t^2\\omega^2 u^n\n\\]\nNick names for this scheme: Störmer’s method or Verlet integration.\n\nThe scheme is a recurrence relation. That is, \\(u^{n+1}\\) is an explicit function of one or more of the solutions at previous time steps \\(u^n, u^{n-1}, \\ldots\\). We will later see implicit schemes where the solution for \\(u^{n+1}\\) depends also on \\(u^{n+2}, u^{n+3}\\) etc."
   },
   {
-    "objectID": "analysis.html#encouraging-numerical-solutions---backwards-euler",
-    "href": "analysis.html#encouraging-numerical-solutions---backwards-euler",
-    "title": "Analysis of exponential decay models",
-    "section": "Encouraging numerical solutions - Backwards Euler",
-    "text": "Encouraging numerical solutions - Backwards Euler\n\\(I=1\\), \\(a=2\\), \\(\\theta =1\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+    "objectID": "vibration.html#computing-the-first-step---option-1",
+    "href": "vibration.html#computing-the-first-step---option-1",
+    "title": "A simple vibration problem",
+    "section": "Computing the first step - option 1",
+    "text": "Computing the first step - option 1\n\nThe two initial conditions require that we fix \\(u^0\\) and \\(u^1\\). How?\n\n\n\nWe cannot use the difference equation \\(u^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\\) because \\(u^{-1}\\) is unknown and outside the mesh!\nAnd: we have not used the initial condition \\(u^{\\prime}(0)=0\\)!\n\n\n\nOption 1: Use a forward difference\n\\[\n  \\begin{align*}\n  u^{\\prime}(0) &=  \\frac{u^1-u^0}{\\Delta t}=0  &\\longrightarrow u^1=u^0=I \\\\\n  u^{\\prime}(0) &= \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0 \\quad &\\longrightarrow u^1=\\frac{u^2+3u^0}{4}\n  \\end{align*}\n\\]\n\n\n\n\n\n\nNote\n\n\nFirst is merely first order accurate, second is second order, but implicit (depends on the unknown \\(u^2\\).)"
   },
   {
-    "objectID": "analysis.html#discouraging-numerical-solutions---crank-nicolson",
-    "href": "analysis.html#discouraging-numerical-solutions---crank-nicolson",
-    "title": "Analysis of exponential decay models",
-    "section": "Discouraging numerical solutions - Crank-Nicolson",
-    "text": "Discouraging numerical solutions - Crank-Nicolson\n\\(I=1\\), \\(a=2\\), \\(\\theta=0.5\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+    "objectID": "vibration.html#computing-the-first-step---option-2",
+    "href": "vibration.html#computing-the-first-step---option-2",
+    "title": "A simple vibration problem",
+    "section": "Computing the first step - option 2",
+    "text": "Computing the first step - option 2\nUse the discrete ODE at \\(t=0\\) together with a central difference at \\(t=0\\) and a ghost cell \\(u^{-1}\\). The central difference is\n\\[\n\\frac{u^1-u^{-1}}{2\\Delta t} = 0\\quad\\Rightarrow\\quad u^{-1} = u^1\n\\]\nThe vibration scheme for \\(n=0\\) is\n\\[\nu^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\n\\]\nUse \\(u^{-1}=u^1\\) to get\n\\[\nu^1 = u^0 - \\frac{1}{2} \\Delta t^2 \\omega^2 u^0\n\\]\n\n\n\n\n\n\nNote\n\n\nSecond order accurate and explicit (does not depend on unknown \\(u^2\\))."
   },
   {
-    "objectID": "analysis.html#discouraging-numerical-solutions---forward-euler",
-    "href": "analysis.html#discouraging-numerical-solutions---forward-euler",
-    "title": "Analysis of exponential decay models",
-    "section": "Discouraging numerical solutions - Forward Euler",
-    "text": "Discouraging numerical solutions - Forward Euler\n\\(I=1\\), \\(a=2\\), \\(\\theta=0\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+    "objectID": "vibration.html#the-computational-algorithm",
+    "href": "vibration.html#the-computational-algorithm",
+    "title": "A simple vibration problem",
+    "section": "The computational algorithm",
+    "text": "The computational algorithm\n\n\\(u^0=I\\)\ncompute \\(u^1 = u^0 - \\frac{1}{2} \\Delta t^2 \\omega^2 u^0\\)\nfor \\(n=1, 2, \\ldots, N_t-1\\):\n\ncompute \\(u^{n+1}\\)\n\n\n\nMore precisely expressed in Python:\n\nT = 1\nNt = 10\nI = 1\nw = 4\nt = np.linspace(0, T, Nt+1)  # mesh points in time\ndt = t[1] - t[0]          # constant time step.\nu = np.zeros(Nt+1)           # solution\n\nu[0] = I\nu[1] = u[0] - 0.5*dt**2*w**2*u[0]\nfor n in range(1, Nt):\n    u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n\nThe code is difficult to vectorize, so we should use Numba or Cython for speed."
   },
   {
-    "objectID": "analysis.html#summary-of-observations",
-    "href": "analysis.html#summary-of-observations",
-    "title": "Analysis of exponential decay models",
-    "section": "Summary of observations",
-    "text": "Summary of observations\nThe characteristics of the displayed curves can be summarized as follows:\n\nThe Backward Euler scheme always gives a monotone solution, lying above the exact solution.\nThe Crank-Nicolson scheme gives the most accurate results, but for \\(\\Delta t=1.25\\) the solution oscillates.\nThe Forward Euler scheme gives a growing, oscillating solution for \\(\\Delta t=1.25\\); a decaying, oscillating solution for \\(\\Delta t=0.75\\); a strange solution \\(u^n=0\\) for \\(n\\geq 1\\) when \\(\\Delta t=0.5\\); and a solution seemingly as accurate as the one by the Backward Euler scheme for \\(\\Delta t = 0.1\\), but the curve lies below the exact solution.\nSmall enough \\(\\Delta t\\) gives stable and accurate solution for all methods!"
+    "objectID": "vibration.html#computing-uprime",
+    "href": "vibration.html#computing-uprime",
+    "title": "A simple vibration problem",
+    "section": "Computing \\(u^{\\prime}\\)",
+    "text": "Computing \\(u^{\\prime}\\)\n\\(u\\) is often displacement/position, \\(u^{\\prime}\\) is velocity and can be computed by\n\\[\nu^{\\prime}(t_n) \\approx \\frac{u^{n+1}-u^{n-1}}{2\\Delta t}\n\\]\n\n\n\n\n\n\nNote\n\n\nFor \\(u^{\\prime}(t_0)\\) and \\(u^{\\prime}(t_{N_t})\\) it is possible to use forward or backwards differences, respectively. However, we already know from initial conditions that \\(u^{\\prime}(t_0) = 0\\) so no need to use finite difference there.\n\n\n\n\nWith vectorization:\n\ndu = np.zeros(Nt+1)\ndu[1:-1] = (u[2:] - u[:-2]) / (2*dt)  # second order accurate\ndu[0] = 0                             # exact from initial condition\ndu[-1] = (u[-1]-u[-2]) / dt           # first order accurate"
   },
   {
-    "objectID": "analysis.html#problem-setting-1",
-    "href": "analysis.html#problem-setting-1",
-    "title": "Analysis of exponential decay models",
-    "section": "Problem setting",
-    "text": "Problem setting\n\n\n\n\n\n\nWe ask the question\n\n\n\nUnder what circumstances, i.e., values of the input data \\(I\\), \\(a\\), and \\(\\Delta t\\) will the Forward Euler and Crank-Nicolson schemes result in undesired oscillatory solutions?\n\nTechniques of investigation:\n\nNumerical experiments\nMathematical analysis\n\nAnother question to be raised is\n\nHow does \\(\\Delta t\\) impact the error in the numerical solution?"
+    "objectID": "vibration.html#implementation",
+    "href": "vibration.html#implementation",
+    "title": "A simple vibration problem",
+    "section": "Implementation",
+    "text": "Implementation\n\ndef solver(I, w, dt, T):\n    \"\"\"\n    Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,\n    by a central finite difference method with time step dt.\n    \"\"\"\n    dt = float(dt)\n    Nt = int(round(T/dt))\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)"
   },
   {
-    "objectID": "analysis.html#exact-numerical-solution",
-    "href": "analysis.html#exact-numerical-solution",
-    "title": "Analysis of exponential decay models",
-    "section": "Exact numerical solution",
-    "text": "Exact numerical solution\nFor the simple exponential decay problem we are lucky enough to have an exact numerical solution\n\\[\nu^{n} = IA^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nSuch a formula for the exact discrete solution is unusual to obtain in practice, but very handy for our analysis here.\n\n\n\n\n\n\nNote\n\n\nAn exact dicrete solution fulfills a discrete equation (without round-off errors), whereas an exact solution fulfills the original mathematical equation."
+    "objectID": "vibration.html#visualization",
+    "href": "vibration.html#visualization",
+    "title": "A simple vibration problem",
+    "section": "Visualization",
+    "text": "Visualization\n\ndef visualize(u, t, I, w):\n    plt.plot(t, u, 'r--o')\n    t_fine = np.linspace(0, t[-1], 1001)  # very fine mesh for u_e\n    u_e = u_exact(t_fine, I, w)\n    plt.plot(t_fine, u_e, 'b-')\n    plt.legend(['numerical', 'exact'], loc='upper left')\n    plt.xlabel('t')\n    plt.ylabel('u(t)')\n    dt = t[1] - t[0]\n    plt.title('dt=%g' % dt)\n    umin = 1.2*u.min();  umax = -umin\n    plt.axis([t[0], t[-1], umin, umax])"
   },
   {
-    "objectID": "analysis.html#stability",
-    "href": "analysis.html#stability",
-    "title": "Analysis of exponential decay models",
-    "section": "Stability",
-    "text": "Stability\nSince \\(u^n=I A^n\\),\n\n\\(A &lt; 0\\) gives a factor \\((-1)^n\\) and oscillatory solutions\n\\(|A|&gt;1\\) gives growing solutions\nRecall: the exact solution is monotone and decaying\nIf these qualitative properties are not met, we say that the numerical solution is unstable\n\n\nFor stability we need\n\\[\nA &gt; 0 \\quad \\text{ and } \\quad |A| \\le 1\n\\]"
+    "objectID": "vibration.html#main-program",
+    "href": "vibration.html#main-program",
+    "title": "A simple vibration problem",
+    "section": "Main program",
+    "text": "Main program\n\nI = 1\nw = 2*np.pi\nnum_periods = 6\nP = 2*np.pi/w    #  one period\nT = P*num_periods\ndt = 0.5/w\nu, t = solver(I, w, dt, T)\nvisualize(u, t, I, w)"
   },
   {
-    "objectID": "analysis.html#computation-of-stability-in-this-problem",
-    "href": "analysis.html#computation-of-stability-in-this-problem",
-    "title": "Analysis of exponential decay models",
-    "section": "Computation of stability in this problem",
-    "text": "Computation of stability in this problem\n\\(A &lt; 0\\) if\n\\[\n\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} &lt; 0\n\\]\nTo avoid oscillatory solutions we must have \\(A&gt; 0\\), which happens for\n\n\\[\n\\Delta t &lt; \\frac{1}{(1-\\theta)a}, \\quad \\text{for} \\, \\theta &lt; 1\n\\]\n\nAlways fulfilled for Backward Euler (\\(\\theta=1 \\rightarrow 1 &lt; 1+a \\Delta t\\) always true)\n\\(\\Delta t \\leq 1/a\\) for Forward Euler (\\(\\theta=0\\))\n\\(\\Delta t \\leq 2/a\\) for Crank-Nicolson (\\(\\theta = 0.5\\))\n\nWe get oscillatory solutions for FE when \\(\\Delta t \\le 1/a\\) and for CN when \\(\\Delta t \\le 2/a\\)"
+    "objectID": "vibration.html#various-timestep",
+    "href": "vibration.html#various-timestep",
+    "title": "A simple vibration problem",
+    "section": "Various timestep",
+    "text": "Various timestep\n\n\n\n\n\n\n\n\n\nWe see that \\(\\Delta t = 2/\\omega\\) is a limit. Using longer \\(\\Delta t\\) leads to growth. Why?"
   },
   {
-    "objectID": "analysis.html#computation-of-stability-in-this-problem-1",
-    "href": "analysis.html#computation-of-stability-in-this-problem-1",
-    "title": "Analysis of exponential decay models",
-    "section": "Computation of stability in this problem",
-    "text": "Computation of stability in this problem\n\\(|A|\\leq 1\\) means \\(-1\\leq A\\leq 1\\)\n\\[\n-1\\leq\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} \\leq 1\n\\]\n\n\\(-1\\) is the critical limit (because \\(A\\le 1\\) is always satisfied).\n\\(-1 &lt; A\\) is always fulfilled for Backward Euler (\\(\\theta=1\\)) and Crank-Nicolson (\\(\\theta=0.5\\)).\nFor forward Euler or simply \\(\\theta &lt; 0.5\\) we have \\[\n\\Delta t \\leq \\frac{2}{(1-2\\theta)a},\\quad\n\\] and thus \\(\\Delta t \\leq 2/a\\) for stability of the forward Euler (\\(\\theta=0\\)) method"
+    "objectID": "vibration.html#mathematical-analysis",
+    "href": "vibration.html#mathematical-analysis",
+    "title": "A simple vibration problem",
+    "section": "Mathematical analysis",
+    "text": "Mathematical analysis\nThe exact solution to the continuous vibration equation is\n\\[\nu_e(t) = I \\cos (\\omega t)\n\\]\nThe key to study the numerical solution is knowing that linear difference equations like\n\\[\nu^{n+1} = (2-\\Delta t^2\\omega^2) u^n - u^{n-1}\n\\]\nadmit solutions of the form\n\\[\nu^{n+1} = A u^n  \\quad \\text{or} \\quad u^n = A^n I\n\\]\nwhere \\(I\\) is an initial condition. This is a recursion relation exactly like the one used for the exponential decay model."
   },
   {
-    "objectID": "analysis.html#explanation-of-problems-with-forward-euler",
-    "href": "analysis.html#explanation-of-problems-with-forward-euler",
-    "title": "Analysis of exponential decay models",
-    "section": "Explanation of problems with forward Euler",
-    "text": "Explanation of problems with forward Euler\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(a\\Delta t= 2\\cdot 1.25=2.5\\) and \\(A=-1.5\\): oscillations and growth\n\\(a\\Delta t = 2\\cdot 0.75=1.5\\) and \\(A=-0.5\\): oscillations and decay\n\\(\\Delta t=0.5\\) and \\(A=0\\): \\(u^n=0\\) for \\(n&gt;0\\)\nSmaller \\(\\Delta t\\): qualitatively correct solution"
+    "objectID": "vibration.html#exact-discrete-solution",
+    "href": "vibration.html#exact-discrete-solution",
+    "title": "A simple vibration problem",
+    "section": "Exact discrete solution",
+    "text": "Exact discrete solution\nWe now have (at least) two possibilities\n\nAssume that \\(A=e^{i \\tilde{\\omega} \\Delta t}\\) and solve for the numerical frequency \\(\\tilde{\\omega}\\)\nAssume nothing and compute with a function A(\\(\\Delta t, \\omega\\)) (like for the exponential decay)\n\n\nWe follow Langtangen’s approach (1) first. Note that since\n\\[\ne^{i \\tilde{\\omega} \\Delta t} = \\cos (\\tilde{\\omega} \\Delta t ) + i \\sin(\\tilde{\\omega} \\Delta t)\n\\]\nwe can work with a complex A and let the real part represent the physical solution.\nThe exact discrete solution is then\n\\[\nu(t_n) = I \\cos (\\tilde{\\omega} t_n)\n\\]\nand we can study the error in \\(\\tilde{\\omega}\\) compared to the true \\(\\omega\\)."
   },
   {
-    "objectID": "analysis.html#explanation-of-problems-with-crank-nicolson",
-    "href": "analysis.html#explanation-of-problems-with-crank-nicolson",
-    "title": "Analysis of exponential decay models",
-    "section": "Explanation of problems with Crank-Nicolson",
-    "text": "Explanation of problems with Crank-Nicolson\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\Delta t=1.25\\) and \\(A=-0.25\\): oscillatory solution\n\nNever any growing solution"
+    "objectID": "vibration.html#find-the-truncation-error",
+    "href": "vibration.html#find-the-truncation-error",
+    "title": "A simple vibration problem",
+    "section": "Find the truncation error",
+    "text": "Find the truncation error\nInsert the numerical solution \\(u^n = I \\cos (\\tilde{\\omega} t_n)\\) into the discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\n\nQuite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you\n\\[\n\\begin{align}\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} &= \\frac{I}{\\Delta t^2} (\\cos (\\tilde{\\omega} t_{n+1}) - 2 \\cos (\\tilde{\\omega} t_n) + \\cos (\\tilde{\\omega} t_{n-1})) \\\\\n&= \\frac{2 I}{\\Delta t^2} (\\cos (\\tilde{\\omega} \\Delta t) - 1) \\cos (\\tilde{\\omega} n \\Delta t) \\\\\n&= -\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) \\cos (\\tilde{\\omega} n \\Delta t)\n\\end{align}\n\\]"
   },
   {
-    "objectID": "analysis.html#summary-of-stability",
-    "href": "analysis.html#summary-of-stability",
-    "title": "Analysis of exponential decay models",
-    "section": "Summary of stability",
-    "text": "Summary of stability\n\nForward Euler is conditionally stable\n\n\\(\\Delta t &lt; 2/a\\) for avoiding growth\n\\(\\Delta t\\leq 1/a\\) for avoiding oscillations\n\nThe Crank-Nicolson is unconditionally stable wrt growth and conditionally stable wrt oscillations\n\n\\(\\Delta t &lt; 2/a\\) for avoiding oscillations\n\nBackward Euler is unconditionally stable"
+    "objectID": "vibration.html#insert-into-discrete-equation",
+    "href": "vibration.html#insert-into-discrete-equation",
+    "title": "A simple vibration problem",
+    "section": "Insert into discrete equation",
+    "text": "Insert into discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\nWe get\n\\[\n-\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) { \\cos (\\tilde{\\omega} n \\Delta t)} + { \\omega^2 { \\cos (\\tilde{\\omega} n \\Delta t)}} = 0\n\\]\nand thus\n\\[\n\\omega^2 = \\frac{4}{\\Delta t^2} \\sin^2 \\left( \\frac{\\tilde{\\omega} \\Delta t}{2} \\right)\n\\]\nSolve for \\(\\tilde{\\omega}\\) by taking the root and using \\(\\sin^{-1}\\)"
   },
   {
-    "objectID": "analysis.html#comparing-amplification-factors",
-    "href": "analysis.html#comparing-amplification-factors",
-    "title": "Analysis of exponential decay models",
-    "section": "Comparing amplification factors",
-    "text": "Comparing amplification factors\n\\(u^{n+1}\\) is an amplification \\(A\\) of \\(u^n\\):\n\\[\nu^{n+1} = Au^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nThe exact solution is also an amplification:\n\\[\n\\begin{align}\nu(t_{n+1}) &= e^{-a(t_n+\\Delta t)} \\\\\nu(t_{n+1}) &= e^{-a \\Delta t} e^{-a t_n} \\\\\nu(t_{n+1}) &= A_e u(t_n), \\quad A_e = e^{-a\\Delta t}\n\\end{align}\n\\]\nA possible measure of accuracy: \\(A_e - A\\)"
+    "objectID": "vibration.html#numerical-frequency",
+    "href": "vibration.html#numerical-frequency",
+    "title": "A simple vibration problem",
+    "section": "Numerical frequency",
+    "text": "Numerical frequency\n\\[\n\\tilde{\\omega} = \\pm \\frac{2}{\\Delta t} \\sin^{-1} \\left( \\frac{\\omega  \\Delta t }{2} \\right)\n\\]\n\n\nThere is always a frequency error because \\(\\tilde{\\omega} \\neq \\omega\\).\nThe dimensionless number \\(p=\\omega\\Delta t\\) is the key parameter (i.e., no of time intervals per period is important, not \\(\\Delta t\\) itself. Remember \\(P=2\\pi/w\\) and thus \\(p=2\\pi / P\\))\nHow good is the approximation \\(\\tilde{\\omega}\\) to \\(\\omega\\)?\nDoes it possible lead to growth? \\(|A|&gt;1\\)."
   },
   {
-    "objectID": "analysis.html#plotting-amplification-factors",
-    "href": "analysis.html#plotting-amplification-factors",
-    "title": "Analysis of exponential decay models",
-    "section": "Plotting amplification factors",
-    "text": "Plotting amplification factors"
+    "objectID": "vibration.html#polynomial-approximation-of-the-frequency-error",
+    "href": "vibration.html#polynomial-approximation-of-the-frequency-error",
+    "title": "A simple vibration problem",
+    "section": "Polynomial approximation of the frequency error",
+    "text": "Polynomial approximation of the frequency error\nHow good is the approximation \\(\\tilde{\\omega} = \\pm \\frac{2}{\\Delta t} \\sin^{-1} \\left( \\frac{\\omega  \\Delta t }{2} \\right)\\) ?\n\nWe can easily use a Taylor series expansion for small \\(h=\\Delta t\\)\n\nimport sympy as sp \nh, w = sp.symbols('h,w')\nw_tilde = sp.asin(w*h/2).series(h, 0, 4)*2/h\nsp.simplify(w_tilde)\n\n\\(\\displaystyle w + \\frac{h^{2} w^{3}}{24} + O\\left(h^{3}\\right)\\)\n\n\n\n\nSo the numerical frequency i always too large (to fast oscillations): \\[\n\\tilde\\omega = \\omega\\left( 1 + \\frac{1}{24}\\omega^2\\Delta t^2\\right) + {\\cal O}(\\Delta t^3)\n\\]"
   },
   {
-    "objectID": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
-    "href": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
-    "title": "Analysis of exponential decay models",
-    "section": "\\(p=a\\Delta t\\) is the important parameter for numerical performance",
-    "text": "\\(p=a\\Delta t\\) is the important parameter for numerical performance\n\n\\(p=a\\Delta t\\) is a dimensionless parameter\nall expressions for stability and accuracy involve \\(p\\)\nNote that \\(\\Delta t\\) alone is not so important, it is the combination with \\(a\\) through \\(p=a\\Delta t\\) that matters\n\n\n\n\n\n\n\nAnother evidence why \\(p=a\\Delta t\\) is key\n\n\nIf we scale the model by \\(\\bar t=at\\), \\(\\bar u=u/I\\), we get \\(d\\bar u/d\\bar t = -\\bar u\\), \\(\\bar u(0)=1\\) (no physical parameters!). The analysis show that \\(\\Delta \\bar t\\) is key, corresponding to \\(a\\Delta t\\) in the unscaled model."
+    "objectID": "vibration.html#simple-improvement-of-previous-solver",
+    "href": "vibration.html#simple-improvement-of-previous-solver",
+    "title": "A simple vibration problem",
+    "section": "Simple improvement of previous solver",
+    "text": "Simple improvement of previous solver\n\n\n\n\n\n\nNote\n\n\nWhat happens if we simply use \\(\\omega = \\omega(1-\\omega^2 \\Delta t^2 /24)\\)?\n\n\n\n\nThe leading order numerical error disappears and we get\n\\[\n\\tilde\\omega = \\omega\\left( 1 - \\left(\\frac{1}{24}\\omega^2\\Delta t^2\\right)^2\\right) + \\cdots\n\\]\n\n\n\n\n\n\nNote\n\n\nDirty trick, and only usable when you can compute the numerical error exactly"
   },
   {
-    "objectID": "analysis.html#series-expansion-of-amplification-factors",
-    "href": "analysis.html#series-expansion-of-amplification-factors",
-    "title": "Analysis of exponential decay models",
-    "section": "Series expansion of amplification factors",
-    "text": "Series expansion of amplification factors\nTo investigate \\(A_e - A\\) mathematically, we can Taylor expand the expression, using \\(p=a\\Delta t\\) as variable.\n\nfrom sympy import *\n# Create p as a mathematical symbol with name 'p'\np = Symbol('p', positive=True)\n# Create a mathematical expression with p\nA_e = exp(-p)\n# Find the first 6 terms of the Taylor series of A_e\nA_e.series(p, 0, 6)\n\n\\(\\displaystyle 1 - p + \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + \\frac{p^{4}}{24} - \\frac{p^{5}}{120} + O\\left(p^{6}\\right)\\)\n\n\nThis is the Taylor expansion of the exact amplification factor. How does it compare with the numerical amplification factors?"
+    "objectID": "vibration.html#how-about-the-global-error",
+    "href": "vibration.html#how-about-the-global-error",
+    "title": "A simple vibration problem",
+    "section": "How about the global error?",
+    "text": "How about the global error?\n\\[\nu^n = I\\cos\\left(\\tilde\\omega n\\Delta t\\right),\\quad\n\\tilde\\omega = \\frac{2}{\\Delta t}\\sin^{-1}\\left(\\frac{\\omega\\Delta t}{2}\\right)\n\\]\nThe error mesh function,\n\\[\ne^n = u_{e}(t_n) - u^n =\nI\\cos\\left(\\omega n\\Delta t\\right)\n- I\\cos\\left(\\tilde\\omega n\\Delta t\\right)\n\\]\nis ideal for verification and further analysis!\n\\[\n\\begin{align*}\ne^n &= I\\cos\\left(\\omega n\\Delta t\\right)\n- I\\cos\\left(\\tilde\\omega n\\Delta t\\right) \\\\\n&= -2I\\sin\\left(n \\Delta t\\frac{1}{2}\\left( \\omega - \\tilde\\omega\\right)\\right)\n\\sin\\left(n \\Delta t\\frac{1}{2}\\left( \\omega + \\tilde\\omega\\right)\\right)\n\\end{align*}\n\\]"
   },
   {
-    "objectID": "analysis.html#numerical-amplification-factors",
-    "href": "analysis.html#numerical-amplification-factors",
-    "title": "Analysis of exponential decay models",
-    "section": "Numerical amplification factors",
-    "text": "Numerical amplification factors\nCompute the Taylor expansions of \\(A_e - A\\)\n\nfrom IPython.display import display\ntheta = Symbol('theta', positive=True)\nA = (1-(1-theta)*p)/(1+theta*p)\nFE = A_e.series(p, 0, 4) - A.subs(theta, 0).series(p, 0, 4)\nBE = A_e.series(p, 0, 4) - A.subs(theta, 1).series(p, 0, 4)\nhalf = Rational(1, 2)  # exact fraction 1/2\nCN = A_e.series(p, 0, 4) - A.subs(theta, half).series(p, 0, 4)\ndisplay(FE)\ndisplay(BE)\ndisplay(CN)\n\n\\(\\displaystyle \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{p^{2}}{2} + \\frac{5 p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\n\nForward/backward Euler have leading error \\(p^2\\), or more commonly \\(\\Delta t^2\\)\nCrank-Nicolson has leading error \\(p^3\\), or \\(\\Delta t^3\\)"
+    "objectID": "vibration.html#convergence-of-the-numerical-scheme",
+    "href": "vibration.html#convergence-of-the-numerical-scheme",
+    "title": "A simple vibration problem",
+    "section": "Convergence of the numerical scheme",
+    "text": "Convergence of the numerical scheme\nWe can easily show convergence (i.e., \\(e^n\\rightarrow 0 \\hbox{ as }\\Delta t\\rightarrow 0\\)) from what we know about sines in the error\n\\[\ne^n = -2I\\sin\\left(n \\Delta t\\frac{1}{2}\\left( \\omega - \\tilde\\omega\\right)\\right)\n\\sin\\left(n \\Delta t \\frac{1}{2}\\left( \\omega + \\tilde\\omega\\right)\\right)\n\\] and the following limit \\[\n\\text{since }\\lim_{\\Delta t\\rightarrow 0}\n\\tilde\\omega = \\lim_{\\Delta t\\rightarrow 0}\n\\frac{2}{\\Delta t}\\sin^{-1}\\left(\\frac{\\omega\\Delta t}{2}\\right)\n= \\omega\n\\]\n\nThe limit can be computed using L’Hopital’s rule or simply by asking sympy or WolframAlpha. Sympy is easier:\n\nsp.limit((2/h)*sp.asin(w*h/2), h, 0, dir='+')\n\n\\(\\displaystyle w\\)"
   },
   {
-    "objectID": "analysis.html#the-trueglobal-error-at-a-point",
-    "href": "analysis.html#the-trueglobal-error-at-a-point",
-    "title": "Analysis of exponential decay models",
-    "section": "The true/global error at a point",
-    "text": "The true/global error at a point\n\nThe error in \\(A\\) reflects the local (amplification) error when going from one time step to the next\nWhat is the global (true) error at \\(t_n\\)?\n\n\\[\ne^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n\n\\]\n\nTaylor series expansions of \\(e^n\\) simplify the expression"
+    "objectID": "vibration.html#how-about-stability",
+    "href": "vibration.html#how-about-stability",
+    "title": "A simple vibration problem",
+    "section": "How about stability?",
+    "text": "How about stability?\n\n\nSolutions are oscillatory, so not a problem that \\(A&lt;0\\), like for the exponential decay\nSolutions should have constant amplitudes (constant \\(I\\)), but we will have growth if\n\\(|A| &gt; 1\\)\nConstant amplitude requires \\[\n|A| = |e^{i \\tilde{\\omega} \\Delta t}| = 1\n\\] Is this always satisfied?"
   },
   {
-    "objectID": "analysis.html#computing-the-global-error-at-a-point",
-    "href": "analysis.html#computing-the-global-error-at-a-point",
-    "title": "Analysis of exponential decay models",
-    "section": "Computing the global error at a point",
-    "text": "Computing the global error at a point\n\nn = Symbol('n', integer=True, positive=True)\nu_e = exp(-p*n)   # I=1\nu_n = A**n        # I=1\nFE = u_e.series(p, 0, 4) - u_n.subs(theta, 0).series(p, 0, 4)\nBE = u_e.series(p, 0, 4) - u_n.subs(theta, 1).series(p, 0, 4)\nCN = u_e.series(p, 0, 4) - u_n.subs(theta, half).series(p, 0, 4)\ndisplay(simplify(FE))\ndisplay(simplify(BE))\ndisplay(simplify(CN))\n\n\\(\\displaystyle \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} - \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} + \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{n p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\nSubstitute \\(n\\) by \\(t/\\Delta t\\) and \\(p\\) by \\(a \\Delta t\\):\n\nForward and Backward Euler: leading order term \\(\\frac{1}{2} ta^2\\Delta t\\)\nCrank-Nicolson: leading order term \\(\\frac{1}{12}ta^3\\Delta t^2\\)"
+    "objectID": "vibration.html#stability-in-growth",
+    "href": "vibration.html#stability-in-growth",
+    "title": "A simple vibration problem",
+    "section": "Stability in growth?",
+    "text": "Stability in growth?\nConsider \\[\n|A| = |e^{i y}| \\quad \\text{where} \\quad y= \\pm 2 \\sin^{-1}\\left(\\frac{\\omega \\Delta t}{2}\\right)\n\\]\nIs \\(|e^{iy}|=1\\) for all \\(y\\)?\n\n\n\nNo! For \\(\\Im(y) &lt; 0\\) we have that \\(|e^{iy}| &gt; 1\\).\n\n\ny = -0.001j\nabs(sp.exp(1j*y)) \n\n\\(\\displaystyle 1.00100050016671\\)\n\n\n\n\n\n\nHow can we get negative \\(\\Im(y)\\)? Can \\(\\Im(\\sin^{-1}(x)) &lt; 0\\) for some \\(x\\)?\n\n\nYes! We can easily check that if \\(|x|&gt;1\\) then \\(\\sin^{-1}(x)\\) has a negative imaginary part:\n\nsp.asin(1.01)\n\n\\(\\displaystyle 1.5707963267949 - 0.141303769485649 i\\)\n\n\n\n\nHence if \\(\\left| \\frac{\\omega \\Delta t}{2} \\right| &gt; 1\\) then we will have growth! For stability \\(\\longrightarrow \\Delta t \\le 2 / w\\) !"
   },
   {
-    "objectID": "analysis.html#convergence",
-    "href": "analysis.html#convergence",
-    "title": "Analysis of exponential decay models",
-    "section": "Convergence",
-    "text": "Convergence\nThe numerical scheme is convergent if the global error \\(e^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). If the error has a leading order term \\((\\Delta t)^r\\), the convergence rate is of order \\(r\\)."
+    "objectID": "vibration.html#stability-limit",
+    "href": "vibration.html#stability-limit",
+    "title": "A simple vibration problem",
+    "section": "Stability limit",
+    "text": "Stability limit\nSummary: we get\n\\[\n\\left|\\sin^{-1}\\left(\\frac{\\omega \\Delta t}{2} \\right) \\right| &gt; 1\n\\]\nif\n\\[\n\\left| \\frac{\\omega \\Delta t}{2} \\right| &gt; 1\n\\]\nThis happens for\n\\[\n\\Delta t &gt; \\frac{2}{\\omega}\n\\]"
   },
   {
-    "objectID": "analysis.html#integrated-errors",
-    "href": "analysis.html#integrated-errors",
-    "title": "Analysis of exponential decay models",
-    "section": "Integrated errors",
-    "text": "Integrated errors\nThe \\(\\ell^2\\) norm of the numerical error is computed as\n\\[\n||e^n||_{\\ell^2} = \\sqrt{\\Delta t\\sum_{n=0}^{N_t} ({u_{e}}(t_n) - u^n)^2}\n\\]\nWe can compute this using Sympy. Forward/Backward Euler has \\(e^n \\sim np^2/2\\)\n\nh, N, a, T = symbols('h,N,a,T') # h represents Delta t\nsimplify(sqrt(h * summation((n*p**2/2)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{2} h^{2} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{12}\\)\n\n\nIf we keep only the leading term in the parenthesis, we get the first order \\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{2}\\sqrt{\\frac{T^3}{3}} a^2\\Delta t\n\\]"
+    "objectID": "vibration.html#remember-the-initial-plots",
+    "href": "vibration.html#remember-the-initial-plots",
+    "title": "A simple vibration problem",
+    "section": "Remember the initial plots",
+    "text": "Remember the initial plots\n\n\n\n\n\n\n\n\n\nWe have growth for \\(\\Delta t &gt; 2/\\omega\\)."
   },
   {
-    "objectID": "analysis.html#crank-nicolson",
-    "href": "analysis.html#crank-nicolson",
-    "title": "Analysis of exponential decay models",
-    "section": "Crank-Nicolson",
-    "text": "Crank-Nicolson\nFor Crank-Nicolson the pointwise error is \\(e^n \\sim n p^3 / 12\\). We get\n\nsimplify(sqrt(h * summation((n*p**3/12)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{3} h^{3} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{72}\\)\n\n\nwhich is simplified to the second order accurate\n\\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{12}\\sqrt{\\frac{T^3}{3}}a^3\\Delta t^2\n\\]\n\n\n\n\n\n\nSummary of errors\n\n\nAnalysis of both the pointwise and the time-integrated true errors:\n\n1st order for Forward and Backward Euler\n2nd order for Crank-Nicolson"
+    "objectID": "vibration.html#about-the-stability-limit",
+    "href": "vibration.html#about-the-stability-limit",
+    "title": "A simple vibration problem",
+    "section": "About the stability limit",
+    "text": "About the stability limit\n\n\n\n\n\n\n\n\n\nFor \\(\\Delta t = 2/\\omega\\) there is exactly one timestep between a minimum and a maximum point for the numerical simulation (zigzag pattern). This is absolutely the smallest number of points that can possibly resolve (poorly) a wave of this frequency! So it really does not make sense physically to use larger time steps!"
   },
   {
-    "objectID": "analysis.html#truncation-error",
-    "href": "analysis.html#truncation-error",
-    "title": "Analysis of exponential decay models",
-    "section": "Truncation error",
-    "text": "Truncation error\n\nHow good is the discrete equation?\nPossible answer: see how well \\(u_{e}\\) fits the discrete equation\n\nConsider the forward difference equation \\[\n\\frac{u^{n+1}-u^n}{\\Delta t} = -au^n\n\\]\nInsert \\(u_{e}\\) to obtain a truncation error \\(R^n\\)\n\\[\n\\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n) = R^n \\neq 0\n\\]"
+    "objectID": "vibration.html#alternative-derivation-of-stability-limit",
+    "href": "vibration.html#alternative-derivation-of-stability-limit",
+    "title": "A simple vibration problem",
+    "section": "Alternative derivation of stability limit",
+    "text": "Alternative derivation of stability limit\nWe have the difference equation\n\\[\nu^{n+1} = (2-\\Delta t^2\\omega^2) u^n - u^{n-1}\n\\]\nand a numerical solution of the form\n\\[\nu^{n} = A^n I\n\\]\n\nInsert for the numerical solution in the difference equation:\n\\[\nA^{n+1}I = (2-\\Delta t^2 \\omega^2) A^n I - A^{n-1}I\n\\]\n\n\nDivide by \\(I A^{n-1}\\) and rearrange\n\\[\nA^2 - (2-\\Delta t^2 \\omega^2)A + 1 = 0\n\\]"
   },
   {
-    "objectID": "analysis.html#computation-of-the-truncation-error",
-    "href": "analysis.html#computation-of-the-truncation-error",
-    "title": "Analysis of exponential decay models",
-    "section": "Computation of the truncation error",
-    "text": "Computation of the truncation error\n\nThe residual \\(R^n\\) is the truncation error. How does \\(R^n\\) vary with \\(\\Delta t\\)?\n\nTool: Taylor expand \\(u_{e}\\) around the point where the ODE is sampled (here \\(t_n\\))\n\\[\nu_{e}(t_{n+1}) = u_{e}(t_n) + u_{e}'(t_n)\\Delta t + \\frac{1}{2}u_{e}''(t_n)\n\\Delta t^2 + \\cdots\n\\]\nInserting this Taylor series for \\(u_{e}\\) in the forward difference equation\n\\[\nR^n = \\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n)\n\\]\nto get\n\\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]"
+    "objectID": "vibration.html#alternative-derivation-ctd",
+    "href": "vibration.html#alternative-derivation-ctd",
+    "title": "A simple vibration problem",
+    "section": "Alternative derivation ct’d",
+    "text": "Alternative derivation ct’d\nSet \\(p=\\Delta t \\omega\\) and solve second order equation\n\\[\nA = 1 - \\frac{p^2}{2} \\pm \\frac{p}{2}\\sqrt{p^2-4}\n\\]\n\nWe still want \\(|A|=1\\) for constant amplitude and stability. However try \\(p &gt; 2\\) in the above equation (using the minus in front of the last term) and you get\n\\[\nA &lt; -1\n\\]\nCheck:\n\np = sp.Symbol('p') \nf = 1 - p**2/2 - p/2*sp.sqrt(p**2-4)\nf.subs(p, 2.01).n() \n\n\\(\\displaystyle -1.22130109316473\\)"
   },
   {
-    "objectID": "analysis.html#the-truncation-error-forward-euler",
-    "href": "analysis.html#the-truncation-error-forward-euler",
-    "title": "Analysis of exponential decay models",
-    "section": "The truncation error forward Euler",
-    "text": "The truncation error forward Euler\nWe have \\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]\nSince \\(u_{e}\\) solves the ODE \\(u_{e}'(t_n)=-au_{e}(t_n)\\), we get that \\(u_{e}'(t_n)\\) and \\(au_{e}(t_n)\\) cancel out. We are left with leading term\n\\[\nR^n \\approx \\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nThis is a mathematical expression for the truncation error."
+    "objectID": "vibration.html#alternative-derivation-ctd-1",
+    "href": "vibration.html#alternative-derivation-ctd-1",
+    "title": "A simple vibration problem",
+    "section": "Alternative derivation ct’d",
+    "text": "Alternative derivation ct’d\nSet \\(p=\\Delta t \\omega\\) and solve second order equation\n\\[\nA = 1 - \\frac{p^2}{2} \\pm \\frac{p}{2}\\sqrt{p^2-4}\n\\]\nWe still want \\(|A|=1\\) for constant amplitude and stability. However try \\(p &gt; 2\\) in the above equation (using the minus in front of the last term) and you get\n\\[\nA &lt; -1\n\\]\nSo we have growth if \\(p &gt; 2\\), which is the same as \\(\\Delta t \\omega &gt; 2\\) or simply\n\\[\n\\Delta t &gt; \\frac{2}{\\omega}\n\\]\nwhich is the same result as we got using the numerical frequency \\(\\tilde{\\omega}\\)!"
   },
   {
-    "objectID": "analysis.html#the-truncation-error-for-other-schemes",
-    "href": "analysis.html#the-truncation-error-for-other-schemes",
-    "title": "Analysis of exponential decay models",
-    "section": "The truncation error for other schemes",
-    "text": "The truncation error for other schemes\nBackward Euler:\n\\[\nR^n \\approx -\\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nCrank-Nicolson:\n\\[\nR^{n+\\scriptstyle\\frac{1}{2}} \\approx \\frac{1}{24}u_{e}'''(t_{n+\\scriptstyle\\frac{1}{2}})\\Delta t^2\n\\]"
+    "objectID": "vibration.html#digression",
+    "href": "vibration.html#digression",
+    "title": "A simple vibration problem",
+    "section": "Digression",
+    "text": "Digression\n\n\n\n\n\n\nDigression\n\n\nThis alternative analysis is no different from what we did with the exponential decay. Only the exponential decay was so easy that we did not actually derive the generic A!\n\n\n\nConsider the difference equation for exponential decay\n\\[\n\\frac{u^{n+1}-u^{n}}{\\triangle t} = -(1-\\theta)au^{n} - \\theta a u^{n+1}\n\\]\nand assume again that \\(u^n = A^n I\\). Insert this into the above\n\\[\n\\frac{A^{n+1}I-A^{n}I}{\\triangle t} = -(1-\\theta)aA^{n}I - \\theta a A^{n+1}I\n\\]\nDivide by \\(A^n I\\) and rearrange to get the well-known \\(A = \\frac{1-(1-\\theta)\\Delta t a}{1+ \\theta \\Delta t a}\\)"
   },
   {
-    "objectID": "analysis.html#consistency-stability-and-convergence",
-    "href": "analysis.html#consistency-stability-and-convergence",
-    "title": "Analysis of exponential decay models",
-    "section": "Consistency, stability, and convergence",
-    "text": "Consistency, stability, and convergence\n\nTruncation error measures the residual in the difference equations. The scheme is consistent if the truncation error goes to 0 as \\(\\Delta t\\rightarrow 0\\). Importance: the difference equations approaches the differential equation as \\(\\Delta t\\rightarrow 0\\).\nStability means that the numerical solution exhibits the same qualitative properties as the exact solution. Here: monotone, decaying function.\nConvergence implies that the true (global) error \\(e^n =u_{e}(t_n)-u^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). This is really what we want!\n\nThe Lax equivalence theorem for linear differential equations: consistency + stability is equivalent with convergence.\n(Consistency and stability is in most problems much easier to establish than convergence.)"
+    "objectID": "vibration.html#key-observations",
+    "href": "vibration.html#key-observations",
+    "title": "A simple vibration problem",
+    "section": "Key observations",
+    "text": "Key observations\nWe can draw three important conclusions:\n\n\nThe key parameter in the formulas is \\(p=\\omega\\Delta t\\) (dimensionless)\n\nPeriod of oscillations: \\(P=2\\pi/\\omega\\)\nNumber of time steps per period: \\(N_P=P/\\Delta t\\)\n\\(\\Rightarrow\\ p=\\omega\\Delta t = 2\\pi/ N_P \\sim 1/N_P\\) so the critical parameter is really the number of time steps per period.\nThe smallest possible \\(N_P\\) is 2 \\(\\Rightarrow\\) \\(p\\in (0,\\pi]\\)\n\nFor \\(p\\leq 2\\) the amplitude of \\(u^n\\) is constant (stable solution)\n\\(u^n\\) has a relative frequency error \\(\\tilde\\omega/\\omega \\approx 1 + \\frac{1}{24}p^2\\), making numerical peaks occur too early. This is also called a phase error, or a dispersive error."
   },
   {
-    "objectID": "analysis.html#numerical-computation-of-convergence-rate",
-    "href": "analysis.html#numerical-computation-of-convergence-rate",
-    "title": "Analysis of exponential decay models",
-    "section": "Numerical computation of convergence rate",
-    "text": "Numerical computation of convergence rate\nWe assume that the \\(\\ell^2\\) error norm on the mesh with level \\(i\\) can be written as\n\\[\nE_i = C (\\Delta t_i)^r\n\\]\nwhere \\(C\\) is a constant. This way, if we have the error on two levels, then we can compute\n\\[\n\\frac{E_{i-1}}{E_i} = \\frac{ (\\Delta t_{i-1})^r}{(\\Delta t_{i})^r} = \\left( \\frac{\\Delta t_{i-1}}{ \\Delta t_i} \\right)^r\n\\]\nand isolate \\(r\\) by computing\n\\[\nr = \\frac{\\log {\\frac{E_{i-1}}{E_i}}}{\\log {\\frac{\\Delta t_{i-1}}{\\Delta t_i}}}\n\\]"
+    "objectID": "vibration.html#convergence-rates",
+    "href": "vibration.html#convergence-rates",
+    "title": "A simple vibration problem",
+    "section": "Convergence rates",
+    "text": "Convergence rates\nLets compute the convergence rate for our solver. However, let it also be possible to choose the numerical frequency \\(\\omega(1-\\omega^2\\Delta t^2/24)\\)\n\ndef solver_adjust(I, w, dt, T, adjust_w=False):\n    Nt = int(T/dt)\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n    w_adj = w*(1 - w**2*dt**2/24.) if adjust_w else w\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w_adj**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w_adj**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)\n\ndef l2_error(dt, T, w=0.35, I=0.3, adjust_w=False):\n    u, t = solver_adjust(I, w, dt, T, adjust_w)\n    ue = u_exact(t, I, w)\n    return np.sqrt(dt*np.sum((ue-u)**2))"
   },
   {
-    "objectID": "analysis.html#function-for-convergence-rate",
-    "href": "analysis.html#function-for-convergence-rate",
-    "title": "Analysis of exponential decay models",
-    "section": "Function for convergence rate",
-    "text": "Function for convergence rate\n\nu_exact = lambda t, I, a: I*np.exp(-a*t)\n\ndef l2_error(I, a, theta, dt): \n    u, t = solver(I, a, T, dt, theta)\n    en = u_exact(t, I, a) - u\n    return np.sqrt(dt*np.sum(en**2)) \n\ndef convergence_rates(m, I=1, a=2, T=8, theta=1, dt=1.):\n    dt_values, E_values = [], []\n    for i in range(m):\n        E = l2_error(I, a, theta, dt)\n        dt_values.append(dt)\n        E_values.append(E)\n        dt = dt/2\n    # Compute m-1 orders that should all be the same\n    r = [np.log(E_values[i-1]/E_values[i])/\n         np.log(dt_values[i-1]/dt_values[i])\n         for i in range(1, m, 1)]\n    return r"
+    "objectID": "vibration.html#convergence-rates-1",
+    "href": "vibration.html#convergence-rates-1",
+    "title": "A simple vibration problem",
+    "section": "Convergence rates",
+    "text": "Convergence rates\nWe compute the order of the convergence in the same manner as lecture 2\n\\[\nr = \\frac{\\log {\\frac{E_{i-1}}{E_i}}}{\\log {\\frac{\\Delta t_{i-1}}{\\Delta t_i}}}\n\\]\n\ndef convergence_rates(m, num_periods=8, w=0.35, I=0.3, adjust_w=False):\n    P = 2*np.pi/w\n    dt = 2 / w    # Initial dt is maximum time step for stability\n    T = P*num_periods\n    dt_values, E_values = [], []\n    for i in range(m):\n        E = l2_error(dt, T, w, I, adjust_w)\n        dt_values.append(dt)\n        E_values.append(E)\n        dt = dt/2.\n    # Compute m-1 orders that should all be the same\n    r = [np.log(E_values[i-1]/E_values[i])/\n         np.log(dt_values[i-1]/dt_values[i])\n         for i in range(1, m, 1)]\n    return r, E_values, dt_values"
   },
   {
-    "objectID": "analysis.html#test-convergence-rates",
-    "href": "analysis.html#test-convergence-rates",
-    "title": "Analysis of exponential decay models",
-    "section": "Test convergence rates",
-    "text": "Test convergence rates\nBackward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 1.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[0.9619265651066382, 0.98003334385805, 0.9897576131285538]\n\n\nForward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[1.0472640894307232, 1.0222599097461846, 1.0108154242259877]\n\n\nCrank-Nicolson:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.5\nconvergence_rates(4, I, a, T, theta, dt)\n\n[2.0037335266421343, 2.0009433957768175, 2.000236481071457]\n\n\nAll in good agreement with theory:-)"
+    "objectID": "vibration.html#try-it",
+    "href": "vibration.html#try-it",
+    "title": "A simple vibration problem",
+    "section": "Try it!",
+    "text": "Try it!\nPrint the computed convergence rates\n\nconvergence_rates(5, w=0.5, I=1)[0]\n\n[0.5812225474381454,\n 1.9588768683386732,\n 2.0128151185701406,\n 2.0050238810553545]\n\n\nAdjusted solver:\n\nconvergence_rates(5, w=0.5, I=1, adjust_w=True)[0]\n\n[4.639514498646321, 4.135402053048683, 4.032727110521893, 4.008071155725109]"
+  },
+  {
+    "objectID": "vibration.html#plot-convergence-regular-solver",
+    "href": "vibration.html#plot-convergence-regular-solver",
+    "title": "A simple vibration problem",
+    "section": "plot convergence regular solver",
+    "text": "plot convergence regular solver\n\nfrom plotslopes import slope_marker\nr, E, dt = convergence_rates(5)\nplt.loglog(dt, E, dt, dt, dt, np.array(dt)**2)\nplt.title('Convergence of finite difference method')\nplt.legend(['Error', '$\\\\mathcal{O}(\\\\Delta t)$', '$\\\\mathcal{O}(\\\\Delta t^2)$'])\nslope_marker((dt[1], E[1]), (2,1))\nslope_marker((dt[1], dt[1]), (1,1))\nslope_marker((dt[1], dt[1]**2), (2,1))"
+  },
+  {
+    "objectID": "vibration.html#plot-convergence-adjusted-solver",
+    "href": "vibration.html#plot-convergence-adjusted-solver",
+    "title": "A simple vibration problem",
+    "section": "plot convergence adjusted solver",
+    "text": "plot convergence adjusted solver\n\nfrom plotslopes import slope_marker\nr, E, dt = convergence_rates(5, adjust_w=True)\nplt.loglog(dt, E, dt, np.array(dt)**4)\nplt.title('Convergence of finite difference method')\nplt.legend(['Error', '$\\\\mathcal{O}(\\\\Delta t^4)$'])\nslope_marker((dt[1], E[1]), (4,1))\nslope_marker((dt[1], dt[1]**4), (4,1))"
+  },
+  {
+    "objectID": "vibration.html#add-tests",
+    "href": "vibration.html#add-tests",
+    "title": "A simple vibration problem",
+    "section": "Add tests",
+    "text": "Add tests\nThe exact solution will not equal the numerical, but the order of the error is something we can test for.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    try:\n      assert error &lt; 0.01\n      print(f'Test passed!!')\n    except AssertionError:\n      print(f'Test failed!! orders = {r}')\n\n\nRun test for \\(m=4\\) levels, \\(w=0.5, I=1\\) and adjust_w=False\n\ntest_order(4, w=0.5, I=1, adjust_w=False)\n\nTest failed!! orders = [0.5812225474381454, 1.9588768683386732, 2.0128151185701406]\n\n\n\n\nTest fails. Try one more level\n\ntest_order(5, w=0.5, I=1, adjust_w=False)\n\nTest passed!!\n\n\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nTest passed!!"
+  },
+  {
+    "objectID": "vibration.html#final-test",
+    "href": "vibration.html#final-test",
+    "title": "A simple vibration problem",
+    "section": "Final test",
+    "text": "Final test\nUse simply an assert clause and do not catch the error.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    assert error &lt; 0.01, r\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nThis test will work with pytest."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Presentations for MATMEK-4270",
+    "section": "",
+    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem"
   },
   {
     "objectID": "intro.html#hans-petter-langtangen-1962-2016",
@@ -592,21 +627,21 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.6 µs ± 398 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.03 µs ± 83.4 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.12 µs ± 660 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.07 µs ± 82.3 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.77 µs ± 339 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.3 µs ± 858 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.48 µs ± 1.5 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 199 µs ± 3.97 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.14 µs ± 565 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.7 µs ± 1.06 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.27 µs ± 1.44 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 198 µs ± 3.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 284 µs ± 694 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.16 µs ± 14.4 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 305 µs ± 745 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.15 µs ± 9.37 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
@@ -620,13 +655,244 @@
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.34 µs ± 394 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.35 µs ± 347 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Presentations for MATMEK-4270",
-    "section": "",
-    "text": "Algorithms and implementations for exponential decay models\nAnalysis of exponential decay models"
+    "objectID": "analysis.html#recap---finite-differencing-of-exponential-decay",
+    "href": "analysis.html#recap---finite-differencing-of-exponential-decay",
+    "title": "Analysis of exponential decay models",
+    "section": "Recap - Finite differencing of exponential decay",
+    "text": "Recap - Finite differencing of exponential decay\n\n\n\n\n\n\n\n\n\nThe ordinary differential equation\n\n\n\\[\nu'(t) = -au(t),\\quad u(0)=I, \\quad y \\in (0, T]\n\\] where \\(a&gt;0\\) is a constant.\n\n\n\nSolve the ODE by finite difference methods:\n\nDiscretize in time:\n\\[0 = t_0 &lt; t_1 &lt; t_2 &lt; \\cdots &lt; t_{N_t-1} &lt; t_{N_t} = T\\]\nSatisfy the ODE at \\(N_t\\) discrete time steps:\n\\[\n\\begin{align}\nu'(t_n) &= -a u(t_n), \\quad &n\\in [1, \\ldots, N_t], \\text{ or} \\\\\nu'(t_{n+\\scriptstyle\\frac{1}{2}}) &= -a u(t_{n+\\scriptstyle\\frac{1}{2}}), \\quad &n\\in [0, \\ldots, N_t-1]\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "analysis.html#finite-difference-algorithms",
+    "href": "analysis.html#finite-difference-algorithms",
+    "title": "Analysis of exponential decay models",
+    "section": "Finite difference algorithms",
+    "text": "Finite difference algorithms\n\nDiscretization by a generic \\(\\theta\\)-rule\n\n\\[\n\\frac{u^{n+1}-u^{n}}{\\triangle t} = -(1-\\theta)au^{n} - \\theta a u^{n+1}\n\\]\n\\[\n\\begin{cases}\n  \\theta = 0 \\quad &\\text{Forward Euler} \\\\\n  \\theta = 1 \\quad &\\text{Backward Euler} \\\\\n  \\theta = 1/2 \\quad &\\text{Crank-Nicolson}\n  \\end{cases}\n\\]\nNote \\(u^n = u(t_n)\\)\n\nSolve recursively: Set \\(u^0 = I\\) and then\n\n\\[\nu^{n+1} = \\frac{1-(1-\\theta)a \\triangle t}{1+\\theta a \\triangle t}u^{n} \\quad \\text{for } n=0, 1, \\ldots\n\\]"
+  },
+  {
+    "objectID": "analysis.html#analysis-of-finite-difference-equations",
+    "href": "analysis.html#analysis-of-finite-difference-equations",
+    "title": "Analysis of exponential decay models",
+    "section": "Analysis of finite difference equations",
+    "text": "Analysis of finite difference equations\nModel: \\[\nu'(t) = -au(t),\\quad u(0)=I\n\\]\nMethod:\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}u^n\n\\]\n\n\n\n\n\n\nProblem setting\n\n\nHow good is this method? Is it safe to use it?"
+  },
+  {
+    "objectID": "analysis.html#solver",
+    "href": "analysis.html#solver",
+    "title": "Analysis of exponential decay models",
+    "section": "Solver",
+    "text": "Solver\nWe already have a solver that we can use to experiment with. Lets run it for a range of different timesteps.\n\nimport numpy as np\ndef solver(I, a, T, dt, theta):\n    \"\"\"Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt.\"\"\"\n    Nt = int(T/dt)            # no of time intervals\n    T = Nt*dt                 # adjust T to fit time step dt\n    u = np.zeros(Nt+1)           # array of u[n] values\n    t = np.linspace(0, T, Nt+1)  # time mesh\n    u[0] = I                  # assign initial condition\n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n    return u, t"
+  },
+  {
+    "objectID": "analysis.html#encouraging-numerical-solutions---backwards-euler",
+    "href": "analysis.html#encouraging-numerical-solutions---backwards-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "Encouraging numerical solutions - Backwards Euler",
+    "text": "Encouraging numerical solutions - Backwards Euler\n\\(I=1\\), \\(a=2\\), \\(\\theta =1\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+  },
+  {
+    "objectID": "analysis.html#discouraging-numerical-solutions---crank-nicolson",
+    "href": "analysis.html#discouraging-numerical-solutions---crank-nicolson",
+    "title": "Analysis of exponential decay models",
+    "section": "Discouraging numerical solutions - Crank-Nicolson",
+    "text": "Discouraging numerical solutions - Crank-Nicolson\n\\(I=1\\), \\(a=2\\), \\(\\theta=0.5\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+  },
+  {
+    "objectID": "analysis.html#discouraging-numerical-solutions---forward-euler",
+    "href": "analysis.html#discouraging-numerical-solutions---forward-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "Discouraging numerical solutions - Forward Euler",
+    "text": "Discouraging numerical solutions - Forward Euler\n\\(I=1\\), \\(a=2\\), \\(\\theta=0\\), \\(\\Delta t=1.25, 0.75, 0.5, 0.1\\)."
+  },
+  {
+    "objectID": "analysis.html#summary-of-observations",
+    "href": "analysis.html#summary-of-observations",
+    "title": "Analysis of exponential decay models",
+    "section": "Summary of observations",
+    "text": "Summary of observations\nThe characteristics of the displayed curves can be summarized as follows:\n\nThe Backward Euler scheme always gives a monotone solution, lying above the exact solution.\nThe Crank-Nicolson scheme gives the most accurate results, but for \\(\\Delta t=1.25\\) the solution oscillates.\nThe Forward Euler scheme gives a growing, oscillating solution for \\(\\Delta t=1.25\\); a decaying, oscillating solution for \\(\\Delta t=0.75\\); a strange solution \\(u^n=0\\) for \\(n\\geq 1\\) when \\(\\Delta t=0.5\\); and a solution seemingly as accurate as the one by the Backward Euler scheme for \\(\\Delta t = 0.1\\), but the curve lies below the exact solution.\nSmall enough \\(\\Delta t\\) gives stable and accurate solution for all methods!"
+  },
+  {
+    "objectID": "analysis.html#problem-setting-1",
+    "href": "analysis.html#problem-setting-1",
+    "title": "Analysis of exponential decay models",
+    "section": "Problem setting",
+    "text": "Problem setting\n\n\n\n\n\n\nWe ask the question\n\n\n\nUnder what circumstances, i.e., values of the input data \\(I\\), \\(a\\), and \\(\\Delta t\\) will the Forward Euler and Crank-Nicolson schemes result in undesired oscillatory solutions?\n\nTechniques of investigation:\n\nNumerical experiments\nMathematical analysis\n\nAnother question to be raised is\n\nHow does \\(\\Delta t\\) impact the error in the numerical solution?"
+  },
+  {
+    "objectID": "analysis.html#exact-numerical-solution",
+    "href": "analysis.html#exact-numerical-solution",
+    "title": "Analysis of exponential decay models",
+    "section": "Exact numerical solution",
+    "text": "Exact numerical solution\nFor the simple exponential decay problem we are lucky enough to have an exact numerical solution\n\\[\nu^{n} = IA^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nSuch a formula for the exact discrete solution is unusual to obtain in practice, but very handy for our analysis here.\n\n\n\n\n\n\nNote\n\n\nAn exact dicrete solution fulfills a discrete equation (without round-off errors), whereas an exact solution fulfills the original mathematical equation."
+  },
+  {
+    "objectID": "analysis.html#stability",
+    "href": "analysis.html#stability",
+    "title": "Analysis of exponential decay models",
+    "section": "Stability",
+    "text": "Stability\nSince \\(u^n=I A^n\\),\n\n\\(A &lt; 0\\) gives a factor \\((-1)^n\\) and oscillatory solutions\n\\(|A|&gt;1\\) gives growing solutions\nRecall: the exact solution is monotone and decaying\nIf these qualitative properties are not met, we say that the numerical solution is unstable\n\n\nFor stability we need\n\\[\nA &gt; 0 \\quad \\text{ and } \\quad |A| \\le 1\n\\]"
+  },
+  {
+    "objectID": "analysis.html#computation-of-stability-in-this-problem",
+    "href": "analysis.html#computation-of-stability-in-this-problem",
+    "title": "Analysis of exponential decay models",
+    "section": "Computation of stability in this problem",
+    "text": "Computation of stability in this problem\n\\(A &lt; 0\\) if\n\\[\n\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} &lt; 0\n\\]\nTo avoid oscillatory solutions we must have \\(A&gt; 0\\), which happens for\n\n\\[\n\\Delta t &lt; \\frac{1}{(1-\\theta)a}, \\quad \\text{for} \\, \\theta &lt; 1\n\\]\n\nAlways fulfilled for Backward Euler (\\(\\theta=1 \\rightarrow 1 &lt; 1+a \\Delta t\\) always true)\n\\(\\Delta t \\leq 1/a\\) for Forward Euler (\\(\\theta=0\\))\n\\(\\Delta t \\leq 2/a\\) for Crank-Nicolson (\\(\\theta = 0.5\\))\n\nWe get oscillatory solutions for FE when \\(\\Delta t \\le 1/a\\) and for CN when \\(\\Delta t \\le 2/a\\)"
+  },
+  {
+    "objectID": "analysis.html#computation-of-stability-in-this-problem-1",
+    "href": "analysis.html#computation-of-stability-in-this-problem-1",
+    "title": "Analysis of exponential decay models",
+    "section": "Computation of stability in this problem",
+    "text": "Computation of stability in this problem\n\\(|A|\\leq 1\\) means \\(-1\\leq A\\leq 1\\)\n\\[\n-1\\leq\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} \\leq 1\n\\]\n\n\\(-1\\) is the critical limit (because \\(A\\le 1\\) is always satisfied).\n\\(-1 &lt; A\\) is always fulfilled for Backward Euler (\\(\\theta=1\\)) and Crank-Nicolson (\\(\\theta=0.5\\)).\nFor forward Euler or simply \\(\\theta &lt; 0.5\\) we have \\[\n\\Delta t \\leq \\frac{2}{(1-2\\theta)a},\\quad\n\\] and thus \\(\\Delta t \\leq 2/a\\) for stability of the forward Euler (\\(\\theta=0\\)) method"
+  },
+  {
+    "objectID": "analysis.html#explanation-of-problems-with-forward-euler",
+    "href": "analysis.html#explanation-of-problems-with-forward-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "Explanation of problems with forward Euler",
+    "text": "Explanation of problems with forward Euler\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(a\\Delta t= 2\\cdot 1.25=2.5\\) and \\(A=-1.5\\): oscillations and growth\n\\(a\\Delta t = 2\\cdot 0.75=1.5\\) and \\(A=-0.5\\): oscillations and decay\n\\(\\Delta t=0.5\\) and \\(A=0\\): \\(u^n=0\\) for \\(n&gt;0\\)\nSmaller \\(\\Delta t\\): qualitatively correct solution"
+  },
+  {
+    "objectID": "analysis.html#explanation-of-problems-with-crank-nicolson",
+    "href": "analysis.html#explanation-of-problems-with-crank-nicolson",
+    "title": "Analysis of exponential decay models",
+    "section": "Explanation of problems with Crank-Nicolson",
+    "text": "Explanation of problems with Crank-Nicolson\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\Delta t=1.25\\) and \\(A=-0.25\\): oscillatory solution\n\nNever any growing solution"
+  },
+  {
+    "objectID": "analysis.html#summary-of-stability",
+    "href": "analysis.html#summary-of-stability",
+    "title": "Analysis of exponential decay models",
+    "section": "Summary of stability",
+    "text": "Summary of stability\n\nForward Euler is conditionally stable\n\n\\(\\Delta t &lt; 2/a\\) for avoiding growth\n\\(\\Delta t\\leq 1/a\\) for avoiding oscillations\n\nThe Crank-Nicolson is unconditionally stable wrt growth and conditionally stable wrt oscillations\n\n\\(\\Delta t &lt; 2/a\\) for avoiding oscillations\n\nBackward Euler is unconditionally stable"
+  },
+  {
+    "objectID": "analysis.html#comparing-amplification-factors",
+    "href": "analysis.html#comparing-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Comparing amplification factors",
+    "text": "Comparing amplification factors\n\\(u^{n+1}\\) is an amplification \\(A\\) of \\(u^n\\):\n\\[\nu^{n+1} = Au^n,\\quad A = \\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t}\n\\]\nThe exact solution is also an amplification:\n\\[\n\\begin{align}\nu(t_{n+1}) &= e^{-a(t_n+\\Delta t)} \\\\\nu(t_{n+1}) &= e^{-a \\Delta t} e^{-a t_n} \\\\\nu(t_{n+1}) &= A_e u(t_n), \\quad A_e = e^{-a\\Delta t}\n\\end{align}\n\\]\nA possible measure of accuracy: \\(A_e - A\\)"
+  },
+  {
+    "objectID": "analysis.html#plotting-amplification-factors",
+    "href": "analysis.html#plotting-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Plotting amplification factors",
+    "text": "Plotting amplification factors"
+  },
+  {
+    "objectID": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
+    "href": "analysis.html#padelta-t-is-the-important-parameter-for-numerical-performance",
+    "title": "Analysis of exponential decay models",
+    "section": "\\(p=a\\Delta t\\) is the important parameter for numerical performance",
+    "text": "\\(p=a\\Delta t\\) is the important parameter for numerical performance\n\n\\(p=a\\Delta t\\) is a dimensionless parameter\nall expressions for stability and accuracy involve \\(p\\)\nNote that \\(\\Delta t\\) alone is not so important, it is the combination with \\(a\\) through \\(p=a\\Delta t\\) that matters\n\n\n\n\n\n\n\nAnother evidence why \\(p=a\\Delta t\\) is key\n\n\nIf we scale the model by \\(\\bar t=at\\), \\(\\bar u=u/I\\), we get \\(d\\bar u/d\\bar t = -\\bar u\\), \\(\\bar u(0)=1\\) (no physical parameters!). The analysis show that \\(\\Delta \\bar t\\) is key, corresponding to \\(a\\Delta t\\) in the unscaled model."
+  },
+  {
+    "objectID": "analysis.html#series-expansion-of-amplification-factors",
+    "href": "analysis.html#series-expansion-of-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Series expansion of amplification factors",
+    "text": "Series expansion of amplification factors\nTo investigate \\(A_e - A\\) mathematically, we can Taylor expand the expression, using \\(p=a\\Delta t\\) as variable.\n\nfrom sympy import *\n# Create p as a mathematical symbol with name 'p'\np = Symbol('p', positive=True)\n# Create a mathematical expression with p\nA_e = exp(-p)\n# Find the first 6 terms of the Taylor series of A_e\nA_e.series(p, 0, 6)\n\n\\(\\displaystyle 1 - p + \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + \\frac{p^{4}}{24} - \\frac{p^{5}}{120} + O\\left(p^{6}\\right)\\)\n\n\nThis is the Taylor expansion of the exact amplification factor. How does it compare with the numerical amplification factors?"
+  },
+  {
+    "objectID": "analysis.html#numerical-amplification-factors",
+    "href": "analysis.html#numerical-amplification-factors",
+    "title": "Analysis of exponential decay models",
+    "section": "Numerical amplification factors",
+    "text": "Numerical amplification factors\nCompute the Taylor expansions of \\(A_e - A\\)\n\nfrom IPython.display import display\ntheta = Symbol('theta', positive=True)\nA = (1-(1-theta)*p)/(1+theta*p)\nFE = A_e.series(p, 0, 4) - A.subs(theta, 0).series(p, 0, 4)\nBE = A_e.series(p, 0, 4) - A.subs(theta, 1).series(p, 0, 4)\nhalf = Rational(1, 2)  # exact fraction 1/2\nCN = A_e.series(p, 0, 4) - A.subs(theta, half).series(p, 0, 4)\ndisplay(FE)\ndisplay(BE)\ndisplay(CN)\n\n\\(\\displaystyle \\frac{p^{2}}{2} - \\frac{p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{p^{2}}{2} + \\frac{5 p^{3}}{6} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\n\nForward/backward Euler have leading error \\(p^2\\), or more commonly \\(\\Delta t^2\\)\nCrank-Nicolson has leading error \\(p^3\\), or \\(\\Delta t^3\\)"
+  },
+  {
+    "objectID": "analysis.html#the-trueglobal-error-at-a-point",
+    "href": "analysis.html#the-trueglobal-error-at-a-point",
+    "title": "Analysis of exponential decay models",
+    "section": "The true/global error at a point",
+    "text": "The true/global error at a point\n\nThe error in \\(A\\) reflects the local (amplification) error when going from one time step to the next\nWhat is the global (true) error at \\(t_n\\)?\n\n\\[\ne^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n\n\\]\n\nTaylor series expansions of \\(e^n\\) simplify the expression"
+  },
+  {
+    "objectID": "analysis.html#computing-the-global-error-at-a-point",
+    "href": "analysis.html#computing-the-global-error-at-a-point",
+    "title": "Analysis of exponential decay models",
+    "section": "Computing the global error at a point",
+    "text": "Computing the global error at a point\n\nn = Symbol('n', integer=True, positive=True)\nu_e = exp(-p*n)   # I=1\nu_n = A**n        # I=1\nFE = u_e.series(p, 0, 4) - u_n.subs(theta, 0).series(p, 0, 4)\nBE = u_e.series(p, 0, 4) - u_n.subs(theta, 1).series(p, 0, 4)\nCN = u_e.series(p, 0, 4) - u_n.subs(theta, half).series(p, 0, 4)\ndisplay(simplify(FE))\ndisplay(simplify(BE))\ndisplay(simplify(CN))\n\n\\(\\displaystyle \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} - \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle - \\frac{n p^{2}}{2} + \\frac{n p^{3}}{3} + \\frac{n^{2} p^{3}}{2} + O\\left(p^{4}\\right)\\)\n\n\n\\(\\displaystyle \\frac{n p^{3}}{12} + O\\left(p^{4}\\right)\\)\n\n\nSubstitute \\(n\\) by \\(t/\\Delta t\\) and \\(p\\) by \\(a \\Delta t\\):\n\nForward and Backward Euler: leading order term \\(\\frac{1}{2} ta^2\\Delta t\\)\nCrank-Nicolson: leading order term \\(\\frac{1}{12}ta^3\\Delta t^2\\)"
+  },
+  {
+    "objectID": "analysis.html#convergence",
+    "href": "analysis.html#convergence",
+    "title": "Analysis of exponential decay models",
+    "section": "Convergence",
+    "text": "Convergence\nThe numerical scheme is convergent if the global error \\(e^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). If the error has a leading order term \\((\\Delta t)^r\\), the convergence rate is of order \\(r\\)."
+  },
+  {
+    "objectID": "analysis.html#integrated-errors",
+    "href": "analysis.html#integrated-errors",
+    "title": "Analysis of exponential decay models",
+    "section": "Integrated errors",
+    "text": "Integrated errors\nThe \\(\\ell^2\\) norm of the numerical error is computed as\n\\[\n||e^n||_{\\ell^2} = \\sqrt{\\Delta t\\sum_{n=0}^{N_t} ({u_{e}}(t_n) - u^n)^2}\n\\]\nWe can compute this using Sympy. Forward/Backward Euler has \\(e^n \\sim np^2/2\\)\n\nh, N, a, T = symbols('h,N,a,T') # h represents Delta t\nsimplify(sqrt(h * summation((n*p**2/2)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{2} h^{2} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{12}\\)\n\n\nIf we keep only the leading term in the parenthesis, we get the first order \\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{2}\\sqrt{\\frac{T^3}{3}} a^2\\Delta t\n\\]"
+  },
+  {
+    "objectID": "analysis.html#crank-nicolson",
+    "href": "analysis.html#crank-nicolson",
+    "title": "Analysis of exponential decay models",
+    "section": "Crank-Nicolson",
+    "text": "Crank-Nicolson\nFor Crank-Nicolson the pointwise error is \\(e^n \\sim n p^3 / 12\\). We get\n\nsimplify(sqrt(h * summation((n*p**3/12)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))\n\n\\(\\displaystyle \\frac{\\sqrt{6} a^{3} h^{3} \\sqrt{T \\left(\\frac{2 T^{2}}{h^{2}} + \\frac{3 T}{h} + 1\\right)}}{72}\\)\n\n\nwhich is simplified to the second order accurate\n\\[\n||e^n||_{\\ell^2} \\approx \\frac{1}{12}\\sqrt{\\frac{T^3}{3}}a^3\\Delta t^2\n\\]\n\n\n\n\n\n\nSummary of errors\n\n\nAnalysis of both the pointwise and the time-integrated true errors:\n\n1st order for Forward and Backward Euler\n2nd order for Crank-Nicolson"
+  },
+  {
+    "objectID": "analysis.html#truncation-error",
+    "href": "analysis.html#truncation-error",
+    "title": "Analysis of exponential decay models",
+    "section": "Truncation error",
+    "text": "Truncation error\n\nHow good is the discrete equation?\nPossible answer: see how well \\(u_{e}\\) fits the discrete equation\n\nConsider the forward difference equation \\[\n\\frac{u^{n+1}-u^n}{\\Delta t} = -au^n\n\\]\nInsert \\(u_{e}\\) to obtain a truncation error \\(R^n\\)\n\\[\n\\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n) = R^n \\neq 0\n\\]"
+  },
+  {
+    "objectID": "analysis.html#computation-of-the-truncation-error",
+    "href": "analysis.html#computation-of-the-truncation-error",
+    "title": "Analysis of exponential decay models",
+    "section": "Computation of the truncation error",
+    "text": "Computation of the truncation error\n\nThe residual \\(R^n\\) is the truncation error. How does \\(R^n\\) vary with \\(\\Delta t\\)?\n\nTool: Taylor expand \\(u_{e}\\) around the point where the ODE is sampled (here \\(t_n\\))\n\\[\nu_{e}(t_{n+1}) = u_{e}(t_n) + u_{e}'(t_n)\\Delta t + \\frac{1}{2}u_{e}''(t_n)\n\\Delta t^2 + \\cdots\n\\]\nInserting this Taylor series for \\(u_{e}\\) in the forward difference equation\n\\[\nR^n = \\frac{u_{e}(t_{n+1})-u_{e}(t_n)}{\\Delta t} + au_{e}(t_n)\n\\]\nto get\n\\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]"
+  },
+  {
+    "objectID": "analysis.html#the-truncation-error-forward-euler",
+    "href": "analysis.html#the-truncation-error-forward-euler",
+    "title": "Analysis of exponential decay models",
+    "section": "The truncation error forward Euler",
+    "text": "The truncation error forward Euler\nWe have \\[\nR^n = u_{e}'(t_n) + \\frac{1}{2}u_{e}''(t_n)\\Delta t + \\ldots + au_{e}(t_n)\n\\]\nSince \\(u_{e}\\) solves the ODE \\(u_{e}'(t_n)=-au_{e}(t_n)\\), we get that \\(u_{e}'(t_n)\\) and \\(au_{e}(t_n)\\) cancel out. We are left with leading term\n\\[\nR^n \\approx \\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nThis is a mathematical expression for the truncation error."
+  },
+  {
+    "objectID": "analysis.html#the-truncation-error-for-other-schemes",
+    "href": "analysis.html#the-truncation-error-for-other-schemes",
+    "title": "Analysis of exponential decay models",
+    "section": "The truncation error for other schemes",
+    "text": "The truncation error for other schemes\nBackward Euler:\n\\[\nR^n \\approx -\\frac{1}{2}u_{e}''(t_n)\\Delta t\n\\]\nCrank-Nicolson:\n\\[\nR^{n+\\scriptstyle\\frac{1}{2}} \\approx \\frac{1}{24}u_{e}'''(t_{n+\\scriptstyle\\frac{1}{2}})\\Delta t^2\n\\]"
+  },
+  {
+    "objectID": "analysis.html#consistency-stability-and-convergence",
+    "href": "analysis.html#consistency-stability-and-convergence",
+    "title": "Analysis of exponential decay models",
+    "section": "Consistency, stability, and convergence",
+    "text": "Consistency, stability, and convergence\n\nTruncation error measures the residual in the difference equations. The scheme is consistent if the truncation error goes to 0 as \\(\\Delta t\\rightarrow 0\\). Importance: the difference equations approaches the differential equation as \\(\\Delta t\\rightarrow 0\\).\nStability means that the numerical solution exhibits the same qualitative properties as the exact solution. Here: monotone, decaying function.\nConvergence implies that the true (global) error \\(e^n =u_{e}(t_n)-u^n\\rightarrow 0\\) as \\(\\Delta t\\rightarrow 0\\). This is really what we want!\n\nThe Lax equivalence theorem for linear differential equations: consistency + stability is equivalent with convergence.\n(Consistency and stability is in most problems much easier to establish than convergence.)"
+  },
+  {
+    "objectID": "analysis.html#numerical-computation-of-convergence-rate",
+    "href": "analysis.html#numerical-computation-of-convergence-rate",
+    "title": "Analysis of exponential decay models",
+    "section": "Numerical computation of convergence rate",
+    "text": "Numerical computation of convergence rate\nWe assume that the \\(\\ell^2\\) error norm on the mesh with level \\(i\\) can be written as\n\\[\nE_i = C (\\Delta t_i)^r\n\\]\nwhere \\(C\\) is a constant. This way, if we have the error on two levels, then we can compute\n\\[\n\\frac{E_{i-1}}{E_i} = \\frac{ (\\Delta t_{i-1})^r}{(\\Delta t_{i})^r} = \\left( \\frac{\\Delta t_{i-1}}{ \\Delta t_i} \\right)^r\n\\]\nand isolate \\(r\\) by computing\n\\[\nr = \\frac{\\log {\\frac{E_{i-1}}{E_i}}}{\\log {\\frac{\\Delta t_{i-1}}{\\Delta t_i}}}\n\\]"
+  },
+  {
+    "objectID": "analysis.html#function-for-convergence-rate",
+    "href": "analysis.html#function-for-convergence-rate",
+    "title": "Analysis of exponential decay models",
+    "section": "Function for convergence rate",
+    "text": "Function for convergence rate\n\nu_exact = lambda t, I, a: I*np.exp(-a*t)\n\ndef l2_error(I, a, theta, dt): \n    u, t = solver(I, a, T, dt, theta)\n    en = u_exact(t, I, a) - u\n    return np.sqrt(dt*np.sum(en**2)) \n\ndef convergence_rates(m, I=1, a=2, T=8, theta=1, dt=1.):\n    dt_values, E_values = [], []\n    for i in range(m):\n        E = l2_error(I, a, theta, dt)\n        dt_values.append(dt)\n        E_values.append(E)\n        dt = dt/2\n    # Compute m-1 orders that should all be the same\n    r = [np.log(E_values[i-1]/E_values[i])/\n         np.log(dt_values[i-1]/dt_values[i])\n         for i in range(1, m, 1)]\n    return r"
+  },
+  {
+    "objectID": "analysis.html#test-convergence-rates",
+    "href": "analysis.html#test-convergence-rates",
+    "title": "Analysis of exponential decay models",
+    "section": "Test convergence rates",
+    "text": "Test convergence rates\nBackward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 1.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[0.9619265651066382, 0.98003334385805, 0.9897576131285538]\n\n\nForward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[1.0472640894307232, 1.0222599097461846, 1.0108154242259877]\n\n\nCrank-Nicolson:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.5\nconvergence_rates(4, I, a, T, theta, dt)\n\n[2.0037335266421343, 2.0009433957768175, 2.000236481071457]\n\n\nAll in good agreement with theory:-)"
   }
 ]
