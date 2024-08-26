@@ -59,7 +59,7 @@ Solve the ODE by finite difference methods:
   * Discretization by a generic $\theta$-rule
 
 $$
-\frac{u^{n+1}-u^{n}}{\triangle t} = -(1-\theta)au^{n} - \theta u^{n+1}
+\frac{u^{n+1}-u^{n}}{\triangle t} = -(1-\theta)au^{n} - \theta a u^{n+1}
 $$
 
 $$

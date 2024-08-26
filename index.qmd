@@ -5,5 +5,6 @@ author: "Prof. Mikael Mortensen, University of Oslo"
 ---
 
 
-* [Algorithms and implementations for exponential decay models](intro.qmd)
-* [Analysis of exponential decay models](analysis.qmd)
+* [Lecture 1 - Algorithms and implementations for exponential decay models](intro.qmd)
+* [Lecture 2 - Analysis of exponential decay models](analysis.qmd)
+* [Lecture 3 - A simple vibration problem](vibration.qmd)
