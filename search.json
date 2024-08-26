@@ -88,7 +88,7 @@
     "href": "vibration.html#mathematical-analysis",
     "title": "A simple vibration problem",
     "section": "Mathematical analysis",
-    "text": "Mathematical analysis\nThe exact solution to the continuous vibration equation is \\(u_e(t) = I \\cos (\\omega t)\\)\nThe key to study the numerical solution is knowing that linear difference equations like\n\\[\nu^{n+1} = (2-\\Delta t^2\\omega^2) u^n - u^{n-1}\n\\]\nadmit discrete (numerical) solutions of the form\n\\[\nu^{n+1} = A u^n  \\quad \\text{or} \\quad u^n = A^n I\n\\]\nwhere \\(I\\) is an initial condition.\n\nNote that the difference equation is a recurrence relation like the one used for the exponential decay. Also note that \\(u^n\\) may be computed recursively\n\ndef u(n, I=2., A=0.5):\n  if n &gt; 0:\n    return A * u(n-1, I, A)\n  return I\nprint(u(0), u(1), u(2), u(3))\n\n2.0 1.0 0.5 0.25"
+    "text": "Mathematical analysis\nThe exact solution to the continuous vibration equation is \\(u_e(t) = I \\cos (\\omega t)\\)\nThe key to study the numerical solution is knowing that linear difference equations like\n\\[\nu^{n+1} = (2-\\Delta t^2\\omega^2) u^n - u^{n-1}\n\\]\nadmit discrete (numerical) solutions of the form\n\\[\nu^{n+1} = A u^n  \\quad \\text{or} \\quad u^n = A^n I\n\\]\nwhere \\(I\\) is an initial condition.\n\nSo the recurrence relation (the difference equation) have solutions \\(u^n\\) that may be computed recursively\n\ndef u(n, I=2., A=0.5):\n  if n &gt; 0:\n    return A * u(n-1, I, A)\n  return I\nprint(u(0), u(1), u(2), u(3))\n\n2.0 1.0 0.5 0.25"
   },
   {
     "objectID": "vibration.html#exact-discrete-solution",
@@ -116,7 +116,7 @@
     "href": "vibration.html#numerical-frequency",
     "title": "A simple vibration problem",
     "section": "Numerical frequency",
-    "text": "Numerical frequency\n\\[\n\\tilde{\\omega} = \\pm \\frac{2}{\\Delta t} \\sin^{-1} \\left( \\frac{\\omega  \\Delta t }{2} \\right)\n\\]\n\n\nThere is always a frequency error because \\(\\tilde{\\omega} \\neq \\omega\\).\nThe dimensionless number \\(p=\\omega\\Delta t\\) is the key parameter (i.e., no of time intervals per period is important, not \\(\\Delta t\\) itself. Remember \\(P=2\\pi/w\\) and thus \\(p=2\\pi / P\\))\nHow good is the approximation \\(\\tilde{\\omega}\\) to \\(\\omega\\)?\nDoes it possible lead to growth? \\(|A|&gt;1\\)."
+    "text": "Numerical frequency\n\\[\n\\tilde{\\omega} = \\pm \\frac{2}{\\Delta t} \\sin^{-1} \\left( \\frac{\\omega  \\Delta t }{2} \\right)\n\\]\n\n\nThere is always a frequency error because \\(\\tilde{\\omega} \\neq \\omega\\).\nThe dimensionless number \\(p=\\omega\\Delta t\\) is the key parameter (i.e., no of time intervals per period is important, not \\(\\Delta t\\) itself. Remember \\(P=2\\pi/w\\) and thus \\(p=2\\pi / P\\))\nHow good is the approximation \\(\\tilde{\\omega}\\) to \\(\\omega\\)?\nDoes it possibly lead to growth? \\(|A|&gt;1\\)."
   },
   {
     "objectID": "vibration.html#polynomial-approximation-of-the-frequency-error",
@@ -130,14 +130,14 @@
     "href": "vibration.html#simple-improvement-of-previous-solver",
     "title": "A simple vibration problem",
     "section": "Simple improvement of previous solver",
-    "text": "Simple improvement of previous solver\n\n\n\n\n\n\nNote\n\n\nWhat happens if we simply use \\(\\omega = \\omega(1-\\omega^2 \\Delta t^2 /24)\\)?\n\n\n\n\nThe leading order numerical error disappears and we get\n\\[\n\\tilde\\omega = \\omega\\left( 1 - \\left(\\frac{1}{24}\\omega^2\\Delta t^2\\right)^2\\right) + \\cdots\n\\]\n\n\n\n\n\n\nNote\n\n\nDirty trick, and only usable when you can compute the numerical error exactly"
+    "text": "Simple improvement of previous solver\n\n\n\n\n\n\nNote\n\n\nWhat happens if we simply use the frequency \\(\\omega(1-\\omega^2 \\Delta t^2 /24)\\) instead of just \\(\\omega\\)?\n\n\n\n\nThe leading order numerical error disappears and we get\n\\[\n\\tilde\\omega = \\omega\\left( 1 - \\left(\\frac{1}{24}\\omega^2\\Delta t^2\\right)^2\\right) + \\cdots\n\\]\n\n\n\n\n\n\nNote\n\n\nDirty trick, and only usable when you can compute the numerical error exactly. But fourth order…"
   },
   {
     "objectID": "vibration.html#how-about-the-global-error",
     "href": "vibration.html#how-about-the-global-error",
     "title": "A simple vibration problem",
     "section": "How about the global error?",
-    "text": "How about the global error?\n\\[\nu^n = I\\cos\\left(\\tilde\\omega n\\Delta t\\right),\\quad\n\\tilde\\omega = \\frac{2}{\\Delta t}\\sin^{-1}\\left(\\frac{\\omega\\Delta t}{2}\\right)\n\\]\nThe error mesh function,\n\\[\ne^n = u_{e}(t_n) - u^n =\nI\\cos\\left(\\omega n\\Delta t\\right)\n- I\\cos\\left(\\tilde\\omega n\\Delta t\\right)\n\\]\nis ideal for verification and further analysis!\n\\[\n\\begin{align*}\ne^n &= I\\cos\\left(\\omega n\\Delta t\\right)\n- I\\cos\\left(\\tilde\\omega n\\Delta t\\right) \\\\\n&= -2I\\sin\\left(n \\Delta t\\frac{1}{2}\\left( \\omega - \\tilde\\omega\\right)\\right)\n\\sin\\left(n \\Delta t\\frac{1}{2}\\left( \\omega + \\tilde\\omega\\right)\\right)\n\\end{align*}\n\\]"
+    "text": "How about the global error?\n\\[\nu^n = I\\cos\\left(\\tilde\\omega n\\Delta t\\right),\\quad\n\\tilde\\omega = \\frac{2}{\\Delta t}\\sin^{-1}\\left(\\frac{\\omega\\Delta t}{2}\\right)\n\\]\nThe error mesh function,\n\\[\ne^n = u_{e}(t_n) - u^n =\nI\\cos\\left(\\omega n\\Delta t\\right)\n- I\\cos\\left(\\tilde\\omega n\\Delta t\\right)\n\\]\nis ideal for verification and further analysis!\n\n\\[\n\\begin{align*}\ne^n &= I\\cos\\left(\\omega n\\Delta t\\right)\n- I\\cos\\left(\\tilde\\omega n\\Delta t\\right) \\\\\n&= -2I\\sin\\left(n \\Delta t\\frac{1}{2}\\left( \\omega - \\tilde\\omega\\right)\\right)\n\\sin\\left(n \\Delta t\\frac{1}{2}\\left( \\omega + \\tilde\\omega\\right)\\right)\n\\end{align*}\n\\]"
   },
   {
     "objectID": "vibration.html#convergence-of-the-numerical-scheme",
@@ -151,7 +151,7 @@
     "href": "vibration.html#how-about-stability",
     "title": "A simple vibration problem",
     "section": "How about stability?",
-    "text": "How about stability?\n\n\nSolutions are oscillatory, so not a problem that \\(A&lt;0\\), like for the exponential decay\nSolutions should have constant amplitudes (constant \\(I\\)), but we will have growth if\n\\(|A| &gt; 1\\)\nConstant amplitude requires \\[\n|A| = |e^{i \\tilde{\\omega} \\Delta t}| = 1\n\\] Is this always satisfied?"
+    "text": "How about stability?\n\n\nSolutions are oscillatory, so not a problem that \\(A&lt;0\\), like for the exponential decay\nSolutions should have constant amplitudes (constant \\(I\\)), but we will have growth if \\[\n|A| &gt; 1\n\\]\nConstant amplitude requires \\[\n|A| = |e^{i \\tilde{\\omega} \\Delta t}| = 1\n\\] Is this always satisfied?"
   },
   {
     "objectID": "vibration.html#stability-in-growth",
@@ -207,7 +207,7 @@
     "href": "vibration.html#digression",
     "title": "A simple vibration problem",
     "section": "Digression",
-    "text": "Digression\n\n\n\n\n\n\nDigression\n\n\nThis alternative analysis is no different from what we did with the exponential decay. Only the exponential decay was so easy that we did not actually derive the generic A!\n\n\n\nConsider the difference equation for exponential decay\n\\[\n\\frac{u^{n+1}-u^{n}}{\\triangle t} = -(1-\\theta)au^{n} - \\theta a u^{n+1}\n\\]\nand assume again that \\(u^n = A^n I\\). Insert this into the above\n\\[\n\\frac{A^{n+1}I-A^{n}I}{\\triangle t} = -(1-\\theta)aA^{n}I - \\theta a A^{n+1}I\n\\]\nDivide by \\(A^n I\\) and rearrange to get the well-known \\(A = \\frac{1-(1-\\theta)\\Delta t a}{1+ \\theta \\Delta t a}\\)"
+    "text": "Digression\n\n\n\n\n\n\nDigression\n\n\nThis alternative analysis is no different from what we did with the exponential decay. Only the exponential decay was so easy that we did not actually derive the generic A!\n\n\n\n\nConsider the difference equation for exponential decay\n\\[\n\\frac{u^{n+1}-u^{n}}{\\triangle t} = -(1-\\theta)au^{n} - \\theta a u^{n+1}\n\\]\nand assume again that \\(u^n = A^n I\\). Insert this into the above\n\\[\n\\frac{A^{n+1}I-A^{n}I}{\\triangle t} = -(1-\\theta)aA^{n}I - \\theta a A^{n+1}I\n\\]\nDivide by \\(A^n I\\) and rearrange to get the well-known \\(A = \\frac{1-(1-\\theta)\\Delta t a}{1+ \\theta \\Delta t a}\\)"
   },
   {
     "objectID": "vibration.html#key-observations",
@@ -256,14 +256,14 @@
     "href": "vibration.html#add-tests",
     "title": "A simple vibration problem",
     "section": "Add tests",
-    "text": "Add tests\nThe exact solution will not equal the numerical, but the order of the error is something we can test for.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    try:\n      assert error &lt; 0.01\n      print(f'Test passed!!')\n    except AssertionError:\n      print(f'Test failed!! orders = {r}')\n\n\nRun test for \\(m=4\\) levels, \\(w=0.5, I=1\\) and adjust_w=False\n\ntest_order(4, w=0.5, I=1, adjust_w=False)\n\nTest passed!!\n\n\n\n\nTest fails. Try one more level\n\ntest_order(5, w=0.5, I=1, adjust_w=False)\n\nTest passed!!\n\n\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nTest passed!!"
+    "text": "Add tests\nThe exact solution will not equal the numerical, but the order of the error is something we can test for.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    try:\n      assert error &lt; 0.005\n      print(f'Test passed!!')\n    except AssertionError:\n      print(f'Test failed!! orders = {r}')\n\n\nRun test for \\(m=4\\) levels, \\(w=0.5, I=1\\) and adjust_w=False\n\ntest_order(4, w=0.5, I=1, adjust_w=False)\n\nTest failed!! orders = [1.9487030166752326, 2.022988970233581, 2.0050238810553545]\n\n\n\n\nTest fails. Try one more level\n\ntest_order(5, w=0.5, I=1, adjust_w=False)\n\nTest passed!!\n\n\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nTest passed!!"
   },
   {
     "objectID": "vibration.html#final-test",
     "href": "vibration.html#final-test",
     "title": "A simple vibration problem",
     "section": "Final test",
-    "text": "Final test\nUse simply an assert clause and do not catch the error.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    assert error &lt; 0.01, r\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nThis test will work with pytest."
+    "text": "Final test\nUse simply an assert clause and do not catch the error.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    assert error &lt; 0.005, r\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nThis test will work with pytest."
   },
   {
     "objectID": "index.html",
@@ -894,5 +894,12 @@
     "title": "Analysis of exponential decay models",
     "section": "Test convergence rates",
     "text": "Test convergence rates\nBackward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 1.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[0.9619265651066382, 0.98003334385805, 0.9897576131285538]\n\n\nForward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[1.0472640894307232, 1.0222599097461846, 1.0108154242259877]\n\n\nCrank-Nicolson:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.5\nconvergence_rates(4, I, a, T, theta, dt)\n\n[2.0037335266421343, 2.0009433957768175, 2.000236481071457]\n\n\nAll in good agreement with theory:-)"
+  },
+  {
+    "objectID": "vibration.html#find-the-error-in-tildeomega",
+    "href": "vibration.html#find-the-error-in-tildeomega",
+    "title": "A simple vibration problem",
+    "section": "Find the error in \\(\\tilde\\omega\\)",
+    "text": "Find the error in \\(\\tilde\\omega\\)\nInsert the numerical solution \\(u^n = I \\cos (\\tilde{\\omega} t_n)\\) into the discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\n\nQuite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you\n\\[\n\\begin{align}\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} &= \\frac{I}{\\Delta t^2} (\\cos (\\tilde{\\omega} t_{n+1}) - 2 \\cos (\\tilde{\\omega} t_n) + \\cos (\\tilde{\\omega} t_{n-1})) \\\\\n&= \\frac{2 I}{\\Delta t^2} (\\cos (\\tilde{\\omega} \\Delta t) - 1) \\cos (\\tilde{\\omega} n \\Delta t) \\\\\n&= -\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) \\cos (\\tilde{\\omega} n \\Delta t)\n\\end{align}\n\\]"
   }
 ]
