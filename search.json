@@ -25,14 +25,14 @@
     "href": "vibration.html#a-centered-finite-difference-scheme-step-4",
     "title": "A simple vibration problem",
     "section": "A centered finite difference scheme; step 4",
-    "text": "A centered finite difference scheme; step 4\nStep 4: Formulate the computational algorithm. Assume \\(u^{n-1}\\) and \\(u^n\\) are known, solve for unknown \\(u^{n+1}\\):\n\\[\nu^{n+1} = 2u^n - u^{n-1} - \\Delta t^2\\omega^2 u^n\n\\]\nNick names for this scheme: Störmer’s method or Verlet integration.\n\nThe scheme is a recurrence relation. That is, \\(u^{n+1}\\) is an explicit function of one or more of the solutions at previous time steps \\(u^n, u^{n-1}, \\ldots\\). We will later see implicit schemes where the solution for \\(u^{n+1}\\) depends also on \\(u^{n+2}, u^{n+3}\\) etc."
+    "text": "A centered finite difference scheme; step 4\nStep 4: Formulate the computational algorithm. Assume \\(u^{n-1}\\) and \\(u^n\\) are known, solve for unknown \\(u^{n+1}\\):\n\\[\nu^{n+1} = 2u^n - u^{n-1} - \\Delta t^2\\omega^2 u^n\n\\]\nNick names for this scheme: Störmer’s method or Verlet integration.\n\nThe scheme is a recurrence relation. That is, \\(u^{n+1}\\) is an explicit function of one or more of the solutions at previous time steps \\(u^n, u^{n-1}, \\ldots\\). We will later see implicit schemes where the equation for \\(u^{n+1}\\) depends also on \\(u^{n+2}, u^{n+3}\\) etc."
   },
   {
     "objectID": "vibration.html#computing-the-first-step---option-1",
     "href": "vibration.html#computing-the-first-step---option-1",
     "title": "A simple vibration problem",
     "section": "Computing the first step - option 1",
-    "text": "Computing the first step - option 1\n\nThe two initial conditions require that we fix \\(u^0\\) and \\(u^1\\). How?\n\n\n\nWe cannot use the difference equation \\(u^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\\) because \\(u^{-1}\\) is unknown and outside the mesh!\nAnd: we have not used the initial condition \\(u^{\\prime}(0)=0\\)!\n\n\n\nOption 1: Use a forward difference\n\\[\n  \\begin{align*}\n  u^{\\prime}(0) &=  \\frac{u^1-u^0}{\\Delta t}=0  &\\longrightarrow u^1=u^0=I \\\\\n  u^{\\prime}(0) &= \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0 \\quad &\\longrightarrow u^1=\\frac{u^2+3u^0}{4}\n  \\end{align*}\n\\]\n\n\n\n\n\n\nNote\n\n\nFirst is merely first order accurate, second is second order, but implicit (depends on the unknown \\(u^2\\).)"
+    "text": "Computing the first step - option 1\n\nThe two initial conditions require that we fix both \\(u^0\\) and \\(u^1\\). How to fix \\(u^1\\)?\n\n\n\nWe cannot use the difference equation \\(u^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\\) because \\(u^{-1}\\) is unknown and outside the mesh!\nAnd: we have not used the initial condition \\(u^{\\prime}(0)=0\\)!\n\n\n\nOption 1: Use a forward difference\n\\[\n  \\begin{align*}\n  u^{\\prime}(0) &=  \\frac{u^1-u^0}{\\Delta t}=0  &\\longrightarrow u^1=u^0=I \\\\\n  u^{\\prime}(0) &= \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0 \\quad &\\longrightarrow u^1=\\frac{u^2+3u^0}{4}\n  \\end{align*}\n\\]\n\n\n\n\n\n\nNote\n\n\nFirst is merely first order accurate, second is second order, but implicit (depends on the unknown \\(u^2\\).)"
   },
   {
     "objectID": "vibration.html#computing-the-first-step---option-2",
@@ -60,21 +60,21 @@
     "href": "vibration.html#implementation",
     "title": "A simple vibration problem",
     "section": "Implementation",
-    "text": "Implementation\n\ndef solver(I, w, dt, T):\n    \"\"\"\n    Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,\n    by a central finite difference method with time step dt.\n    \"\"\"\n    dt = float(dt)\n    Nt = int(round(T/dt))\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)"
+    "text": "Implementation\n\ndef solver(I, w, dt, T):\n    \"\"\"\n    Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,\n    by a central finite difference method with time step dt.\n    \"\"\"\n    Nt = int(round(T/dt))\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)"
   },
   {
     "objectID": "vibration.html#visualization",
     "href": "vibration.html#visualization",
     "title": "A simple vibration problem",
     "section": "Visualization",
-    "text": "Visualization\n\ndef visualize(u, t, I, w):\n    plt.plot(t, u, 'r--o')\n    t_fine = np.linspace(0, t[-1], 1001)  # very fine mesh for u_e\n    u_e = u_exact(t_fine, I, w)\n    plt.plot(t_fine, u_e, 'b-')\n    plt.legend(['numerical', 'exact'], loc='upper left')\n    plt.xlabel('t')\n    plt.ylabel('u(t)')\n    dt = t[1] - t[0]\n    plt.title('dt=%g' % dt)\n    umin = 1.2*u.min();  umax = -umin\n    plt.axis([t[0], t[-1], umin, umax])"
+    "text": "Visualization\n\ndef visualize(u, t, I, w):\n    plt.plot(t, u, 'b-o')\n    t_fine = np.linspace(0, t[-1], 1001)  # very fine mesh for u_e\n    u_e = u_exact(t_fine, I, w)\n    plt.plot(t_fine, u_e, 'r--')\n    plt.legend(['numerical', 'exact'], loc='upper left')\n    plt.xlabel('t')\n    plt.ylabel('u(t)')\n    dt = t[1] - t[0]\n    plt.title('dt=%g' % dt)\n    umin = 1.2*u.min();  umax = -umin\n    plt.axis([t[0], t[-1], umin, umax])"
   },
   {
     "objectID": "vibration.html#main-program",
     "href": "vibration.html#main-program",
     "title": "A simple vibration problem",
     "section": "Main program",
-    "text": "Main program\n\nI = 1\nw = 2*np.pi\nnum_periods = 6\nP = 2*np.pi/w    #  one period\nT = P*num_periods\ndt = 0.5/w\nu, t = solver(I, w, dt, T)\nvisualize(u, t, I, w)"
+    "text": "Main program\n\nI = 1\nw = 2*np.pi\nnum_periods = 6\nP = 2*np.pi/w    #  one period\nT = P*num_periods\ndt = 1/w\nu, t = solver(I, w, dt, T)\nvisualize(u, t, I, w)"
   },
   {
     "objectID": "vibration.html#various-timestep",
@@ -221,28 +221,28 @@
     "href": "vibration.html#convergence-rates",
     "title": "A simple vibration problem",
     "section": "Convergence rates",
-    "text": "Convergence rates\nLets compute the convergence rate for our solver. However, let it also be possible to choose the numerical frequency \\(\\omega(1-\\omega^2\\Delta t^2/24)\\)\n\ndef solver_adjust(I, w, dt, T, adjust_w=False):\n    Nt = int(T/dt)\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n    w_adj = w*(1 - w**2*dt**2/24.) if adjust_w else w\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w_adj**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w_adj**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)\n\ndef l2_error(dt, T, w=0.35, I=0.3, adjust_w=False):\n    u, t = solver_adjust(I, w, dt, T, adjust_w)\n    ue = u_exact(t, I, w)\n    return np.sqrt(dt*np.sum((ue-u)**2))"
+    "text": "Convergence rates\nLets compute the convergence rate for our solver. However, let it also be possible to choose the numerical frequency \\(\\omega(1-\\omega^2\\Delta t^2/24)\\)\n\ndef solver_adjust(I, w, dt, T, adjust_w=False):\n    Nt = int(round(T/dt))\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n    w_adj = w*(1 - w**2*dt**2/24.) if adjust_w else w\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w_adj**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w_adj**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)\n\ndef l2_error(dt, T, w=0.35, I=0.3, adjust_w=False):\n    u, t = solver_adjust(I, w, dt, T, adjust_w)\n    ue = u_exact(t, I, w)\n    return np.sqrt(dt*np.sum((ue-u)**2))"
   },
   {
     "objectID": "vibration.html#convergence-rates-1",
     "href": "vibration.html#convergence-rates-1",
     "title": "A simple vibration problem",
     "section": "Convergence rates",
-    "text": "Convergence rates\nWe compute the order of the convergence in the same manner as lecture 2\n\\[\nr = \\frac{\\log {\\frac{E_{i-1}}{E_i}}}{\\log {\\frac{\\Delta t_{i-1}}{\\Delta t_i}}}\n\\]\n\ndef convergence_rates(m, num_periods=8, w=0.35, I=0.3, adjust_w=False):\n    P = 2*np.pi/w\n    dt = 2 / w    # Initial dt is maximum time step for stability\n    T = P*num_periods\n    dt_values, E_values = [], []\n    for i in range(m):\n        E = l2_error(dt, T, w, I, adjust_w)\n        dt_values.append(dt)\n        E_values.append(E)\n        dt = dt/2.\n    # Compute m-1 orders that should all be the same\n    r = [np.log(E_values[i-1]/E_values[i])/\n         np.log(dt_values[i-1]/dt_values[i])\n         for i in range(1, m, 1)]\n    return r, E_values, dt_values"
+    "text": "Convergence rates\nWe compute the order of the convergence in the same manner as lecture 2\n\\[\nr = \\frac{\\log {\\frac{E_{i-1}}{E_i}}}{\\log {\\frac{\\Delta t_{i-1}}{\\Delta t_i}}}\n\\]\n\ndef convergence_rates(m, num_periods=8, w=0.35, I=0.3, adjust_w=False):\n    P = 2*np.pi/w\n    dt = 1 / w    # Half stability limit\n    T = P*num_periods\n    dt_values, E_values = [], []\n    for i in range(m):\n        E = l2_error(dt, T, w, I, adjust_w)\n        dt_values.append(dt)\n        E_values.append(E)\n        dt = dt/2.\n    # Compute m-1 orders that should all be the same\n    r = [np.log(E_values[i-1]/E_values[i])/\n         np.log(dt_values[i-1]/dt_values[i])\n         for i in range(1, m, 1)]\n    return r, E_values, dt_values"
   },
   {
     "objectID": "vibration.html#try-it",
     "href": "vibration.html#try-it",
     "title": "A simple vibration problem",
     "section": "Try it!",
-    "text": "Try it!\nPrint the computed convergence rates\n\nconvergence_rates(5, w=0.5, I=1)[0]\n\n[0.5812225474381454,\n 1.9588768683386732,\n 2.0128151185701406,\n 2.0050238810553545]\n\n\nAdjusted solver:\n\nconvergence_rates(5, w=0.5, I=1, adjust_w=True)[0]\n\n[4.639514498646321, 4.135402053048683, 4.032727110521893, 4.008071155725109]"
+    "text": "Try it!\nPrint the computed convergence rates\n\nconvergence_rates(5, w=0.5, I=1)[0]\n\n[1.9487030166752326, 2.022988970233581, 2.0050238810553545, 2.0013403129395835]\n\n\nAdjusted solver:\n\nconvergence_rates(5, w=0.5, I=1, adjust_w=True)[0]\n\n[4.133074797577663, 4.035054365992913, 4.008071155725109, 4.0020125447469646]"
   },
   {
     "objectID": "vibration.html#plot-convergence-regular-solver",
     "href": "vibration.html#plot-convergence-regular-solver",
     "title": "A simple vibration problem",
     "section": "plot convergence regular solver",
-    "text": "plot convergence regular solver\n\nfrom plotslopes import slope_marker\nr, E, dt = convergence_rates(5)\nplt.loglog(dt, E, dt, dt, dt, np.array(dt)**2)\nplt.title('Convergence of finite difference method')\nplt.legend(['Error', '$\\\\mathcal{O}(\\\\Delta t)$', '$\\\\mathcal{O}(\\\\Delta t^2)$'])\nslope_marker((dt[1], E[1]), (2,1))\nslope_marker((dt[1], dt[1]), (1,1))\nslope_marker((dt[1], dt[1]**2), (2,1))"
+    "text": "plot convergence regular solver\n\nfrom plotslopes import slope_marker\nr, E, dt = convergence_rates(5)\nplt.loglog(dt, E, dt, 10*np.array(dt), dt, np.array(dt)**2)\nplt.title('Convergence of finite difference method')\nplt.legend(['Error', '$\\\\mathcal{O}(\\\\Delta t)$', '$\\\\mathcal{O}(\\\\Delta t^2)$'])\nslope_marker((dt[1], E[1]), (2,1))\nslope_marker((dt[1], 10*dt[1]), (1,1))\nslope_marker((dt[1], dt[1]**2), (2,1))"
   },
   {
     "objectID": "vibration.html#plot-convergence-adjusted-solver",
@@ -256,7 +256,7 @@
     "href": "vibration.html#add-tests",
     "title": "A simple vibration problem",
     "section": "Add tests",
-    "text": "Add tests\nThe exact solution will not equal the numerical, but the order of the error is something we can test for.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    try:\n      assert error &lt; 0.01\n      print(f'Test passed!!')\n    except AssertionError:\n      print(f'Test failed!! orders = {r}')\n\n\nRun test for \\(m=4\\) levels, \\(w=0.5, I=1\\) and adjust_w=False\n\ntest_order(4, w=0.5, I=1, adjust_w=False)\n\nTest failed!! orders = [0.5812225474381454, 1.9588768683386732, 2.0128151185701406]\n\n\n\n\nTest fails. Try one more level\n\ntest_order(5, w=0.5, I=1, adjust_w=False)\n\nTest passed!!\n\n\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nTest passed!!"
+    "text": "Add tests\nThe exact solution will not equal the numerical, but the order of the error is something we can test for.\n\ndef test_order(m, w=1, I=1, adjust_w=False):\n    r, E, dt = convergence_rates(m, w=w, I=I, adjust_w=adjust_w)\n    true_order = 4 if adjust_w else 2\n    error = abs(r[-1]-true_order)\n    try:\n      assert error &lt; 0.01\n      print(f'Test passed!!')\n    except AssertionError:\n      print(f'Test failed!! orders = {r}')\n\n\nRun test for \\(m=4\\) levels, \\(w=0.5, I=1\\) and adjust_w=False\n\ntest_order(4, w=0.5, I=1, adjust_w=False)\n\nTest passed!!\n\n\n\n\nTest fails. Try one more level\n\ntest_order(5, w=0.5, I=1, adjust_w=False)\n\nTest passed!!\n\n\n\ntest_order(5, w=0.5, I=1, adjust_w=True)\n\nTest passed!!"
   },
   {
     "objectID": "vibration.html#final-test",
