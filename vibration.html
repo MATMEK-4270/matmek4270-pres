@@ -537,7 +537,7 @@ u^1 = u^0 - \frac{1}{2} \Delta t^2 \omega^2 u^0
 </ul>
 <div class="fragment">
 <p>More precisely expressed in Python:</p>
-<div id="4ab1455f" class="cell" data-execution_count="2">
+<div id="13fe9b2e" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>T <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb1-2"><a></a>Nt <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb1-3"><a></a>I <span class="op">=</span> <span class="dv">1</span></span>
@@ -577,7 +577,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </div>
 <div class="fragment">
 <p>With vectorization:</p>
-<div id="685ac5f0" class="cell" data-execution_count="3">
+<div id="a96015d1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>du <span class="op">=</span> np.zeros(Nt<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb2-2"><a></a>du[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> (u[<span class="dv">2</span>:] <span class="op">-</span> u[:<span class="op">-</span><span class="dv">2</span>]) <span class="op">/</span> (<span class="dv">2</span><span class="op">*</span>dt)  <span class="co"># second order accurate</span></span>
 <span id="cb2-3"><a></a>du[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span>                             <span class="co"># exact from initial condition</span></span>
@@ -587,7 +587,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </section>
 <section id="implementation" class="slide level2 smaller">
 <h2>Implementation</h2>
-<div id="471e41db" class="cell" data-execution_count="4">
+<div id="f4c2d1ae" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="kw">def</span> solver(I, w, dt, T):</span>
 <span id="cb3-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb3-3"><a></a><span class="co">    Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,</span></span>
@@ -610,7 +610,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </section>
 <section id="visualization" class="slide level2 smaller">
 <h2>Visualization</h2>
-<div id="ba29ec6f" class="cell" data-execution_count="5">
+<div id="11592c68" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="kw">def</span> visualize(u, t, I, w):</span>
 <span id="cb4-2"><a></a>    plt.plot(t, u, <span class="st">'r--o'</span>)</span>
 <span id="cb4-3"><a></a>    t_fine <span class="op">=</span> np.linspace(<span class="dv">0</span>, t[<span class="op">-</span><span class="dv">1</span>], <span class="dv">1001</span>)  <span class="co"># very fine mesh for u_e</span></span>
@@ -627,7 +627,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </section>
 <section id="main-program" class="slide level2 smaller">
 <h2>Main program</h2>
-<div id="428ab104" class="cell" data-execution_count="6">
+<div id="92248da3" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>I <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb5-2"><a></a>w <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.pi</span>
 <span id="cb5-3"><a></a>num_periods <span class="op">=</span> <span class="dv">6</span></span>
@@ -647,7 +647,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </section>
 <section id="various-timestep" class="slide level2 smaller">
 <h2>Various timestep</h2>
-<div id="cd14b1d0" class="cell" data-execution_count="7">
+<div id="f30281df" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -745,12 +745,12 @@ u(t_n) = I \cos (\tilde{\omega} t_n)
 <p>How good is the approximation <span class="math inline">\(\tilde{\omega} = \pm \frac{2}{\Delta t} \sin^{-1} \left( \frac{\omega  \Delta t }{2} \right)\)</span> ?</p>
 <div class="fragment">
 <p>We can easily use a Taylor series expansion for small <span class="math inline">\(h=\Delta t\)</span></p>
-<div id="69fba782" class="cell" data-execution_count="8">
+<div id="cc7eb690" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp </span>
 <span id="cb6-2"><a></a>h, w <span class="op">=</span> sp.symbols(<span class="st">'h,w'</span>)</span>
 <span id="cb6-3"><a></a>w_tilde <span class="op">=</span> sp.asin(w<span class="op">*</span>h<span class="op">/</span><span class="dv">2</span>).series(h, <span class="dv">0</span>, <span class="dv">4</span>)<span class="op">*</span><span class="dv">2</span><span class="op">/</span>h</span>
 <span id="cb6-4"><a></a>sp.simplify(w_tilde)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="8">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="83">
 <p><span class="math inline">\(\displaystyle w + \frac{h^{2} w^{3}}{24} + O\left(h^{3}\right)\)</span></p>
 </div>
 </div>
@@ -832,9 +832,9 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 \]</span></p>
 <div class="fragment">
 <p>The limit can be computed using L’Hopital’s rule or simply by asking <code>sympy</code> or <a href="http://www.wolframalpha.com/input/?i=%282%2Fx%29*asin%28w*x%2F2%29+as+x-%3E0">WolframAlpha</a>. Sympy is easier:</p>
-<div id="5762c351" class="cell" data-execution_count="9">
+<div id="4a926fce" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>sp.limit((<span class="dv">2</span><span class="op">/</span>h)<span class="op">*</span>sp.asin(w<span class="op">*</span>h<span class="op">/</span><span class="dv">2</span>), h, <span class="dv">0</span>, <span class="bu">dir</span><span class="op">=</span><span class="st">'+'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="9">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="84">
 <p><span class="math inline">\(\displaystyle w\)</span></p>
 </div>
 </div>
@@ -864,10 +864,10 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 <div class="column">
 <p>No! For <span class="math inline">\(\Im(y) &lt; 0\)</span> we have that <span class="math inline">\(|e^{iy}| &gt; 1\)</span>.</p>
 </div><div class="column">
-<div id="f459b108" class="cell" data-execution_count="10">
+<div id="ee062f77" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>y <span class="op">=</span> <span class="op">-</span><span class="ot">0.001j</span></span>
 <span id="cb8-2"><a></a><span class="bu">abs</span>(sp.exp(<span class="ot">1j</span><span class="op">*</span>y)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="10">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="85">
 <p><span class="math inline">\(\displaystyle 1.00100050016671\)</span></p>
 </div>
 </div>
@@ -879,9 +879,9 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 </div>
 <div class="fragment">
 <p>Yes! We can easily check that if <span class="math inline">\(|x|&gt;1\)</span> then <span class="math inline">\(\sin^{-1}(x)\)</span> has a negative imaginary part:</p>
-<div id="5223b96c" class="cell" data-execution_count="11">
+<div id="b34cca47" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>sp.asin(<span class="fl">1.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="11">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="86">
 <p><span class="math inline">\(\displaystyle 1.5707963267949 - 0.141303769485649 i\)</span></p>
 </div>
 </div>
@@ -907,11 +907,11 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 </section>
 <section id="remember-the-initial-plots" class="slide level2 smaller">
 <h2>Remember the initial plots</h2>
-<div id="8144a266" class="cell" data-execution_count="12">
+<div id="031c137f" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="vibration_files/figure-revealjs/cell-13-output-1.png" width="805" height="431"></p>
+<p><img data-src="vibration_files/figure-revealjs/cell-13-output-1.png" width="805" height="449"></p>
 </figure>
 </div>
 </div>
@@ -920,11 +920,11 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 </section>
 <section id="about-the-stability-limit" class="slide level2 smaller">
 <h2>About the stability limit</h2>
-<div id="64d8c8df" class="cell" data-execution_count="13">
+<div id="a463cbf8" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="vibration_files/figure-revealjs/cell-14-output-1.png" width="813" height="431"></p>
+<p><img data-src="vibration_files/figure-revealjs/cell-14-output-1.png" width="813" height="449"></p>
 </figure>
 </div>
 </div>
@@ -966,11 +966,11 @@ A = 1 - \frac{p^2}{2} \pm \frac{p}{2}\sqrt{p^2-4}
 A &lt; -1
 \]</span></p>
 <p>Check:</p>
-<div id="f8235970" class="cell" data-execution_count="14">
+<div id="0a21842d" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>p <span class="op">=</span> sp.Symbol(<span class="st">'p'</span>) </span>
 <span id="cb10-2"><a></a>f <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span> <span class="op">-</span> p<span class="op">/</span><span class="dv">2</span><span class="op">*</span>sp.sqrt(p<span class="op">**</span><span class="dv">2</span><span class="op">-</span><span class="dv">4</span>)</span>
 <span id="cb10-3"><a></a>f.subs(p, <span class="fl">2.01</span>).n() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="14">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="89">
 <p><span class="math inline">\(\displaystyle -1.22130109316473\)</span></p>
 </div>
 </div>
@@ -1022,12 +1022,11 @@ A &lt; -1
 <p>We can draw three important conclusions:</p>
 <div>
 <ul>
-<li class="fragment">The key parameter in the formulas is <span class="math inline">\(p=\omega\Delta t\)</span> (dimensionless)
+<li class="fragment">The key parameter in the formulas is <span class="math inline">\(p=\omega\Delta t\)</span> or <span class="math inline">\(\tilde{p} = \tilde{\omega} \Delta t\)</span> (dimensionless)
 <ul>
-<li class="fragment">Period of oscillations: <span class="math inline">\(P=2\pi/\omega\)</span></li>
-<li class="fragment">Number of time steps per period: <span class="math inline">\(N_P=P/\Delta t\)</span></li>
-<li class="fragment"><span class="math inline">\(\Rightarrow\ p=\omega\Delta t = 2\pi/ N_P \sim 1/N_P\)</span> so the critical parameter is really the number of time steps per period.</li>
-<li class="fragment">The smallest possible <span class="math inline">\(N_P\)</span> is 2 <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(p\in (0,\pi]\)</span></li>
+<li class="fragment">Period of oscillations: <span class="math inline">\(P=2\pi/\omega\)</span> vs numerical <span class="math inline">\(\tilde{P}=2 \pi / \tilde{\omega}\)</span></li>
+<li class="fragment">Number of time steps per period: <span class="math inline">\(N_P=P/\Delta t\)</span> vs <span class="math inline">\(\tilde{N}_P =\tilde{P}/\Delta t\)</span></li>
+<li class="fragment">At stability limit <span class="math inline">\(\omega = 2/\Delta t\)</span> and <span class="math inline">\(\tilde{\omega}=\pi/\Delta t\)</span> <span class="math inline">\(\Rightarrow P = \pi \Delta t\)</span> and <span class="math inline">\(\tilde{P} = 2 \Delta t\)</span>. We get <span class="math inline">\(\tilde{N}_P = \tilde{P}/\Delta t = 2\)</span> and the critical parameter is really the number of time steps per numerical period.</li>
 </ul></li>
 <li class="fragment">For <span class="math inline">\(p\leq 2\)</span> the amplitude of <span class="math inline">\(u^n\)</span> is constant (stable solution)</li>
 <li class="fragment"><span class="math inline">\(u^n\)</span> has a relative frequency error <span class="math inline">\(\tilde\omega/\omega \approx 1 + \frac{1}{24}p^2\)</span>, making numerical peaks occur too early. This is also called a <strong>phase error</strong>, or a <strong>dispersive error</strong>.</li>
@@ -1037,7 +1036,7 @@ A &lt; -1
 <section id="convergence-rates" class="slide level2 smaller">
 <h2>Convergence rates</h2>
 <p>Lets compute the convergence rate for our solver. However, let it also be possible to choose the numerical frequency <span class="math inline">\(\omega(1-\omega^2\Delta t^2/24)\)</span></p>
-<div id="fb970171" class="cell" data-execution_count="15">
+<div id="7c8a6466" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">def</span> solver_adjust(I, w, dt, T, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb11-2"><a></a>    Nt <span class="op">=</span> <span class="bu">int</span>(T<span class="op">/</span>dt)</span>
 <span id="cb11-3"><a></a>    u <span class="op">=</span> np.zeros(Nt<span class="op">+</span><span class="dv">1</span>)</span>
@@ -1064,7 +1063,7 @@ A &lt; -1
 <p><span class="math display">\[
 r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 \]</span></p>
-<div id="7de81293" class="cell" data-execution_count="16">
+<div id="60525858" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="kw">def</span> convergence_rates(m, num_periods<span class="op">=</span><span class="dv">8</span>, w<span class="op">=</span><span class="fl">0.35</span>, I<span class="op">=</span><span class="fl">0.3</span>, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb12-2"><a></a>    P <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.pi<span class="op">/</span>w</span>
 <span id="cb12-3"><a></a>    dt <span class="op">=</span> <span class="dv">2</span> <span class="op">/</span> w    <span class="co"># Initial dt is maximum time step for stability</span></span>
@@ -1085,9 +1084,9 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <section id="try-it" class="slide level2 smaller">
 <h2>Try it!</h2>
 <p>Print the computed convergence rates</p>
-<div id="96f06106" class="cell" data-execution_count="17">
+<div id="7437621c" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>convergence_rates(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="92">
 <pre><code>[0.5812225474381454,
  1.9588768683386732,
  2.0128151185701406,
@@ -1095,16 +1094,16 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 </div>
 <p>Adjusted solver:</p>
-<div id="8c9fe57d" class="cell" data-execution_count="18">
+<div id="d4ba9a66" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>convergence_rates(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="93">
 <pre><code>[4.639514498646321, 4.135402053048683, 4.032727110521893, 4.008071155725109]</code></pre>
 </div>
 </div>
 </section>
 <section id="plot-convergence-regular-solver" class="slide level2 smaller">
 <h2>plot convergence regular solver</h2>
-<div id="d2ac41aa" class="cell" data-execution_count="19">
+<div id="21550db9" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="im">from</span> plotslopes <span class="im">import</span> slope_marker</span>
 <span id="cb17-2"><a></a>r, E, dt <span class="op">=</span> convergence_rates(<span class="dv">5</span>)</span>
 <span id="cb17-3"><a></a>plt.loglog(dt, E, dt, dt, dt, np.array(dt)<span class="op">**</span><span class="dv">2</span>)</span>
@@ -1124,7 +1123,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </section>
 <section id="plot-convergence-adjusted-solver" class="slide level2 smaller">
 <h2>plot convergence adjusted solver</h2>
-<div id="74a3c456" class="cell" data-execution_count="20">
+<div id="a139d6dd" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a><span class="im">from</span> plotslopes <span class="im">import</span> slope_marker</span>
 <span id="cb18-2"><a></a>r, E, dt <span class="op">=</span> convergence_rates(<span class="dv">5</span>, adjust_w<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb18-3"><a></a>plt.loglog(dt, E, dt, np.array(dt)<span class="op">**</span><span class="dv">4</span>)</span>
@@ -1144,7 +1143,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <section id="add-tests" class="slide level2 smaller">
 <h2>Add tests</h2>
 <p>The exact solution will not equal the numerical, but the order of the error is something we can test for.</p>
-<div id="b7e28a6b" class="cell" data-execution_count="21">
+<div id="1755a7c7" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a><span class="kw">def</span> test_order(m, w<span class="op">=</span><span class="dv">1</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb19-2"><a></a>    r, E, dt <span class="op">=</span> convergence_rates(m, w<span class="op">=</span>w, I<span class="op">=</span>I, adjust_w<span class="op">=</span>adjust_w)</span>
 <span id="cb19-3"><a></a>    true_order <span class="op">=</span> <span class="dv">4</span> <span class="cf">if</span> adjust_w <span class="cf">else</span> <span class="dv">2</span></span>
@@ -1157,7 +1156,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 <div class="fragment">
 <p>Run test for <span class="math inline">\(m=4\)</span> levels, <span class="math inline">\(w=0.5, I=1\)</span> and <code>adjust_w=False</code></p>
-<div id="6ba33f52" class="cell" data-execution_count="22">
+<div id="fdfb64ed" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a>test_order(<span class="dv">4</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Test failed!! orders = [0.5812225474381454, 1.9588768683386732, 2.0128151185701406]</code></pre>
@@ -1166,13 +1165,13 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 <div class="fragment">
 <p>Test fails. Try one more level</p>
-<div id="ff013098" class="cell" data-execution_count="23">
+<div id="5d044cbd" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a>test_order(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Test passed!!</code></pre>
 </div>
 </div>
-<div id="ccab5c8b" class="cell" data-execution_count="24">
+<div id="e91ca358" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>test_order(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Test passed!!</code></pre>
@@ -1183,7 +1182,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <section id="final-test" class="slide level2 smaller">
 <h2>Final test</h2>
 <p>Use simply an assert clause and do not catch the error.</p>
-<div id="f93369e6" class="cell" data-execution_count="25">
+<div id="b4caec33" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a><span class="kw">def</span> test_order(m, w<span class="op">=</span><span class="dv">1</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb26-2"><a></a>    r, E, dt <span class="op">=</span> convergence_rates(m, w<span class="op">=</span>w, I<span class="op">=</span>I, adjust_w<span class="op">=</span>adjust_w)</span>
 <span id="cb26-3"><a></a>    true_order <span class="op">=</span> <span class="dv">4</span> <span class="cf">if</span> adjust_w <span class="cf">else</span> <span class="dv">2</span></span>
