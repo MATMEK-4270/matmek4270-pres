@@ -8,3 +8,4 @@ author: "Prof. Mikael Mortensen, University of Oslo"
 * [Lecture 1 - Algorithms and implementations for exponential decay models](intro.qmd)
 * [Lecture 2 - Analysis of exponential decay models](analysis.qmd)
 * [Lecture 3 - A simple vibration problem](vibration.qmd)
+* [Lecture 4 - The finite difference method](finitedifferences.qmd)
