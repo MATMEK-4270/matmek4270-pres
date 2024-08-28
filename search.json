@@ -98,11 +98,11 @@
     "text": "Exact discrete solution\nWe now have (at least) two possibilities\n\nAssume that \\(A=e^{i \\tilde{\\omega} \\Delta t}\\) and solve for the numerical frequency \\(\\tilde{\\omega}\\)\nAssume nothing and compute with a function A(\\(\\Delta t, \\omega\\)) (like for the exponential decay)\n\n\nWe follow Langtangen’s approach (1) first. Note that since\n\\[\ne^{i \\tilde{\\omega} \\Delta t} = \\cos (\\tilde{\\omega} \\Delta t ) + i \\sin(\\tilde{\\omega} \\Delta t)\n\\]\nwe can work with a complex A and let the real part represent the physical solution.\nThe exact discrete solution is then\n\\[\nu(t_n) = I \\cos (\\tilde{\\omega} t_n)\n\\]\nand we can study the error in \\(\\tilde{\\omega}\\) compared to the true \\(\\omega\\)."
   },
   {
-    "objectID": "vibration.html#find-the-truncation-error",
-    "href": "vibration.html#find-the-truncation-error",
+    "objectID": "vibration.html#find-the-error-in-tildeomega",
+    "href": "vibration.html#find-the-error-in-tildeomega",
     "title": "A simple vibration problem",
-    "section": "Find the truncation error",
-    "text": "Find the truncation error\nInsert the numerical solution \\(u^n = I \\cos (\\tilde{\\omega} t_n)\\) into the discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\n\nQuite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you\n\\[\n\\begin{align}\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} &= \\frac{I}{\\Delta t^2} (\\cos (\\tilde{\\omega} t_{n+1}) - 2 \\cos (\\tilde{\\omega} t_n) + \\cos (\\tilde{\\omega} t_{n-1})) \\\\\n&= \\frac{2 I}{\\Delta t^2} (\\cos (\\tilde{\\omega} \\Delta t) - 1) \\cos (\\tilde{\\omega} n \\Delta t) \\\\\n&= -\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) \\cos (\\tilde{\\omega} n \\Delta t)\n\\end{align}\n\\]"
+    "section": "Find the error in \\(\\tilde\\omega\\)",
+    "text": "Find the error in \\(\\tilde\\omega\\)\nInsert the numerical solution \\(u^n = I \\cos (\\tilde{\\omega} t_n)\\) into the discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\n\nQuite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you\n\\[\n\\begin{align}\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} &= \\frac{I}{\\Delta t^2} (\\cos (\\tilde{\\omega} t_{n+1}) - 2 \\cos (\\tilde{\\omega} t_n) + \\cos (\\tilde{\\omega} t_{n-1})) \\\\\n&= \\frac{2 I}{\\Delta t^2} (\\cos (\\tilde{\\omega} \\Delta t) - 1) \\cos (\\tilde{\\omega} n \\Delta t) \\\\\n&= -\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) \\cos (\\tilde{\\omega} n \\Delta t)\n\\end{align}\n\\]"
   },
   {
     "objectID": "vibration.html#insert-into-discrete-equation",
@@ -270,7 +270,287 @@
     "href": "index.html",
     "title": "Presentations for MATMEK-4270",
     "section": "",
-    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem"
+    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method"
+  },
+  {
+    "objectID": "finitedifferences.html#the-finite-difference-method",
+    "href": "finitedifferences.html#the-finite-difference-method",
+    "title": "The finite difference method",
+    "section": "The finite difference method",
+    "text": "The finite difference method\n\n\n\nThe finite difference method divides (in 1D) the line into a mesh and solves equations only for specific locations (nodes) in the mesh. A mesh is created with \\(t = 0, \\Delta t, 2\\Delta t, \\ldots, N \\Delta t\\), where \\(t_n=n \\Delta t\\) and \\(T=t_N = N \\Delta t\\).\n\nUp until now we have solved equations by using a recurrence approach. This is very easy to implement intuitively using for-loops. However, the most common and general use of finite difference methods is through explicit assembling of matrices."
+  },
+  {
+    "objectID": "finitedifferences.html#the-recurrence-approach-for-exponential-decay",
+    "href": "finitedifferences.html#the-recurrence-approach-for-exponential-decay",
+    "title": "The finite difference method",
+    "section": "The recurrence approach for exponential decay",
+    "text": "The recurrence approach for exponential decay\nThe exponential decay problem is\n\\[\nu' + au = 0, t \\in (0, T], \\, u(0)=I.\n\\]\nwith difference equation\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a \\Delta t}{1 + \\theta a \\Delta t} u^n = g u^n.\n\\]\nA solution vector \\(\\boldsymbol{u} = (u^0, u^1, \\ldots, u^{N_t})\\). The recurrence algorithm is:\n\n\\(u^0 = I\\)\nfor n = 0, 1, … , N-1\n\nCompute \\(u^{n+1} = g u^n\\)\n\n\nEasy to understand and easy to solve. Equations are never assembled into matrix form"
+  },
+  {
+    "objectID": "finitedifferences.html#the-matrix-approach",
+    "href": "finitedifferences.html#the-matrix-approach",
+    "title": "The finite difference method",
+    "section": "The matrix approach",
+    "text": "The matrix approach\nThe matrix approach solves the difference equations by assembling matrices and vectors. Each row in the matrix-problem represents one difference equation.\n\\[\nA \\boldsymbol{u} = \\boldsymbol{b}\n\\]\nFor the exponential decay problem the matrix problem looks like\n\\[\n\\underbrace{\n\\begin{bmatrix}\n  1  & 0 & 0 & 0 & 0  \\\\\n-g  & 1 & 0 & 0 & 0  \\\\\n0  & -g & 1 & 0 & 0  \\\\\n0  & 0 & -g & 1 & 0  \\\\\n0  & 0 & 0 & -g & 1  \n\\end{bmatrix}}_{A}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\nu^3 \\\\\nu^4 \\\\\nu^5\n\\end{bmatrix}}_{\\boldsymbol{u}} =\n\\underbrace{\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n0\n\\end{bmatrix}}_{\\boldsymbol{b}}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#understand-that-the-matrix-problem-is-the-same-as-the-recurrence",
+    "href": "finitedifferences.html#understand-that-the-matrix-problem-is-the-same-as-the-recurrence",
+    "title": "The finite difference method",
+    "section": "Understand that the matrix problem is the same as the recurrence",
+    "text": "Understand that the matrix problem is the same as the recurrence\n\\[\n\\underbrace{\n\\begin{bmatrix}\n1   & 0 & 0 & 0 & 0   \\\\\n-g  & 1 & 0 & 0 & 0   \\\\\n0  & -g & 1 & 0 & 0   \\\\\n0  & 0 & -g & 1 & 0   \\\\\n0  & 0 & 0 & -g & 1   \n\\end{bmatrix}}_{A}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\nu^3 \\\\\nu^4 \\\\\nu^5\n\\end{bmatrix}}_{\\boldsymbol{u}} =\n\\underbrace{\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n0\n\\end{bmatrix}}_{\\boldsymbol{b}}\n\\]\n\n\nsimply means\n\n\\[\n\\begin{align}\nu^0 &= I \\\\\n-g u^0 + u^1 &= 0 \\\\\n-g u^1 + u^2 &= 0 \\\\\n\\vdots\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#solve-matrix-problem",
+    "href": "finitedifferences.html#solve-matrix-problem",
+    "title": "The finite difference method",
+    "section": "Solve matrix problem",
+    "text": "Solve matrix problem\nThe matrix problem\n\\[\nA \\boldsymbol{u} = \\boldsymbol{b}\n\\]\nis solved as\n\\[\n\\boldsymbol{u} = A^{-1} \\boldsymbol{b}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#assemble-matrix-problem",
+    "href": "finitedifferences.html#assemble-matrix-problem",
+    "title": "The finite difference method",
+    "section": "Assemble matrix problem",
+    "text": "Assemble matrix problem\n\nN = 8\na = 2\nI = 1\ntheta = 0.5\ndt = 0.5\nT = N*dt\nt = np.linspace(0, N*dt, N+1)\nu = np.zeros(N+1)\ng = (1 - (1-theta) * a * dt)/(1 + theta * a * dt)\n\nAssemble\n\nfrom scipy import sparse\nA = sparse.diags([-g, 1], np.array([-1, 0]), (N+1, N+1), 'csr')\nb = np.zeros(N+1); b[0] = I"
+  },
+  {
+    "objectID": "finitedifferences.html#solve-and-compare-with-recurrence",
+    "href": "finitedifferences.html#solve-and-compare-with-recurrence",
+    "title": "The finite difference method",
+    "section": "Solve and compare with recurrence",
+    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n] \n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. Which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n] \nN = 1000\nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I) \n\n105 µs ± 3.92 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b) \n\n19.2 µs ± 1.77 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+  },
+  {
+    "objectID": "finitedifferences.html#compute-the-inverse",
+    "href": "finitedifferences.html#compute-the-inverse",
+    "title": "The finite difference method",
+    "section": "Compute the inverse",
+    "text": "Compute the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True) \nAi = np.linalg.inv(A.toarray())\nprint(Ai)\n\n[[1.    0.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.333 1.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.111 0.333 1.    0.    0.    0.    0.    0.    0.   ]\n [0.037 0.111 0.333 1.    0.    0.    0.    0.    0.   ]\n [0.012 0.037 0.111 0.333 1.    0.    0.    0.    0.   ]\n [0.004 0.012 0.037 0.111 0.333 1.    0.    0.    0.   ]\n [0.001 0.004 0.012 0.037 0.111 0.333 1.    0.    0.   ]\n [0.    0.001 0.004 0.012 0.037 0.111 0.333 1.    0.   ]\n [0.    0.    0.001 0.004 0.012 0.037 0.111 0.333 1.   ]]\n\n\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui) \n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\n%timeit -n 100 ui = Ai @ b \n\n548 ns ± 36.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+  },
+  {
+    "objectID": "finitedifferences.html#the-vibration-problem",
+    "href": "finitedifferences.html#the-vibration-problem",
+    "title": "The finite difference method",
+    "section": "The vibration problem",
+    "text": "The vibration problem\n\\[\nu'' + \\omega^2 u = 0,\\, t \\in (0, T] \\quad u(0) = I, u'(0) = 0,\n\\]\nis solved using a central difference for \\(n=1, 2, \\ldots, N-1\\)\n\\[\n\\frac{u^{n+1}-2u^n+u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0.\n\\]\nThe recurrence algorithm is\n\n\\(u^0 = I\\)\n\\(u^1 = u^0(1 - 0.5 \\omega^2 \\Delta t^2)\\)\nfor n = 1, 2, … , N-1\n\n\\(u^{n+1} = (2-\\omega^2 \\Delta t^2 ) u^n - u^{n-1}\\)"
+  },
+  {
+    "objectID": "finitedifferences.html#vibration-on-matrix-form",
+    "href": "finitedifferences.html#vibration-on-matrix-form",
+    "title": "The finite difference method",
+    "section": "Vibration on matrix form",
+    "text": "Vibration on matrix form\nThe matrix problem is now, using \\(g = 2-\\omega^2 \\Delta t^2\\),\n\\[\n\\begin{bmatrix}\n1  & 0 & 0 & 0 & 0 & 0 & 0  \\\\\n-{g}/{2} & 1 & 0 & 0 & 0 & 0 & 0  \\\\\n1  & -g & 1 & 0 & 0 & 0 & 0  \\\\\n0  & 1 & -g & 1 & 0 & 0 & 0  \\\\\n0  & 0 & 1 & -g & 1 & 0 & 0  \\\\\n0  & 0 & 0 & 1 & -g & 1 & 0  \\\\\n0  & 0 & 0 & 0 & 1 & -g & 1  \\\\\n\\end{bmatrix}\n\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\nu^3 \\\\\nu^4 \\\\\nu^5 \\\\\nu^6 \\\\\nu^7\n\\end{bmatrix}\n=\n\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n0\n\\end{bmatrix}\n\\]\n\n\n\n\n\n\nNote\n\n\nNotice that the matrix is still lower triangular. Matrices that are lower or upper triangular are especially quick to solve for using forward or backward substitution. This is due to the explicit recurrence relation. Just optimize the for-loop using Numba/Cython."
+  },
+  {
+    "objectID": "finitedifferences.html#stencils-from-taylor-expansions",
+    "href": "finitedifferences.html#stencils-from-taylor-expansions",
+    "title": "The finite difference method",
+    "section": "Stencils from Taylor expansions",
+    "text": "Stencils from Taylor expansions\nCreate one backward and three forward Taylor expansions starting from \\(u(t_n)\\)\n\\[ \\small\n\\begin{align*}\n(-1)\\quad u^{n-1} &= u^n - h u' + \\frac{h^2}{2}u'' - \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' - \\cdots \\\\\n(1)\\quad u^{n+1} &= u^n + h u' + \\frac{h^2}{2}u'' + \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots \\\\\n(2)\\quad u^{n+2} &= u^n + 2h u' + \\frac{2 h^2}{1}u'' + \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' + \\cdots \\\\\n(3)\\quad u^{n+3} &= u^n + 3h u' + \\frac{9 h^2}{2}u'' + \\frac{9 h^3}{2}u''' + \\frac{27 h^4}{8}u'''' + \\cdots \\\\\n\\end{align*}\n\\]\n\\(u^{n+a} = u(t_{n+a})\\) and \\(t_{n+a} = (n+a)h\\) and we use \\(h=\\Delta t\\) for simplicity.\nNow add equations (-1) and (1) and isolate \\(u''(t_n)\\)\n\\[\n\\begin{equation*}\nu''(t_n) = \\frac{u^{n+1}-2u^n + u^{n-1}}{h^2}  + \\frac{h^2}{12}u'''' +\n\\end{equation*}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#matrix-form",
+    "href": "finitedifferences.html#matrix-form",
+    "title": "The finite difference method",
+    "section": "Matrix form",
+    "text": "Matrix form\nLet the mesh function mesh function \\(\\boldsymbol{u}^{(2)} \\in \\mathbb{R}^N\\) be defined as\n\\[\n\\boldsymbol{u}^{(2)}=(u''(t_n))_{n=0}^{N}\n\\]\nWe can compute this using a finite difference matrix \\(D^{(2)} \\in \\mathbb{R}^{N \\times N}\\) and \\(\\boldsymbol{u} \\in \\mathbb{R}^N\\)\n\\[\n\\boldsymbol{u}^{(2)} = D^{(2)} \\boldsymbol{u},\n\\]\n\\[ \\small\n\\underbrace{\n\\begin{bmatrix}\nu^{(2)}_0 \\\\\nu^{(2)}_1 \\\\\nu^{(2)}_2 \\\\\n\\vdots \\\\\nu^{(2)}_{N-2} \\\\\nu^{(2)}_{N-1} \\\\\nu^{(2)}_{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{u}^{(2)}} =\n\\underbrace{\n  \\frac{1}{h^2} \\begin{bmatrix}\n? & ? & ? & ?  & ? & ? & ? & ?  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n? & ? & ? & ?  & ? & ? & ? & ? \\\\\n\\end{bmatrix}\n}_{D^{(2)}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-1} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#boundaries",
+    "href": "finitedifferences.html#boundaries",
+    "title": "The finite difference method",
+    "section": "Boundaries",
+    "text": "Boundaries\n\\[ \\small\n\\underbrace{\n\\begin{bmatrix}\nu^{(2)}_0 \\\\\nu^{(2)}_1 \\\\\nu^{(2)}_2 \\\\\n\\vdots \\\\\nu^{(2)}_{N-2} \\\\\nu^{(2)}_{N-1} \\\\\nu^{(2)}_{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{u}^{(2)}} =\n\\underbrace{\n  \\frac{1}{h^2} \\begin{bmatrix}\n? & ? & ? & ?  & ? & ? & ? & ?  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n? & ? & ? & ?  & ? & ? & ? & ? \\\\\n\\end{bmatrix}\n}_{D^{(2)}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-1} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n\\]\nWhat to do with the first and last rows? The central stencils do not work here.\n\nForward and backward stencils will do"
+  },
+  {
+    "objectID": "finitedifferences.html#forward-difference-at-n0",
+    "href": "finitedifferences.html#forward-difference-at-n0",
+    "title": "The finite difference method",
+    "section": "Forward difference at \\(n=0\\)",
+    "text": "Forward difference at \\(n=0\\)\nRemember: \\[ \\small\n\\begin{align*}\n(1)\\quad u^{n+1} &= u^n + h u' + \\frac{h^2}{2}u'' + \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots \\\\\n(2)\\quad u^{n+2} &= u^n + 2h u' + \\frac{2 h^2}{1}u'' + \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' + \\cdots\n\\end{align*}\n\\]\nSubtract 2 times Eq. (1) from Eq. (2) and rearrange\n\\[\\small\n(2)-2(1): \\, u^{n+2} - 2u^{n+1} = -u^n +  \\frac{h^2}{1}u'' + h^3 u''' + \\frac{7 h^4}{12}u'''' +\n\\]\nRearrange to isolate a  first order  accurate stencil for \\(u''(0)\\)\n\\[\\small\nu''(0) = \\frac{u^{2}-2u^{1}+u^0}{h^2} - \\color{red} h \\color{black} u'''(0) - \\frac{7 h^2}{12}u''''(0) +\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#backward-difference-at-nn",
+    "href": "finitedifferences.html#backward-difference-at-nn",
+    "title": "The finite difference method",
+    "section": "Backward difference at \\(n=N\\)",
+    "text": "Backward difference at \\(n=N\\)\nUse two backward Taylor expansions:\n\\[ \\small\n\\begin{align*}\n(-2)\\quad u^{n-2} &= u^n - 2 h u' + \\frac{2 h^2}{1}u'' - \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' - \\cdots \\\\\n(-1)\\quad u^{n-1} &= u^n - h u' + \\frac{h^2}{2}u'' - \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' - \\cdots \\\\\n\\end{align*}\n\\]\nSubtract 2 times Eq. (-1) from Eq. (-2) and rearrange\n\\[\\small\n(-2)-2(-1): \\, u^{n-2} - 2u^{n-1} = -u^n +  \\frac{h^2}{1}u'' - h^3 u''' + \\frac{7 h^4}{12}u'''' +\n\\]\nRearrange to isolate a  first order  accurate backward stencil for \\(u''(T)\\)\n\\[\\small\nu''(T) = \\frac{u^{N-2}-2u^{N-1}+u^N}{h^2} - \\color{red} h \\color{black} u'''(T) - \\frac{7 h^2}{12}u''''(T) +\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#second-derivative-matrix",
+    "href": "finitedifferences.html#second-derivative-matrix",
+    "title": "The finite difference method",
+    "section": "Second derivative matrix",
+    "text": "Second derivative matrix\n\\[\nD^{(2)} = \\frac{1}{h^2} \\begin{bmatrix}\n1 & -2 & 1 & 0  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -2 & 1 \\\\\n\\end{bmatrix}\n\\]\nBut with first order only at the boundaries. Can we do better?"
+  },
+  {
+    "objectID": "finitedifferences.html#second-order-forward-stencil",
+    "href": "finitedifferences.html#second-order-forward-stencil",
+    "title": "The finite difference method",
+    "section": "Second order forward stencil",
+    "text": "Second order forward stencil\nUse three forward points \\(u^{n+1}, u^{n+2}, u^{n+3}\\)\n\\[ \\small\n\\begin{align*}\n(1)\\quad u^{n+1} &= u^n + h u' + \\frac{h^2}{2}u'' + \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots \\\\\n(2)\\quad u^{n+2} &= u^n + 2h u' + \\frac{2 h^2}{1}u'' + \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' + \\cdots \\\\\n(3)\\quad u^{n+3} &= u^n + 3h u' + \\frac{9 h^2}{2}u'' + \\frac{9 h^3}{2}u''' + \\frac{27 h^4}{8}u'''' + \\cdots \\\\\n\\end{align*}\n\\]\nNow to eliminate both \\(u'\\) and \\(u'''\\) terms add the three equations as \\(-(3) + 4\\cdot(2) - 5\\cdot(1)\\) (don’t worry about how I know this yet)\n\\[\n-(3)+4\\cdot(2)-5\\cdot(1): \\, -u^{n+3}+4u^{n+2}-5u^{n+1} = -2 u^n + h^2 u'' - \\frac{11 h^4}{12}u'''' +  \n\\]\nIsolate \\(u''(0)\\)\n\\[\nu''(0) = \\frac{-u^{3} + 4u^{2} - 5u^{1} + 2u^n}{h^2} + \\frac{11 \\color{red} h^2 \\color{black}}{12} u'''' +\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#fully-second-order-d2",
+    "href": "finitedifferences.html#fully-second-order-d2",
+    "title": "The finite difference method",
+    "section": "Fully second order \\(D^{(2)}\\)",
+    "text": "Fully second order \\(D^{(2)}\\)\n\\[\nD^{(2)} = \\frac{1}{h^2} \\begin{bmatrix}\n2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\\\\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#assemble-in-python",
+    "href": "finitedifferences.html#assemble-in-python",
+    "title": "The finite difference method",
+    "section": "Assemble in Python",
+    "text": "Assemble in Python\n\nN = 8\nD2 = sparse.diags([1, -2, 1], np.array([-1, 0, 1]), (N+1, N+1), 'lil')\nD2[0, :4] = 2, -5, 4, -1\nD2[-1, -4:] = -1, 4, -5, 2\nD2 *= (1/dt**2) # don't forget h\nD2.toarray()*dt**2\n\narray([[ 2., -5.,  4., -1.,  0.,  0.,  0.,  0.,  0.],\n       [ 1., -2.,  1.,  0.,  0.,  0.,  0.,  0.,  0.],\n       [ 0.,  1., -2.,  1.,  0.,  0.,  0.,  0.,  0.],\n       [ 0.,  0.,  1., -2.,  1.,  0.,  0.,  0.,  0.],\n       [ 0.,  0.,  0.,  1., -2.,  1.,  0.,  0.,  0.],\n       [ 0.,  0.,  0.,  0.,  1., -2.,  1.,  0.,  0.],\n       [ 0.,  0.,  0.,  0.,  0.,  1., -2.,  1.,  0.],\n       [ 0.,  0.,  0.,  0.,  0.,  0.,  1., -2.,  1.],\n       [ 0.,  0.,  0.,  0.,  0., -1.,  4., -5.,  2.]])\n\n\nApply matrix to a mesh function \\(f(t_n) = t_n^2\\)\n\n\narray([2., 2., 2., 2., 2., 2., 2., 2., 2.])\n\n\nExact for all \\(n\\)!"
+  },
+  {
+    "objectID": "finitedifferences.html#first-order-boundary",
+    "href": "finitedifferences.html#first-order-boundary",
+    "title": "The finite difference method",
+    "section": "First order boundary",
+    "text": "First order boundary\n\nD21 = sparse.diags([1, -2, 1], np.array([-1, 0, 1]), (N+1, N+1), 'lil')\nD21[0, :4] = 1, -2, 1, 0\nD21[-1, -4:] = 0, 1, -2, 1\nD21 *= (1/dt**2) \nD21 @ f\n\narray([2., 2., 2., 2., 2., 2., 2., 2., 2.])\n\n\nStill exact! Why?\n\nConsider the forward first order stencil\n\\[\nu''(0) = \\frac{u^{n+2}-2u^{n+1}+u^n}{h^2} - \\color{red} h u'''(0) \\color{black} - \\frac{7 h^2}{12}u''''(0) +\n\\]\n\n\nThe leading error is \\(h u'''(0)\\). What is \\(u'''(0)\\) if \\(u(t) = t^2\\)? The second order stencil captures the second order polynomial \\(t^2\\) exactly!"
+  },
+  {
+    "objectID": "finitedifferences.html#more-challenging-example",
+    "href": "finitedifferences.html#more-challenging-example",
+    "title": "The finite difference method",
+    "section": "More challenging example",
+    "text": "More challenging example\nLet \\(f(t) = \\sin(\\pi t / T)\\) such that \\(f''(t) = -(\\pi/T)^2 f(t)\\). Here none of the error terms will disappear and we see the effect of the poor first order boundary.\n\nf = np.sin(np.pi*t / T)\nd2fe = -(np.pi/T)**2*f\nd2f = D2 @ f\nd2f1 = D21 @ f\nplt.plot(t, d2fe, 'k', t, d2f, 'b', t, d2f1, 'r')\nplt.legend(['Exact', '2nd order', '1st order']);"
+  },
+  {
+    "objectID": "finitedifferences.html#first-derivative-matrix",
+    "href": "finitedifferences.html#first-derivative-matrix",
+    "title": "The finite difference method",
+    "section": "First derivative matrix",
+    "text": "First derivative matrix\nLets create a similar matrix for a second order accurate single derivative.\n\\[ \\small\n\\begin{align}\n(-1)\\quad u^{n-1} &= u^n - h u' + \\frac{h^2}{2}u'' - \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots \\\\\n(1)\\quad u^{n+1} &= u^n + h u' + \\frac{h^2}{2}u'' + \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots\n\\end{align}\n\\]\nHere Eq. (1) minus Eq. (-1) leads to\n\\[\nu'(t_n) = \\frac{u^{n+1}-u^{n-1}}{2 h} + \\frac{h^2}{6} u''' +\n\\]\nwhich is second order accurate.\nThe central scheme cannot be used for \\(n=0\\) or \\(n=N\\)."
+  },
+  {
+    "objectID": "finitedifferences.html#boundaries-single-derivative",
+    "href": "finitedifferences.html#boundaries-single-derivative",
+    "title": "The finite difference method",
+    "section": "Boundaries single derivative",
+    "text": "Boundaries single derivative\nForward for \\(n=0\\)\n\\[ \\small\n\\begin{align}\n(1)\\quad u^{n+1} &= u^n + h u' + \\frac{h^2}{2}u'' + \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots \\\\\n(2)\\quad u^{n+2} &= u^n + 2h u' + \\frac{2 h^2}{1}u'' + \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' + \\cdots\n\\end{align}\n\\]\nWe get a first order approximation for \\(u'\\) using merely Eq. (1):\n\\[\nu'(t_n) = \\frac{u^{n+1}-u^n}{h} - \\frac{h}{2}u'' -\n\\]\nAdding one more equation (2) we get second order: \\((2)-4\\cdot (1)\\) (Note that the terms with \\(u''\\) then cancel)\n\\[\nu'(t_n) = \\frac{-u^{n+2}+4u^{n+1}-3u^n}{2h} + \\frac{h^2}{3}u''' +\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#first-derivative-matrix-1",
+    "href": "finitedifferences.html#first-derivative-matrix-1",
+    "title": "The finite difference method",
+    "section": "First derivative matrix",
+    "text": "First derivative matrix\nThe backward for \\(n=N\\) is the same, only with different sign from \\(n=0\\). The derivative matrix is\n\\[\nD^{(1)} = \\frac{1}{2 h}\\begin{bmatrix}\n-3 & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 0 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 0 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  -1& 0& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& -1& 0& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3 \\\\\n\\end{bmatrix}\n\\]\n\nD1 = sparse.diags([-1, 1], np.array([-1, 1]), (N+1, N+1), 'lil')\nD1[0, :3] = -3, 4, -1\nD1[-1, -3:] = 1, -4, 3 \nD1 *= (1/(2*dt))\nf = t \nD1 @ f \n\narray([1., 1., 1., 1., 1., 1., 1., 1., 1.])"
+  },
+  {
+    "objectID": "finitedifferences.html#is-d2-the-same-as-d1d1",
+    "href": "finitedifferences.html#is-d2-the-same-as-d1d1",
+    "title": "The finite difference method",
+    "section": "Is \\(D^{(2)}\\) the same as \\(D^{(1)}D^{(1)}\\)?",
+    "text": "Is \\(D^{(2)}\\) the same as \\(D^{(1)}D^{(1)}\\)?\n\nD22 = D1 @ D1\nD22.toarray()*4*dt**2\n\narray([[  5., -11.,   7.,  -1.,   0.,   0.,   0.,   0.,   0.],\n       [  3.,  -5.,   1.,   1.,   0.,   0.,   0.,   0.,   0.],\n       [  1.,   0.,  -2.,   0.,   1.,   0.,   0.,   0.,   0.],\n       [  0.,   1.,   0.,  -2.,   0.,   1.,   0.,   0.,   0.],\n       [  0.,   0.,   1.,   0.,  -2.,   0.,   1.,   0.,   0.],\n       [  0.,   0.,   0.,   1.,   0.,  -2.,   0.,   1.,   0.],\n       [  0.,   0.,   0.,   0.,   1.,   0.,  -2.,   0.,   1.],\n       [  0.,   0.,   0.,   0.,   0.,   1.,   1.,  -5.,   3.],\n       [  0.,   0.,   0.,   0.,   0.,  -1.,   7., -11.,   5.]])\n\n\nNo! This stencil is wider, using neighboring points farther away. The central stencil is\n\\[\nu''(t_n) = \\frac{u^{n+2}-2u^{n}+u^{n-2}}{4h^2}\n\\]\nHow accurate is \\(D^{(1)}D^{(1)}\\)?"
+  },
+  {
+    "objectID": "finitedifferences.html#internal-points",
+    "href": "finitedifferences.html#internal-points",
+    "title": "The finite difference method",
+    "section": "Internal points",
+    "text": "Internal points\n\\[ \\small\n\\begin{align*}\n(-2)\\quad u^{n-2} &= u^n - 2h u' + \\frac{2 h^2}{1}u'' - \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' - \\cdots \\\\\n(2)\\quad u^{n+2} &= u^n + 2h u' + \\frac{2 h^2}{1}u'' + \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' + \\cdots\n\\end{align*}\n\\]\nTake Eq. (2) plus Eq. (-2)\n\\[\nu^{n+2} + u^{n-2} = 2u^n + 4h^2 u'' + \\frac{4h^4}{3}u'''' +\n\\]\nand\n\\[\nu''(t_n) = \\frac{u^{n+2}-2u^{n}+u^{n-2}}{4h^2} - \\frac{h^2}{3}u'''' + \\cdots\n\\]\nSecond order!"
+  },
+  {
+    "objectID": "finitedifferences.html#how-about-boundaries",
+    "href": "finitedifferences.html#how-about-boundaries",
+    "title": "The finite difference method",
+    "section": "How about boundaries?",
+    "text": "How about boundaries?\n\\[\nu''(t_1) = \\frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2}\n\\]\n\\[ \\small\n\\begin{align*}\n(-1)\\quad u^{n-1} &= u^n - h u' + \\frac{h^2}{2}u'' - \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' - \\cdots \\\\\n(1)\\quad u^{n+1} &= u^n + h u' + \\frac{h^2}{2}u'' + \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots \\\\\n(2)\\quad u^{n+2} &= u^n + 2h u' + \\frac{2 h^2}{1}u'' + \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' + \\cdots\n\\end{align*}\n\\]\nTake Eq. \\((2) + (1) + 3 \\cdot (-1)\\)\n\\[\nu''(t_1) = \\frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2} + \\frac{h}{4}u''' + \\cdots\n\\]\nOnly first order."
+  },
+  {
+    "objectID": "finitedifferences.html#first-point",
+    "href": "finitedifferences.html#first-point",
+    "title": "The finite difference method",
+    "section": "First point",
+    "text": "First point\n\\[\nu''(t_0) = \\frac{-u^{n+3}+7u^{n+2}-11u^{n+1}+5u^{n}}{4h^2}\n\\]\n\\[ \\small\n\\begin{align*}\n(1)\\quad u^{n+1} &= u^n + h u' + \\frac{h^2}{2}u'' + \\frac{h^3}{6}u''' + \\frac{h^4}{24}u'''' + \\cdots \\\\\n(2)\\quad u^{n+2} &= u^n + 2h u' + \\frac{2 h^2}{1}u'' + \\frac{4 h^3}{3}u''' + \\frac{2 h^4}{3}u'''' + \\cdots \\\\\n(3)\\quad u^{n+3} &= u^n + 3h u' + \\frac{9 h^2}{2}u'' + \\frac{9 h^3}{2}u''' + \\frac{27 h^4}{8}u'''' + \\cdots \\\\\n\\end{align*}\n\\]\nTake Eq. \\(-(3)+7\\cdot (2) -11 \\cdot (1)\\) to obtain\n\\[\nu''(t_0) = \\frac{-u^{n+3}+7u^{n+2}-11u^{n+1}+5u^{n}}{4h^2} -\\frac{3 \\color{red}h\\color{black}}{4}u''' \\cdots\n\\]\nFirst order. So \\(D^{(1)}D^{(1)}\\) is still an approximation of the second derivative, only first order accurate near the boundaries."
+  },
+  {
+    "objectID": "finitedifferences.html#test-accuracy",
+    "href": "finitedifferences.html#test-accuracy",
+    "title": "The finite difference method",
+    "section": "Test accuracy",
+    "text": "Test accuracy\nTesting \\(D^{(2)}\\), \\(D^{(2)}\\) with only first order boundaries, and \\(D^{(1)}D^{(1)}\\)\n\nf = np.sin(np.pi*t / T)\nd2fe = -(np.pi/T)**2*f\nd2f = D2 @ f\nd2f1 = D21 @ f\nd2f2 = D1 @ D1 @ f\nplt.plot(t, d2fe, 'k', t, d2f, 'b', t, d2f1, 'r', t, d2f2, 'm')\nplt.legend(['Exact', '2nd order', '1st order', 'D1 @ D1']);"
+  },
+  {
+    "objectID": "finitedifferences.html#solving-equations-using-fd-matrices",
+    "href": "finitedifferences.html#solving-equations-using-fd-matrices",
+    "title": "The finite difference method",
+    "section": "Solving equations using FD matrices",
+    "text": "Solving equations using FD matrices\nConsider the exponential decay model\n\\[\nu' + au = 0, \\, t \\in (0, T], u(0)=I.\n\\]\nWithout considering boundary conditions we can assemble this problem as\n\\[\n(D^{(1)} + a \\mathbb{I})\\boldsymbol{u} = \\boldsymbol{0},\n\\]\nwhere \\(\\mathbb{I} \\in \\mathbb{R}^{N+1\\times N+1}\\) is the identity matrix and \\(\\boldsymbol{0}\\in \\mathbb{R}^{N+1}\\) is a null-vector. The matrix problem is\n\\[\nA \\boldsymbol{u} = \\boldsymbol{0}, \\quad A = D^{(1)}+a\\mathbb{I}\n\\]\nwhich is only trivially solved to \\(\\boldsymbol{u}=\\boldsymbol{0}\\) before adding boundary conditions."
+  },
+  {
+    "objectID": "finitedifferences.html#modify-the-matrix",
+    "href": "finitedifferences.html#modify-the-matrix",
+    "title": "The finite difference method",
+    "section": "Modify the matrix",
+    "text": "Modify the matrix\nWe need to modify the matrix problem to enforce the boundary condition. Assume first\n\\[\nA \\boldsymbol{u} = \\boldsymbol{b}, \\quad \\text{for} \\quad \\boldsymbol{b}\\in \\mathbb{R}^{N+1}\n\\]\n\\[ \\small\n\\underbrace{\n  \\frac{1}{2h} \\begin{bmatrix}\n-3+2ah & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 2ah & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 2ah & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah\n\\end{bmatrix}\n}_{D^{(1)}+a\\mathbb{I}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-2} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n=\n\\underbrace{\n\\begin{bmatrix}\nb^0 \\\\\nb^1 \\\\\nb^2 \\\\\n\\vdots \\\\\nb^{N-2} \\\\\nb^{N-1} \\\\\nb^{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{b}} =\n\\]\nIn order to enforce that \\(u(0) = I\\), we can modify the first row of the coefficient matrix \\(A\\) and the right hand side vector \\(\\boldsymbol{b}\\)"
+  },
+  {
+    "objectID": "finitedifferences.html#modify-matrix",
+    "href": "finitedifferences.html#modify-matrix",
+    "title": "The finite difference method",
+    "section": "Modify matrix",
+    "text": "Modify matrix\n\\[ \\small\n\\underbrace{\n  \\frac{1}{2h} \\begin{bmatrix}\n2h & 0 & 0 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 2ah & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 2ah & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah\n\\end{bmatrix}\n}_{A}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-2} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n=\n\\underbrace{\n\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n\\vdots \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n\\end{bmatrix}}_{\\boldsymbol{b}}\n\\]\nNow the equation in the first row states that \\(u^0 = I\\), whereas the remaining rows are unchanged and solve the central and implicit problem for row \\(n\\)\n\\[\n\\frac{u^{n+1}-u^{n-1}}{2h} + au^n = 0\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#implement-decay-problem",
+    "href": "finitedifferences.html#implement-decay-problem",
+    "title": "The finite difference method",
+    "section": "Implement decay problem",
+    "text": "Implement decay problem\n\nN = 10\ndt = 0.5\na = 5\nT = N*dt\nt = np.linspace(0, N*dt, N+1) \nD1 = sparse.diags([-1, 1], np.array([-1, 1]), (N+1, N+1), 'lil')\nD1[-1, -3:] = 1, -4, 3\n#D1[-1, -3:] = 0, -2, 2\nD1 *= (1/(2*dt))\nId = sparse.eye(N+1)\nA = D1 + a*Id\nb = np.zeros(N+1)\nb[0] = I\nA[0, :3] = 1, 0, 0 # boundary condition\nA.toarray()\n\narray([[ 1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],\n       [-1.,  5.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],\n       [ 0., -1.,  5.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],\n       [ 0.,  0., -1.,  5.,  1.,  0.,  0.,  0.,  0.,  0.,  0.],\n       [ 0.,  0.,  0., -1.,  5.,  1.,  0.,  0.,  0.,  0.,  0.],\n       [ 0.,  0.,  0.,  0., -1.,  5.,  1.,  0.,  0.,  0.,  0.],\n       [ 0.,  0.,  0.,  0.,  0., -1.,  5.,  1.,  0.,  0.,  0.],\n       [ 0.,  0.,  0.,  0.,  0.,  0., -1.,  5.,  1.,  0.,  0.],\n       [ 0.,  0.,  0.,  0.,  0.,  0.,  0., -1.,  5.,  1.,  0.],\n       [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0., -1.,  5.,  1.],\n       [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1., -4.,  8.]])"
+  },
+  {
+    "objectID": "finitedifferences.html#compare-with-exact-solution",
+    "href": "finitedifferences.html#compare-with-exact-solution",
+    "title": "The finite difference method",
+    "section": "Compare with exact solution",
+    "text": "Compare with exact solution\n\n\n\n\n\n\n\n\n\nThe accuracy is like for the Crank-Nicolson method discussed in lectures 1-2. However, the FD method is not a recursive marching method, since the equation for \\(u^n\\) depends on the solution at \\(u^{n+1}\\)! This implicit FD method is unconditionally stable. Normally, only marching methods are analysed for stability."
+  },
+  {
+    "objectID": "finitedifferences.html#generic-finite-difference-stencils",
+    "href": "finitedifferences.html#generic-finite-difference-stencils",
+    "title": "The finite difference method",
+    "section": "Generic Finite difference stencils",
+    "text": "Generic Finite difference stencils\nWe have seen that it is quite simple to develop finite difference stencils for any derivative, using either forward or backward points. Can this be generalized?\n\nYes! Of course it can. The generic Taylor expansion around \\(x=x_0\\) reads\n\\[\nu(x) = \\sum_{i=0}^{N} \\frac{(x-x_0)^i}{i!} u^{(i)}(x_0) + \\mathcal{O}((x-x_0)^{N+1}),\n\\]\nwhere \\(u^{(i)}(x_0) = \\frac{d^{i}u}{dx^{i}}|_{x=x_0}\\).\nUse only \\(x=x_0+mh\\), where \\(m\\) is an integer and \\(h\\) is a constant (\\(\\Delta t\\) or \\(\\Delta x\\))\n\\[\nu^{n+m} = \\sum_{i=0}^{N} \\frac{(mh)^i}{i!} u^{(i)}(x_0) + \\mathcal{O}(h^{N+1}),\n\\]\nwhere we use the finite difference notation \\(u^{n+m} = u(x_0+mh)\\)"
+  },
+  {
+    "objectID": "finitedifferences.html#generic-fd",
+    "href": "finitedifferences.html#generic-fd",
+    "title": "The finite difference method",
+    "section": "Generic FD",
+    "text": "Generic FD\nThe Taylor expansions for a given \\(m\\) can be written \\[\nu^{n+m} = \\sum_{i=0}^{N} \\frac{(mh)^i}{i!} u^{(i)}(x_0) = \\sum_{i=0}^{N} c_{mi} du_i\n\\]\nusing \\(c_{mi} = \\frac{(mh)^i}{i!}\\) and \\(du_i = u^{(i)}(x_0)\\).\n\nThis can be understood as a matrix-vector product\n\\[\n\\boldsymbol{u} = C \\boldsymbol{du},\n\\]\nwhere \\(\\boldsymbol{u} = (u^{n+m})_{m=m_0}^{N+m_0}\\), \\(C = (c_{m+m_0,i})_{m,i=0}^{N,N}\\) and \\(\\boldsymbol{du}=(du_i)_{i=0}^N\\). Here \\(m_0\\) is an integer representing the lowest value of \\(m\\) in the stencil.\nFor \\(m_0=-2\\) and \\(N=4\\):\n\\[\n\\boldsymbol{u} = (u^{n-2}, u^{n-1}, u^{n}, u^{n+1}, u^{n+2})^T \\quad\n\\boldsymbol{du} =(u^{(0)}, u^{(1)}, u^{(2)}, u^{(3)}, u^{(4)})^T\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#the-stencil-matrix",
+    "href": "finitedifferences.html#the-stencil-matrix",
+    "title": "The finite difference method",
+    "section": "The stencil matrix",
+    "text": "The stencil matrix\nFor \\(m_0=-2\\) and \\(N=4\\) we get 5 Taylor expansions\n\\[\n\\begin{align*}\nu^{n-2} &= \\sum_{i=0}^{N} \\frac{(-2h)^i}{i!} du_i  \\\\\nu^{n-1} &= \\sum_{i=0}^{N} \\frac{(-h)^i}{i!} du_i  \\\\\nu^{n} &= u^{n} \\\\\nu^{n+1} &= \\sum_{i=0}^{N} \\frac{(h)^i}{i!} du_i  \\\\\nu^{n+2} &= \\sum_{i=0}^{N} \\frac{(2h)^i}{i!} du_i  \\\\\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#the-stencil-matrix-ctd",
+    "href": "finitedifferences.html#the-stencil-matrix-ctd",
+    "title": "The finite difference method",
+    "section": "The stencil matrix ctd",
+    "text": "The stencil matrix ctd\nExpanding the sums these 5 Taylor expansions can be written in matrix form\n\\[\n\\underbrace{\n\\begin{bmatrix}\nu^{n-2}\\\\\nu^{n-1}\\\\\nu^{n}\\\\\nu^{n+1}\\\\\nu^{n+2}\\\\\n\\end{bmatrix}}_{\\boldsymbol{u}}\n= \\underbrace{\\begin{bmatrix}\n\\frac{(-2h)^0}{0!} & \\frac{(-2h)^1}{1!} & \\frac{(-2h)^2}{2!} & \\frac{(-2h)^3}{3!} & \\frac{(-2h)^4}{4!}  \\\\\n\\frac{(-h)^0}{0!} & \\frac{(-h)^1}{1!} & \\frac{(-h)^2}{2!} & \\frac{(-h)^3}{3!} & \\frac{(-h)^4}{4!} \\\\\n1 & 0 & 0 & 0 & 0 \\\\\n\\frac{(h)^0}{0!} & \\frac{(h)^1}{1!} & \\frac{(h)^2}{2!} & \\frac{(h)^3}{3!} & \\frac{(h)^4}{4!} \\\\\n\\frac{(2h)^0}{0!} & \\frac{(2h)^1}{1!} & \\frac{(2h)^2}{2!} & \\frac{(2h)^3}{3!} & \\frac{(2h)^4}{4!} \\\\\n\\end{bmatrix}}_{C}\n\\underbrace{\n\\begin{bmatrix}\ndu_{0} \\\\\ndu_1 \\\\\ndu_2 \\\\\ndu_3 \\\\\ndu_4\n\\end{bmatrix}}_{\\boldsymbol{du}}\n\\]\n\nInvert to obtain\n\\[\n\\boldsymbol{du} = C^{-1} \\boldsymbol{u}\n\\]\nThis is how we can get any derivative stencil! Remember \\(du_i\\) is an approximation to the i’th derivative."
+  },
+  {
+    "objectID": "finitedifferences.html#second-order-second-derivative-stencil",
+    "href": "finitedifferences.html#second-order-second-derivative-stencil",
+    "title": "The finite difference method",
+    "section": "Second order second derivative stencil",
+    "text": "Second order second derivative stencil\nWe have been using the following stencil\n\\[\ndu_2 = u^{(2)}(x_0) = \\frac{u^{n+1}-2u^n+u^{n-1}}{h^2}.\n\\]\nLet’s derive this with the approach above. The scheme is central and second order so we use \\(m_0=-1\\) and \\(N=2\\) (hence \\(m=(-1, 0, 1)\\)). Insert into the recipe for \\(C\\)\n\\[\nC = \\begin{bmatrix}\n1 & -h & \\frac{h^2}{2} \\\\\n1 & 0 & 0 \\\\\n1 & h & \\frac{h^2}{2}\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "finitedifferences.html#in-sympy",
+    "href": "finitedifferences.html#in-sympy",
+    "title": "The finite difference method",
+    "section": "In Sympy",
+    "text": "In Sympy\n\nimport sympy as sp\nx, h = sp.symbols('x,h')\nC = sp.Matrix([[1, -h, h**2/2], [1, 0, 0], [1, h, h**2/2]])\n\n\n\nPrint \\(C\\) matrix\n\nC\n\n\\(\\displaystyle \\left[\\begin{matrix}1 & - h & \\frac{h^{2}}{2}\\\\1 & 0 & 0\\\\1 & h & \\frac{h^{2}}{2}\\end{matrix}\\right]\\)\n\n\n\nPrint \\(C^{-1}\\) matrix\n\nC.inv() \n\n\\(\\displaystyle \\left[\\begin{matrix}0 & 1 & 0\\\\- \\frac{1}{2 h} & 0 & \\frac{1}{2 h}\\\\\\frac{1}{h^{2}} & - \\frac{2}{h^{2}} & \\frac{1}{h^{2}}\\end{matrix}\\right]\\)\n\n\n\n\nThe last row in \\(C^{-1}\\) represents \\(u''\\)! The middle row represents a second order central \\(u'\\).\nCreate a vector for \\(\\boldsymbol{u}\\) and print \\(u'\\) and \\(u'\\)\n\nu = sp.Function('u')\ncoef = sp.Matrix([u(x-h), u(x), u(x+h)]) \n\n\n\n\ndisplay((C.inv()[1, :] @ coef)[0])\n\n\\(\\displaystyle - \\frac{u{\\left(- h + x \\right)}}{2 h} + \\frac{u{\\left(h + x \\right)}}{2 h}\\)\n\n\n\n\ndisplay((C.inv()[2, :] @ coef)[0]) \n\n\\(\\displaystyle - \\frac{2 u{\\left(x \\right)}}{h^{2}} + \\frac{u{\\left(- h + x \\right)}}{h^{2}} + \\frac{u{\\left(h + x \\right)}}{h^{2}}\\)"
   },
   {
     "objectID": "intro.html#hans-petter-langtangen-1962-2016",
@@ -627,21 +907,21 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.12 µs ± 660 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.07 µs ± 82.3 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.8 µs ± 781 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.05 µs ± 108 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.14 µs ± 565 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.7 µs ± 1.06 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.27 µs ± 1.44 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 198 µs ± 3.7 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.06 µs ± 415 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.7 µs ± 1.18 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.36 µs ± 1.78 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 195 µs ± 4.19 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 305 µs ± 745 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.15 µs ± 9.37 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 269 µs ± 657 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.18 µs ± 13.7 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
@@ -655,7 +935,7 @@
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.35 µs ± 347 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.28 µs ± 301 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
     "objectID": "analysis.html#recap---finite-differencing-of-exponential-decay",
@@ -894,12 +1174,5 @@
     "title": "Analysis of exponential decay models",
     "section": "Test convergence rates",
     "text": "Test convergence rates\nBackward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 1.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[0.9619265651066382, 0.98003334385805, 0.9897576131285538]\n\n\nForward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[1.0472640894307232, 1.0222599097461846, 1.0108154242259877]\n\n\nCrank-Nicolson:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.5\nconvergence_rates(4, I, a, T, theta, dt)\n\n[2.0037335266421343, 2.0009433957768175, 2.000236481071457]\n\n\nAll in good agreement with theory:-)"
-  },
-  {
-    "objectID": "vibration.html#find-the-error-in-tildeomega",
-    "href": "vibration.html#find-the-error-in-tildeomega",
-    "title": "A simple vibration problem",
-    "section": "Find the error in \\(\\tilde\\omega\\)",
-    "text": "Find the error in \\(\\tilde\\omega\\)\nInsert the numerical solution \\(u^n = I \\cos (\\tilde{\\omega} t_n)\\) into the discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\n\nQuite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you\n\\[\n\\begin{align}\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} &= \\frac{I}{\\Delta t^2} (\\cos (\\tilde{\\omega} t_{n+1}) - 2 \\cos (\\tilde{\\omega} t_n) + \\cos (\\tilde{\\omega} t_{n-1})) \\\\\n&= \\frac{2 I}{\\Delta t^2} (\\cos (\\tilde{\\omega} \\Delta t) - 1) \\cos (\\tilde{\\omega} n \\Delta t) \\\\\n&= -\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) \\cos (\\tilde{\\omega} n \\Delta t)\n\\end{align}\n\\]"
   }
 ]
