@@ -404,26 +404,50 @@ Prof.&nbsp;Mikael Mortensen, University of Oslo
 </div>
 
 </section>
-<section id="the-finite-difference-method" class="slide level2 smaller">
-<h2>The finite difference method</h2>
+<section id="initial-or-boundary-value-problems" class="slide level2 smaller">
+<h2>Initial or Boundary Value Problems</h2>
+<p>The second-order differential equation</p>
+<p><span class="math display">\[
+u''(t) + au'(t) + bu(t) = f(t), \quad t \in [0, T]
+\]</span></p>
+<p>is classified as either an IVP or a BVP based on boundary/initial conditions.</p>
+<div class="fragment">
+<div class="columns">
+<div class="column">
+<h3 id="ivp">IVP</h3>
+<ul>
+<li>Typically specifies <span class="math inline">\(u(0)\)</span> and <span class="math inline">\(u'(0)\)</span></li>
+<li><strong>Explicit</strong> recurrence relations, no use of linear algebra</li>
+<li>Can use the finite difference method for discretization</li>
+</ul>
+</div><div class="column">
+<h3 id="bvp">BVP</h3>
+<ul>
+<li>Typically specifies <span class="math inline">\(u(0)\)</span> and <span class="math inline">\(u(T)\)</span> or <span class="math inline">\(u'(0)\)</span> and <span class="math inline">\(u'(T)\)</span></li>
+<li><strong>Implicit</strong> linear algebra methods</li>
+<li>Can use the finite difference method for discretization</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>Similar characteristics for higher-order differential equations. IVP specifies all conditions at initial time.</p>
+</div>
+</section>
+<section id="the-explicit-ivp-approach" class="slide level2 smaller">
+<h2>The explicit IVP approach</h2>
 <div class="hidden">
 
 </div>
-<p>The finite difference method divides (in 1D) the line into a mesh and solves equations only for specific locations (nodes) in the mesh. A mesh is created with <span class="math inline">\(t = 0, \Delta t, 2\Delta t, \ldots, N \Delta t\)</span>, where <span class="math inline">\(t_n=n \Delta t\)</span> and <span class="math inline">\(T=t_N = N \Delta t\)</span>.</p>
-
-<img data-src="./figures/line.png" class="r-stretch"><p>Up until now we have solved equations by using a recurrence approach. This is very easy to implement intuitively using for-loops. However, the most common and general use of finite difference methods is through <strong>explicit</strong> assembling of matrices.</p>
-</section>
-<section id="the-recurrence-approach-for-exponential-decay" class="slide level2 smaller">
-<h2>The recurrence approach for exponential decay</h2>
-<p>The exponential decay problem is</p>
+<p>For example, the exponential decay problem with initial condition</p>
 <p><span class="math display">\[
 u' + au = 0, t \in (0, T], \, u(0)=I.
 \]</span></p>
-<p>with difference equation</p>
+<p>is discretized as</p>
 <p><span class="math display">\[
 u^{n+1} = \frac{1 - (1-\theta) a \Delta t}{1 + \theta a \Delta t} u^n = g u^n.
 \]</span></p>
-<p>A solution vector <span class="math inline">\(\boldsymbol{u} = (u^0, u^1, \ldots, u^{N_t})\)</span>. The recurrence algorithm is:</p>
+<p>The solution vector <span class="math inline">\(\boldsymbol{u} = (u^0, u^1, \ldots, u^{N_t})\)</span> is obtained from a recurrence algorithm</p>
 <ul>
 <li><span class="math inline">\(u^0 = I\)</span></li>
 <li>for n = 0, 1, … , N-1
@@ -431,11 +455,11 @@ u^{n+1} = \frac{1 - (1-\theta) a \Delta t}{1 + \theta a \Delta t} u^n = g u^n.
 <li>Compute <span class="math inline">\(u^{n+1} = g u^n\)</span></li>
 </ul></li>
 </ul>
-<p>Easy to understand and easy to solve. Equations are never <strong>assembled</strong> into matrix form</p>
+<p>Easy to understand and easy to solve. Equations are never <strong>assembled</strong> into matrix form. But may be unstable!</p>
 </section>
-<section id="the-matrix-approach" class="slide level2 smaller">
-<h2>The matrix approach</h2>
-<p>The matrix approach solves the difference equations by assembling matrices and vectors. Each <strong>row</strong> in the matrix-problem represents one difference equation.</p>
+<section id="the-implicit-bvp-approach" class="slide level2 smaller">
+<h2>The implicit BVP approach</h2>
+<p>The linear algebra approach solves the difference equations by assembling matrices and vectors. Each <strong>row</strong> in the matrix-problem represents one difference equation.</p>
 <p><span class="math display">\[
 A \boldsymbol{u} = \boldsymbol{b}
 \]</span></p>
@@ -454,8 +478,7 @@ u^0 \\
 u^1 \\
 u^2 \\
 u^3 \\
-u^4 \\
-u^5
+u^4
 \end{bmatrix}}_{\boldsymbol{u}} =
 \underbrace{\begin{bmatrix}
 I \\
@@ -482,8 +505,7 @@ u^0 \\
 u^1 \\
 u^2 \\
 u^3 \\
-u^4 \\
-u^5
+u^4
 \end{bmatrix}}_{\boldsymbol{u}} =
 \underbrace{\begin{bmatrix}
 I \\
@@ -521,7 +543,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 </section>
 <section id="assemble-matrix-problem" class="slide level2 smaller">
 <h2>Assemble matrix problem</h2>
-<div id="4f69ff44" class="cell" data-execution_count="2">
+<div id="be19fe82" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>N <span class="op">=</span> <span class="dv">8</span></span>
 <span id="cb1-2"><a></a>a <span class="op">=</span> <span class="dv">2</span></span>
 <span id="cb1-3"><a></a>I <span class="op">=</span> <span class="dv">1</span></span>
@@ -533,7 +555,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 <span id="cb1-9"><a></a>g <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta) <span class="op">*</span> a <span class="op">*</span> dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta <span class="op">*</span> a <span class="op">*</span> dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Assemble</p>
-<div id="25cbda5f" class="cell" data-execution_count="3">
+<div id="f14510d6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
 <span id="cb2-2"><a></a>A <span class="op">=</span> sparse.diags([<span class="op">-</span>g, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'csr'</span>)</span>
 <span id="cb2-3"><a></a>b <span class="op">=</span> np.zeros(N<span class="op">+</span><span class="dv">1</span>)<span class="op">;</span> b[<span class="dv">0</span>] <span class="op">=</span> I</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -542,13 +564,13 @@ A \boldsymbol{u} = \boldsymbol{b}
 <section id="solve-and-compare-with-recurrence" class="slide level2 smaller">
 <h2>Solve and compare with recurrence</h2>
 <p>Recurrence:</p>
-<div id="920b6a12" class="cell" data-execution_count="4">
+<div id="7182f6e3" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>u[<span class="dv">0</span>] <span class="op">=</span> I</span>
 <span id="cb3-2"><a></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N):</span>
 <span id="cb3-3"><a></a>  u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> g <span class="op">*</span> u[n] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Matrix</p>
-<div id="f9cfc0e5" class="cell" data-execution_count="5">
+<div id="46c21f93" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>um <span class="op">=</span> sparse.linalg.spsolve(A, b)</span>
 <span id="cb4-2"><a></a><span class="bu">print</span>(u<span class="op">-</span>um)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -557,7 +579,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 </div>
 <p>Ok, no difference. Which is faster?</p>
 <div class="fragment">
-<div id="70256245" class="cell" data-execution_count="6">
+<div id="533b96c9" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">def</span> reccsolve(u, N, I):</span>
 <span id="cb6-2"><a></a>  u[<span class="dv">0</span>] <span class="op">=</span> I</span>
 <span id="cb6-3"><a></a>  <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N):</span>
@@ -566,13 +588,13 @@ A \boldsymbol{u} = \boldsymbol{b}
 <span id="cb6-6"><a></a>u <span class="op">=</span> np.zeros(N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb6-7"><a></a><span class="op">%</span>timeit <span class="op">-</span>n100 reccsolve(u, N, I) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>105 µs ± 3.92 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>107 µs ± 3.52 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
-<div id="6a2d9a99" class="cell" data-execution_count="7">
+<div id="3f67c68a" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>n100 um <span class="op">=</span> sparse.linalg.spsolve(A, b) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>19.2 µs ± 1.77 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>18.7 µs ± 1.82 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
 </div>
@@ -580,7 +602,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 <section id="compute-the-inverse" class="slide level2 smaller">
 <h2>Compute the inverse</h2>
 <p>A unit lower triangular matrix has a unit lower triangular inverse</p>
-<div id="5dc3e400" class="cell" data-execution_count="8">
+<div id="454cc5c0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>np.set_printoptions(precision<span class="op">=</span><span class="dv">3</span>, suppress<span class="op">=</span><span class="va">True</span>) </span>
 <span id="cb10-2"><a></a>Ai <span class="op">=</span> np.linalg.inv(A.toarray())</span>
 <span id="cb10-3"><a></a><span class="bu">print</span>(Ai)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -598,56 +620,51 @@ A \boldsymbol{u} = \boldsymbol{b}
 </div>
 <div class="fragment">
 <p>Now solve directly using <span class="math inline">\(A^{-1}\)</span></p>
-<div id="3dfee49b" class="cell" data-execution_count="9">
+<div id="06aa5c41" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>ui <span class="op">=</span> Ai <span class="op">@</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compare with previous</p>
-<div id="90baa5c8" class="cell" data-execution_count="10">
+<div id="b59c514d" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>um <span class="op">=</span> sparse.linalg.spsolve(A, b)</span>
 <span id="cb13-2"><a></a><span class="bu">print</span>(um<span class="op">-</span>ui) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0. 0. 0. 0. 0. 0. 0. 0. 0.]</code></pre>
 </div>
 </div>
-<div id="3ef2416e" class="cell" data-execution_count="11">
+<div id="77aa691f" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>n <span class="dv">100</span> ui <span class="op">=</span> Ai <span class="op">@</span> b </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>548 ns ± 36.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>547 ns ± 49.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
 </div>
 </section>
-<section id="the-vibration-problem" class="slide level2 smaller">
-<h2>The vibration problem</h2>
+<section id="the-bv-vibration-problem" class="slide level2 smaller">
+<h2>The BV vibration problem</h2>
 <p><span class="math display">\[
-u'' + \omega^2 u = 0,\, t \in (0, T] \quad u(0) = I, u'(0) = 0,
+u'' + \omega^2 u = 0,\, t \in (0, T) \quad u(0) = I, u(T) = I,
 \]</span></p>
-<p>is solved using a central difference for <span class="math inline">\(n=1, 2, \ldots, N-1\)</span></p>
+<p>cannot be solved with recurrence, since it is not an initial value problem.</p>
+<div class="fragment">
+<p>However, we can solve this problem using a central finite difference for all internal points <span class="math inline">\(n=1, 2, \ldots, N-1\)</span></p>
 <p><span class="math display">\[
 \frac{u^{n+1}-2u^n+u^{n-1}}{\Delta t^2} + \omega^2 u^n = 0.
 \]</span></p>
-<p>The recurrence algorithm is</p>
-<ul>
-<li><span class="math inline">\(u^0 = I\)</span></li>
-<li><span class="math inline">\(u^1 = u^0(1 - 0.5 \omega^2 \Delta t^2)\)</span></li>
-<li>for n = 1, 2, … , N-1
-<ul>
-<li><span class="math inline">\(u^{n+1} = (2-\omega^2 \Delta t^2 ) u^n - u^{n-1}\)</span></li>
-</ul></li>
-</ul>
+<p>This leads to an implicit linear algebra problem, because the equation for <span class="math inline">\(u^n\)</span> (above) depends on <span class="math inline">\(u^{n+1}\)</span>!</p>
+</div>
 </section>
 <section id="vibration-on-matrix-form" class="slide level2 smaller">
 <h2>Vibration on matrix form</h2>
 <p>The matrix problem is now, using <span class="math inline">\(g = 2-\omega^2 \Delta t^2\)</span>,</p>
 <p><span class="math display">\[
 \begin{bmatrix}
-1  &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0  \\
--{g}/{2} &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0  \\
+  1  &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0  \\
 1  &amp; -g &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0  \\
 0  &amp; 1 &amp; -g &amp; 1 &amp; 0 &amp; 0 &amp; 0  \\
 0  &amp; 0 &amp; 1 &amp; -g &amp; 1 &amp; 0 &amp; 0  \\
 0  &amp; 0 &amp; 0 &amp; 1 &amp; -g &amp; 1 &amp; 0  \\
 0  &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; -g &amp; 1  \\
+0  &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1  
 \end{bmatrix}
 \begin{bmatrix}
 u^0 \\
@@ -656,8 +673,7 @@ u^2 \\
 u^3 \\
 u^4 \\
 u^5 \\
-u^6 \\
-u^7
+u^6
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -667,7 +683,7 @@ I \\
 0 \\
 0 \\
 0 \\
-0
+I
 \end{bmatrix}
 \]</span></p>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -679,40 +695,48 @@ I \\
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>Notice that the matrix is still lower triangular. Matrices that are lower or upper triangular are especially quick to solve for using forward or backward substitution. This is due to the explicit recurrence relation. Just optimize the for-loop using Numba/Cython.</p>
+<ul>
+<li>The matrix contains items both over and under the main diagonal, which characterizes an <strong>implicit</strong> method. <strong>Explicit</strong> marching method leads to lower triangular matrices.</li>
+<li>The first and last rows are modified in order to apply boundary conditions <strong>implicitly</strong>.</li>
+</ul>
 </div>
 </div>
 </div>
 </section>
+<section>
+<section id="implicit-finite-difference-methods" class="title-slide slide level1 center">
+<h1>Implicit finite difference methods</h1>
+
+</section>
 <section id="stencils-from-taylor-expansions" class="slide level2 smaller">
 <h2>Stencils from Taylor expansions</h2>
-<p>Create one backward and three forward Taylor expansions starting from <span class="math inline">\(u(t_n)\)</span></p>
+<p>Taylor expansions can be used to design finite difference methods of any order. For example, we can create two backward and two forward Taylor expansions starting from <span class="math inline">\(u^n=u(t_n)\)</span></p>
 <p><span class="math display">\[ \small
 \begin{align*}
+(-2)\quad u^{n-2} &amp;= u^n - 2h u' + \frac{2 h^2}{1}u'' - \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' - \cdots \\
 (-1)\quad u^{n-1} &amp;= u^n - h u' + \frac{h^2}{2}u'' - \frac{h^3}{6}u''' + \frac{h^4}{24}u'''' - \cdots \\
 (1)\quad u^{n+1} &amp;= u^n + h u' + \frac{h^2}{2}u'' + \frac{h^3}{6}u''' + \frac{h^4}{24}u'''' + \cdots \\
-(2)\quad u^{n+2} &amp;= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots \\
-(3)\quad u^{n+3} &amp;= u^n + 3h u' + \frac{9 h^2}{2}u'' + \frac{9 h^3}{2}u''' + \frac{27 h^4}{8}u'''' + \cdots \\
+(2)\quad u^{n+2} &amp;= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots
 \end{align*}
 \]</span></p>
-<p><span class="math inline">\(u^{n+a} = u(t_{n+a})\)</span> and <span class="math inline">\(t_{n+a} = (n+a)h\)</span> and we use <span class="math inline">\(h=\Delta t\)</span> for simplicity.</p>
-<p>Now add equations (-1) and (1) and isolate <span class="math inline">\(u''(t_n)\)</span></p>
+<p>Remember: <span class="math inline">\(u^{n+a} = u(t_{n+a})\)</span> and <span class="math inline">\(t_{n+a} = (n+a)h\)</span> and we use <span class="math inline">\(h=\Delta t\)</span> for simplicity.</p>
+<div class="fragment">
+<p>Add equations (-1) and (1) and isolate <span class="math inline">\(u''(t_n)\)</span></p>
 <p><span class="math display">\[
 \begin{equation*}
 u''(t_n) = \frac{u^{n+1}-2u^n + u^{n-1}}{h^2}  + \frac{h^2}{12}u'''' +
 \end{equation*}
 \]</span></p>
+</div>
 </section>
-<section id="matrix-form" class="slide level2 smaller">
-<h2>Matrix form</h2>
-<p>Let the mesh function mesh function <span class="math inline">\(\boldsymbol{u}^{(2)} \in \mathbb{R}^N\)</span> be defined as</p>
-<p><span class="math display">\[
-\boldsymbol{u}^{(2)}=(u''(t_n))_{n=0}^{N}
-\]</span></p>
-<p>We can compute this using a finite difference matrix <span class="math inline">\(D^{(2)} \in \mathbb{R}^{N \times N}\)</span> and <span class="math inline">\(\boldsymbol{u} \in \mathbb{R}^N\)</span></p>
+<section id="second-derivative-matrix" class="slide level2 smaller">
+<h2>Second derivative matrix</h2>
+<p>The FD stencil can be applied to the entire mesh at once. That is, we can compute <span class="math inline">\(\boldsymbol{u}^{(2)}=(u''(t_n))_{n=0}^{N}\)</span> from the mesh function <span class="math inline">\(\boldsymbol{u} \in \mathbb{R}^{N+1}\)</span> as</p>
 <p><span class="math display">\[
 \boldsymbol{u}^{(2)} = D^{(2)} \boldsymbol{u},
 \]</span></p>
+<p>where <span class="math inline">\(D^{(2)} \in \mathbb{R}^{N+1 \times N+1}\)</span> is the second order <strong>derivative matrix</strong>.</p>
+<div class="fragment">
 <p><span class="math display">\[ \small
 \underbrace{
 \begin{bmatrix}
@@ -745,6 +769,7 @@ u^{N-1} \\
 u^{N}
 \end{bmatrix}}_{\boldsymbol{u}}
 \]</span></p>
+</div>
 </section>
 <section id="boundaries" class="slide level2 smaller">
 <h2>Boundaries</h2>
@@ -781,6 +806,7 @@ u^{N}
 \end{bmatrix}}_{\boldsymbol{u}}
 \]</span></p>
 <p>What to do with the first and last rows? The central stencils do not work here.</p>
+<p>We still want to compute <span class="math inline">\(u_0^{(2)}=u''(t_0)\)</span> and <span class="math inline">\(u_N^{(2)}=u''(t_N)\)</span>. How?</p>
 <div class="fragment">
 <p>Forward and backward stencils will do</p>
 </div>
@@ -820,7 +846,7 @@ u''(0) = \frac{u^{2}-2u^{1}+u^0}{h^2} - \color{red} h \color{black} u'''(0) - \f
 u''(T) = \frac{u^{N-2}-2u^{N-1}+u^N}{h^2} - \color{red} h \color{black} u'''(T) - \frac{7 h^2}{12}u''''(T) +
 \]</span></p>
 </section>
-<section id="second-derivative-matrix" class="slide level2 smaller">
+<section id="second-derivative-matrix-1" class="slide level2 smaller">
 <h2>Second derivative matrix</h2>
 <p><span class="math display">\[
 D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
@@ -837,7 +863,7 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 </section>
 <section id="second-order-forward-stencil" class="slide level2 smaller">
 <h2>Second order forward stencil</h2>
-<p>Use three forward points <span class="math inline">\(u^{n+1}, u^{n+2}, u^{n+3}\)</span></p>
+<p>Use <strong>three</strong> forward points <span class="math inline">\(u^{n+1}, u^{n+2}, u^{n+3}\)</span></p>
 <p><span class="math display">\[ \small
 \begin{align*}
 (1)\quad u^{n+1} &amp;= u^n + h u' + \frac{h^2}{2}u'' + \frac{h^3}{6}u''' + \frac{h^4}{24}u'''' + \cdots \\
@@ -851,7 +877,7 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 \]</span></p>
 <p>Isolate <span class="math inline">\(u''(0)\)</span></p>
 <p><span class="math display">\[
-u''(0) = \frac{-u^{3} + 4u^{2} - 5u^{1} + 2u^n}{h^2} + \frac{11 \color{red} h^2 \color{black}}{12} u'''' +
+u''(0) = \frac{-u^{3} + 4u^{2} - 5u^{1} + 2u^0}{h^2} + \frac{11 \color{red} h^2 \color{black}}{12} u'''' +
 \]</span></p>
 </section>
 <section id="fully-second-order-d2" class="slide level2 smaller">
@@ -870,7 +896,7 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 </section>
 <section id="assemble-in-python" class="slide level2 smaller">
 <h2>Assemble in Python</h2>
-<div id="04efaf21" class="cell" data-execution_count="12">
+<div id="43b6e436" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a>N <span class="op">=</span> <span class="dv">8</span></span>
 <span id="cb17-2"><a></a>D2 <span class="op">=</span> sparse.diags([<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
 <span id="cb17-3"><a></a>D2[<span class="dv">0</span>, :<span class="dv">4</span>] <span class="op">=</span> <span class="dv">2</span>, <span class="op">-</span><span class="dv">5</span>, <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span></span>
@@ -890,7 +916,12 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 </div>
 </div>
 <p>Apply matrix to a mesh function <span class="math inline">\(f(t_n) = t_n^2\)</span></p>
-<div id="54b11fb0" class="cell" data-execution_count="13">
+<div id="925d0b1c" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a>dt <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb19-2"><a></a>T <span class="op">=</span> N<span class="op">*</span>dt</span>
+<span id="cb19-3"><a></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, N<span class="op">*</span>dt, N<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb19-4"><a></a>f <span class="op">=</span> t<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb19-5"><a></a>D2 <span class="op">@</span> f</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>array([2., 2., 2., 2., 2., 2., 2., 2., 2.])</code></pre>
 </div>
@@ -899,12 +930,12 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 </section>
 <section id="first-order-boundary" class="slide level2 smaller">
 <h2>First order boundary</h2>
-<div id="5cf18d34" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a>D21 <span class="op">=</span> sparse.diags([<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
-<span id="cb20-2"><a></a>D21[<span class="dv">0</span>, :<span class="dv">4</span>] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span></span>
-<span id="cb20-3"><a></a>D21[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>:] <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span></span>
-<span id="cb20-4"><a></a>D21 <span class="op">*=</span> (<span class="dv">1</span><span class="op">/</span>dt<span class="op">**</span><span class="dv">2</span>) </span>
-<span id="cb20-5"><a></a>D21 <span class="op">@</span> f</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="99611f1c" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a></a>D21 <span class="op">=</span> sparse.diags([<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
+<span id="cb21-2"><a></a>D21[<span class="dv">0</span>, :<span class="dv">4</span>] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span></span>
+<span id="cb21-3"><a></a>D21[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>:] <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span></span>
+<span id="cb21-4"><a></a>D21 <span class="op">*=</span> (<span class="dv">1</span><span class="op">/</span>dt<span class="op">**</span><span class="dv">2</span>) </span>
+<span id="cb21-5"><a></a>D21 <span class="op">@</span> f</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>array([2., 2., 2., 2., 2., 2., 2., 2., 2.])</code></pre>
 </div>
@@ -923,13 +954,13 @@ u''(0) = \frac{u^{n+2}-2u^{n+1}+u^n}{h^2} - \color{red} h u'''(0) \color{black} 
 <section id="more-challenging-example" class="slide level2 smaller">
 <h2>More challenging example</h2>
 <p>Let <span class="math inline">\(f(t) = \sin(\pi t / T)\)</span> such that <span class="math inline">\(f''(t) = -(\pi/T)^2 f(t)\)</span>. Here none of the error terms will disappear and we see the effect of the poor first order boundary.</p>
-<div id="c6e71443" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a>f <span class="op">=</span> np.sin(np.pi<span class="op">*</span>t <span class="op">/</span> T)</span>
-<span id="cb22-2"><a></a>d2fe <span class="op">=</span> <span class="op">-</span>(np.pi<span class="op">/</span>T)<span class="op">**</span><span class="dv">2</span><span class="op">*</span>f</span>
-<span id="cb22-3"><a></a>d2f <span class="op">=</span> D2 <span class="op">@</span> f</span>
-<span id="cb22-4"><a></a>d2f1 <span class="op">=</span> D21 <span class="op">@</span> f</span>
-<span id="cb22-5"><a></a>plt.plot(t, d2fe, <span class="st">'k'</span>, t, d2f, <span class="st">'b'</span>, t, d2f1, <span class="st">'r'</span>)</span>
-<span id="cb22-6"><a></a>plt.legend([<span class="st">'Exact'</span>, <span class="st">'2nd order'</span>, <span class="st">'1st order'</span>])<span class="op">;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="66438732" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a>f <span class="op">=</span> np.sin(np.pi<span class="op">*</span>t <span class="op">/</span> T)</span>
+<span id="cb23-2"><a></a>d2fe <span class="op">=</span> <span class="op">-</span>(np.pi<span class="op">/</span>T)<span class="op">**</span><span class="dv">2</span><span class="op">*</span>f</span>
+<span id="cb23-3"><a></a>d2f <span class="op">=</span> D2 <span class="op">@</span> f</span>
+<span id="cb23-4"><a></a>d2f1 <span class="op">=</span> D21 <span class="op">@</span> f</span>
+<span id="cb23-5"><a></a>plt.plot(t, d2fe, <span class="st">'k'</span>, t, d2f, <span class="st">'b'</span>, t, d2f1, <span class="st">'r'</span>)</span>
+<span id="cb23-6"><a></a>plt.legend([<span class="st">'Exact'</span>, <span class="st">'2nd order'</span>, <span class="st">'1st order'</span>])<span class="op">;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -976,7 +1007,7 @@ u'(t_n) = \frac{-u^{n+2}+4u^{n+1}-3u^n}{2h} + \frac{h^2}{3}u''' +
 <section id="first-derivative-matrix-1" class="slide level2 smaller">
 <h2>First derivative matrix</h2>
 <p>The backward for <span class="math inline">\(n=N\)</span> is the same, only with different sign from <span class="math inline">\(n=0\)</span>. The derivative matrix is</p>
-<p><span class="math display">\[
+<p><span class="math display">\[ \small
 D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
 -3 &amp; 4 &amp; -1 &amp; 0  &amp; 0 &amp; 0 &amp; 0 &amp; 0  \\
 -1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots \\
@@ -987,13 +1018,13 @@ D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
 0 &amp; 0 &amp; 0 &amp; 0  &amp; 0 &amp; 1 &amp; -4 &amp; 3 \\
 \end{bmatrix}
 \]</span></p>
-<div id="5364d9fe" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a>D1 <span class="op">=</span> sparse.diags([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
-<span id="cb23-2"><a></a>D1[<span class="dv">0</span>, :<span class="dv">3</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">3</span>, <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb23-3"><a></a>D1[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">3</span>:] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dv">3</span> </span>
-<span id="cb23-4"><a></a>D1 <span class="op">*=</span> (<span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>dt))</span>
-<span id="cb23-5"><a></a>f <span class="op">=</span> t </span>
-<span id="cb23-6"><a></a>D1 <span class="op">@</span> f </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c2b228b8" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>D1 <span class="op">=</span> sparse.diags([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
+<span id="cb24-2"><a></a>D1[<span class="dv">0</span>, :<span class="dv">3</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">3</span>, <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb24-3"><a></a>D1[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">3</span>:] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dv">3</span> </span>
+<span id="cb24-4"><a></a>D1 <span class="op">*=</span> (<span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>dt))</span>
+<span id="cb24-5"><a></a>f <span class="op">=</span> t </span>
+<span id="cb24-6"><a></a>D1 <span class="op">@</span> f </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>array([1., 1., 1., 1., 1., 1., 1., 1., 1.])</code></pre>
 </div>
@@ -1001,9 +1032,9 @@ D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
 </section>
 <section id="is-d2-the-same-as-d1d1" class="slide level2 smaller">
 <h2>Is <span class="math inline">\(D^{(2)}\)</span> the same as <span class="math inline">\(D^{(1)}D^{(1)}\)</span>?</h2>
-<div id="3e887f07" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a>D22 <span class="op">=</span> D1 <span class="op">@</span> D1</span>
-<span id="cb25-2"><a></a>D22.toarray()<span class="op">*</span><span class="dv">4</span><span class="op">*</span>dt<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="22185e29" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a>D22 <span class="op">=</span> D1 <span class="op">@</span> D1</span>
+<span id="cb26-2"><a></a>D22.toarray()<span class="op">*</span><span class="dv">4</span><span class="op">*</span>dt<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>array([[  5., -11.,   7.,  -1.,   0.,   0.,   0.,   0.,   0.],
        [  3.,  -5.,   1.,   1.,   0.,   0.,   0.,   0.,   0.],
@@ -1042,9 +1073,7 @@ u''(t_n) = \frac{u^{n+2}-2u^{n}+u^{n-2}}{4h^2} - \frac{h^2}{3}u'''' + \cdots
 </section>
 <section id="how-about-boundaries" class="slide level2 smaller">
 <h2>How about boundaries?</h2>
-<p><span class="math display">\[
-u''(t_1) = \frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2}
-\]</span></p>
+<p>We have obtained <span class="math inline">\(u''(t_1) = \frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2}\)</span>. Compute the error in this stencil using one backward and two forward points</p>
 <p><span class="math display">\[ \small
 \begin{align*}
 (-1)\quad u^{n-1} &amp;= u^n - h u' + \frac{h^2}{2}u'' - \frac{h^3}{6}u''' + \frac{h^4}{24}u'''' - \cdots \\
@@ -1054,7 +1083,7 @@ u''(t_1) = \frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2}
 \]</span></p>
 <p>Take Eq. <span class="math inline">\((2) + (1) + 3 \cdot (-1)\)</span></p>
 <p><span class="math display">\[
-u''(t_1) = \frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2} + \frac{h}{4}u''' + \cdots
+u''(t_1) = \frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2} + \frac{\color{red}h\color{black}}{4}u''' + \cdots
 \]</span></p>
 <p>Only first order.</p>
 </section>
@@ -1079,14 +1108,14 @@ u''(t_0) = \frac{-u^{n+3}+7u^{n+2}-11u^{n+1}+5u^{n}}{4h^2} -\frac{3 \color{red}h
 <section id="test-accuracy" class="slide level2 smaller">
 <h2>Test accuracy</h2>
 <p>Testing <span class="math inline">\(D^{(2)}\)</span>, <span class="math inline">\(D^{(2)}\)</span> with only first order boundaries, and <span class="math inline">\(D^{(1)}D^{(1)}\)</span></p>
-<div id="6bed1c6f" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a>f <span class="op">=</span> np.sin(np.pi<span class="op">*</span>t <span class="op">/</span> T)</span>
-<span id="cb27-2"><a></a>d2fe <span class="op">=</span> <span class="op">-</span>(np.pi<span class="op">/</span>T)<span class="op">**</span><span class="dv">2</span><span class="op">*</span>f</span>
-<span id="cb27-3"><a></a>d2f <span class="op">=</span> D2 <span class="op">@</span> f</span>
-<span id="cb27-4"><a></a>d2f1 <span class="op">=</span> D21 <span class="op">@</span> f</span>
-<span id="cb27-5"><a></a>d2f2 <span class="op">=</span> D1 <span class="op">@</span> D1 <span class="op">@</span> f</span>
-<span id="cb27-6"><a></a>plt.plot(t, d2fe, <span class="st">'k'</span>, t, d2f, <span class="st">'b'</span>, t, d2f1, <span class="st">'r'</span>, t, d2f2, <span class="st">'m'</span>)</span>
-<span id="cb27-7"><a></a>plt.legend([<span class="st">'Exact'</span>, <span class="st">'2nd order'</span>, <span class="st">'1st order'</span>, <span class="st">'D1 @ D1'</span>])<span class="op">;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8b12c96d" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a></a>f <span class="op">=</span> np.sin(np.pi<span class="op">*</span>t <span class="op">/</span> T)</span>
+<span id="cb28-2"><a></a>d2fe <span class="op">=</span> <span class="op">-</span>(np.pi<span class="op">/</span>T)<span class="op">**</span><span class="dv">2</span><span class="op">*</span>f</span>
+<span id="cb28-3"><a></a>d2f <span class="op">=</span> D2 <span class="op">@</span> f</span>
+<span id="cb28-4"><a></a>d2f1 <span class="op">=</span> D21 <span class="op">@</span> f</span>
+<span id="cb28-5"><a></a>d2f2 <span class="op">=</span> D1 <span class="op">@</span> D1 <span class="op">@</span> f</span>
+<span id="cb28-6"><a></a>plt.plot(t, d2fe, <span class="st">'k'</span>, t, d2f, <span class="st">'b'</span>, t, d2f1, <span class="st">'r'</span>, t, d2f2, <span class="st">'m'</span>)</span>
+<span id="cb28-7"><a></a>plt.legend([<span class="st">'Exact'</span>, <span class="st">'2nd order'</span>, <span class="st">'1st order'</span>, <span class="st">'D1 @ D1'</span>])<span class="op">;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1098,19 +1127,26 @@ u''(t_0) = \frac{-u^{n+3}+7u^{n+2}-11u^{n+1}+5u^{n}}{4h^2} -\frac{3 \color{red}h
 </section>
 <section id="solving-equations-using-fd-matrices" class="slide level2 smaller">
 <h2>Solving equations using FD matrices</h2>
+<p>It is easy to solve equations with FD matrices, just</p>
+<ol type="1">
+<li>Discretization <span class="math inline">\(\rightarrow\)</span> Simply replace <span class="math inline">\(k\)</span>’th derivative with the <span class="math inline">\(k\)</span>’th derivative matrix</li>
+<li>Apply boundary conditions to the assembled matrix</li>
+</ol>
+<div class="fragment">
 <p>Consider the exponential decay model</p>
 <p><span class="math display">\[
 u' + au = 0, \, t \in (0, T], u(0)=I.
 \]</span></p>
-<p>Without considering boundary conditions we can assemble this problem as</p>
+<p>Replace derivatives with derivative matrices (<span class="math inline">\(u'=D^{(1)}\boldsymbol{u}, u = \mathbb{I}\boldsymbol{u}\)</span>):</p>
 <p><span class="math display">\[
 (D^{(1)} + a \mathbb{I})\boldsymbol{u} = \boldsymbol{0},
 \]</span></p>
-<p>where <span class="math inline">\(\mathbb{I} \in \mathbb{R}^{N+1\times N+1}\)</span> is the identity matrix and <span class="math inline">\(\boldsymbol{0}\in \mathbb{R}^{N+1}\)</span> is a null-vector. The matrix problem is</p>
+<p>where <span class="math inline">\(\mathbb{I} \in \mathbb{R}^{N+1\times N+1}\)</span> is the identity matrix and <span class="math inline">\(\boldsymbol{0}\in \mathbb{R}^{N+1}\)</span> is a null-vector. We get</p>
 <p><span class="math display">\[
 A \boldsymbol{u} = \boldsymbol{0}, \quad A = D^{(1)}+a\mathbb{I}
 \]</span></p>
-<p>which is only trivially solved to <span class="math inline">\(\boldsymbol{u}=\boldsymbol{0}\)</span> before adding boundary conditions.</p>
+<p>which is trivially solved to <span class="math inline">\(\boldsymbol{u}=\boldsymbol{0}\)</span> before adding boundary conditions. Not after.</p>
+</div>
 </section>
 <section id="modify-the-matrix" class="slide level2 smaller">
 <h2>Modify the matrix</h2>
@@ -1153,8 +1189,8 @@ b^{N} \\
 \]</span></p>
 <p>In order to enforce that <span class="math inline">\(u(0) = I\)</span>, we can modify the first row of the coefficient matrix <span class="math inline">\(A\)</span> and the right hand side vector <span class="math inline">\(\boldsymbol{b}\)</span></p>
 </section>
-<section id="modify-matrix" class="slide level2 smaller">
-<h2>Modify matrix</h2>
+<section id="modify-the-matrix-1" class="slide level2 smaller">
+<h2>Modify the matrix</h2>
 <p><span class="math display">\[ \small
 \underbrace{
   \frac{1}{2h} \begin{bmatrix}
@@ -1195,22 +1231,22 @@ I \\
 </section>
 <section id="implement-decay-problem" class="slide level2 smaller">
 <h2>Implement decay problem</h2>
-<div id="c89ddb6e" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a></a>N <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb28-2"><a></a>dt <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb28-3"><a></a>a <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb28-4"><a></a>T <span class="op">=</span> N<span class="op">*</span>dt</span>
-<span id="cb28-5"><a></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, N<span class="op">*</span>dt, N<span class="op">+</span><span class="dv">1</span>) </span>
-<span id="cb28-6"><a></a>D1 <span class="op">=</span> sparse.diags([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
-<span id="cb28-7"><a></a>D1[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">3</span>:] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dv">3</span></span>
-<span id="cb28-8"><a></a><span class="co">#D1[-1, -3:] = 0, -2, 2</span></span>
-<span id="cb28-9"><a></a>D1 <span class="op">*=</span> (<span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>dt))</span>
-<span id="cb28-10"><a></a>Id <span class="op">=</span> sparse.eye(N<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb28-11"><a></a>A <span class="op">=</span> D1 <span class="op">+</span> a<span class="op">*</span>Id</span>
-<span id="cb28-12"><a></a>b <span class="op">=</span> np.zeros(N<span class="op">+</span><span class="dv">1</span>)</span>
-<span id="cb28-13"><a></a>b[<span class="dv">0</span>] <span class="op">=</span> I</span>
-<span id="cb28-14"><a></a>A[<span class="dv">0</span>, :<span class="dv">3</span>] <span class="op">=</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span> <span class="co"># boundary condition</span></span>
-<span id="cb28-15"><a></a>A.toarray()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="51be4f1e" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a>N <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb29-2"><a></a>dt <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb29-3"><a></a>a <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb29-4"><a></a>T <span class="op">=</span> N<span class="op">*</span>dt</span>
+<span id="cb29-5"><a></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, N<span class="op">*</span>dt, N<span class="op">+</span><span class="dv">1</span>) </span>
+<span id="cb29-6"><a></a>D1 <span class="op">=</span> sparse.diags([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
+<span id="cb29-7"><a></a>D1[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">3</span>:] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dv">3</span></span>
+<span id="cb29-8"><a></a><span class="co">#D1[-1, -3:] = 0, -2, 2</span></span>
+<span id="cb29-9"><a></a>D1 <span class="op">*=</span> (<span class="dv">1</span><span class="op">/</span>(<span class="dv">2</span><span class="op">*</span>dt))</span>
+<span id="cb29-10"><a></a>Id <span class="op">=</span> sparse.eye(N<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb29-11"><a></a>A <span class="op">=</span> D1 <span class="op">+</span> a<span class="op">*</span>Id</span>
+<span id="cb29-12"><a></a>b <span class="op">=</span> np.zeros(N<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb29-13"><a></a>b[<span class="dv">0</span>] <span class="op">=</span> I</span>
+<span id="cb29-14"><a></a>A[<span class="dv">0</span>, :<span class="dv">3</span>] <span class="op">=</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span> <span class="co"># boundary condition</span></span>
+<span id="cb29-15"><a></a>A.toarray()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>array([[ 1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
        [-1.,  5.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
@@ -1228,7 +1264,7 @@ I \\
 </section>
 <section id="compare-with-exact-solution" class="slide level2 smaller">
 <h2>Compare with exact solution</h2>
-<div id="d1030ce6" class="cell" data-execution_count="20">
+<div id="ec206209" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1237,7 +1273,80 @@ I \\
 </div>
 </div>
 </div>
-<p>The accuracy is like for the Crank-Nicolson method discussed in <a href="https://matmek-4270.github.io/matmek4270-pres/intro.html#/the-crank-nicolson-scheme-ideas">lectures 1-2</a>. However, the FD method is not a recursive <strong>marching method</strong>, since the equation for <span class="math inline">\(u^n\)</span> depends on the solution at <span class="math inline">\(u^{n+1}\)</span>! This <strong>implicit</strong> FD method is unconditionally stable. Normally, only marching methods are analysed for stability.</p>
+<p>The accuracy is similar to the Crank-Nicolson method discussed in <a href="https://matmek-4270.github.io/matmek4270-pres/intro.html#/the-crank-nicolson-scheme-ideas">lectures 1-2</a>. However, the FD method is not a recursive <strong>marching method</strong>, since the equation for <span class="math inline">\(u^n\)</span> depends on the solution at <span class="math inline">\(u^{n+1}\)</span>! This <strong>implicit</strong> FD method is unconditionally stable. Normally, only marching methods are analysed for stability.</p>
+</section>
+<section id="vibration-equation" class="slide level2 smaller">
+<h2>Vibration equation</h2>
+<p>Consider the boundary value problem</p>
+<p><span class="math display">\[
+u''(t) + \omega^2 u(t) = 0, \quad u(0) = u(T) = I, \quad t=(0, T)
+\]</span></p>
+<p>Discretize by replacing derivatives with matrices</p>
+<p><span class="math display">\[
+(D^{(2)} + \omega^2 \mathbb{I}) \boldsymbol{u} = \boldsymbol{b}
+\]</span></p>
+<div id="fdae560b" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a>w <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.pi </span>
+<span id="cb31-2"><a></a>T, N, I <span class="op">=</span> <span class="fl">3.</span>, <span class="dv">35</span>, <span class="fl">1.</span></span>
+<span id="cb31-3"><a></a>dt <span class="op">=</span> T<span class="op">/</span>N </span>
+<span id="cb31-4"><a></a>D2 <span class="op">=</span> sparse.diags([<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
+<span id="cb31-5"><a></a>D2 <span class="op">*=</span> (<span class="dv">1</span><span class="op">/</span>(dt<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb31-6"><a></a>Id <span class="op">=</span> sparse.eye(N<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb31-7"><a></a>A <span class="op">=</span> D2 <span class="op">+</span> w<span class="op">**</span><span class="dv">2</span><span class="op">*</span>Id</span>
+<span id="cb31-8"><a></a>b <span class="op">=</span> np.zeros(N<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb31-9"><a></a>A.toarray()<span class="op">*</span>dt<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>array([[-1.71,  1.  ,  0.  , ...,  0.  ,  0.  ,  0.  ],
+       [ 1.  , -1.71,  1.  , ...,  0.  ,  0.  ,  0.  ],
+       [ 0.  ,  1.  , -1.71, ...,  0.  ,  0.  ,  0.  ],
+       ...,
+       [ 0.  ,  0.  ,  0.  , ..., -1.71,  1.  ,  0.  ],
+       [ 0.  ,  0.  ,  0.  , ...,  1.  , -1.71,  1.  ],
+       [ 0.  ,  0.  ,  0.  , ...,  0.  ,  1.  , -1.71]])</code></pre>
+</div>
+</div>
+</section>
+<section id="solve-vibration-equation" class="slide level2 smaller">
+<h2>Solve vibration equation</h2>
+<p>Apply boundary conditions to the first and last rows</p>
+<p><span class="math display">\[
+\begin{align}
+u^0 &amp;= I \\
+u^N &amp;= I
+\end{align}
+\]</span></p>
+<div id="def30af8" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a>A[<span class="dv">0</span>, :<span class="dv">3</span>] <span class="op">=</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb33-2"><a></a>A[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">3</span>:] <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span></span>
+<span id="cb33-3"><a></a>b[<span class="dv">0</span>] <span class="op">=</span> I</span>
+<span id="cb33-4"><a></a>b[<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> I</span>
+<span id="cb33-5"><a></a>A.toarray()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>array([[   1.   ,    0.   ,    0.   , ...,    0.   ,    0.   ,    0.   ],
+       [ 136.111, -232.744,  136.111, ...,    0.   ,    0.   ,    0.   ],
+       [   0.   ,  136.111, -232.744, ...,    0.   ,    0.   ,    0.   ],
+       ...,
+       [   0.   ,    0.   ,    0.   , ..., -232.744,  136.111,    0.   ],
+       [   0.   ,    0.   ,    0.   , ...,  136.111, -232.744,  136.111],
+       [   0.   ,    0.   ,    0.   , ...,    0.   ,    0.   ,    1.   ]])</code></pre>
+</div>
+</div>
+</section>
+<section id="solve-vibration-equation-1" class="slide level2 smaller">
+<h2>Solve vibration equation</h2>
+<div id="d6f36ec3" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a>u2 <span class="op">=</span> sparse.linalg.spsolve(A, b)</span>
+<span id="cb35-2"><a></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, T, N<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb35-3"><a></a>plt.plot(t, u2, <span class="st">'bo'</span>, t, I<span class="op">*</span>np.cos(w<span class="op">*</span>t), <span class="st">'r--'</span>)</span>
+<span id="cb35-4"><a></a>plt.legend([<span class="st">'Numerical'</span>, <span class="st">'Exact'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="finitedifferences_files/figure-revealjs/cell-24-output-1.png" width="813" height="411"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="generic-finite-difference-stencils" class="slide level2 smaller">
 <h2>Generic Finite difference stencils</h2>
@@ -1245,29 +1354,29 @@ I \\
 <div class="fragment">
 <p>Yes! Of course it can. The generic Taylor expansion around <span class="math inline">\(x=x_0\)</span> reads</p>
 <p><span class="math display">\[
-u(x) = \sum_{i=0}^{N} \frac{(x-x_0)^i}{i!} u^{(i)}(x_0) + \mathcal{O}((x-x_0)^{N+1}),
+u(x) = \sum_{i=0}^{M} \frac{(x-x_0)^i}{i!} u^{(i)}(x_0) + \mathcal{O}((x-x_0)^{M}),
 \]</span></p>
-<p>where <span class="math inline">\(u^{(i)}(x_0) = \frac{d^{i}u}{dx^{i}}|_{x=x_0}\)</span>.</p>
-<p>Use only <span class="math inline">\(x=x_0+mh\)</span>, where <span class="math inline">\(m\)</span> is an integer and <span class="math inline">\(h\)</span> is a constant (<span class="math inline">\(\Delta t\)</span> or <span class="math inline">\(\Delta x\)</span>)</p>
+<p>where <span class="math inline">\(u^{(i)}(x_0) = \frac{d^{i}u}{dx^{i}}|_{x=x_0}\)</span> and the are <span class="math inline">\(M+1\)</span> terms in the expansion.</p>
+<p>Use only <span class="math inline">\(x=x_0+ph\)</span>, where <span class="math inline">\(p\)</span> is an integer and <span class="math inline">\(h\)</span> is a constant (<span class="math inline">\(\Delta t\)</span> or <span class="math inline">\(\Delta x\)</span>)</p>
 <p><span class="math display">\[
-u^{n+m} = \sum_{i=0}^{N} \frac{(mh)^i}{i!} u^{(i)}(x_0) + \mathcal{O}(h^{N+1}),
+u^{n+p} = \sum_{i=0}^{M} \frac{(ph)^i}{i!} u^{(i)}(x_0) + \mathcal{O}(h^{M+1}),
 \]</span></p>
-<p>where we use the finite difference notation <span class="math inline">\(u^{n+m} = u(x_0+mh)\)</span></p>
+<p>where <span class="math inline">\(u^{n+p} = u(x_0+ph)\)</span></p>
 </div>
 </section>
 <section id="generic-fd" class="slide level2 smaller">
 <h2>Generic FD</h2>
-<p>The Taylor expansions for a given <span class="math inline">\(m\)</span> can be written <span class="math display">\[
-u^{n+m} = \sum_{i=0}^{N} \frac{(mh)^i}{i!} u^{(i)}(x_0) = \sum_{i=0}^{N} c_{mi} du_i
+<p>The truncated Taylor expansions for a given <span class="math inline">\(p\)</span> can be written <span class="math display">\[
+u^{n+p} = \sum_{i=0}^{M} \frac{(ph)^i}{i!} u^{(i)}(x_0) = \sum_{i=0}^{M} c_{pi} du_i
 \]</span></p>
-<p>using <span class="math inline">\(c_{mi} = \frac{(mh)^i}{i!}\)</span> and <span class="math inline">\(du_i = u^{(i)}(x_0)\)</span>.</p>
+<p>using <span class="math inline">\(c_{pi} = \frac{(ph)^i}{i!}\)</span> and <span class="math inline">\(du_i = u^{(i)}(x_0)\)</span>.</p>
 <div class="fragment">
 <p>This can be understood as a matrix-vector product</p>
 <p><span class="math display">\[
 \boldsymbol{u} = C \boldsymbol{du},
 \]</span></p>
-<p>where <span class="math inline">\(\boldsymbol{u} = (u^{n+m})_{m=m_0}^{N+m_0}\)</span>, <span class="math inline">\(C = (c_{m+m_0,i})_{m,i=0}^{N,N}\)</span> and <span class="math inline">\(\boldsymbol{du}=(du_i)_{i=0}^N\)</span>. Here <span class="math inline">\(m_0\)</span> is an integer representing the lowest value of <span class="math inline">\(m\)</span> in the stencil.</p>
-<p>For <span class="math inline">\(m_0=-2\)</span> and <span class="math inline">\(N=4\)</span>:</p>
+<p>where <span class="math inline">\(\boldsymbol{u} = (u^{n+p})_{p=p_0}^{M+p_0}\)</span>, <span class="math inline">\(C = (c_{p_0+p,i})_{p,i=0}^{M,M}\)</span> and <span class="math inline">\(\boldsymbol{du}=(du_i)_{i=0}^M\)</span>. Here <span class="math inline">\(p_0\)</span> is an integer representing the lowest value of <span class="math inline">\(p\)</span> in the stencil.</p>
+<p>For <span class="math inline">\(p_0=-2\)</span> and <span class="math inline">\(M=4\)</span>:</p>
 <p><span class="math display">\[
 \boldsymbol{u} = (u^{n-2}, u^{n-1}, u^{n}, u^{n+1}, u^{n+2})^T \quad
 \boldsymbol{du} =(u^{(0)}, u^{(1)}, u^{(2)}, u^{(3)}, u^{(4)})^T
@@ -1276,21 +1385,21 @@ u^{n+m} = \sum_{i=0}^{N} \frac{(mh)^i}{i!} u^{(i)}(x_0) = \sum_{i=0}^{N} c_{mi} 
 </section>
 <section id="the-stencil-matrix" class="slide level2 smaller">
 <h2>The stencil matrix</h2>
-<p>For <span class="math inline">\(m_0=-2\)</span> and <span class="math inline">\(N=4\)</span> we get 5 Taylor expansions</p>
+<p>For <span class="math inline">\(p_0=-2\)</span> and <span class="math inline">\(M=4\)</span> we get 5 Taylor expansions</p>
 <p><span class="math display">\[
 \begin{align*}
-u^{n-2} &amp;= \sum_{i=0}^{N} \frac{(-2h)^i}{i!} du_i  \\
-u^{n-1} &amp;= \sum_{i=0}^{N} \frac{(-h)^i}{i!} du_i  \\
+u^{n-2} &amp;= \sum_{i=0}^{M} \frac{(-2h)^i}{i!} du_i  \\
+u^{n-1} &amp;= \sum_{i=0}^{M} \frac{(-h)^i}{i!} du_i  \\
 u^{n} &amp;= u^{n} \\
-u^{n+1} &amp;= \sum_{i=0}^{N} \frac{(h)^i}{i!} du_i  \\
-u^{n+2} &amp;= \sum_{i=0}^{N} \frac{(2h)^i}{i!} du_i  \\
+u^{n+1} &amp;= \sum_{i=0}^{M} \frac{(h)^i}{i!} du_i  \\
+u^{n+2} &amp;= \sum_{i=0}^{M} \frac{(2h)^i}{i!} du_i  \\
 \end{align*}
 \]</span></p>
 </section>
 <section id="the-stencil-matrix-ctd" class="slide level2 smaller">
 <h2>The stencil matrix ctd</h2>
 <p>Expanding the sums these 5 Taylor expansions can be written in matrix form</p>
-<p><span class="math display">\[
+<p><span class="math display">\[ \small
 \underbrace{
 \begin{bmatrix}
 u^{n-2}\\
@@ -1315,21 +1424,24 @@ du_3 \\
 du_4
 \end{bmatrix}}_{\boldsymbol{du}}
 \]</span></p>
+<p><span class="math display">\[
+\boldsymbol{u} = C \boldsymbol{du}
+\]</span></p>
 <div class="fragment">
 <p>Invert to obtain</p>
 <p><span class="math display">\[
 \boldsymbol{du} = C^{-1} \boldsymbol{u}
 \]</span></p>
-<p>This is how we can get any derivative stencil! Remember <span class="math inline">\(du_i\)</span> is an approximation to the i’th derivative.</p>
+<p>Since <span class="math inline">\(du_i\)</span> is an approximation to the i’th derivative we can now compute any derivative stencil!</p>
 </div>
 </section>
-<section id="second-order-second-derivative-stencil" class="slide level2 smaller">
-<h2>Second order second derivative stencil</h2>
+<section id="second-order-2nd-derivative-stencil" class="slide level2 smaller">
+<h2>Second order 2nd derivative stencil</h2>
 <p>We have been using the following stencil</p>
 <p><span class="math display">\[
 du_2 = u^{(2)}(x_0) = \frac{u^{n+1}-2u^n+u^{n-1}}{h^2}.
 \]</span></p>
-<p>Let’s derive this with the approach above. The scheme is central and second order so we use <span class="math inline">\(m_0=-1\)</span> and <span class="math inline">\(N=2\)</span> (hence <span class="math inline">\(m=(-1, 0, 1)\)</span>). Insert into the recipe for <span class="math inline">\(C\)</span></p>
+<p>Let’s derive this with the approach above. The scheme is central and second order so we use <span class="math inline">\(p_0=-1\)</span> and <span class="math inline">\(M=2\)</span> (hence <span class="math inline">\(m=(-1, 0, 1)\)</span>). Insert into the recipe for <span class="math inline">\(C\)</span></p>
 <p><span class="math display">\[
 C = \begin{bmatrix}
 1 &amp; -h &amp; \frac{h^2}{2} \\
@@ -1340,60 +1452,132 @@ C = \begin{bmatrix}
 </section>
 <section id="in-sympy" class="slide level2 smaller">
 <h2>In Sympy</h2>
-<div id="143bff1b" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
-<span id="cb30-2"><a></a>x, h <span class="op">=</span> sp.symbols(<span class="st">'x,h'</span>)</span>
-<span id="cb30-3"><a></a>C <span class="op">=</span> sp.Matrix([[<span class="dv">1</span>, <span class="op">-</span>h, h<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">1</span>, h, h<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3589618c" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
+<span id="cb36-2"><a></a>x, h <span class="op">=</span> sp.symbols(<span class="st">'x,h'</span>)</span>
+<span id="cb36-3"><a></a>C <span class="op">=</span> sp.Matrix([[<span class="dv">1</span>, <span class="op">-</span>h, h<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">1</span>, h, h<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="columns">
 <div class="column">
 <p>Print <span class="math inline">\(C\)</span> matrix</p>
-<div id="df91b0a1" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a>C</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="22">
+<div id="22ce3efe" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a></a>C</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="25">
 <p><span class="math inline">\(\displaystyle \left[\begin{matrix}1 &amp; - h &amp; \frac{h^{2}}{2}\\1 &amp; 0 &amp; 0\\1 &amp; h &amp; \frac{h^{2}}{2}\end{matrix}\right]\)</span></p>
 </div>
 </div>
 </div><div class="column">
 <p>Print <span class="math inline">\(C^{-1}\)</span> matrix</p>
-<div id="a05c1b7e" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a></a>C.inv() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="23">
+<div id="5aaa4ab5" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a></a>C.inv() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="26">
 <p><span class="math inline">\(\displaystyle \left[\begin{matrix}0 &amp; 1 &amp; 0\\- \frac{1}{2 h} &amp; 0 &amp; \frac{1}{2 h}\\\frac{1}{h^{2}} &amp; - \frac{2}{h^{2}} &amp; \frac{1}{h^{2}}\end{matrix}\right]\)</span></p>
 </div>
 </div>
 </div>
 </div>
 <p>The last row in <span class="math inline">\(C^{-1}\)</span> represents <span class="math inline">\(u''\)</span>! The middle row represents a second order central <span class="math inline">\(u'\)</span>.</p>
-<p>Create a vector for <span class="math inline">\(\boldsymbol{u}\)</span> and print <span class="math inline">\(u'\)</span> and <span class="math inline">\(u'\)</span></p>
-<div id="ce844d6b" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a>u <span class="op">=</span> sp.Function(<span class="st">'u'</span>)</span>
-<span id="cb33-2"><a></a>coef <span class="op">=</span> sp.Matrix([u(x<span class="op">-</span>h), u(x), u(x<span class="op">+</span>h)]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Create a vector for <span class="math inline">\(\boldsymbol{u}\)</span> and print <span class="math inline">\(u'\)</span> and <span class="math inline">\(u''\)</span></p>
+<div id="339e5050" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a></a>u <span class="op">=</span> sp.Function(<span class="st">'u'</span>)</span>
+<span id="cb39-2"><a></a>coef <span class="op">=</span> sp.Matrix([u(x<span class="op">-</span>h), u(x), u(x<span class="op">+</span>h)]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="columns">
 <div class="column">
-<div id="03098899" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a>display((C.inv()[<span class="dv">1</span>, :] <span class="op">@</span> coef)[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown">
+<div id="c45430e1" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a></a>(C.inv()[<span class="dv">1</span>, :] <span class="op">@</span> coef)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="28">
 <p><span class="math inline">\(\displaystyle - \frac{u{\left(- h + x \right)}}{2 h} + \frac{u{\left(h + x \right)}}{2 h}\)</span></p>
 </div>
 </div>
 </div><div class="column">
-<div id="9cb14cea" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a>display((C.inv()[<span class="dv">2</span>, :] <span class="op">@</span> coef)[<span class="dv">0</span>]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display cell-output-markdown">
+<div id="2200bd32" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a></a>(C.inv()[<span class="dv">2</span>, :] <span class="op">@</span> coef)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="29">
 <p><span class="math inline">\(\displaystyle - \frac{2 u{\left(x \right)}}{h^{2}} + \frac{u{\left(- h + x \right)}}{h^{2}} + \frac{u{\left(h + x \right)}}{h^{2}}\)</span></p>
 </div>
 </div>
 </div>
 </div>
+</section>
+<section id="we-can-get-any-stencil" class="slide level2 smaller">
+<h2>We can get any stencil</h2>
+<p>Create a function that computes <span class="math inline">\(C\)</span> for any <span class="math inline">\(p_0\)</span> and <span class="math inline">\(M\)</span></p>
+<div id="543eb93a" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a></a><span class="kw">def</span> Cmat(p0, M):</span>
+<span id="cb42-2"><a></a>  C <span class="op">=</span> np.zeros((M<span class="op">+</span><span class="dv">1</span>, M<span class="op">+</span><span class="dv">1</span>), dtype<span class="op">=</span><span class="bu">object</span>)</span>
+<span id="cb42-3"><a></a>  <span class="cf">for</span> j, p <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">range</span>(p0, p0<span class="op">+</span>M<span class="op">+</span><span class="dv">1</span>)):</span>
+<span id="cb42-4"><a></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(M<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb42-5"><a></a>      C[j, i] <span class="op">=</span> (p<span class="op">*</span>h)<span class="op">**</span>i <span class="op">/</span> sp.factorial(i) </span>
+<span id="cb42-6"><a></a>  <span class="cf">return</span> sp.Matrix(C)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><span class="math inline">\(p_0=-1, M=2\)</span></p>
+<div id="952cd3f1" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a></a>Cmat(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="31">
+<p><span class="math inline">\(\displaystyle \left[\begin{matrix}1 &amp; - h &amp; \frac{h^{2}}{2}\\1 &amp; 0 &amp; 0\\1 &amp; h &amp; \frac{h^{2}}{2}\end{matrix}\right]\)</span></p>
+</div>
+</div>
+<div class="fragment">
+<p>A central stencil of order <span class="math inline">\(l\)</span> for the <span class="math inline">\(k\)</span>’th’ derivative requires <span class="math inline">\(M+1\)</span> points, where</p>
+<p><span class="math display">\[
+M = l + 2 \left\lfloor \frac{k-1}{2} \right\rfloor
+\]</span></p>
+</div>
+</section>
+<section id="forward-and-backward" class="slide level2 smaller">
+<h2>Forward and backward</h2>
+<p>Non-central schemes requires one more point for the same accuracy as central</p>
+<div class="columns">
+<div class="column">
+<h3 id="forward-u">Forward <span class="math inline">\(u''\)</span></h3>
+<p><span class="math inline">\(p_0=0, M=3\)</span></p>
+<div id="c6554aff" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a></a>C <span class="op">=</span> Cmat(<span class="dv">0</span>, <span class="dv">3</span>)</span>
+<span id="cb44-2"><a></a>C.inv()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="32">
+<p><span class="math inline">\(\displaystyle \left[\begin{matrix}1 &amp; 0 &amp; 0 &amp; 0\\- \frac{11}{6 h} &amp; \frac{3}{h} &amp; - \frac{3}{2 h} &amp; \frac{1}{3 h}\\\frac{2}{h^{2}} &amp; - \frac{5}{h^{2}} &amp; \frac{4}{h^{2}} &amp; - \frac{1}{h^{2}}\\- \frac{1}{h^{3}} &amp; \frac{3}{h^{3}} &amp; - \frac{3}{h^{3}} &amp; \frac{1}{h^{3}}\end{matrix}\right]\)</span></p>
+</div>
+</div>
+</div><div class="column">
+<h3 id="backward-u">Backward <span class="math inline">\(u''\)</span></h3>
+<p><span class="math inline">\(p_0 = -3, M=3\)</span></p>
+<div id="cf891725" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a></a>C <span class="op">=</span> Cmat(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb45-2"><a></a>C.inv()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="33">
+<p><span class="math inline">\(\displaystyle \left[\begin{matrix}0 &amp; 0 &amp; 0 &amp; 1\\- \frac{1}{3 h} &amp; \frac{3}{2 h} &amp; - \frac{3}{h} &amp; \frac{11}{6 h}\\- \frac{1}{h^{2}} &amp; \frac{4}{h^{2}} &amp; - \frac{5}{h^{2}} &amp; \frac{2}{h^{2}}\\- \frac{1}{h^{3}} &amp; \frac{3}{h^{3}} &amp; - \frac{3}{h^{3}} &amp; \frac{1}{h^{3}}\end{matrix}\right]\)</span></p>
+</div>
+</div>
+</div>
+</div>
+<p>Recognize the third row in the forward scheme:</p>
+<p><span class="math display">\[
+u'' = \frac{-u^{n+3} + 4u^{n+2} - 5u^{n+1} +2 u^{n}}{h^2}
+\]</span></p>
+</section>
+<section id="fourth-order-central" class="slide level2 smaller">
+<h2>Fourth order central</h2>
+<p><span class="math inline">\(p_0=-2, M=4\)</span></p>
+<div id="eaef0a71" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a></a>C <span class="op">=</span> Cmat(<span class="op">-</span><span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb46-2"><a></a>C.inv()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="34">
+<p><span class="math inline">\(\displaystyle \left[\begin{matrix}0 &amp; 0 &amp; 1 &amp; 0 &amp; 0\\\frac{1}{12 h} &amp; - \frac{2}{3 h} &amp; 0 &amp; \frac{2}{3 h} &amp; - \frac{1}{12 h}\\- \frac{1}{12 h^{2}} &amp; \frac{4}{3 h^{2}} &amp; - \frac{5}{2 h^{2}} &amp; \frac{4}{3 h^{2}} &amp; - \frac{1}{12 h^{2}}\\- \frac{1}{2 h^{3}} &amp; \frac{1}{h^{3}} &amp; 0 &amp; - \frac{1}{h^{3}} &amp; \frac{1}{2 h^{3}}\\\frac{1}{h^{4}} &amp; - \frac{4}{h^{4}} &amp; \frac{6}{h^{4}} &amp; - \frac{4}{h^{4}} &amp; \frac{1}{h^{4}}\end{matrix}\right]\)</span></p>
+</div>
+</div>
+<p>Third row gives us:</p>
+<p><span class="math display">\[
+u'' = \frac{-u^{n+2} + 16u^{n+1} - 30 u^n + 16 u^{n-1} - u^{n-2}}{12 h^2} + \mathcal{O}(h^4)
+\]</span></p>
+<p>where the order = <span class="math inline">\(M - 2 \left\lfloor \frac{2-1}{2} \right \rfloor = M = 4\)</span>.</p>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
