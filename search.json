@@ -277,14 +277,14 @@
     "href": "finitedifferences.html#initial-or-boundary-value-problems",
     "title": "The finite difference method",
     "section": "Initial or Boundary Value Problems",
-    "text": "Initial or Boundary Value Problems\nThe second-order differential equation\n\\[\nu''(t) + au'(t) + bu(t) = f(t), \\quad t \\in [0, T]\n\\]\nis classified as either an IVP or a BVP based on boundary/initial conditions.\n\n\n\nIVP\n\nTypically specifies \\(u(0)\\) and \\(u'(0)\\)\nExplicit recurrence relations, no use of linear algebra\nCan use the finite difference method for discretization\n\n\nBVP\n\nTypically specifies \\(u(0)\\) and \\(u(T)\\) or \\(u'(0)\\) and \\(u'(T)\\)\nImplicit linear algebra methods\nCan use the finite difference method for discretization\n\n\n\nSimilar characteristics for higher-order differential equations. IVP specifies all conditions at initial time."
+    "text": "Initial or Boundary Value Problems\nThe second-order differential equation\n\\[\nu''(t) + au'(t) + bu(t) = f(t), \\quad t \\in [0, T]\n\\]\nis classified as either an IVP or a BVP based on boundary/initial conditions.\n\n\n\nIVP\n\nTypically specifies \\(u(0)\\) and \\(u'(0)\\)\nExplicit recurrence relations, no use of linear algebra\nCan use the finite difference or similar methods for discretization\n\n\nBVP\n\nTypically specifies \\(u(0)\\) and \\(u(T)\\) or \\(u'(0)\\) and \\(u'(T)\\)\nImplicit linear algebra methods\nCan use the finite difference or similar methods for discretization\n\n\n\nSimilar characteristics for higher-order differential equations. IVP specifies all conditions at initial time."
   },
   {
     "objectID": "finitedifferences.html#the-explicit-ivp-approach-simply-computes-un1-from-un-un-1",
     "href": "finitedifferences.html#the-explicit-ivp-approach-simply-computes-un1-from-un-un-1",
     "title": "The finite difference method",
     "section": "The explicit IVP approach simply computes \\(u^{n+1}\\) from \\(u^n, u^{n-1}\\)…",
-    "text": "The explicit IVP approach simply computes \\(u^{n+1}\\) from \\(u^n, u^{n-1}\\)…\n\n\n\nFor example, the exponential decay problem with initial condition\n\\[\nu' + au = 0, t \\in (0, T], \\, u(0)=I.\n\\]\nis discretized as\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a \\Delta t}{1 + \\theta a \\Delta t} u^n = g u^n.\n\\]\nThe solution vector \\(\\boldsymbol{u} = (u^0, u^1, \\ldots, u^{N_t})\\) is obtained from a recurrence algorithm\n\n\\(u^0 = I\\)\nfor n = 0, 1, … , N-1\n\nCompute \\(u^{n+1} = g u^n\\)\n\n\nEasy to understand and easy to solve. Equations are never assembled into matrix form. But may be unstable!"
+    "text": "The explicit IVP approach simply computes \\(u^{n+1}\\) from \\(u^n, u^{n-1}\\)…\n\n\n\nFor example, the exponential decay problem with initial condition\n\\[\nu' + au = 0, t \\in (0, T], \\, u(0)=I.\n\\]\nis discretized as\n\\[\nu^{n+1} = \\frac{1 - (1-\\theta) a \\Delta t}{1 + \\theta a \\Delta t} u^n = g u^n.\n\\]\nThe solution vector \\(\\boldsymbol{u} = (u^0, u^1, \\ldots, u^{N})\\) is obtained from a recurrence algorithm\n\n\\(u^0 = I\\)\nfor n = 0, 1, … , N-1\n\nCompute \\(u^{n+1} = g u^n\\)\n\n\nEasy to understand and easy to solve. Equations are never assembled into matrix form. But may be unstable!"
   },
   {
     "objectID": "finitedifferences.html#the-bvp-approach-solves-the-difference-equations-by-assembling-matrices-and-vectors",
@@ -298,7 +298,7 @@
     "href": "finitedifferences.html#understand-that-the-matrix-problem-is-the-same-as-the-recurrence",
     "title": "The finite difference method",
     "section": "Understand that the matrix problem is the same as the recurrence",
-    "text": "Understand that the matrix problem is the same as the recurrence\n\\[\n\\underbrace{\n\\begin{bmatrix}\n1   & 0 & 0 & 0 & 0   \\\\\n-g  & 1 & 0 & 0 & 0   \\\\\n0  & -g & 1 & 0 & 0   \\\\\n0  & 0 & -g & 1 & 0   \\\\\n0  & 0 & 0 & -g & 1   \n\\end{bmatrix}}_{A}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\nu^3 \\\\\nu^4\n\\end{bmatrix}}_{\\boldsymbol{u}} =\n\\underbrace{\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n0\n\\end{bmatrix}}_{\\boldsymbol{b}}\n\\]\n\n\nsimply means\n\n\\[\n\\begin{align}\nu^0 &= I \\\\\n-g u^0 + u^1 &= 0 \\\\\n-g u^1 + u^2 &= 0 \\\\\n\\vdots\n\\end{align}\n\\]\n\n\nStill explicit since the matrix is lower triangular. But the problem is assembled into matrix form."
+    "text": "Understand that the matrix problem is the same as the recurrence\n\\[\n\\underbrace{\n\\begin{bmatrix}\n1   & 0 & 0 & 0 & 0   \\\\\n-g  & 1 & 0 & 0 & 0   \\\\\n0  & -g & 1 & 0 & 0   \\\\\n0  & 0 & -g & 1 & 0   \\\\\n0  & 0 & 0 & -g & 1   \n\\end{bmatrix}}_{A}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\nu^3 \\\\\nu^4\n\\end{bmatrix}}_{\\boldsymbol{u}} =\n\\underbrace{\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n0\n\\end{bmatrix}}_{\\boldsymbol{b}}\n\\]\n\n\nsimply means\n\n\\[\n\\begin{align}\nu^0 &= I \\\\\n-g u^0 + u^1 &= 0 \\\\\n-g u^1 + u^2 &= 0 \\\\\n\\vdots\n\\end{align}\n\\]\n\n\nStill explicit since matrix is lower triangular. But problem is assembled into matrix form."
   },
   {
     "objectID": "finitedifferences.html#solve-matrix-problem",
@@ -319,21 +319,21 @@
     "href": "finitedifferences.html#solve-and-compare-with-recurrence",
     "title": "The finite difference method",
     "section": "Solve and compare with recurrence",
-    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n] \n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n] \nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I) \n\n854 ns ± 45.2 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b) \n\n19.4 µs ± 1.93 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n] \n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n] \nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I) \n\n860 ns ± 38 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b) \n\n20.6 µs ± 3.04 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
     "href": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
     "title": "The finite difference method",
     "section": "Try to speed up by computing the inverse",
-    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True) \nAi = np.linalg.inv(A.toarray())\nprint(Ai)\n\n[[1.    0.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.333 1.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.111 0.333 1.    0.    0.    0.    0.    0.    0.   ]\n [0.037 0.111 0.333 1.    0.    0.    0.    0.    0.   ]\n [0.012 0.037 0.111 0.333 1.    0.    0.    0.    0.   ]\n [0.004 0.012 0.037 0.111 0.333 1.    0.    0.    0.   ]\n [0.001 0.004 0.012 0.037 0.111 0.333 1.    0.    0.   ]\n [0.    0.001 0.004 0.012 0.037 0.111 0.333 1.    0.   ]\n [0.    0.    0.001 0.004 0.012 0.037 0.111 0.333 1.   ]]\n\n\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui) \n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b \n\n525 ns ± 35.6 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True) \nAi = np.linalg.inv(A.toarray())\nprint(Ai)\n\n[[1.    0.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.333 1.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.111 0.333 1.    0.    0.    0.    0.    0.    0.   ]\n [0.037 0.111 0.333 1.    0.    0.    0.    0.    0.   ]\n [0.012 0.037 0.111 0.333 1.    0.    0.    0.    0.   ]\n [0.004 0.012 0.037 0.111 0.333 1.    0.    0.    0.   ]\n [0.001 0.004 0.012 0.037 0.111 0.333 1.    0.    0.   ]\n [0.    0.001 0.004 0.012 0.037 0.111 0.333 1.    0.   ]\n [0.    0.    0.001 0.004 0.012 0.037 0.111 0.333 1.   ]]\n\n\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui) \n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b \n\n585 ns ± 77.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "href": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "title": "The finite difference method",
     "section": "Until we try Numba on the explicit solver",
-    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb \n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n136 ns ± 7.78 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
+    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb \n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n141 ns ± 9.52 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
   },
   {
     "objectID": "finitedifferences.html#the-bv-vibration-problem",
@@ -1230,5 +1230,12 @@
     "title": "Analysis of exponential decay models",
     "section": "Test convergence rates",
     "text": "Test convergence rates\nBackward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 1.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[0.9619265651066382, 0.98003334385805, 0.9897576131285538]\n\n\nForward Euler:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.\nconvergence_rates(4, I, a, T, theta, dt)\n\n[1.0472640894307232, 1.0222599097461846, 1.0108154242259877]\n\n\nCrank-Nicolson:\n\nI, a, T, dt, theta = 1., 2., 8., 0.1, 0.5\nconvergence_rates(4, I, a, T, theta, dt)\n\n[2.0037335266421343, 2.0009433957768175, 2.000236481071457]\n\n\nAll in good agreement with theory:-)"
+  },
+  {
+    "objectID": "finitedifferences.html#fourth-order-central-small-p_0-2-m4",
+    "href": "finitedifferences.html#fourth-order-central-small-p_0-2-m4",
+    "title": "The finite difference method",
+    "section": "Fourth order central \\(\\small p_0=-2, M=4\\)",
+    "text": "Fourth order central \\(\\small p_0=-2, M=4\\)\n\nC = Cmat(-2, 4)\nC.inv()\n\n\\(\\displaystyle \\left[\\begin{matrix}0 & 0 & 1 & 0 & 0\\\\\\frac{1}{12 h} & - \\frac{2}{3 h} & 0 & \\frac{2}{3 h} & - \\frac{1}{12 h}\\\\- \\frac{1}{12 h^{2}} & \\frac{4}{3 h^{2}} & - \\frac{5}{2 h^{2}} & \\frac{4}{3 h^{2}} & - \\frac{1}{12 h^{2}}\\\\- \\frac{1}{2 h^{3}} & \\frac{1}{h^{3}} & 0 & - \\frac{1}{h^{3}} & \\frac{1}{2 h^{3}}\\\\\\frac{1}{h^{4}} & - \\frac{4}{h^{4}} & \\frac{6}{h^{4}} & - \\frac{4}{h^{4}} & \\frac{1}{h^{4}}\\end{matrix}\\right]\\)\n\n\nThird row gives us:\n\\[\nu'' = \\frac{-u^{n+2} + 16u^{n+1} - 30 u^n + 16 u^{n-1} - u^{n-2}}{12 h^2} + \\mathcal{O}(h^4)\n\\]\nwhere the order \\(l = M - 2 \\left\\lfloor \\frac{2-1}{2} \\right \\rfloor = M = 4\\).\n\nWhat is the order of the fourth derivative \\(u''''=\\frac{u^{n+2}-4u^{n+1}+6u^{n}-4u^{n-1}+u^{n-2}}{h^4}\\)?\n\n\n\\(l = M - 2 \\left\\lfloor \\frac{4-1}{2} \\right \\rfloor = M - 2 = 2\\)"
   }
 ]
