@@ -486,7 +486,7 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 <section id="solver" class="slide level2">
 <h2>Solver</h2>
 <p>We already have a solver that we can use to experiment with. Lets run it for a range of different timesteps.</p>
-<div id="b4ea7281" class="cell" data-execution_count="1">
+<div id="d85a787a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a></a><span class="kw">def</span> solver(I, a, T, dt, theta):</span>
 <span id="cb1-3"><a></a>    <span class="co">"""Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt."""</span></span>
@@ -503,7 +503,7 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 <section id="encouraging-numerical-solutions---backwards-euler" class="slide level2">
 <h2>Encouraging numerical solutions - Backwards Euler</h2>
 <p><span class="math inline">\(I=1\)</span>, <span class="math inline">\(a=2\)</span>, <span class="math inline">\(\theta =1\)</span>, <span class="math inline">\(\Delta t=1.25, 0.75, 0.5, 0.1\)</span>.</p>
-<div id="f09d866b" class="cell" data-execution_count="2">
+<div id="93b0f07f" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -516,7 +516,7 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 <section id="discouraging-numerical-solutions---crank-nicolson" class="slide level2">
 <h2>Discouraging numerical solutions - Crank-Nicolson</h2>
 <p><span class="math inline">\(I=1\)</span>, <span class="math inline">\(a=2\)</span>, <span class="math inline">\(\theta=0.5\)</span>, <span class="math inline">\(\Delta t=1.25, 0.75, 0.5, 0.1\)</span>.</p>
-<div id="68647cc8" class="cell" data-execution_count="3">
+<div id="a23459a4" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -529,7 +529,7 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 <section id="discouraging-numerical-solutions---forward-euler" class="slide level2">
 <h2>Discouraging numerical solutions - Forward Euler</h2>
 <p><span class="math inline">\(I=1\)</span>, <span class="math inline">\(a=2\)</span>, <span class="math inline">\(\theta=0\)</span>, <span class="math inline">\(\Delta t=1.25, 0.75, 0.5, 0.1\)</span>.</p>
-<div id="8580a445" class="cell" data-execution_count="4">
+<div id="0dad47af" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -650,7 +650,7 @@ A &gt; 0 \quad \text{ and } \quad |A| \le 1
 <h2>Explanation of problems with forward Euler</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="6ad4da32" class="cell" data-execution_count="5">
+<div id="80b859a3" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -673,7 +673,7 @@ A &gt; 0 \quad \text{ and } \quad |A| \le 1
 <h2>Explanation of problems with Crank-Nicolson</h2>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="38614a42" class="cell" data-execution_count="6">
+<div id="49f07f3a" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -723,7 +723,7 @@ u(t_{n+1}) &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 </section>
 <section id="plotting-amplification-factors" class="slide level2">
 <h2>Plotting amplification factors</h2>
-<div id="be3be800" class="cell" data-execution_count="7">
+<div id="dbd11d80" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -757,7 +757,7 @@ u(t_{n+1}) &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 <section id="series-expansion-of-amplification-factors" class="slide level2 smaller">
 <h2>Series expansion of amplification factors</h2>
 <p>To investigate <span class="math inline">\(A_e - A\)</span> mathematically, we can Taylor expand the expression, using <span class="math inline">\(p=a\Delta t\)</span> as variable.</p>
-<div id="bf0b7eae" class="cell" data-execution_count="8">
+<div id="5220a377" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> sympy <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb2-2"><a></a><span class="co"># Create p as a mathematical symbol with name 'p'</span></span>
 <span id="cb2-3"><a></a>p <span class="op">=</span> Symbol(<span class="st">'p'</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
@@ -774,7 +774,7 @@ u(t_{n+1}) &amp;= A_e u(t_n), \quad A_e = e^{-a\Delta t}
 <section id="numerical-amplification-factors" class="slide level2 smaller">
 <h2>Numerical amplification factors</h2>
 <p>Compute the Taylor expansions of <span class="math inline">\(A_e - A\)</span></p>
-<div id="9b17a04e" class="cell" data-execution_count="9">
+<div id="3928d6e4" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
 <span id="cb3-2"><a></a>theta <span class="op">=</span> Symbol(<span class="st">'theta'</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb3-3"><a></a>A <span class="op">=</span> (<span class="dv">1</span><span class="op">-</span>(<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>p)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>theta<span class="op">*</span>p)</span>
@@ -815,7 +815,7 @@ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
 </section>
 <section id="computing-the-global-error-at-a-point" class="slide level2 smaller">
 <h2>Computing the global error at a point</h2>
-<div id="efe19653" class="cell" data-execution_count="10">
+<div id="6efb40ee" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>n <span class="op">=</span> Symbol(<span class="st">'n'</span>, integer<span class="op">=</span><span class="va">True</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb4-2"><a></a>u_e <span class="op">=</span> exp(<span class="op">-</span>p<span class="op">*</span>n)   <span class="co"># I=1</span></span>
 <span id="cb4-3"><a></a>u_n <span class="op">=</span> A<span class="op">**</span>n        <span class="co"># I=1</span></span>
@@ -852,7 +852,7 @@ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
 ||e^n||_{\ell^2} = \sqrt{\Delta t\sum_{n=0}^{N_t} ({u_{e}}(t_n) - u^n)^2}
 \]</span></p>
 <p>We can compute this using Sympy. Forward/Backward Euler has <span class="math inline">\(e^n \sim np^2/2\)</span></p>
-<div id="9c566ece" class="cell" data-execution_count="11">
+<div id="9f2cb752" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>h, N, a, T <span class="op">=</span> symbols(<span class="st">'h,N,a,T'</span>) <span class="co"># h represents Delta t</span></span>
 <span id="cb5-2"><a></a>simplify(sqrt(h <span class="op">*</span> summation((n<span class="op">*</span>p<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span>, (n, <span class="dv">0</span>, N))).subs(p, a<span class="op">*</span>h).subs(N, T<span class="op">/</span>h))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="11">
@@ -866,7 +866,7 @@ e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
 <section id="crank-nicolson" class="slide level2 smaller">
 <h2>Crank-Nicolson</h2>
 <p>For Crank-Nicolson the pointwise error is <span class="math inline">\(e^n \sim n p^3 / 12\)</span>. We get</p>
-<div id="df3cf937" class="cell" data-execution_count="12">
+<div id="3328bbaa" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>simplify(sqrt(h <span class="op">*</span> summation((n<span class="op">*</span>p<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">12</span>)<span class="op">**</span><span class="dv">2</span>, (n, <span class="dv">0</span>, N))).subs(p, a<span class="op">*</span>h).subs(N, T<span class="op">/</span>h))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="12">
 <p><span class="math inline">\(\displaystyle \frac{\sqrt{6} a^{3} h^{3} \sqrt{T \left(\frac{2 T^{2}}{h^{2}} + \frac{3 T}{h} + 1\right)}}{72}\)</span></p>
@@ -976,7 +976,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </section>
 <section id="function-for-convergence-rate" class="slide level2 smaller">
 <h2>Function for convergence rate</h2>
-<div id="42d20492" class="cell" data-execution_count="13">
+<div id="b64c7a7a" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
 <span id="cb7-2"><a></a></span>
 <span id="cb7-3"><a></a><span class="kw">def</span> l2_error(I, a, theta, dt): </span>
@@ -1001,7 +1001,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <section id="test-convergence-rates" class="slide level2 smaller">
 <h2>Test convergence rates</h2>
 <p>Backward Euler:</p>
-<div id="b455cbfb" class="cell" data-execution_count="14">
+<div id="3a0a6c9f" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.1</span>, <span class="fl">1.</span></span>
 <span id="cb8-2"><a></a>convergence_rates(<span class="dv">4</span>, I, a, T, theta, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
@@ -1009,7 +1009,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 </div>
 <p>Forward Euler:</p>
-<div id="5713f56c" class="cell" data-execution_count="15">
+<div id="890905f2" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.1</span>, <span class="fl">0.</span></span>
 <span id="cb10-2"><a></a>convergence_rates(<span class="dv">4</span>, I, a, T, theta, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
@@ -1017,7 +1017,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 </div>
 <p>Crank-Nicolson:</p>
-<div id="6c28600b" class="cell" data-execution_count="16">
+<div id="c87af8db" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span></span>
 <span id="cb12-2"><a></a>convergence_rates(<span class="dv">4</span>, I, a, T, theta, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
