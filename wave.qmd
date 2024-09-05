@@ -1,0 +1,782 @@
+---
+title: "Finite difference methods for the wave equation"
+subtitle: "MATMEK-4270"
+author: "Prof. Mikael Mortensen, University of Oslo"
+
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    slide-number: true
+    preview-links: auto
+    css: styles.css
+    embed-resources: false
+
+pandoc:
+  to: revealjs
+  standalone: false
+  wrap: none
+  default-image-extension: png
+  html-math-method:
+    method: mathjax
+    url: >-
+      https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  slide-level: 2
+---
+
+## The wave equation is a partial differential equation (PDE) {.smaller}
+
+$$
+\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2}.
+$$
+
+
+We will consider the time and space domains:
+$t\in[0, T]$, $x \in [0, L]$.
+
+::: {.incremental}
+
+* The wave equation is an initial-boundary value problem! 
+* Two initial conditions required since two derivatives in time
+* Two boundary conditions required since two derivatives in space
+* The solutions are waves that can be written as $u(x+ct)$ and $u(x-ct)$
+
+:::
+
+## Wave solution with different boundary conditions 
+
+<iframe src="https://phet.colorado.edu/sims/html/wave-on-a-string/latest/wave-on-a-string_all.html" width="1200" height="600" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Boundary conditions {.smaller}
+
+::: {.columns}
+::: {.column}
+
+#### Dirichlet (Fixed end)
+
+:::
+::: {.column}
+
+$$
+u(0, t) = u(L, t) = 0
+$$
+
+:::
+::: 
+
+The wave will be reflected, but $u$ will change sign. A nonzero Dirichlet condition is also possible, but will not be considered here.
+
+::: {.fragment}
+
+::: {.columns}
+::: {.column}
+
+#### Neumann (Loose end)
+
+:::
+::: {.column}
+
+$$
+\frac{\partial u}{\partial x}(0, t) = \frac{\partial u}{\partial x}(L, t) = 0
+$$
+
+:::
+::: 
+
+The wave will be reflected without change in sign. A nonzero Neumann condition is also possible, but will not be considered here.
+
+:::
+
+## Boundary conditions continued {.smaller}
+
+::: {.columns}
+::: {.column width="35%"}
+
+#### Open boundary (No end)
+
+:::
+::: {.column}
+
+$$
+\frac{\partial u(0, t)}{\partial t} - c \frac{\partial u(0, t)}{\partial x}= 0
+$$
+
+$$
+\frac{\partial u(L, t)}{\partial t} + c \frac{\partial u(L, t)}{\partial x}=0
+$$
+
+:::
+:::
+
+The wave will simply pass undisturbed and unreflected through an open boundary.
+
+::: {.fragment}
+
+::: {.columns}
+::: {.column width="35%"}
+
+#### Periodic boundary (No end)
+
+:::
+::: {.column}
+
+$$
+u(0, t) = u(L, t)
+$$
+
+:::
+:::
+
+The solution repeats itself indefinitely.
+
+:::
+
+
+## Discretization {.smaller}
+
+The simplest possible discretization is uniform in time and space
+
+$$
+t_n = n \Delta t, \quad n = 0, 1, \ldots, N_t
+$$
+
+$$
+x_j = j \Delta x, \quad j = 0, 1, \ldots, N
+$$
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+T = 5
+L = 7
+for i in range(T+1):
+    plt.plot((0, L), (i, i), 'k')
+for j in range(L+1):
+    plt.plot((j, j), (0, T), 'k')
+plt.xlabel('j')
+plt.ylabel('n')
+plt.plot(2, 3, 'ko')
+plt.text(2.15, 3.15, '$(x_2, t_3)$');
+```
+
+## A mesh function in space and time is defined as {.smaller}
+
+$$
+u^n_j = u(x_j, t_n)
+$$
+
+The mesh function has one value at each node in the mesh. For simplicity in later algorithms we will use the vectors
+
+$$
+u^n = (u^n_0, u^n_1, \ldots, u^n_N)^T,
+$$
+
+which is the solution vector at time $t_n$.
+
+A second order accurate discretization of the wave equation is
+
+$$
+\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\Delta t^2} = c^2 \frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\Delta x^2}
+$$
+
+
+## The finite difference stencil makes use of 5 neighboring points {.smaller}
+
+::: {.columns}
+::: {.column}
+
+```{python}
+fig = plt.figure(figsize=(5, 5))
+for i in range(5):
+    plt.plot((0, 4), (i, i), 'k')
+for j in range(5):
+    plt.plot((j, j), (0, 4), 'k')
+plt.plot(2, 2, 'ko', ms=8)
+plt.plot(2, 1, 'ko', ms=8)
+plt.plot(2, 3, 'ko', ms=8)
+plt.plot(1, 2, 'ko', ms=8)
+plt.plot(3, 2, 'ko', ms=8)
+ax = fig.gca()
+#ax.get_xaxis().set_visible(False)
+#ax.get_yaxis().set_visible(False)
+ax.axis('off')
+ax.axis('equal')
+plt.text(1, -0.5, '$j-1$')
+plt.text(2, -0.5, '$j$')
+plt.text(3, -0.5, '$j+1$')
+plt.text(-0.5, 1, '$n-1$')
+plt.text(-0.5, 2, '$n$')
+plt.text(-0.5, 3, '$n+1$')
+plt.text(-0.5, 4, '$time$')
+plt.text(4, -0.5, '$space$')
+plt.text(2.1, 2.1, '$(x_j, t_n)$')
+plt.text(2.1, 3.1, '$(x_j, t_{n+1})$')
+plt.text(2.1, 1.1, '$(x_j, t_{n-1})$')
+plt.text(3.1, 2.1, '$(x_{j+1}, t_n)$')
+plt.text(1.1, 2.1, '$(x_{j-1}, t_n)$');
+```
+
+:::
+::: {.column}
+
+$$
+\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\Delta t^2} = c^2 \frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\Delta x^2}
+$$
+
+:::
+::: 
+
+
+
+## We use a marching method in time {.smaller}
+
+1. Initialize $u^0$ and $u^1$
+
+2. for n in range(1, $N_t-1$):
+    - for j in range(1, N-1):
+        - $u^{n+1}_j = 2u^n_j - u^{n-1}_j + \left(\frac{c \Delta t}{ \Delta x}\right)^2 (u^{n}_{j+1}-2u^n_{j} + u^n_{j-1})$
+        
+and apply the chosen boundary conditions.
+
+::: {.fragment}
+
+All the indices makes it a bit messy. Lets make use of a differentiation matrix for the spatial dimension! And the Courant (or CFL) number
+
+$$
+ \overline{c} = \frac{c \Delta t}{\Delta x}
+$$
+
+:::
+
+## Use differentiation matrix to simplify the notation {.smaller}
+
+We define the second differentiation matrix without the scaling $1/(\Delta x)^2$ such that
+
+$$\small
+D^{(2)} = \begin{bmatrix}
+-2 & 1 & 0 & 0  & 0 & 0 & 0 & 0  \\
+1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
+0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
+\vdots & & & \ddots &  & & &\cdots \\
+\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+0 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\
+\end{bmatrix}
+$$
+
+and thus row $0 < j < N$ of $D^{(2)}u^n$ becomes
+
+$$
+(D^{(2)}u^n)_j = u^n_{j+1}-2u^n_j+u^n_{j-1} 
+$$
+
+
+## The vectorized marching method becomes {.smaller}
+
+1. Initialize $u^0$ and $u^1$
+
+2. for n in range(1, $N_t-1$):
+    - $u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n$
+    - Apply boundary conditions to $u^{n+1}_0$ and $u^{n+1}_N$
+
+
+::: {.incremental}
+
+* The boundary step can **often**, but not always, be incorporated into the matrix $D^{(2)}$
+* Very easy to vectorize using the matrix vector product!
+
+:::
+
+## PDE solvers (of time-dependent problems) should use memory carefully {.smaller}
+
+::: {.callout-note}
+
+* At any time we only need to store three vectors: $u^{n+1}, u^{n}$ and $u^{n-1}$.
+  - Memory requirement = $3(N+1)$ floating point numbers
+* Storing all time steps requires $(N_t+1) \times (N+1)$ floating point numbers
+* Not a huge problem for our case, but for 2 or 3 spatial dimensions it is very important!
+
+:::
+
+## Implementation - A low-memory marching method needs to update solution vectors {.smaller}
+
+1. Allocate three vectors $u^{nm1}, u^n, u^{np1}$, representing $u^{n-1}, u^n, u^{n+1}$.
+
+2. Initialize $u^0$ and $u^1$ by setting $u^{nm1}=u^0, u^n=u^1$
+
+3. for n in range(1, $N_t-1$):
+    - $u^{np1} = 2u^n-u^{nm1} + \underline{c}^2 D^{(2)} u^n$
+    - Apply boundary conditions to $u^{np1}_0$ and $u^{np1}_N$
+    - Update to next iteration:
+      * $u^{nm1} = u^n$
+      * $u^n = u^{np1}$
+
+## In Python {.smaller}
+
+Set up solver
+```{python}
+#| echo : true 
+import numpy as np 
+from scipy import sparse
+import sympy as sp 
+x, t = sp.symbols('x,t')
+N = 100
+Nt = 500 
+L = 2
+c = 1 # wavespeed
+dx = L / N
+CFL = 1.0
+dt = CFL*dx/c
+xj = np.linspace(0, L, N+1)
+unm1, un, unp1 = np.zeros((3, N+1))
+D2 = sparse.diags([1, -2, 1], [-1, 0, 1], (N+1, N+1))
+u0 = sp.exp(-200*(x-L/2+t)**2)
+```
+
+Solve by marching method
+```{python}
+#| echo : true 
+#| eval : false 
+unm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)
+un[:] = sp.lambdify(x, u0.subs(t, dt))(xj) 
+for n in range(Nt):
+  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un 
+  unp1[0] = 0
+  unp1[-1] = 0
+  unm1[:] = un 
+  un[:] = unp1  
+```
+
+## Store results at intermediate intervals for plotting {.smaller}
+
+```{python}
+#| echo : true
+unm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)
+un[:] = sp.lambdify(x, u0.subs(t, dt))(xj) 
+plotdata = {0: unm1.copy()}
+for n in range(Nt):
+  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un 
+  unp1[0] = 0
+  unp1[-1] = 0
+  unm1[:] = un 
+  un[:] = unp1
+  if n % 10 == 0:
+    plotdata[n] = unp1.copy()
+```
+
+
+## Create animation after the simulation is finished {.smaller}
+
+```{python}
+#| echo : true
+def animation(data):
+  from matplotlib import animation 
+  fig, ax = plt.subplots()
+  v = np.array(list(data.values()))
+  t = np.array(list(data.keys()))
+  save_step = t[1]-t[0]
+  line, = ax.plot(xj, data[0])
+  ax.set_ylim(v.min(), v.max())
+  def update(frame):
+    line.set_ydata(data[frame*save_step])
+    return (line,)
+  ani = animation.FuncAnimation(fig=fig, func=update, frames=len(data), blit=True)
+  ani.save('wavemovie.apng', writer='pillow', fps=5) # This animated png opens in a browser 
+animation(plotdata)
+```
+
+![](./figures/wavemovie.gif)
+
+
+## How to implement the initial conditions? {.smaller}
+
+To initialize a mesh function $u^0$, we write
+$$
+u^0 = I(x)
+$$
+
+which represents
+
+$$
+u^0_j = I(x_j), \quad \forall \, j=0, 1, \ldots, N
+$$
+
+::: {.fragment}
+
+How about the second condition $\frac{\partial u}{\partial t}(x, 0) = 0$?
+
+Just like for the vibration equation there are several options.
+
+:::
+
+## How to implement $\frac{\partial u}{\partial t}(x, 0) = 0$, option 1 {.smaller}
+
+Use a forward difference
+
+$$
+\frac{\partial u}{\partial t}(x, 0) \approx \frac{u^1-u^0}{\Delta t}=0, \quad \text{such that} \quad u^1 = u^0
+$$
+
+Only first order accurate, but still a possibility.
+
+::: {.fragment}
+
+Use a second order forward difference
+
+$$
+\frac{\partial u}{\partial t}(x, 0) \approx \frac{-u^2+4u^1-3u^0}{2 \Delta t}=0, \quad \text{such that} \quad u^1 = \frac{3u^0+u^2}{4}
+$$
+
+Second order accurate, but **implicit**
+
+:::
+
+## How to implement $\frac{\partial u}{\partial t}(x, 0) = 0$, option 2 {.smaller}
+
+Use a second order central differece 
+
+$$
+\frac{\partial u}{\partial t}(x, 0) = \frac{u^1-u^{-1}}{2 \Delta 2}=0, \quad \text{such that} \quad u^1 = u^{-1}
+$$ 
+
+and the PDE at $n=0$
+
+$$
+u^1 = 2u^0 - u^{-1} + \underline{c}^2 D^{(2)}u^{0}
+$$
+
+::: {.fragment}
+
+Insert for $u^{-1}=u^1$ to obtain
+
+$$
+u^1 = u^0 + \frac{\underline{c}^2}{2} D^{(2)}u^{0}
+$$
+
+Second order accurate and **explicit**
+
+:::
+
+## How to fix boundary conditions? {.smaller}
+
+We will consider 4 different types of boundary conditions
+
+|           |                         |
+|---        |---  |
+| Dirichlet | $u(0, t)$ and $u(L, t)$ |
+| Neumann   | $\frac{\partial u}{\partial x}(0, t)$ and $\frac{\partial u}{\partial x}(L, t)$ |
+| Open      | $\frac{\partial u}{\partial t}(0, t)-c\frac{\partial u}{\partial x}(0, t) = 0$ and $\frac{\partial u}{\partial t}(L, t)+c\frac{\partial u}{\partial x}(L, t) = 0$ |
+| Periodic  |  $u(L, t) = u(0, t)$ |
+
+: {tbl-colwidths="[25,75]"}
+
+::: {.fragment}
+
+::: {.callout-note}
+
+Accounting for boundary conditions very often takes more than 50 % of the lines of code in a PDE solver!
+
+:::
+
+:::
+
+## Dirichlet boundary conditions {.smaller}
+
+We need to fix $u(0, t) = I(0)$ and $u(L, t) = I(L)$ and start by fixing this at $t=0$
+
+$$
+u^0_0=I(0) \quad \text{and}\quad u^0_N=I(L)
+$$
+
+Next, we compute 
+
+$$
+u^1 = u^0 + \frac{\underline{c}^2}{2} D^{(2)}u^{0}
+$$
+
+Here, if the first and last rows of $D^{(2)}$ are set to zero, then $u^1_0 = u^0_0$ and $u^1_N=u^0_N$.
+
+Next, for $n=1, 2, \ldots, N_t-1$
+
+$$
+u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
+$$
+
+Again, if the first and last rows of $D^{(2)}$ are zero, then $u^{n+1}_0 = u^0_0$ and $u^{n+1}_N=u^0_N$. The boundary values remain as initially set at $t=0$.
+
+## Dirichlet boundary conditions summary {.smaller}
+
+Set $u^0=I(x)$ and define a modified differentiation matrix
+
+$$\small
+\tilde{D}^{(2)} = \begin{bmatrix}
+\color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  \\
+1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
+0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
+\vdots & & & \ddots &  & & &\cdots \\
+\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+\color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}0 & \color{red}0 \\
+\end{bmatrix}
+$$
+
+Now boundary conditions will be ok at all time steps simply by:
+
+1. Initialize $u^0$ and compute $u^1 = u^0+\frac{\underline{c}^2}{2}\tilde{D}^{(2)} u^0$. Set $u^{nm1}=u^0, u^n=u^1$
+
+2. for n in range(1, $N_t-1$):
+    - $u^{np1} = 2u^n-u^{nm1} + \underline{c}^2 \tilde{D}^{(2)} u^n$
+    - Update to next iteration: $u^{nm1} = u^n; u^n = u^{np1}$
+
+## Neumann boundary conditions {.smaller}
+
+We need to fix $\frac{\partial u}{\partial x}(0, t) = 0$ and $\frac{\partial u}{\partial x}(L, t) = 0$. We already have $u^0=I(x)$.
+
+A second order central scheme at $x=0$ is using ghost cell at $j=-1$
+
+$$
+\frac{\partial u}{\partial x}(0, t_n) = \frac{u^{n}_1 - u^n_{-1}}{2 \Delta x} = 0 \rightarrow u^n_{-1} = u^{n}_{1}
+$$
+
+The PDE at the left hand side $j=0$ using ghost cell (same for $j=N$):
+
+$$
+u^{n+1}_0 = 2u^{n}_0 - u^{n-1}_0 + \underline{c}^2(u^n_{1}-2u^n_0+u^n_{-1})
+$$
+
+Insert for $u^{n}_{-1}=u^n_{1}$ and obtain
+
+$$
+u^{n+1}_0 = 2u^{n}_0 - u^{n-1}_0 + \underline{c}^2(2u^n_{1}-2u^n_0)
+$$
+
+::: {.callout-note}
+
+Second order accurate and **explicit**. Can be implemented by modifying $D^{(2)}$!
+
+:::
+
+## Neumann at $x=L$ is the same {.smaller}
+
+$$
+\frac{\partial u}{\partial x}(L, t_n) = \frac{u^{n}_{N+1} - u^n_{N-1}}{2 \Delta x} = 0 \rightarrow u^n_{N+1} = u^{n}_{N-1}
+$$
+
+The PDE at the right hand side $j=N$ using ghost cell:
+
+$$
+u^{n+1}_N = 2u^{n}_N - u^{n-1}_N + \underline{c}^2(u^n_{N+1}-2u^n_N+u^n_{N-1})
+$$
+
+Insert for $u^{n}_{N+1}=u^n_{N-1}$ and obtain
+
+$$
+u^{n+1}_N = 2u^{n}_N - u^{n-1}_N + \underline{c}^2(2u^n_{N-1}-2u^n_N)
+$$
+
+::: {.fragment}
+
+And for $n=1$ we similarly get
+
+$$
+u^{1}_0 = u^{0}_0 +\frac{\underline{c}^2}{2}(2u^n_{1}-2u^n_0) \quad \text{and} \quad u^{1}_N = u^{0}_N + \frac{\underline{c}^2}{2}(2u^n_{N-1}-2u^n_N)
+$$
+
+:::
+
+## Neumann summary {.smaller}
+
+Set $u^0=I(x)$ and define a modified differentiation matrix
+
+$$\small
+\tilde{D}^{(2)} = \begin{bmatrix}
+\color{red}-2 & \color{red}2 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  \\
+1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
+0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
+\vdots & & & \ddots &  & & &\cdots \\
+\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+\color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}2 & \color{red}-2 \\
+\end{bmatrix}
+$$
+
+Now boundary conditions will be ok at all time steps simply by:
+
+1. Initialize $u^0$ and compute $u^1 = u^0+\frac{\underline{c}^2}{2}\tilde{D}^{(2)} u^0$. Set $u^{nm1}=u^0, u^n=u^1$
+
+2. for n in range(1, $N_t-1$):
+    - $u^{np1} = 2u^n-u^{nm1} + \underline{c}^2 \tilde{D}^{(2)} u^n$
+    - Update to next iteration: $u^{nm1} = u^n; u^n = u^{np1}$
+
+## Open boundary {.smaller}
+
+The wave simply disappears through the boundary
+
+$$
+\frac{\partial u}{\partial t}(0, t) - c \frac{\partial u}{\partial x}(0, t) = 0 \quad \text{and} \quad \frac{\partial u}{\partial t}(L, t) + c \frac{\partial u}{\partial x}(L, t) = 0
+$$
+
+As for Neumann there are several ways to implement these boundary conditions. The simplest option is to solve the first order accurate
+
+$$
+\frac{u^{n+1}_0-u^{n}_0}{\Delta t} - c \frac{u^n_1-u^{n}_{0}}{\Delta x} = 0
+$$
+
+such that
+
+$$
+u^{n+1}_0 = u^n_0 + \frac{c \Delta t}{\Delta x}(u^n_1-u^n_0)
+$$
+
+## Second order option {.smaller}
+
+$$
+\frac{u^{n+1}_0-u^{n-1}_0}{2\Delta t} - c \frac{-u^n_2+4u^n_1-3u^{n}_{0}}{2 \Delta x} = 0
+$$
+
+Solve for the boundary node $u^{n+1}_0$
+
+$$
+u^{n+1}_0 = u^{n-1}_0 - \frac{c \Delta t}{\Delta x}(-u^n_2+4u^n_1-3u^n_0)
+$$
+
+Nice option, but difficult to incorporate in the $D^{(2)}$ matrix, since there is no way to modify the first and last rows of $D^{(2)}$ such that
+
+$$
+u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
+$$
+
+## Second second order option {.smaller}
+
+Use central, second order scheme
+
+$$
+\frac{u^{n+1}_0-u^{n-1}_0}{2\Delta t} - c \frac{u^n_1-u^{n}_{-1}}{2 \Delta x} = 0
+$$
+
+and isolate the ghost node $u^{n}_{-1}$:
+
+$$
+\color{red}u^{n}_{-1} \color{black} = u^n_1 - \frac{1}{\underline{c}}(u^{n+1}_0 - u^{n-1}_0)
+$$
+
+Use regular PDE at the boundary that includes the ghost node:
+
+$$
+u^{n+1}_0 = 2u^n_0 - u^{n-1}_0 + \underline{c}^2(u^{n}_1-2u^n_0+\color{red}u^n_{-1}\color{black})
+$$
+
+To get an equation for $u^{n+1}_0$ that fixes the open boundary condition:
+
+$$
+u^{n+1}_0 = 2(1-\underline{c})u^n_0 - \frac{1-\underline{c}}{1+\underline{c}}u^{n-1}_0 + \frac{2 \underline{c}^2}{1+\underline{c}}u^{n_1}_1
+$$
+
+## Open boundary conditions {.smaller}
+
+Left boundary:
+
+$$
+u^{n+1}_0 = 2(1-\underline{c})u^n_0 - \frac{1-\underline{c}}{1+\underline{c}}u^{n-1}_0 + \frac{2 \underline{c}^2}{1+\underline{c}}u^{n_1}_1
+$$
+
+Right boundary:
+
+$$
+u^{n+1}_N = 2(1-\underline{c})u^n_N - \frac{1-\underline{c}}{1+\underline{c}}u^{n-1}_N + \frac{2 \underline{c}^2}{1+\underline{c}}u^{n_1}_{N-1}
+$$
+
+Both **explicit** and second order. But not possible to implement into the matrix such that
+
+$$
+u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
+$$
+
+## Implementation open boundaries {.smaller}
+
+1. Initialize $u^0$ and compute $u^1 = u^0+\frac{\underline{c}^2}{2}{D}^{(2)} u^0$. Set $u^{nm1}=u^0, u^n=u^1$
+
+2. for n in range(1, $N_t-1$):
+    - $u^{np1} = 2u^n-u^{nm1} + \underline{c}^2 {D}^{(2)} u^n$
+    - $u^{np1}_0 = 2(1-\underline{c})u^n_0 - \frac{1-\underline{c}}{1+\underline{c}}u^{nm1}_0 + \frac{2 \underline{c}^2}{1+\underline{c}}u^{nm1}_1$
+    - $u^{np1}_N = 2(1-\underline{c})u^n_N - \frac{1-\underline{c}}{1+\underline{c}}u^{nm1}_N + \frac{2 \underline{c}^2}{1+\underline{c}}u^{nm1}_{N-1}$ 
+    - Update to next iteration: $u^{nm1} = u^n; u^n = u^{np1}$
+
+::: {.callout-note}
+
+There is no need to use a modified $D^{(2)}$. The two updates of $u^{np1}_0$ and $u^{np1}_N$ will overwrite anything computed in the first step. 
+
+:::
+
+## Periodic boundary conditions {.smaller}
+
+A periodic solution is a solution that is repeating itself indefinitely. For example $u(x) = \sin(2\pi x)$:
+
+```{python}
+x = np.linspace(0, 4, 800)
+fi = plt.figure(figsize=(12, 3))
+plt.plot(x, np.sin(2*x*np.pi), 'k')
+for i in range(5):
+    plt.plot((i, i), (-1, 1), 'b')
+```
+
+We solve the problem for example for $x \in [0, 1]$, but the actual solution will be like above, with no boundaries. 
+
+::: {.callout-note}
+A periodic domain is also referred to as a domain with no boundaries.
+:::
+
+## A periodic mesh in time {.smaller}
+
+![](figures/periodic.png)
+
+$$u(t_N) = u(0) \quad \text{or} \quad u^N = u^0$$
+
+::: {.callout-note}
+
+There are only $N$ unknowns $u^0, u^1, \ldots, u^{N-1}$ for a mesh with $N+1$ nodes.
+
+:::
+
+## Consider the discretization of $u''$ {.smaller}
+
+![](figures/periodic.png)
+
+
+At the left hand side of the domain, the point to the left of $u^0$ is $u^{N-1}$
+
+$$
+u''(0) \approx \frac{u_1 - 2u_0 + \color{red}u_{-1}}{h^2} = \frac{u_1 - 2u_0 + \color{red}u_{N-1}}{h^2} 
+$$
+
+At the right hand side of the domain the point to the right of $u^{N-1}$ is $u^N=u^0$
+
+$$
+u''(t_{N-1}) \approx \frac{\color{red}u_N \color{black} - 2u_{N-1} + u_{N-2}}{h^2} = \frac{\color{red}u_0 \color{black} - 2u_{N-1} + u_{N-2}}{h^2} 
+$$
+
+## Periodic boundary conditions can be implemented in the matrix $D^{(2)} \in \mathbb{R}^{N+1 \times N+1}$ {.smaller}
+
+$$\small
+\tilde{D}^{(2)} = \begin{bmatrix}
+\color{red}-2 & \color{red}1 & 0 & 0  & 0 & 0 & \color{red}1 & 0  \\
+1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
+0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
+\vdots & & & \ddots &  & & &\cdots \\
+\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+0 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\
+\end{bmatrix}
+$$
+
+Note that the matrix expects $\boldsymbol{u} = (u^0, u^1, \ldots, u^{N-1}, u^N)$, even though $u^0=u^N$. The last row in $\tilde{D}^{(2)}$ is thus irrelevant, because we wil set $u^0=u^N$ manually.
+
+## Implementation periodic boundaries {.smaller}
+
+1. Initialize $u^0$ and compute $u^1 = u^0+\frac{\underline{c}^2}{2}\tilde{D}^{(2)} u^0$. Set $u^{nm1}=u^0, u^n=u^1$
+
+2. for n in range(1, $N_t-1$):
+    - $u^{np1} = 2u^n-u^{nm1} + \underline{c}^2 \tilde{D}^{(2)} u^n$
+    - $u^{np1}_N = u^{np1}_0$
+    - Update to next iteration: $u^{nm1} = u^n; u^n = u^{np1}$
+
+## Stability
