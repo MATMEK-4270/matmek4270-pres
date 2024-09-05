@@ -384,8 +384,7 @@ def animation(data):
 animation(plotdata)
 ```
 
-![](./figures/wavemovie.gif)
-
+![](https://raw.githack.com/MATMEK-4270/matmek4270-pres/main/figures/wavemovie.apng)
 
 ## How to implement the initial conditions? {.smaller}
 
