@@ -363,8 +363,13 @@ for n in range(Nt):
     plotdata[n] = unp1.copy()
 ```
 
+For example every tenth time step. Normally you do not need every time step to get a good animation.
 
 ## Create animation after the simulation is finished {.smaller}
+
+
+<img src="https://rawcdn.githack.com/MATMEK-4270/matmek4270-pres/6406baaf8be23232cb706f9ac69903403bf897b1/figures/wavemovie.png?min=1" alt="Animated Image" width=600 height=300>
+
 
 ```{python}
 #| echo : true
@@ -381,10 +386,8 @@ def animation(data):
     return (line,)
   ani = animation.FuncAnimation(fig=fig, func=update, frames=len(data), blit=True)
   ani.save('wavemovie.apng', writer='pillow', fps=5) # This animated png opens in a browser 
-animation(plotdata)
 ```
 
-![](https://raw.githack.com/MATMEK-4270/matmek4270-pres/main/figures/wavemovie.gif)
 
 ## How to implement the initial conditions? {.smaller}
 
@@ -401,13 +404,41 @@ $$
 
 ::: {.fragment}
 
-How about the second condition $\frac{\partial u}{\partial t}(x, 0) = 0$?
+```{python}
+#| echo : true 
+#| eval : false 
+u0 = sp.exp(-200*(x-L/2+t)**2) 
+unm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj) 
+```
+:::
 
-Just like for the vibration equation there are several options.
+::: {.fragment}
+
+How about the second condition $\frac{\partial u}{\partial t}(x, 0) = 0$?
 
 :::
 
-## How to implement $\frac{\partial u}{\partial t}(x, 0) = 0$, option 1 {.smaller}
+::: {.fragment}
+
+Just like for the vibration equation there are several options. If you have an analytical solution $I(x, t)$ that is time-dependent:
+
+$$
+u^1 = I(x, \Delta t)
+$$
+
+```{python}
+#| echo : true 
+#| eval : false 
+un[:] = sp.lambdify(x, u0.subs(t, dt))(xj) 
+```
+
+:::
+
+## If you do not have $I(x, t)$, then what? {.smaller}
+
+::: {.fragment}
+
+### How to fix $\frac{\partial u}{\partial t}(x, 0) = 0$, option 1
 
 Use a forward difference
 
@@ -416,6 +447,9 @@ $$
 $$
 
 Only first order accurate, but still a possibility.
+
+
+:::
 
 ::: {.fragment}
 
@@ -486,6 +520,8 @@ $$
 u^0_0=I(0) \quad \text{and}\quad u^0_N=I(L)
 $$
 
+::: {.fragment}
+
 Next, we compute 
 
 $$
@@ -494,13 +530,19 @@ $$
 
 Here, if the first and last rows of $D^{(2)}$ are set to zero, then $u^1_0 = u^0_0$ and $u^1_N=u^0_N$.
 
+:::
+
+:::{.fragment}
+
 Next, for $n=1, 2, \ldots, N_t-1$
 
 $$
 u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
 $$
 
-Again, if the first and last rows of $D^{(2)}$ are zero, then $u^{n+1}_0 = u^0_0$ and $u^{n+1}_N=u^0_N$. The boundary values remain as initially set at $t=0$.
+Again, if the first and last rows of $D^{(2)}$ are zero, then $u^{n+1}_0 = u^0_0$ and $u^{n+1}_N=u^0_N$ for all $n$. The boundary values remain as initially set at $t=0$.
+
+:::
 
 ## Dirichlet boundary conditions summary {.smaller}
 
@@ -525,6 +567,28 @@ Now boundary conditions will be ok at all time steps simply by:
 2. for n in range(1, $N_t-1$):
     - $u^{np1} = 2u^n-u^{nm1} + \underline{c}^2 \tilde{D}^{(2)} u^n$
     - Update to next iteration: $u^{nm1} = u^n; u^n = u^{np1}$
+
+## Dirichlet boundary conditions summary {.smaller}
+
+::: {.callout-note}
+It is also possible to do nothing with $D^{(2)}$ and simply fix the boundary conditions after updating all the internal points
+:::
+
+:::{.fragment}
+
+1. Initialize $u^0=u^{nm1}$ and compute $u^n = u^1 = u^0+\frac{\underline{c}^2}{2}{D}^{(2)} u^0$. 
+
+2. Set $u^1_0=u^n_0=0$ and $u^1_N=u^n_N=0$. 
+
+3. for n in range(1, $N_t-1$):
+    - $u^{np1} = 2u^n-u^{nm1} + \underline{c}^2 {D}^{(2)} u^n$
+    - Set $u^{np1}_0=0$ and $u^{np1}_N=0$
+    - Update to next iteration: $u^{nm1} = u^n; u^n = u^{np1}$
+
+::: {.callout-note}
+Regular, unmodified $D^{(2)}$, where the first and last rows are completely irrelevant.
+:::
+:::
 
 ## Neumann boundary conditions {.smaller}
 
