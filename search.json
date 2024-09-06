@@ -599,14 +599,14 @@
     "href": "intro.html#step-1-discretizing-the-domain-1",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Step 1: Discretizing the domain",
-    "text": "Step 1: Discretizing the domain\n\\(u^n\\) is a mesh function, defined at the mesh points \\(t_n\\), \\(n=0,\\ldots,N_t\\) only.\n\nN = 100\nt = np.linspace(0, T, N)\nfig, ax = plt.subplots(1, 1) \nax.plot(t, f(t), 'k--')\nt = np.linspace(0, T, 7)\nax.plot(t, f(t)+rnd, 'ko')\nfor i, ti in enumerate(t):\n    ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')\n\nax.set_xticklabels([f'$t_{i}$' for i in range(7)]);\nax.set_yticks([]);\n\n/var/folders/ql/nly59sfj4dd3spkth6lk0kjw0000gn/T/ipykernel_50266/372960509.py:10: UserWarning:\n\nset_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator."
+    "text": "Step 1: Discretizing the domain\n\\(u^n\\) is a mesh function, defined at the mesh points \\(t_n\\), \\(n=0,\\ldots,N_t\\) only.\n\nN = 100\nt = np.linspace(0, T, N)\nfig, ax = plt.subplots(1, 1) \nax.plot(t, f(t), 'k--')\nt = np.linspace(0, T, 7)\nax.plot(t, f(t)+rnd, 'ko')\nfor i, ti in enumerate(t):\n    ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')\n\nax.set_xticklabels([f'$t_{i}$' for i in range(7)]);\nax.set_yticks([]);\n\n/var/folders/ql/nly59sfj4dd3spkth6lk0kjw0000gn/T/ipykernel_52499/372960509.py:10: UserWarning:\n\nset_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator."
   },
   {
     "objectID": "intro.html#what-about-a-mesh-function-between-the-mesh-points",
     "href": "intro.html#what-about-a-mesh-function-between-the-mesh-points",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What about a mesh function between the mesh points?",
-    "text": "What about a mesh function between the mesh points?\nCan extend the mesh function to yield values between mesh points by linear interpolation:\n\\[\n\\begin{equation}\nu(t) \\approx u^n + \\frac{u^{n+1}-u^n}{t_{n+1}-t_n}(t - t_n)\n\\end{equation}\n\\]\n\nfig, ax = plt.subplots(1, 1, figsize=(8, 4))\nt = np.linspace(0, T, N)\nax.plot(t, f(t), 'k--')\nt = np.linspace(0, T, 7)\nax.plot(t, f(t)+rnd, 'ko-')\nfor i, ti in enumerate(t):\n    ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')\nax.legend(['Exact', 'FD-linear interpolation']);\nax.set_xticklabels([f'$t_{i}$' for i in range(7)]);\nax.set_yticks([]);\n\n/var/folders/ql/nly59sfj4dd3spkth6lk0kjw0000gn/T/ipykernel_50266/4036393064.py:9: UserWarning:\n\nset_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator."
+    "text": "What about a mesh function between the mesh points?\nCan extend the mesh function to yield values between mesh points by linear interpolation:\n\\[\n\\begin{equation}\nu(t) \\approx u^n + \\frac{u^{n+1}-u^n}{t_{n+1}-t_n}(t - t_n)\n\\end{equation}\n\\]\n\nfig, ax = plt.subplots(1, 1, figsize=(8, 4))\nt = np.linspace(0, T, N)\nax.plot(t, f(t), 'k--')\nt = np.linspace(0, T, 7)\nax.plot(t, f(t)+rnd, 'ko-')\nfor i, ti in enumerate(t):\n    ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')\nax.legend(['Exact', 'FD-linear interpolation']);\nax.set_xticklabels([f'$t_{i}$' for i in range(7)]);\nax.set_yticks([]);\n\n/var/folders/ql/nly59sfj4dd3spkth6lk0kjw0000gn/T/ipykernel_52499/4036393064.py:9: UserWarning:\n\nset_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator."
   },
   {
     "objectID": "intro.html#step-2-fulfilling-the-equation-at-discrete-time-points",
@@ -858,21 +858,21 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.94 µs ± 673 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.22 µs ± 83.9 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.75 µs ± 719 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.17 µs ± 62.7 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.19 µs ± 819 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 20.7 µs ± 517 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.38 µs ± 1.08 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 215 µs ± 4.02 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.26 µs ± 759 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 20.8 µs ± 748 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.48 µs ± 1.31 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 220 µs ± 3.69 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 237 µs ± 576 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.26 µs ± 9.44 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 251 µs ± 612 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.29 µs ± 12.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
@@ -886,7 +886,7 @@
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.41 µs ± 345 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\nNote\n\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.4 µs ± 236 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\nNote\n\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
     "objectID": "finitedifferences.html#initial-or-boundary-value-problems",
@@ -935,21 +935,21 @@
     "href": "finitedifferences.html#solve-and-compare-with-recurrence",
     "title": "The finite difference method",
     "section": "Solve and compare with recurrence",
-    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n] \n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n] \nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I) \n\n841 ns ± 30.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b) \n\n19.3 µs ± 1.65 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n] \n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n] \nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I) \n\n866 ns ± 26.7 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b) \n\n19.5 µs ± 1.61 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
     "href": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
     "title": "The finite difference method",
     "section": "Try to speed up by computing the inverse",
-    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True) \nAi = np.linalg.inv(A.toarray())\nprint(Ai)\n\n[[1.    0.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.333 1.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.111 0.333 1.    0.    0.    0.    0.    0.    0.   ]\n [0.037 0.111 0.333 1.    0.    0.    0.    0.    0.   ]\n [0.012 0.037 0.111 0.333 1.    0.    0.    0.    0.   ]\n [0.004 0.012 0.037 0.111 0.333 1.    0.    0.    0.   ]\n [0.001 0.004 0.012 0.037 0.111 0.333 1.    0.    0.   ]\n [0.    0.001 0.004 0.012 0.037 0.111 0.333 1.    0.   ]\n [0.    0.    0.001 0.004 0.012 0.037 0.111 0.333 1.   ]]\n\n\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui) \n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b \n\n539 ns ± 47.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True) \nAi = np.linalg.inv(A.toarray())\nprint(Ai)\n\n[[1.    0.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.333 1.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.111 0.333 1.    0.    0.    0.    0.    0.    0.   ]\n [0.037 0.111 0.333 1.    0.    0.    0.    0.    0.   ]\n [0.012 0.037 0.111 0.333 1.    0.    0.    0.    0.   ]\n [0.004 0.012 0.037 0.111 0.333 1.    0.    0.    0.   ]\n [0.001 0.004 0.012 0.037 0.111 0.333 1.    0.    0.   ]\n [0.    0.001 0.004 0.012 0.037 0.111 0.333 1.    0.   ]\n [0.    0.    0.001 0.004 0.012 0.037 0.111 0.333 1.   ]]\n\n\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui) \n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b \n\n556 ns ± 67.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "href": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "title": "The finite difference method",
     "section": "Until we try Numba on the explicit solver",
-    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb \n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n137 ns ± 8.27 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
+    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb \n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n138 ns ± 7.66 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
   },
   {
     "objectID": "finitedifferences.html#the-bv-vibration-problem",
@@ -1566,5 +1566,12 @@
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Python - pros and cons",
     "text": "Python - pros and cons"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Presentations for MATMEK-4270",
+    "section": "",
+    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation"
   }
 ]
