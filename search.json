@@ -507,8 +507,8 @@
     "objectID": "intro.html#hans-petter-langtangen-1962-2016",
     "href": "intro.html#hans-petter-langtangen-1962-2016",
     "title": "Algorithms and implementations for exponential decay models",
-    "section": "Hans Petter Langtangen 1962-2016",
-    "text": "Hans Petter Langtangen 1962-2016\n\n\n\n\n\n\n\n\n\n\n2011-2015 Editor-In-Chief SIAM J of Scientific Computing\nAuthor of 13 published books on scientific computing\nProfessor of Mechanics, University of Oslo 1998\nDeveloped INF5620 (which became IN5270 and now MAT-MEK4270)\nMemorial page"
+    "section": "",
+    "text": "2011-2015 Editor-In-Chief SIAM J of Scientific Computing\nAuthor of 13 published books on scientific computing\nProfessor of Mechanics, University of Oslo 1998\nDeveloped INF5620 (which became IN5270 and now MAT-MEK4270)\nMemorial page"
   },
   {
     "objectID": "intro.html#a-little-bit-about-myself",
@@ -536,14 +536,14 @@
     "href": "intro.html#syllabus",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Syllabus",
-    "text": "Syllabus\n\n\n\n\n\n\nImportant stuff\n\n\n\nLecture notes\nPresentations (including this one)\nGithub organization MATMEK-4270\n\n\n\n\n\n\n\n\n\n\nAlso important stuff, but less so as I will try to put all really important stuff in the lecture notes\n\n\n\nLangtangen, Finite Difference Computing with exponential decay - Chapters 1 and 2.\nLangtangen and Linge, Finite Difference Computing with PDEs - Parts of chapters 1 and 2.\nLangtangen and Mardal, Introduction to Numerical Methods for Variational Problems"
+    "text": "Syllabus\n\n\n\n\n\n\nImportant stuff\n\n\n\n\nLecture notes\nPresentations (including this one)\nGithub organization MATMEK-4270\n\n\n\n\n\n\n\n\n\nAlso important stuff, but less so as I will try to put all really important stuff in the lecture notes\n\n\n\n\nLangtangen, Finite Difference Computing with exponential decay - Chapters 1 and 2.\nLangtangen and Linge, Finite Difference Computing with PDEs - Parts of chapters 1 and 2.\nLangtangen and Mardal, Introduction to Numerical Methods for Variational Problems"
   },
   {
     "objectID": "intro.html#two-major-approaches",
     "href": "intro.html#two-major-approaches",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Two major approaches",
-    "text": "Two major approaches\n\n\nFinite differences\n\\[\n\\frac{du(t)}{dt} \\approx \\frac{u(t+\\Delta t) - u(t)}{\\Delta t}\n\\]\n\nApproximate in points\nUniform grid\nTaylor expansions\n\n\nVariational methods\n\\[\n\\int_{\\Omega} u'' v d\\Omega = -\\int_{\\Omega} u' v' d\\Omega + \\int_{\\Gamma} u'v d\\Gamma\n\\]\n\nApproximate weakly\nFinite element method\nLeast squares method\nGalerkin method\n\n\n\nWe will use both approaches to first consider function approximations and then the approximation of equations."
+    "text": "Two major approaches\n\n\n\nFinite differences\n\\[\n\\frac{du(t)}{dt} \\approx \\frac{u(t+\\Delta t) - u(t)}{\\Delta t}\n\\]\n\nApproximate in points\nUniform grid\nTaylor expansions\n\n\n\n\nVariational methods\n\\[\n\\int_{\\Omega} u'' v d\\Omega = -\\int_{\\Omega} u' v' d\\Omega + \\int_{\\Gamma} u'v d\\Gamma\n\\]\n\nApproximate weakly\nFinite element method\nLeast squares method\nGalerkin method\n\n\n\n\nWe will use both approaches to first consider function approximations and then the approximation of equations."
   },
   {
     "objectID": "intro.html#required-software-skills",
@@ -564,7 +564,7 @@
     "href": "intro.html#exponential-decay-model",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Exponential decay model",
-    "text": "Exponential decay model\n\n\n\n\n\n\nODE problem\n\n\n\\[\nu'=-au,\\quad u(0)=I,\\ t\\in (0,T]\n\\]\nwhere \\(a&gt;0\\) is a constant and \\(u(t)\\) is the time-dependent solution.\n\n\n\n\nWe study first a simple 1D ODE, because this will lead us to the building blocks that we need for solving PDEs!\nWe can more easily study the concepts of stability, accuracy, convergence and consistency.\n\n\nSee Langtangen, Finite Difference Computing - Chapter 1"
+    "text": "Exponential decay model\n\n\n\n\n\n\nODE problem\n\n\n\n\\[\nu'=-au,\\quad u(0)=I,\\ t\\in (0,T]\n\\]\nwhere \\(a&gt;0\\) is a constant and \\(u(t)\\) is the time-dependent solution.\n\n\n\nWe study first a simple 1D ODE, because this will lead us to the building blocks that we need for solving PDEs!\nWe can more easily study the concepts of stability, accuracy, convergence and consistency.\n\n\nSee Langtangen, Finite Difference Computing - Chapter 1"
   },
   {
     "objectID": "intro.html#what-to-learn-in-the-start-up-example",
@@ -578,7 +578,7 @@
     "href": "intro.html#finite-difference-methods",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Finite difference methods",
-    "text": "Finite difference methods\n\nThe finite difference method is the simplest method for solving differential equations\nSatisfy the equations in discrete points, not continuously\nFast to learn, derive, and implement\nA very useful tool to know, even if you aim at using the finite element or the finite volume method"
+    "text": "Finite difference methods\n\nThe finite difference method is the simplest method for solving differential equations\nSatisfy the equations in discrete points, not continuously\nFast to learn, derive, and implement\nA very useful tool to know, even if you aim at using the finite element or the finite volume method\n\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nN = 100\nT = 1\nt = np.linspace(0, T, N)\nfig = plt.figure(figsize=(8, 4))\nf = lambda t: t + np.sin(4*t*np.pi) + np.sin(t*np.pi)\nplt.plot(t, f(t), 'k--')\nt = np.linspace(0, T, 7)\nrnd = np.array([0, 0.02, 0.05, 0.1, 0.02, 0.1, 0])\nplt.plot(t, f(t)+rnd, 'ko')\nplt.legend(['Exact', 'FD']);"
   },
   {
     "objectID": "intro.html#the-steps-in-the-finite-difference-method",
@@ -592,21 +592,21 @@
     "href": "intro.html#step-1-discretizing-the-domain",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Step 1: Discretizing the domain",
-    "text": "Step 1: Discretizing the domain\nThe time domain \\([0,T]\\) is represented by a mesh: a finite number of \\(N_t+1\\) points\n\\[\n0 = t_0 &lt; t_1 &lt; t_2 &lt; \\cdots &lt; t_{N_t-1} &lt; t_{N_t} = T\n\\]\n\n\nWe seek the solution \\(u\\) at the mesh points: \\(u(t_n)\\), \\(n=1,2,\\ldots,N_t\\).\nNote: \\(u^0\\) is known as \\(I\\).\nNotational short-form for the numerical approximation to \\(u(t_n)\\): \\(u^n\\)\nIn the differential equation: \\(u(t)\\) is the exact solution\nIn the numerical method and implementation: \\(u^n\\) is the numerical approximation"
+    "text": "Step 1: Discretizing the domain\nThe time domain \\([0,T]\\) is represented by a mesh: a finite number of \\(N_t+1\\) points\n\\[\n0 = t_0 &lt; t_1 &lt; t_2 &lt; \\cdots &lt; t_{N_t-1} &lt; t_{N_t} = T\n\\]\n\n\n\n\n\n\nWe seek the solution \\(u\\) at the mesh points: \\(u(t_n)\\), \\(n=1,2,\\ldots,N_t\\).\nNote: \\(u^0\\) is known as \\(I\\).\nNotational short-form for the numerical approximation to \\(u(t_n)\\): \\(u^n\\)\nIn the differential equation: \\(u(t)\\) is the exact solution\nIn the numerical method and implementation: \\(u^n\\) is the numerical approximation"
   },
   {
     "objectID": "intro.html#step-1-discretizing-the-domain-1",
     "href": "intro.html#step-1-discretizing-the-domain-1",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Step 1: Discretizing the domain",
-    "text": "Step 1: Discretizing the domain\n\\(u^n\\) is a mesh function, defined at the mesh points \\(t_n\\), \\(n=0,\\ldots,N_t\\) only."
+    "text": "Step 1: Discretizing the domain\n\\(u^n\\) is a mesh function, defined at the mesh points \\(t_n\\), \\(n=0,\\ldots,N_t\\) only.\n\nN = 100\nt = np.linspace(0, T, N)\nfig, ax = plt.subplots(1, 1) \nax.plot(t, f(t), 'k--')\nt = np.linspace(0, T, 7)\nax.plot(t, f(t)+rnd, 'ko')\nfor i, ti in enumerate(t):\n    ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')\n\nax.set_xticklabels([f'$t_{i}$' for i in range(7)]);\nax.set_yticks([]);\n\n/var/folders/ql/nly59sfj4dd3spkth6lk0kjw0000gn/T/ipykernel_50266/372960509.py:10: UserWarning:\n\nset_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator."
   },
   {
     "objectID": "intro.html#what-about-a-mesh-function-between-the-mesh-points",
     "href": "intro.html#what-about-a-mesh-function-between-the-mesh-points",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What about a mesh function between the mesh points?",
-    "text": "What about a mesh function between the mesh points?\nCan extend the mesh function to yield values between mesh points by linear interpolation:\n\\[\n\\begin{equation}\nu(t) \\approx u^n + \\frac{u^{n+1}-u^n}{t_{n+1}-t_n}(t - t_n)\n\\end{equation}\n\\]"
+    "text": "What about a mesh function between the mesh points?\nCan extend the mesh function to yield values between mesh points by linear interpolation:\n\\[\n\\begin{equation}\nu(t) \\approx u^n + \\frac{u^{n+1}-u^n}{t_{n+1}-t_n}(t - t_n)\n\\end{equation}\n\\]\n\nfig, ax = plt.subplots(1, 1, figsize=(8, 4))\nt = np.linspace(0, T, N)\nax.plot(t, f(t), 'k--')\nt = np.linspace(0, T, 7)\nax.plot(t, f(t)+rnd, 'ko-')\nfor i, ti in enumerate(t):\n    ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')\nax.legend(['Exact', 'FD-linear interpolation']);\nax.set_xticklabels([f'$t_{i}$' for i in range(7)]);\nax.set_yticks([]);\n\n/var/folders/ql/nly59sfj4dd3spkth6lk0kjw0000gn/T/ipykernel_50266/4036393064.py:9: UserWarning:\n\nset_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator."
   },
   {
     "objectID": "intro.html#step-2-fulfilling-the-equation-at-discrete-time-points",
@@ -634,7 +634,7 @@
     "href": "intro.html#step-4-formulating-a-recursive-algorithm",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Step 4: Formulating a recursive algorithm",
-    "text": "Step 4: Formulating a recursive algorithm\nHow can we actually compute the \\(u^n\\) values?\n\ngiven \\(u^0=I\\)\ncompute \\(u^1\\) from \\(u^0\\)\ncompute \\(u^2\\) from \\(u^1\\)\ncompute \\(u^3\\) from \\(u^2\\) (and so forth)\n\nIn general: we have \\(u^n\\) and seek \\(u^{n+1}\\)\n\n\n\n\n\n\nThe Forward Euler scheme\n\n\nSolve wrt \\(u^{n+1}\\) to get the computational formula: \\[\nu^{n+1} = u^n - a(t_{n+1} -t_n)u^n\n\\]"
+    "text": "Step 4: Formulating a recursive algorithm\nHow can we actually compute the \\(u^n\\) values?\n\ngiven \\(u^0=I\\)\ncompute \\(u^1\\) from \\(u^0\\)\ncompute \\(u^2\\) from \\(u^1\\)\ncompute \\(u^3\\) from \\(u^2\\) (and so forth)\n\nIn general: we have \\(u^n\\) and seek \\(u^{n+1}\\)\n\n\n\n\n\n\nThe Forward Euler scheme\n\n\n\nSolve wrt \\(u^{n+1}\\) to get the computational formula: \\[\nu^{n+1} = u^n - a(t_{n+1} -t_n)u^n\n\\]"
   },
   {
     "objectID": "intro.html#let-us-apply-the-scheme-by-hand",
@@ -655,7 +655,7 @@
     "href": "intro.html#the-backward-euler-scheme",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "The Backward Euler scheme",
-    "text": "The Backward Euler scheme\nInserting the finite difference approximation in \\(u'(t_n)=-au(t_n)\\) yields the Backward Euler (BE) scheme:\n\\[\n\\frac{u^{n}-u^{n-1}}{t_{n}-t_{n-1}} = -a u^n\n\\]\nSolve with respect to the unknown \\(u^{n+1}\\):\n\\[\nu^{n+1} = \\frac{1}{1+ a(t_{n+1}-t_n)} u^n\n\\]\n\n\n\n\n\n\nNote\n\n\nWe use \\(u^{n+1}\\) as unknown and rename \\(u^n \\longrightarrow u^{n+1}\\) and \\(u^{n-1} \\longrightarrow u^{n}\\)"
+    "text": "The Backward Euler scheme\nInserting the finite difference approximation in \\(u'(t_n)=-au(t_n)\\) yields the Backward Euler (BE) scheme:\n\\[\n\\frac{u^{n}-u^{n-1}}{t_{n}-t_{n-1}} = -a u^n\n\\]\nSolve with respect to the unknown \\(u^{n+1}\\):\n\\[\nu^{n+1} = \\frac{1}{1+ a(t_{n+1}-t_n)} u^n\n\\]\n\n\n\n\n\n\nNote\n\n\n\nWe use \\(u^{n+1}\\) as unknown and rename \\(u^n \\longrightarrow u^{n+1}\\) and \\(u^{n-1} \\longrightarrow u^{n}\\)"
   },
   {
     "objectID": "intro.html#a-centered-difference",
@@ -760,14 +760,14 @@
     "href": "intro.html#comparison-with-exact-numerical-solution",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Comparison with exact numerical solution",
-    "text": "Comparison with exact numerical solution\n\n\n\n\n\n\nWhat is exact?\n\n\nThere is a difference between exact numerical solution and exact solution!\n\n\n\nRepeated use of the \\(\\theta\\)-rule gives exact numerical solution: \\[\n\\begin{align*}\nu^0 &= I,\\\\\nu^1 &= Au^0 = AI\\\\\nu^n &= A^nu^{n-1} = A^nI\n\\end{align*}\n\\]\nExact solution on the other hand:\n\\[\nu(t) = \\exp(-a t), \\quad u(t_n) = \\exp(-a t_n)\n\\]"
+    "text": "Comparison with exact numerical solution\n\n\n\n\n\n\nWhat is exact?\n\n\n\nThere is a difference between exact numerical solution and exact solution!\n\n\nRepeated use of the \\(\\theta\\)-rule gives exact numerical solution: \\[\n\\begin{align*}\nu^0 &= I,\\\\\nu^1 &= Au^0 = AI\\\\\nu^n &= A^nu^{n-1} = A^nI\n\\end{align*}\n\\]\nExact solution on the other hand:\n\\[\nu(t) = \\exp(-a t), \\quad u(t_n) = \\exp(-a t_n)\n\\]"
   },
   {
     "objectID": "intro.html#making-a-test-based-on-an-exact-numerical-solution",
     "href": "intro.html#making-a-test-based-on-an-exact-numerical-solution",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Making a test based on an exact numerical solution",
-    "text": "Making a test based on an exact numerical solution\nThe exact discrete solution is\n\\[\nu^n = IA^n\n\\]\nTest if your solver gives\n\\[\n\\max_n |u^n - IA^n| &lt; \\epsilon\\sim 10^{-15}\n\\]\nfor a few precalculated steps.\n\n\n\n\n\n\nTip\n\n\nMake sure you understand what \\(n\\) in \\(u^n\\) and in \\(A^n\\) means! \\(n\\) is not used as a power in \\(u^n\\), but it is a power in \\(A^n\\)!"
+    "text": "Making a test based on an exact numerical solution\nThe exact discrete solution is\n\\[\nu^n = IA^n\n\\]\nTest if your solver gives\n\\[\n\\max_n |u^n - IA^n| &lt; \\epsilon\\sim 10^{-15}\n\\]\nfor a few precalculated steps.\n\n\n\n\n\n\nTip\n\n\n\nMake sure you understand what \\(n\\) in \\(u^n\\) and in \\(A^n\\) means! \\(n\\) is not used as a power in \\(u^n\\), but it is a power in \\(A^n\\)!"
   },
   {
     "objectID": "intro.html#run-a-few-numerical-steps-by-hand",
@@ -781,14 +781,14 @@
     "href": "intro.html#the-test-based-on-exact-numerical-solution",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "The test based on exact numerical solution",
-    "text": "The test based on exact numerical solution\n\ndef test_solver_three_steps(solver):\n    \"\"\"Compare three steps with known manual computations.\"\"\"\n    theta = 0.8\n    a = 2\n    I = 0.1\n    dt = 0.8\n    u_by_hand = np.array([I,\n                          0.0298245614035,\n                          0.00889504462912,\n                          0.00265290804728])\n\n    Nt = 3  # number of time steps\n    u, t = solver(I=I, a=a, T=Nt*dt, dt=dt, theta=theta)\n    tol = 1E-14  # tolerance for comparing floats\n    diff = abs(u - u_by_hand).max()\n    success = diff &lt; tol\n    assert success, diff\n\ntest_solver_three_steps(solver)\n\n\n\n\n\n\n\nNote\n\n\nWe do not use the exact solution because the numerical solution will not equal the exact!"
+    "text": "The test based on exact numerical solution\n\ndef test_solver_three_steps(solver):\n    \"\"\"Compare three steps with known manual computations.\"\"\"\n    theta = 0.8\n    a = 2\n    I = 0.1\n    dt = 0.8\n    u_by_hand = np.array([I,\n                          0.0298245614035,\n                          0.00889504462912,\n                          0.00265290804728])\n\n    Nt = 3  # number of time steps\n    u, t = solver(I=I, a=a, T=Nt*dt, dt=dt, theta=theta)\n    tol = 1E-14  # tolerance for comparing floats\n    diff = abs(u - u_by_hand).max()\n    success = diff &lt; tol\n    assert success, diff\n\ntest_solver_three_steps(solver)\n\n\n\n\n\n\n\nNote\n\n\n\nWe do not use the exact solution because the numerical solution will not equal the exact!"
   },
   {
     "objectID": "intro.html#quantifying-the-error",
     "href": "intro.html#quantifying-the-error",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Quantifying the error",
-    "text": "Quantifying the error\nComputing the norm of the error\n\n\\(e^n = u^n - u_e(t_n)\\) is a mesh function\nUsually we want one number for the error\nUse a norm of \\(e^n\\)\n\nNorms of a function \\(f(t)\\):\n\\[\n\\begin{align}\n||f||_{L^2} &= \\left( \\int_0^T f(t)^2 dt\\right)^{1/2} \\\\\n||f||_{L^1} &= \\int_0^T |f(t)| dt \\\\\n||f||_{L^\\infty} &= \\max_{t\\in [0,T]}|f(t)|\n\\end{align}\n\\]"
+    "text": "Quantifying the error\n\nComputing the norm of the error\n\n\\(e^n = u^n - u_e(t_n)\\) is a mesh function\nUsually we want one number for the error\nUse a norm of \\(e^n\\)\n\nNorms of a function \\(f(t)\\):\n\\[\n\\begin{align}\n||f||_{L^2} &= \\left( \\int_0^T f(t)^2 dt\\right)^{1/2} \\\\\n||f||_{L^1} &= \\int_0^T |f(t)| dt \\\\\n||f||_{L^\\infty} &= \\max_{t\\in [0,T]}|f(t)|\n\\end{align}\n\\]"
   },
   {
     "objectID": "intro.html#norms-of-mesh-functions",
@@ -816,21 +816,21 @@
     "href": "intro.html#how-about-computational-speed",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "How about computational speed?",
-    "text": "How about computational speed?\nThe code is naive and not very efficient. It is not vectorized!\n\n\n\n\n\n\nVectorization\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\n\nFor example, you have three arrays\n\\[\n\\boldsymbol{u} = (u_i)_{i=0}^N, \\boldsymbol{v} = (v_i)_{i=0}^N, \\boldsymbol{w} = (w_i)_{i=0}^N\n\\]\nNow compute\n\\[\nw_i = u_i \\cdot v_i, \\quad \\forall \\, i=0, 1, \\ldots, N\n\\]"
+    "text": "How about computational speed?\nThe code is naive and not very efficient. It is not vectorized!\n\n\n\n\n\n\nVectorization\n\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\nFor example, you have three arrays\n\\[\n\\boldsymbol{u} = (u_i)_{i=0}^N, \\boldsymbol{v} = (v_i)_{i=0}^N, \\boldsymbol{w} = (w_i)_{i=0}^N\n\\]\nNow compute\n\\[\nw_i = u_i \\cdot v_i, \\quad \\forall \\, i=0, 1, \\ldots, N\n\\]"
   },
   {
     "objectID": "intro.html#how-about-computational-speed-1",
     "href": "intro.html#how-about-computational-speed-1",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "How about computational speed?",
-    "text": "How about computational speed?\nThe code is naive and not very efficient. It is not vectorized!\n\n\n\n\n\n\nVectorization\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\nRegular (scalar) implementation:\n\nN = 1000\nu = np.random.random(N)\nv = np.random.random(N)\nw = np.zeros(N)\n\nfor i in range(N):\n    w[i] = u[i] * v[i]\n\nVectorized:\n\nw[:] = u * v\n\nNumpy is heavily vectorized! So much so that mult, add, div, etc are vectorized by default!"
+    "text": "How about computational speed?\nThe code is naive and not very efficient. It is not vectorized!\n\n\n\n\n\n\nVectorization\n\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\nRegular (scalar) implementation:\n\nN = 1000\nu = np.random.random(N)\nv = np.random.random(N)\nw = np.zeros(N)\n\nfor i in range(N):\n    w[i] = u[i] * v[i]\n\nVectorized:\n\nw[:] = u * v\n\nNumpy is heavily vectorized! So much so that mult, add, div, etc are vectorized by default!"
   },
   {
     "objectID": "intro.html#how-about-computational-speed-2",
     "href": "intro.html#how-about-computational-speed-2",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "How about computational speed?",
-    "text": "How about computational speed?\nThe code is naive and not very efficient. It is not vectorized!\n\n\n\n\n\n\nVectorization\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\n\n\n\n\n\n\nVectorization warning\n\n\nPretty much all the code you will see and get access to in this course will be vectorized!"
+    "text": "How about computational speed?\nThe code is naive and not very efficient. It is not vectorized!\n\n\n\n\n\n\nVectorization\n\n\n\nVectorization refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.\n\n\n\n\n\n\n\n\nVectorization warning\n\n\n\nPretty much all the code you will see and get access to in this course will be vectorized!"
   },
   {
     "objectID": "intro.html#vectorizing-the-decay-solver",
@@ -858,21 +858,21 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.15 µs ± 630 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.25 µs ± 57.6 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.94 µs ± 673 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.22 µs ± 83.9 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.7 µs ± 877 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 21 µs ± 626 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.82 µs ± 2.25 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 217 µs ± 2.92 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.19 µs ± 819 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 20.7 µs ± 517 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.38 µs ± 1.08 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 215 µs ± 4.02 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 227 µs ± 552 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.32 µs ± 58.7 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 237 µs ± 576 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.26 µs ± 9.44 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
@@ -886,7 +886,7 @@
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.42 µs ± 386 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.41 µs ± 345 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\nNote\n\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
     "objectID": "finitedifferences.html#initial-or-boundary-value-problems",
@@ -935,21 +935,21 @@
     "href": "finitedifferences.html#solve-and-compare-with-recurrence",
     "title": "The finite difference method",
     "section": "Solve and compare with recurrence",
-    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n] \n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n] \nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I) \n\n861 ns ± 25.2 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b) \n\n19.6 µs ± 1.51 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n] \n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n] \nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I) \n\n841 ns ± 30.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b) \n\n19.3 µs ± 1.65 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
     "href": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
     "title": "The finite difference method",
     "section": "Try to speed up by computing the inverse",
-    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True) \nAi = np.linalg.inv(A.toarray())\nprint(Ai)\n\n[[1.    0.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.333 1.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.111 0.333 1.    0.    0.    0.    0.    0.    0.   ]\n [0.037 0.111 0.333 1.    0.    0.    0.    0.    0.   ]\n [0.012 0.037 0.111 0.333 1.    0.    0.    0.    0.   ]\n [0.004 0.012 0.037 0.111 0.333 1.    0.    0.    0.   ]\n [0.001 0.004 0.012 0.037 0.111 0.333 1.    0.    0.   ]\n [0.    0.001 0.004 0.012 0.037 0.111 0.333 1.    0.   ]\n [0.    0.    0.001 0.004 0.012 0.037 0.111 0.333 1.   ]]\n\n\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui) \n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b \n\n523 ns ± 53.7 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True) \nAi = np.linalg.inv(A.toarray())\nprint(Ai)\n\n[[1.    0.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.333 1.    0.    0.    0.    0.    0.    0.    0.   ]\n [0.111 0.333 1.    0.    0.    0.    0.    0.    0.   ]\n [0.037 0.111 0.333 1.    0.    0.    0.    0.    0.   ]\n [0.012 0.037 0.111 0.333 1.    0.    0.    0.    0.   ]\n [0.004 0.012 0.037 0.111 0.333 1.    0.    0.    0.   ]\n [0.001 0.004 0.012 0.037 0.111 0.333 1.    0.    0.   ]\n [0.    0.001 0.004 0.012 0.037 0.111 0.333 1.    0.   ]\n [0.    0.    0.001 0.004 0.012 0.037 0.111 0.333 1.   ]]\n\n\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui) \n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b \n\n539 ns ± 47.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "href": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "title": "The finite difference method",
     "section": "Until we try Numba on the explicit solver",
-    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb \n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n139 ns ± 9.94 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
+    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb \n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n137 ns ± 8.27 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
   },
   {
     "objectID": "finitedifferences.html#the-bv-vibration-problem",
@@ -1223,13 +1223,6 @@
     "title": "The finite difference method",
     "section": "Fourth order central \\(\\small p_0=-2, M=4\\)",
     "text": "Fourth order central \\(\\small p_0=-2, M=4\\)\n\nC = Cmat(-2, 4)\nC.inv()\n\n\\(\\displaystyle \\left[\\begin{matrix}0 & 0 & 1 & 0 & 0\\\\\\frac{1}{12 h} & - \\frac{2}{3 h} & 0 & \\frac{2}{3 h} & - \\frac{1}{12 h}\\\\- \\frac{1}{12 h^{2}} & \\frac{4}{3 h^{2}} & - \\frac{5}{2 h^{2}} & \\frac{4}{3 h^{2}} & - \\frac{1}{12 h^{2}}\\\\- \\frac{1}{2 h^{3}} & \\frac{1}{h^{3}} & 0 & - \\frac{1}{h^{3}} & \\frac{1}{2 h^{3}}\\\\\\frac{1}{h^{4}} & - \\frac{4}{h^{4}} & \\frac{6}{h^{4}} & - \\frac{4}{h^{4}} & \\frac{1}{h^{4}}\\end{matrix}\\right]\\)\n\n\nThird row gives us:\n\\[\nu'' = \\frac{-u^{n+2} + 16u^{n+1} - 30 u^n + 16 u^{n-1} - u^{n-2}}{12 h^2} + \\mathcal{O}(h^4)\n\\]\nwhere the order \\(l = M - 2 \\left\\lfloor \\frac{2-1}{2} \\right \\rfloor = M = 4\\).\n\nWhat is the order of the fourth derivative \\(u''''=\\frac{u^{n+2}-4u^{n+1}+6u^{n}-4u^{n-1}+u^{n-2}}{h^4}\\)?\n\n\n\\(l = M - 2 \\left\\lfloor \\frac{4-1}{2} \\right \\rfloor = M - 2 = 2\\)"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Presentations for MATMEK-4270",
-    "section": "",
-    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation"
   },
   {
     "objectID": "wave.html#the-wave-equation-is-a-partial-differential-equation-pde",
@@ -1538,5 +1531,40 @@
     "title": "Finite difference methods for the wave equation",
     "section": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0",
     "text": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0\n\n\n\n\n\n\n\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj) \nplotdata = {0: unm1.copy()}\nCFL = 1.01\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un \n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un \n  un[:] = unp1\n  if n % 10 == 0:\n    plotdata[n] = unp1.copy()"
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "",
+    "text": "2011-2015 Editor-In-Chief SIAM J of Scientific Computing\nAuthor of 13 published books on scientific computing\nProfessor of Mechanics, University of Oslo 1998\nDeveloped INF5620 (which became IN5270 and now MAT-MEK4270)\nMemorial page"
+  },
+  {
+    "objectID": "intro.html#what-to-learn-in-the-start-up-example-programming-topics",
+    "href": "intro.html#what-to-learn-in-the-start-up-example-programming-topics",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "What to learn in the start-up example; programming topics",
+    "text": "What to learn in the start-up example; programming topics\n\nHow to verify an implementation and automate verification through tests in Python\nHow to structure code in terms of functions, classes, and modules\nHow to work with Python concepts such as arrays, lists, dictionaries, lambda functions, functions in functions (closures), unit tests, command-line interfaces\nHow to perform array computing and understand the difference from scalar computing. Vectorization."
+  },
+  {
+    "objectID": "intro.html#what-to-learn-in-the-start-up-example-mathematical-analysis",
+    "href": "intro.html#what-to-learn-in-the-start-up-example-mathematical-analysis",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "What to learn in the start-up example; mathematical analysis",
+    "text": "What to learn in the start-up example; mathematical analysis\n\nHow to uncover numerical artifacts in the computed solution\nHow to analyze the numerical schemes mathematically to understand why artifacts occur\nHow to derive mathematical expressions for various measures of the error in numerical methods, frequently by using the sympy software for symbolic computation\nIntroduce concepts such as finite difference operators, mesh (grid), mesh functions, stability, truncation error, consistency, and convergence"
+  },
+  {
+    "objectID": "intro.html#topics-in-the-first-intro-to-the-finite-difference-method",
+    "href": "intro.html#topics-in-the-first-intro-to-the-finite-difference-method",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Topics in the first intro to the finite difference method",
+    "text": "Topics in the first intro to the finite difference method\n\nHow to think about finite difference discretization\nKey concepts:\n\nmesh\nmesh function\nfinite difference approximations\n\nThe Forward Euler, Backward Euler, and Crank-Nicolson methods\nFinite difference operator notation\nHow to derive an algorithm and implement it in Python\nHow to test the implementation"
+  },
+  {
+    "objectID": "intro.html#python---pros-and-cons",
+    "href": "intro.html#python---pros-and-cons",
+    "title": "Algorithms and implementations for exponential decay models",
+    "section": "Python - pros and cons",
+    "text": "Python - pros and cons"
   }
 ]

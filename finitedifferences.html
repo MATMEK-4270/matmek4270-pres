@@ -543,7 +543,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 </section>
 <section id="assemble-matrix-problem" class="slide level2 smaller">
 <h2>Assemble matrix problem</h2>
-<div id="2163cac4" class="cell" data-execution_count="2">
+<div id="66893c2c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>N <span class="op">=</span> <span class="dv">8</span></span>
 <span id="cb1-2"><a></a>a <span class="op">=</span> <span class="dv">2</span></span>
 <span id="cb1-3"><a></a>I <span class="op">=</span> <span class="dv">1</span></span>
@@ -555,7 +555,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 <span id="cb1-9"><a></a>g <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta) <span class="op">*</span> a <span class="op">*</span> dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta <span class="op">*</span> a <span class="op">*</span> dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Assemble</p>
-<div id="fb8b39b9" class="cell" data-execution_count="3">
+<div id="b0015a29" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
 <span id="cb2-2"><a></a>A <span class="op">=</span> sparse.diags([<span class="op">-</span>g, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'csr'</span>)</span>
 <span id="cb2-3"><a></a>b <span class="op">=</span> np.zeros(N<span class="op">+</span><span class="dv">1</span>)<span class="op">;</span> b[<span class="dv">0</span>] <span class="op">=</span> I</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -564,13 +564,13 @@ A \boldsymbol{u} = \boldsymbol{b}
 <section id="solve-and-compare-with-recurrence" class="slide level2 smaller">
 <h2>Solve and compare with recurrence</h2>
 <p>Recurrence:</p>
-<div id="f080f557" class="cell" data-execution_count="4">
+<div id="0c7d5cae" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>u[<span class="dv">0</span>] <span class="op">=</span> I</span>
 <span id="cb3-2"><a></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N):</span>
 <span id="cb3-3"><a></a>  u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> g <span class="op">*</span> u[n] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Matrix</p>
-<div id="f4b3d776" class="cell" data-execution_count="5">
+<div id="c6031e46" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>um <span class="op">=</span> sparse.linalg.spsolve(A, b)</span>
 <span id="cb4-2"><a></a><span class="bu">print</span>(u<span class="op">-</span>um)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -580,7 +580,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 <p>Ok, no difference. There’s really no advantage of assembling the explicit exponential decay problem.</p>
 <p>But which is faster?</p>
 <div class="fragment">
-<div id="05ff6fa1" class="cell" data-execution_count="6">
+<div id="aec7f34b" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">def</span> reccsolve(u, N, I):</span>
 <span id="cb6-2"><a></a>  u[<span class="dv">0</span>] <span class="op">=</span> I</span>
 <span id="cb6-3"><a></a>  <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N):</span>
@@ -588,13 +588,13 @@ A \boldsymbol{u} = \boldsymbol{b}
 <span id="cb6-5"><a></a>u <span class="op">=</span> np.zeros(N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb6-6"><a></a><span class="op">%</span>timeit <span class="op">-</span>n100 reccsolve(u, N, I) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>861 ns ± 25.2 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>841 ns ± 30.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
-<div id="67439764" class="cell" data-execution_count="7">
+<div id="97ae9cc2" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>n100 um <span class="op">=</span> sparse.linalg.spsolve(A, b) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>19.6 µs ± 1.51 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>19.3 µs ± 1.65 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
 </div>
@@ -602,7 +602,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 <section id="try-to-speed-up-by-computing-the-inverse" class="slide level2 smaller">
 <h2>Try to speed up by computing the inverse</h2>
 <p>A unit lower triangular matrix has a unit lower triangular inverse</p>
-<div id="35ba5178" class="cell" data-execution_count="8">
+<div id="b33892e8" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>np.set_printoptions(precision<span class="op">=</span><span class="dv">3</span>, suppress<span class="op">=</span><span class="va">True</span>) </span>
 <span id="cb10-2"><a></a>Ai <span class="op">=</span> np.linalg.inv(A.toarray())</span>
 <span id="cb10-3"><a></a><span class="bu">print</span>(Ai)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -620,11 +620,11 @@ A \boldsymbol{u} = \boldsymbol{b}
 </div>
 <div class="fragment">
 <p>Now solve directly using <span class="math inline">\(A^{-1}\)</span></p>
-<div id="3e47fbc2" class="cell" data-execution_count="9">
+<div id="60314976" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>ui <span class="op">=</span> Ai <span class="op">@</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compare with previous - still the same</p>
-<div id="9968107c" class="cell" data-execution_count="10">
+<div id="a3b017d0" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>um <span class="op">=</span> sparse.linalg.spsolve(A, b)</span>
 <span id="cb13-2"><a></a><span class="bu">print</span>(um<span class="op">-</span>ui) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -634,17 +634,17 @@ A \boldsymbol{u} = \boldsymbol{b}
 </div>
 <div class="fragment">
 <p>but it seems to be very fast</p>
-<div id="9fb6890c" class="cell" data-execution_count="11">
+<div id="e72647e6" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>n <span class="dv">100</span> ui <span class="op">=</span> Ai <span class="op">@</span> b </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>523 ns ± 53.7 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>539 ns ± 47.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
 </div>
 </section>
 <section id="until-we-try-numba-on-the-explicit-solver" class="slide level2 smaller">
 <h2>Until we try Numba on the explicit solver</h2>
-<div id="c20ab04d" class="cell" data-execution_count="12">
+<div id="65c7c277" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="im">import</span> numba <span class="im">as</span> nb </span>
 <span id="cb17-2"><a></a></span>
 <span id="cb17-3"><a></a><span class="at">@nb.jit</span></span>
@@ -655,7 +655,7 @@ A \boldsymbol{u} = \boldsymbol{b}
 <span id="cb17-8"><a></a>nbreccsolve(u, N, I, g)</span>
 <span id="cb17-9"><a></a><span class="op">%</span>timeit <span class="op">-</span>n <span class="dv">100</span> nbreccsolve(u, N, I, g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>139 ns ± 9.94 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>137 ns ± 8.27 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
 <div class="fragment">
@@ -728,7 +728,7 @@ I
 </section>
 <section id="assemble-and-solve-the-implicit-bvp" class="slide level2 smaller">
 <h2>Assemble and solve the implicit BVP</h2>
-<div id="e2cdb4b2" class="cell" data-execution_count="13">
+<div id="6de1ad88" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a>T, N, I, w <span class="op">=</span> <span class="fl">3.</span>, <span class="dv">35</span>, <span class="fl">1.</span>, <span class="dv">2</span><span class="op">*</span>np.pi</span>
 <span id="cb19-2"><a></a>dt <span class="op">=</span> T<span class="op">/</span>N </span>
 <span id="cb19-3"><a></a>g <span class="op">=</span> <span class="dv">2</span> <span class="op">-</span> w<span class="op">**</span><span class="dv">2</span><span class="op">*</span>dt<span class="op">**</span><span class="dv">2</span></span>
@@ -945,7 +945,7 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 </section>
 <section id="assemble-in-python" class="slide level2 smaller">
 <h2>Assemble in Python</h2>
-<div id="5a3fbd5a" class="cell" data-execution_count="14">
+<div id="0b384b88" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a>N <span class="op">=</span> <span class="dv">8</span></span>
 <span id="cb20-2"><a></a>dt <span class="op">=</span> <span class="fl">0.5</span></span>
 <span id="cb20-3"><a></a>T <span class="op">=</span> N<span class="op">*</span>dt</span>
@@ -967,7 +967,7 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 </div>
 </div>
 <p>Apply matrix to a mesh function <span class="math inline">\(f(t_n) = t_n^2\)</span></p>
-<div id="4563102e" class="cell" data-execution_count="15">
+<div id="c6a68d1d" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, N<span class="op">*</span>dt, N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb22-2"><a></a>f <span class="op">=</span> t<span class="op">**</span><span class="dv">2</span></span>
 <span id="cb22-3"><a></a>D2 <span class="op">@</span> f</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -979,7 +979,7 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 </section>
 <section id="try-with-merely-first-order-boundary" class="slide level2 smaller">
 <h2>Try with merely first order boundary</h2>
-<div id="0864c04c" class="cell" data-execution_count="16">
+<div id="262638b1" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>D21 <span class="op">=</span> sparse.diags([<span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
 <span id="cb24-2"><a></a>D21[<span class="dv">0</span>, :<span class="dv">4</span>] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span></span>
 <span id="cb24-3"><a></a>D21[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>:] <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span></span>
@@ -1003,7 +1003,7 @@ u''(0) = \frac{u^{2}-2u^{1}+u^0}{h^2} - \color{red} h u'''(0) \color{black} - \f
 <section id="more-challenging-example" class="slide level2 smaller">
 <h2>More challenging example</h2>
 <p>Let <span class="math inline">\(f(t) = \sin(\pi t / T)\)</span> such that <span class="math inline">\(f''(t) = -(\pi/T)^2 f(t)\)</span>. Here none of the error terms will disappear and we see the effect of the poor first order boundary.</p>
-<div id="de74025c" class="cell" data-execution_count="17">
+<div id="b3365d93" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a>f <span class="op">=</span> np.sin(np.pi<span class="op">*</span>t <span class="op">/</span> T)</span>
 <span id="cb26-2"><a></a>d2fe <span class="op">=</span> <span class="op">-</span>(np.pi<span class="op">/</span>T)<span class="op">**</span><span class="dv">2</span><span class="op">*</span>f</span>
 <span id="cb26-3"><a></a>d2f <span class="op">=</span> D2 <span class="op">@</span> f</span>
@@ -1065,7 +1065,7 @@ D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
 0 &amp; 0 &amp; 0 &amp; 0  &amp; 0 &amp; 1 &amp; -4 &amp; 3 \\
 \end{bmatrix}
 \]</span></p>
-<div id="fbc200e1" class="cell" data-execution_count="18">
+<div id="c0f60df2" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a>D1 <span class="op">=</span> sparse.diags([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>], np.array([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>]), (N<span class="op">+</span><span class="dv">1</span>, N<span class="op">+</span><span class="dv">1</span>), <span class="st">'lil'</span>)</span>
 <span id="cb27-2"><a></a>D1[<span class="dv">0</span>, :<span class="dv">3</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">3</span>, <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span></span>
 <span id="cb27-3"><a></a>D1[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">3</span>:] <span class="op">=</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dv">3</span> </span>
@@ -1082,7 +1082,7 @@ D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
 <p>Is it the same to compute <span class="math inline">\(D^{(2)} \boldsymbol{u}\)</span> as <span class="math inline">\(D^{(1)}(D^{(1)}\boldsymbol{u})\)</span>?</p>
 <div class="fragment">
 <p>Analytically, we know that <span class="math inline">\(u'' = \frac{d^2u}{dt^2} = \frac{d}{dt}\left(\frac{du}{dt}\right)\)</span>, but this is not necessarily so numerically.</p>
-<div id="2f9bfb15" class="cell" data-execution_count="19">
+<div id="0ff0b398" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a>D22 <span class="op">=</span> D1 <span class="op">@</span> D1 <span class="co"># @ represents matrix-matrix product </span></span>
 <span id="cb29-2"><a></a>D22.toarray()<span class="op">*</span><span class="dv">4</span><span class="op">*</span>dt<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
@@ -1156,7 +1156,7 @@ u''(t_0) = \frac{-u^{n+3}+7u^{n+2}-11u^{n+1}+5u^{n}}{4h^2} -\frac{3 \color{red}h
 </section>
 <section id="test-the-accuracy-of-d2-d2-with-only-first-order-boundary-and-d1d1" class="slide level2 smaller">
 <h2>Test the accuracy of <span class="math inline">\(D^{(2)}\)</span>, <span class="math inline">\(D^{(2)}\)</span> with only first order boundary and <span class="math inline">\(D^{(1)}D^{(1)}\)</span></h2>
-<div id="c9ddcccc" class="cell" data-execution_count="20">
+<div id="bf77d858" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a>f <span class="op">=</span> np.sin(np.pi<span class="op">*</span>t <span class="op">/</span> T)</span>
 <span id="cb31-2"><a></a>d2fe <span class="op">=</span> <span class="op">-</span>(np.pi<span class="op">/</span>T)<span class="op">**</span><span class="dv">2</span><span class="op">*</span>f</span>
 <span id="cb31-3"><a></a>d2f <span class="op">=</span> D2 <span class="op">@</span> f</span>
@@ -1278,7 +1278,7 @@ I \\
 </section>
 <section id="implement-decay-problem" class="slide level2 smaller">
 <h2>Implement decay problem</h2>
-<div id="2cd36df0" class="cell" data-execution_count="21">
+<div id="8a59d867" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a></a>N <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb32-2"><a></a>dt <span class="op">=</span> <span class="fl">0.5</span></span>
 <span id="cb32-3"><a></a>a <span class="op">=</span> <span class="dv">5</span></span>
@@ -1311,7 +1311,7 @@ I \\
 </section>
 <section id="compare-with-exact-solution" class="slide level2 smaller">
 <h2>Compare with exact solution</h2>
-<div id="ad9e2f74" class="cell" data-execution_count="22">
+<div id="ff0393f2" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1331,7 +1331,7 @@ u''(t) + \omega^2 u(t) = 0, \quad u(0) = u(T) = I, \quad t=(0, T)
 <p><span class="math display">\[
 (D^{(2)} + \omega^2 \mathbb{I}) \boldsymbol{u} = \boldsymbol{b}
 \]</span></p>
-<div id="e4133c74" class="cell" data-execution_count="23">
+<div id="46b02e44" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a>w <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.pi </span>
 <span id="cb34-2"><a></a>T, N, I <span class="op">=</span> <span class="fl">3.</span>, <span class="dv">35</span>, <span class="fl">1.</span></span>
 <span id="cb34-3"><a></a>dt <span class="op">=</span> T<span class="op">/</span>N </span>
@@ -1360,7 +1360,7 @@ u^0 &amp;= I \\
 u^N &amp;= I
 \end{align}
 \]</span></p>
-<div id="1af2b317" class="cell" data-execution_count="24">
+<div id="a6c34ec5" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a></a>A[<span class="dv">0</span>, :<span class="dv">3</span>] <span class="op">=</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
 <span id="cb36-2"><a></a>A[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">3</span>:] <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span></span>
 <span id="cb36-3"><a></a>b[<span class="dv">0</span>] <span class="op">=</span> I</span>
@@ -1379,7 +1379,7 @@ u^N &amp;= I
 </section>
 <section id="solve-the-vibration-equation" class="slide level2 smaller">
 <h2>Solve the vibration equation</h2>
-<div id="a6d4a196" class="cell" data-execution_count="25">
+<div id="7803961a" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a></a>u2 <span class="op">=</span> sparse.linalg.spsolve(A, b)</span>
 <span id="cb38-2"><a></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, T, N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb38-3"><a></a>plt.plot(t, u2, <span class="st">'bo'</span>, t, I<span class="op">*</span>np.cos(w<span class="op">*</span>t), <span class="st">'r--'</span>)</span>
@@ -1497,7 +1497,7 @@ C = \begin{bmatrix}
 </section>
 <section id="in-sympy" class="slide level2 smaller">
 <h2>In Sympy</h2>
-<div id="8a22f70f" class="cell" data-execution_count="26">
+<div id="ba03c805" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
 <span id="cb39-2"><a></a>x, h <span class="op">=</span> sp.symbols(<span class="st">'x,h'</span>)</span>
 <span id="cb39-3"><a></a>C <span class="op">=</span> sp.Matrix([[<span class="dv">1</span>, <span class="op">-</span>h, h<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">1</span>, h, h<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1505,7 +1505,7 @@ C = \begin{bmatrix}
 <div class="columns">
 <div class="column">
 <p>Print <span class="math inline">\(C\)</span> matrix</p>
-<div id="45b1e0f2" class="cell" data-execution_count="27">
+<div id="cefcb302" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a></a>C</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="27">
 <p><span class="math inline">\(\displaystyle \left[\begin{matrix}1 &amp; - h &amp; \frac{h^{2}}{2}\\1 &amp; 0 &amp; 0\\1 &amp; h &amp; \frac{h^{2}}{2}\end{matrix}\right]\)</span></p>
@@ -1513,7 +1513,7 @@ C = \begin{bmatrix}
 </div>
 </div><div class="column">
 <p>Print <span class="math inline">\(C^{-1}\)</span> matrix</p>
-<div id="e96cbea7" class="cell" data-execution_count="28">
+<div id="d5c57bea" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a></a>C.inv() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="28">
 <p><span class="math inline">\(\displaystyle \left[\begin{matrix}0 &amp; 1 &amp; 0\\- \frac{1}{2 h} &amp; 0 &amp; \frac{1}{2 h}\\\frac{1}{h^{2}} &amp; - \frac{2}{h^{2}} &amp; \frac{1}{h^{2}}\end{matrix}\right]\)</span></p>
@@ -1523,20 +1523,20 @@ C = \begin{bmatrix}
 </div>
 <p>The last row in <span class="math inline">\(C^{-1}\)</span> represents <span class="math inline">\(u''\)</span>! The middle row represents a second order central <span class="math inline">\(u'\)</span>.</p>
 <p>Create a vector for <span class="math inline">\(\boldsymbol{u}\)</span> and print <span class="math inline">\(u'\)</span> and <span class="math inline">\(u''\)</span></p>
-<div id="1054dc33" class="cell" data-execution_count="29">
+<div id="581b13bb" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a></a>u <span class="op">=</span> sp.Function(<span class="st">'u'</span>)</span>
 <span id="cb42-2"><a></a>coef <span class="op">=</span> sp.Matrix([u(x<span class="op">-</span>h), u(x), u(x<span class="op">+</span>h)]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="columns">
 <div class="column">
-<div id="30b1ff97" class="cell" data-execution_count="30">
+<div id="28a30fe0" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a></a>(C.inv()[<span class="dv">1</span>, :] <span class="op">@</span> coef)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="30">
 <p><span class="math inline">\(\displaystyle - \frac{u{\left(- h + x \right)}}{2 h} + \frac{u{\left(h + x \right)}}{2 h}\)</span></p>
 </div>
 </div>
 </div><div class="column">
-<div id="51f0537c" class="cell" data-execution_count="31">
+<div id="bc91c255" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a></a>(C.inv()[<span class="dv">2</span>, :] <span class="op">@</span> coef)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="31">
 <p><span class="math inline">\(\displaystyle - \frac{2 u{\left(x \right)}}{h^{2}} + \frac{u{\left(- h + x \right)}}{h^{2}} + \frac{u{\left(h + x \right)}}{h^{2}}\)</span></p>
@@ -1548,7 +1548,7 @@ C = \begin{bmatrix}
 <section id="we-can-get-any-stencil" class="slide level2 smaller">
 <h2>We can get any stencil</h2>
 <p>Create a function that computes <span class="math inline">\(C\)</span> for any <span class="math inline">\(p_0\)</span> and <span class="math inline">\(M\)</span></p>
-<div id="8d9eb7fa" class="cell" data-execution_count="32">
+<div id="752b1000" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a></a><span class="kw">def</span> Cmat(p0, M):</span>
 <span id="cb45-2"><a></a>  C <span class="op">=</span> np.zeros((M<span class="op">+</span><span class="dv">1</span>, M<span class="op">+</span><span class="dv">1</span>), dtype<span class="op">=</span><span class="bu">object</span>)</span>
 <span id="cb45-3"><a></a>  <span class="cf">for</span> j, p <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">range</span>(p0, p0<span class="op">+</span>M<span class="op">+</span><span class="dv">1</span>)):</span>
@@ -1557,7 +1557,7 @@ C = \begin{bmatrix}
 <span id="cb45-6"><a></a>  <span class="cf">return</span> sp.Matrix(C)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><span class="math inline">\(p_0=-1, M=2\)</span></p>
-<div id="cbde7790" class="cell" data-execution_count="33">
+<div id="87a7b7dc" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a></a>Cmat(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="33">
 <p><span class="math inline">\(\displaystyle \left[\begin{matrix}1 &amp; - h &amp; \frac{h^{2}}{2}\\1 &amp; 0 &amp; 0\\1 &amp; h &amp; \frac{h^{2}}{2}\end{matrix}\right]\)</span></p>
@@ -1577,7 +1577,7 @@ M = l + 2 \left\lfloor \frac{k-1}{2} \right\rfloor
 <div class="column">
 <h3 id="forward-u">Forward <span class="math inline">\(u''\)</span></h3>
 <p><span class="math inline">\(p_0=0, M=3\)</span></p>
-<div id="4b764d54" class="cell" data-execution_count="34">
+<div id="fb9444a2" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a></a>C <span class="op">=</span> Cmat(<span class="dv">0</span>, <span class="dv">3</span>)</span>
 <span id="cb47-2"><a></a>C.inv()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="34">
@@ -1587,7 +1587,7 @@ M = l + 2 \left\lfloor \frac{k-1}{2} \right\rfloor
 </div><div class="column">
 <h3 id="backward-u">Backward <span class="math inline">\(u''\)</span></h3>
 <p><span class="math inline">\(p_0 = -3, M=3\)</span></p>
-<div id="81cdad28" class="cell" data-execution_count="35">
+<div id="905e4aff" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a></a>C <span class="op">=</span> Cmat(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
 <span id="cb48-2"><a></a>C.inv()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="35">
@@ -1603,7 +1603,7 @@ u'' = \frac{-u^{n+3} + 4u^{n+2} - 5u^{n+1} +2 u^{n}}{h^2}
 </section>
 <section id="fourth-order-central-small-p_0-2-m4" class="slide level2 smaller">
 <h2>Fourth order central <span class="math inline">\(\small p_0=-2, M=4\)</span></h2>
-<div id="09c57877" class="cell" data-execution_count="36">
+<div id="7c99c78d" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a></a>C <span class="op">=</span> Cmat(<span class="op">-</span><span class="dv">2</span>, <span class="dv">4</span>)</span>
 <span id="cb49-2"><a></a>C.inv()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="36">
