@@ -486,7 +486,7 @@ t_n = n \Delta t, \quad n = 0, 1, \ldots, N_t
 <p><span class="math display">\[
 x_j = j \Delta x, \quad j = 0, 1, \ldots, N
 \]</span></p>
-<div id="77272889" class="cell" data-execution_count="1">
+<div id="127529c6" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -515,7 +515,7 @@ u^n = (u^n_0, u^n_1, \ldots, u^n_N)^T,
 <h2>The finite difference stencil makes use of 5 neighboring points</h2>
 <div class="columns">
 <div class="column">
-<div id="e1282446" class="cell" data-execution_count="2">
+<div id="f1b7459d" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -630,7 +630,7 @@ D^{(2)} = \begin{bmatrix}
 <section id="in-python" class="slide level2 smaller">
 <h2>In Python</h2>
 <p>Set up solver</p>
-<div id="2b3db7b1" class="cell" data-execution_count="3">
+<div id="a2ded61c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
 <span id="cb1-3"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp </span>
@@ -648,7 +648,7 @@ D^{(2)} = \begin{bmatrix}
 <span id="cb1-15"><a></a>u0 <span class="op">=</span> sp.exp(<span class="op">-</span><span class="dv">200</span><span class="op">*</span>(x<span class="op">-</span>L<span class="op">/</span><span class="dv">2</span><span class="op">+</span>t)<span class="op">**</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Solve by marching method</p>
-<div id="e2dcef77" class="cell" data-execution_count="4">
+<div id="a761f08d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb2-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span>
 <span id="cb2-3"><a></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(Nt):</span>
@@ -661,7 +661,7 @@ D^{(2)} = \begin{bmatrix}
 </section>
 <section id="store-results-at-intermediate-intervals-for-plotting" class="slide level2 smaller">
 <h2>Store results at intermediate intervals for plotting</h2>
-<div id="599790a2" class="cell" data-execution_count="5">
+<div id="e31bdfdb" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb3-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span>
 <span id="cb3-3"><a></a>plotdata <span class="op">=</span> {<span class="dv">0</span>: unm1.copy()}</span>
@@ -679,7 +679,7 @@ D^{(2)} = \begin{bmatrix}
 <section id="create-animation-after-the-simulation-is-finished" class="slide level2 smaller">
 <h2>Create animation after the simulation is finished</h2>
 <p><img src="https://rawcdn.githack.com/MATMEK-4270/matmek4270-pres/6406baaf8be23232cb706f9ac69903403bf897b1/figures/wavemovie.png?min=1" alt="Animated Image" width="600" height="300"></p>
-<div id="cd85a561" class="cell" data-execution_count="6">
+<div id="64b6c56f" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="kw">def</span> animation(data):</span>
 <span id="cb4-2"><a></a>  <span class="im">from</span> matplotlib <span class="im">import</span> animation </span>
 <span id="cb4-3"><a></a>  fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -705,7 +705,7 @@ u^0 = I(x)
 u^0_j = I(x_j), \quad \forall \, j=0, 1, \ldots, N
 \]</span></p>
 <div class="fragment">
-<div id="5c77367f" class="cell" data-execution_count="7">
+<div id="b8f3d272" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>u0 <span class="op">=</span> sp.exp(<span class="op">-</span><span class="dv">200</span><span class="op">*</span>(x<span class="op">-</span>L<span class="op">/</span><span class="dv">2</span><span class="op">+</span>t)<span class="op">**</span><span class="dv">2</span>) </span>
 <span id="cb5-2"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -718,7 +718,7 @@ u^0_j = I(x_j), \quad \forall \, j=0, 1, \ldots, N
 <p><span class="math display">\[
 u^1 = I(x, \Delta t)
 \]</span></p>
-<div id="656fdb74" class="cell" data-execution_count="8">
+<div id="fe196afc" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -1054,7 +1054,7 @@ u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
 <section id="periodic-boundary-conditions" class="slide level2 smaller">
 <h2>Periodic boundary conditions</h2>
 <p>A periodic solution is a solution that is repeating itself indefinitely. For example <span class="math inline">\(u(x) = \sin(2\pi x)\)</span>:</p>
-<div id="2abbccce" class="cell" data-execution_count="9">
+<div id="4120c4d0" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1280,11 +1280,11 @@ C \le 1
 <p><img data-src="./figures/wavestable.apng"></p>
 </div>
 </div>
-<div id="29d9c214" class="cell" data-execution_count="10">
+<div id="ebcf47b4" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb7-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span>
 <span id="cb7-3"><a></a>plotdata <span class="op">=</span> {<span class="dv">0</span>: unm1.copy()}</span>
-<span id="cb7-4"><a></a>CFL <span class="op">=</span> <span class="fl">1.001</span></span>
+<span id="cb7-4"><a></a>CFL <span class="op">=</span> <span class="fl">1.01</span></span>
 <span id="cb7-5"><a></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(Nt):</span>
 <span id="cb7-6"><a></a>  unp1[:] <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>un <span class="op">-</span> unm1 <span class="op">+</span> CFL<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> D2 <span class="op">@</span> un </span>
 <span id="cb7-7"><a></a>  unp1[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span></span>

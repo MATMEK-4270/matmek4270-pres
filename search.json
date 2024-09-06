@@ -1537,6 +1537,6 @@
     "href": "wave.html#test-dirichlet-solver-using-cfl1.01-vs-cfl1.0",
     "title": "Finite difference methods for the wave equation",
     "section": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0",
-    "text": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0\n\n\n\n\n\n\n\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj) \nplotdata = {0: unm1.copy()}\nCFL = 1.001\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un \n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un \n  un[:] = unp1\n  if n % 10 == 0:\n    plotdata[n] = unp1.copy()"
+    "text": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0\n\n\n\n\n\n\n\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj) \nplotdata = {0: unm1.copy()}\nCFL = 1.01\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un \n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un \n  un[:] = unp1\n  if n % 10 == 0:\n    plotdata[n] = unp1.copy()"
   }
 ]
