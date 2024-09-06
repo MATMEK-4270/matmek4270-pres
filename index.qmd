@@ -1,9 +1,7 @@
 ---
 title: "Presentations for MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
-
 ---
-
 
 * [Lecture 1 - Algorithms and implementations for exponential decay models](intro.qmd)
 * [Lecture 2 - Analysis of exponential decay models](analysis.qmd)

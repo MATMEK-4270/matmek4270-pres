@@ -1032,7 +1032,7 @@ $$
 unm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)
 un[:] = sp.lambdify(x, u0.subs(t, dt))(xj) 
 plotdata = {0: unm1.copy()}
-CFL = 1.001
+CFL = 1.01
 for n in range(Nt):
   unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un 
   unp1[0] = 0

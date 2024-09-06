@@ -9,6 +9,7 @@ format:
     preview-links: auto
     css: styles.css
     embed-resources: false
+
 pandoc:
   to: revealjs
   standalone: false

@@ -9,3 +9,4 @@ pdfs:
 	decktape reveal https://matmek-4270.github.io/matmek4270-pres/analysis.html#/title-slide pdfs/analysis.pdf	
 	decktape reveal https://matmek-4270.github.io/matmek4270-pres/vibration.html#/title-slide pdfs/vibration.pdf
 	decktape reveal https://matmek-4270.github.io/matmek4270-pres/finitedifferences.html#/title-slide pdfs/finitedifferences.pdf
+	decktape reveal https://matmek-4270.github.io/matmek4270-pres/wave.html#/title-slide pdfs/wave.pdf
