@@ -486,7 +486,7 @@ t_n = n \Delta t, \quad n = 0, 1, \ldots, N_t
 <p><span class="math display">\[
 x_j = j \Delta x, \quad j = 0, 1, \ldots, N
 \]</span></p>
-<div id="aded4ccc" class="cell" data-execution_count="1">
+<div id="a1f6c2e4" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -515,7 +515,7 @@ u^n = (u^n_0, u^n_1, \ldots, u^n_N)^T,
 <h2>The finite difference stencil makes use of 5 neighboring points</h2>
 <div class="columns">
 <div class="column">
-<div id="bd772d9a" class="cell" data-execution_count="2">
+<div id="aafbc46f" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -536,7 +536,7 @@ u^n = (u^n_0, u^n_1, \ldots, u^n_N)^T,
 <h2>The finite difference stencil is not used at the spatial boundary</h2>
 <div class="columns">
 <div class="column">
-<div id="d0c295c7" class="cell" data-execution_count="3">
+<div id="8a6ebe82" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -657,7 +657,7 @@ D^{(2)} = \begin{bmatrix}
 <section id="in-python" class="slide level2 smaller">
 <h2>In Python</h2>
 <p>Set up solver</p>
-<div id="e7f8a7c0" class="cell" data-execution_count="4">
+<div id="bc18c129" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
 <span id="cb1-3"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp </span>
@@ -675,7 +675,7 @@ D^{(2)} = \begin{bmatrix}
 <span id="cb1-15"><a></a>u0 <span class="op">=</span> sp.exp(<span class="op">-</span><span class="dv">200</span><span class="op">*</span>(x<span class="op">-</span>L<span class="op">/</span><span class="dv">2</span><span class="op">+</span>t)<span class="op">**</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Solve by marching method</p>
-<div id="ee7f59ca" class="cell" data-execution_count="5">
+<div id="bd7bb306" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb2-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span>
 <span id="cb2-3"><a></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(Nt):</span>
@@ -688,7 +688,7 @@ D^{(2)} = \begin{bmatrix}
 </section>
 <section id="store-results-at-intermediate-intervals-for-plotting" class="slide level2 smaller">
 <h2>Store results at intermediate intervals for plotting</h2>
-<div id="34a7e803" class="cell" data-execution_count="6">
+<div id="8ea3ca17" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb3-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span>
 <span id="cb3-3"><a></a>plotdata <span class="op">=</span> {<span class="dv">0</span>: unm1.copy()}</span>
@@ -706,7 +706,7 @@ D^{(2)} = \begin{bmatrix}
 <section id="create-animation-after-the-simulation-is-finished" class="slide level2 smaller">
 <h2>Create animation after the simulation is finished</h2>
 <p><img src="https://rawcdn.githack.com/MATMEK-4270/matmek4270-pres/6406baaf8be23232cb706f9ac69903403bf897b1/figures/wavemovie.png?min=1" alt="Animated Image" width="600" height="300"></p>
-<div id="b000d466" class="cell" data-execution_count="7">
+<div id="c73f5352" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="kw">def</span> animation(data):</span>
 <span id="cb4-2"><a></a>  <span class="im">from</span> matplotlib <span class="im">import</span> animation </span>
 <span id="cb4-3"><a></a>  fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -732,7 +732,7 @@ u^0 = I(x)
 u^0_j = I(x_j), \quad \forall \, j=0, 1, \ldots, N
 \]</span></p>
 <div class="fragment">
-<div id="69d6a09b" class="cell" data-execution_count="8">
+<div id="93c8ba4d" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>u0 <span class="op">=</span> sp.exp(<span class="op">-</span><span class="dv">200</span><span class="op">*</span>(x<span class="op">-</span>L<span class="op">/</span><span class="dv">2</span><span class="op">+</span>t)<span class="op">**</span><span class="dv">2</span>) </span>
 <span id="cb5-2"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -741,11 +741,11 @@ u^0_j = I(x_j), \quad \forall \, j=0, 1, \ldots, N
 <p>How about the second condition <span class="math inline">\(\frac{\partial u}{\partial t}(x, 0) = 0\)</span>?</p>
 </div>
 <div class="fragment">
-<p>Just like for the vibration equation there are several options. If you have an analytical solution <span class="math inline">\(I(x, t)\)</span> that is time-dependent:</p>
+<p>Just like for the vibration equation there are several options. If you have an analytical solution <span class="math inline">\(I(x, t)\)</span> that is time-dependent you can specify <strong>one wave</strong> as:</p>
 <p><span class="math display">\[
 u^1 = I(x, \Delta t)
 \]</span></p>
-<div id="5d776aee" class="cell" data-execution_count="9">
+<div id="34c4df1e" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -766,7 +766,7 @@ u^1 = I(x, \Delta t)
 <p><span class="math display">\[
 \frac{\partial u}{\partial t}(x, 0) \approx \frac{-u^2+4u^1-3u^0}{2 \Delta t}=0, \quad \text{such that} \quad u^1 = \frac{3u^0+u^2}{4}
 \]</span></p>
-<p>Second order accurate, but <strong>implicit</strong></p>
+<p>Second order accurate, but <strong>implicit</strong>. And you get two waves!</p>
 </div>
 </section>
 <section id="how-to-implement-fracpartial-upartial-tx-0-0-option-2" class="slide level2 smaller">
@@ -924,7 +924,7 @@ u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
 <p><span class="math display">\[
 \frac{\partial u}{\partial x}(0, t_n) = \frac{u^{n}_1 - u^n_{-1}}{2 \Delta x} = 0 \rightarrow u^n_{-1} = u^{n}_{1}
 \]</span></p>
-<div id="99893443" class="cell" data-execution_count="10">
+<div id="32594502" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1097,7 +1097,7 @@ u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
 <section id="periodic-boundary-conditions" class="slide level2 smaller">
 <h2>Periodic boundary conditions</h2>
 <p>A periodic solution is a solution that is repeating itself indefinitely. For example <span class="math inline">\(u(x) = \sin(2\pi x)\)</span>:</p>
-<div id="e0e93131" class="cell" data-execution_count="11">
+<div id="e077f84c" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1330,7 +1330,7 @@ C \le 1
 <p><img data-src="./figures/wavestable.apng"></p>
 </div>
 </div>
-<div id="b74b5086" class="cell" data-execution_count="12">
+<div id="24dfac1a" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb7-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj) </span>
 <span id="cb7-3"><a></a>plotdata <span class="op">=</span> {<span class="dv">0</span>: unm1.copy()}</span>

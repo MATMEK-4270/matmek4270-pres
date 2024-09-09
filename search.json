@@ -1334,14 +1334,14 @@
     "href": "wave.html#how-to-implement-the-initial-conditions",
     "title": "Finite difference methods for the wave equation",
     "section": "How to implement the initial conditions?",
-    "text": "How to implement the initial conditions?\nTo initialize a mesh function \\(u^0\\), we write \\[\nu^0 = I(x)\n\\]\nwhich represents\n\\[\nu^0_j = I(x_j), \\quad \\forall \\, j=0, 1, \\ldots, N\n\\]\n\n\nu0 = sp.exp(-200*(x-L/2+t)**2) \nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj) \n\n\n\nHow about the second condition \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\)?\n\n\nJust like for the vibration equation there are several options. If you have an analytical solution \\(I(x, t)\\) that is time-dependent:\n\\[\nu^1 = I(x, \\Delta t)\n\\]\n\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)"
+    "text": "How to implement the initial conditions?\nTo initialize a mesh function \\(u^0\\), we write \\[\nu^0 = I(x)\n\\]\nwhich represents\n\\[\nu^0_j = I(x_j), \\quad \\forall \\, j=0, 1, \\ldots, N\n\\]\n\n\nu0 = sp.exp(-200*(x-L/2+t)**2) \nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj) \n\n\n\nHow about the second condition \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\)?\n\n\nJust like for the vibration equation there are several options. If you have an analytical solution \\(I(x, t)\\) that is time-dependent you can specify one wave as:\n\\[\nu^1 = I(x, \\Delta t)\n\\]\n\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)"
   },
   {
     "objectID": "wave.html#if-you-do-not-have-ix-t-then-what",
     "href": "wave.html#if-you-do-not-have-ix-t-then-what",
     "title": "Finite difference methods for the wave equation",
     "section": "If you do not have \\(I(x, t)\\), then what?",
-    "text": "If you do not have \\(I(x, t)\\), then what?\n\n\nHow to fix \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 1\nUse a forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{u^1-u^0}{\\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^0\n\\]\nOnly first order accurate, but still a possibility.\n\n\nUse a second order forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = \\frac{3u^0+u^2}{4}\n\\]\nSecond order accurate, but implicit"
+    "text": "If you do not have \\(I(x, t)\\), then what?\n\n\nHow to fix \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 1\nUse a forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{u^1-u^0}{\\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^0\n\\]\nOnly first order accurate, but still a possibility.\n\n\nUse a second order forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = \\frac{3u^0+u^2}{4}\n\\]\nSecond order accurate, but implicit. And you get two waves!"
   },
   {
     "objectID": "wave.html#how-to-implement-fracpartial-upartial-tx-0-0-option-2",
