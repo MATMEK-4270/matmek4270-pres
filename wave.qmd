@@ -474,7 +474,7 @@ How about the second condition $\frac{\partial u}{\partial t}(x, 0) = 0$?
 
 ::: {.fragment}
 
-Just like for the vibration equation there are several options. If you have an analytical solution $I(x, t)$ that is time-dependent:
+Just like for the vibration equation there are several options. If you have an analytical solution $I(x, t)$ that is time-dependent you can specify **one wave** as: 
 
 $$
 u^1 = I(x, \Delta t)
@@ -513,7 +513,7 @@ $$
 \frac{\partial u}{\partial t}(x, 0) \approx \frac{-u^2+4u^1-3u^0}{2 \Delta t}=0, \quad \text{such that} \quad u^1 = \frac{3u^0+u^2}{4}
 $$
 
-Second order accurate, but **implicit**
+Second order accurate, but **implicit**. And you get two waves!
 
 :::
 
