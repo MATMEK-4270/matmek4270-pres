@@ -1608,5 +1608,411 @@
     "title": "Finite difference methods for the wave equation",
     "section": "Use the ghost cell and the PDE to fix the Neumann condition",
     "text": "Use the ghost cell and the PDE to fix the Neumann condition\nThe PDE at the left hand side \\(j=0\\) using ghost cell:\n\\[\nu^{n+1}_0 = 2u^{n}_0 - u^{n-1}_0 + \\underline{c}^2(u^n_{1}-2u^n_0+u^n_{-1})\n\\]\nInsert for \\(u^{n}_{-1}=u^n_{1}\\) and obtain\n\\[\nu^{n+1}_0 = 2u^{n}_0 - u^{n-1}_0 + \\underline{c}^2(2u^n_{1}-2u^n_0)\n\\]\n\n\n\n\n\n\nNote\n\n\nSecond order accurate and explicit. Can be implemented by modifying \\(D^{(2)}\\)!"
+  },
+  {
+    "objectID": "postprocessing.html#postprocessing",
+    "href": "postprocessing.html#postprocessing",
+    "title": "Postprocessing and Interpolation",
+    "section": "Postprocessing",
+    "text": "Postprocessing\nWe have computed the solution. Now what?\n\n\nWe analyze the solution!\nWe process the solution into presentable tables and figures\nWe extract important numbers that the solution allows us to compute. For example lift or drag on an airplane wing, or the flux through a boundary.\n\n\n\nIn order to achieve this we need\n\n\nInterpolation - to get the solution everywhere and not just in nodes\nIntegrals - Averages arise from integrals over domains and boundaries\nDerivatives - For example, drag is the integral of the gradient over a boundary \\(\\int_{\\Gamma}\\nu \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\\).\nLagrange interpolation polynomials will help us get there!"
+  },
+  {
+    "objectID": "postprocessing.html#one-dimensional-interpolation",
+    "href": "postprocessing.html#one-dimensional-interpolation",
+    "title": "Postprocessing and Interpolation",
+    "section": "One-dimensional interpolation",
+    "text": "One-dimensional interpolation\n\\[\nu(x) = x(1-x)\n\\]\n\n\n\n\n\n\n\n\n\n\nWe have the mesh function \\((u(x_i))_{i=0}^{5}\\). What is \\(u(0.75)\\)?\nLinear interpolation requires interpolating between \\(u(x_3)\\) and \\(u(x_4)\\)\n\\[\n\\overline{u}(x) = u_3 + (u_4-u_3)\\frac{x-x_3}{x_4-x_3}.\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#section",
+    "href": "postprocessing.html#section",
+    "title": "Postprocessing and Interpolation",
+    "section": "",
+    "text": "N = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nu2 = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um**2*dx*dy))\n\nI(u2, 1/N, 1/N)\n\n0.09552823074589575\n\n\nCompared to the exact\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))))\n\n0.09586332023451888"
+  },
+  {
+    "objectID": "postprocessing.html#linear-interpolation-using-sympy",
+    "href": "postprocessing.html#linear-interpolation-using-sympy",
+    "title": "Postprocessing and Interpolation",
+    "section": "Linear interpolation using Sympy",
+    "text": "Linear interpolation using Sympy\n\nx = sp.Symbol('x')\nuo = u[3] + (u[4]-u[3])/(xj[4]-xj[3])*(x-xj[3])\n\n\n\n\n\n\n\n\n\n\nLinear interpolation is not very accurate. How do we increase accuracy?"
+  },
+  {
+    "objectID": "postprocessing.html#lagrange-interpolation",
+    "href": "postprocessing.html#lagrange-interpolation",
+    "title": "Postprocessing and Interpolation",
+    "section": "Lagrange interpolation",
+    "text": "Lagrange interpolation\nLagrange interpolation is a generic approach that uses any number of points from the mesh function and defines a Lagrange interpolation polynomial\n\\[\nL(x) = \\sum_{j=0}^k u^j \\ell_j(x)\n\\]\nwhere \\(\\{u^j\\}_{j=0}^k\\) are the mesh function values at the chosen \\(k+1\\) mesh points. For the linear example we have just seen\n\\[\n(u^0, u^1) = (u_3, u_4)\n\\]\n\n\n\n\n\n\nNote\n\n\nLagrange mesh function values are given a superscript that starts counting from 0."
+  },
+  {
+    "objectID": "postprocessing.html#lagrange-basis-functions",
+    "href": "postprocessing.html#lagrange-basis-functions",
+    "title": "Postprocessing and Interpolation",
+    "section": "Lagrange basis functions",
+    "text": "Lagrange basis functions\nThe Lagrange basis functions are defined as\n\\[\n    \\ell_j(x) = \\frac{x-x^0}{x^j-x^0} \\cdots \\frac{x-x^{j-1}}{x^j-x^{j-1}}\\frac{x-x^{j+1}}{x^j-x^{j+1}} \\cdots \\frac{x-x^{k}}{x^j-x^{k}}\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#lagrange-basis-functions-and-nodes",
+    "href": "postprocessing.html#lagrange-basis-functions-and-nodes",
+    "title": "Postprocessing and Interpolation",
+    "section": "Lagrange basis functions and nodes",
+    "text": "Lagrange basis functions and nodes\nThe Lagrange interpolation polynomial \\[\nL(x) = \\sum_{j=0}^k u^j \\ell_j(x)\n\\]\ncontains \\(k+1\\) basis functions \\(\\{\\ell_j(x)\\}_{j=0}^k\\).\n\nThe basis functions are defined using any number of chosen interpolation nodes \\((x^0, \\ldots, x^k)\\). For our linear example the nodes are simply\n\\[\n(x^0, x^1) = (x_3, x_4)\n\\]\n\n\n\n\n\n\nNote\n\n\nLagrange nodes are given a superscript that starts counting from 0. Choosing different nodes leads to different results!"
+  },
+  {
+    "objectID": "postprocessing.html#lagrange-basis-functions-are-defined-as",
+    "href": "postprocessing.html#lagrange-basis-functions-are-defined-as",
+    "title": "Postprocessing and Interpolation",
+    "section": "Lagrange basis functions are defined as",
+    "text": "Lagrange basis functions are defined as\n\\[\n    \\ell_j(x) = \\frac{x-x^0}{x^j-x^0} \\cdots \\frac{x-x^{j-1}}{x^j-x^{j-1}}\\frac{x-x^{j+1}}{x^j-x^{j+1}} \\cdots \\frac{x-x^{k}}{x^j-x^{k}}\n\\]\nLet that one sink in.\n\n\nNote index \\(j\\) in \\(\\ell_j(x)\\), the \\(j\\)’th basis function.\nNumerator contains the product of all differences \\((x-x^m)\\) for all \\(m\\) except \\(m=j\\)\nDenominator contains the product of all differences \\((x^j-x^m)\\) for all \\(m\\) except \\(m=j\\)\n\n\n\nWe can write\n\\[\n\\ell_j(x) = \\prod_{\\substack{0 \\le m \\le k \\\\ m \\ne j}} \\frac{x-x^m}{x^j-x^m}.\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#lagrange-basis-function-in-sympy",
+    "href": "postprocessing.html#lagrange-basis-function-in-sympy",
+    "title": "Postprocessing and Interpolation",
+    "section": "Lagrange basis function in Sympy",
+    "text": "Lagrange basis function in Sympy\n\ndef Lagrangebasis(xj, x=x):\n    \"\"\"Construct Lagrange basis function for points in xj\n\n    Parameters\n    ----------\n    xj : array\n        Interpolation points\n    x : Sympy Symbol\n\n    Returns\n    -------\n    Lagrange basis functions as Sympy function \n    \"\"\"\n    from sympy import Mul\n    n = len(xj)\n    ell = []\n    numert = Mul(*[x - xj[i] for i in range(n)])\n\n    for i in range(n):\n        numer = numert/(x - xj[i])\n        denom = Mul(*[(xj[i] - xj[j]) for j in range(n) if i != j])\n        ell.append(numer/denom)\n    return ell"
+  },
+  {
+    "objectID": "postprocessing.html#lagrange-basis-in-sympy",
+    "href": "postprocessing.html#lagrange-basis-in-sympy",
+    "title": "Postprocessing and Interpolation",
+    "section": "Lagrange basis in Sympy",
+    "text": "Lagrange basis in Sympy\nA basis is a collection of basis functions\n\\[\n\\{\\ell_j(x)\\}_{j=0}^k\n\\]\n\ndef Lagrangebasis(xj, x=x):\n  \"\"\"Construct Lagrange basis for points in xj\n\n  Parameters\n  ----------\n  xj : array\n    Interpolation points (nodes)\n  x : Sympy Symbol\n\n  Returns\n  -------\n  Lagrange basis as a list of Sympy functions \n  \"\"\"\n  from sympy import Mul\n  n = len(xj)\n  ell = []\n  numert = Mul(*[x - xj[i] for i in range(n)])\n  for i in range(n):\n    numer = numert/(x - xj[i])\n    denom = Mul(*[(xj[i] - xj[j]) for j in range(n) if i != j])\n    ell.append(numer/denom)\n  return ell"
+  },
+  {
+    "objectID": "postprocessing.html#the-basis-for-linear-interpolation-of-our-first-example-is",
+    "href": "postprocessing.html#the-basis-for-linear-interpolation-of-our-first-example-is",
+    "title": "Postprocessing and Interpolation",
+    "section": "The basis for linear interpolation of our first example is",
+    "text": "The basis for linear interpolation of our first example is\n\nell = Lagrangebasis(xj[3:5], x=x)\nell\n\n[4.0 - 5.0*x, 5.0*x - 3.0]\n\n\nWe can plot these two linear functions between \\(x_3\\) and \\(x_4\\)\n\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nxf = np.linspace(xj[3], xj[4], 10)\nplt.plot(xf, sp.lambdify(x, ell[0])(xf), 'g--')\nplt.plot(xf, sp.lambdify(x, ell[1])(xf), 'r--')"
+  },
+  {
+    "objectID": "postprocessing.html#lagrange-interpolation-polynomial",
+    "href": "postprocessing.html#lagrange-interpolation-polynomial",
+    "title": "Postprocessing and Interpolation",
+    "section": "Lagrange interpolation polynomial",
+    "text": "Lagrange interpolation polynomial\nWith the basis we can now compute the Lagrange interpolation polynomial\n\\[\nL(x) = \\sum_{j=0}^k u^j \\ell_j(x)\n\\]\n\n\n\ndef Lagrangefunction(u, basis):\n  \"\"\"Return Lagrange polynomial\n\n  Parameters\n  ----------\n  u : array\n    Mesh function values\n  basis : tuple of Lagrange basis functions\n    Output from Lagrangebasis\n  \"\"\"\n  f = 0\n  for j, uj in enumerate(u):\n    f += basis[j]*uj\n  return f\n\n\n\nL = Lagrangefunction(u[3:5], ell)\nxf = np.linspace(xj[3]-0.1, xj[4]+0.1, 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
+  },
+  {
+    "objectID": "postprocessing.html#the-great-thing-about-lagrange-polynomials-is-that-we-can-choose-the-number-of-basis-functions",
+    "href": "postprocessing.html#the-great-thing-about-lagrange-polynomials-is-that-we-can-choose-the-number-of-basis-functions",
+    "title": "Postprocessing and Interpolation",
+    "section": "The great thing about Lagrange polynomials is that we can choose the number of basis functions",
+    "text": "The great thing about Lagrange polynomials is that we can choose the number of basis functions\n\n\nChoose \\((x^0, x^1, x^2) = (x_2, x_3, x_4)\\)\n\nell3 = Lagrangebasis(xj[2:5], x=x) \nL = Lagrangefunction(u[2:5], ell3)\nxf = np.linspace(xj[2], xj[4], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')\n\n\n\n\n\n\n\n\n\nChoose \\((x^0, x^1, x^2) = (x_3, x_4, x_5)\\)\n\nell3 = Lagrangebasis(xj[3:6], x=x) \nL = Lagrangefunction(u[3:6], ell3)\nxf = np.linspace(xj[3], xj[5], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
+  },
+  {
+    "objectID": "postprocessing.html#we-can-choose-any-and-any-number-of-basis-functions",
+    "href": "postprocessing.html#we-can-choose-any-and-any-number-of-basis-functions",
+    "title": "Postprocessing and Interpolation",
+    "section": "We can choose any, and any number of basis functions",
+    "text": "We can choose any, and any number of basis functions\n\n\nChoose \\((x^0, x^1, x^2) = (x_2, x_3, x_4)\\)\n\nell2 = Lagrangebasis(xj[2:5], x=x) \nL = Lagrangefunction(u[2:5], ell2)\nxf = np.linspace(xj[2], xj[4], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')\n\n\n\n\n\n\n\n\n\nChoose \\((x^0, x^1, x^2) = (x_3, x_4, x_5)\\)\n\nell3 = Lagrangebasis(xj[3:6], x=x) \nL = Lagrangefunction(u[3:6], ell3)\nxf = np.linspace(xj[3], xj[5], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
+  },
+  {
+    "objectID": "postprocessing.html#with-three-nodes-the-lagrange-basis-functions-are-second-order-polynomials",
+    "href": "postprocessing.html#with-three-nodes-the-lagrange-basis-functions-are-second-order-polynomials",
+    "title": "Postprocessing and Interpolation",
+    "section": "With three nodes the Lagrange basis functions are second order polynomials",
+    "text": "With three nodes the Lagrange basis functions are second order polynomials\n\n\n\nplt.figure(figsize=(6, 4)) \nell2 = Lagrangebasis(xj[2:5], x=x) \nplt.plot(xj, u, 'bo-')\nxl = np.linspace(xj[2], xj[4], 100)\nplt.plot(xl, sp.lambdify(x, ell2[0])(xl), 'r:')\nplt.plot(xl, sp.lambdify(x, ell2[1])(xl), 'g:')\nplt.plot(xl, sp.lambdify(x, ell2[2])(xl), 'b:')\nplt.legend([r'$u(x_i)$', r'$\\ell_0(x)$', r'$\\ell_1(x)$', r'$\\ell_2(x)$'], loc='upper left'); \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\nAll Lagrange basis functions are such that on the chosen mesh points \\(\\{x^{i}\\}_{i=0}^{k}\\) we have\n\\[\n\\ell_j(x^i) = \\delta_{ij} = \\begin{cases} 1 \\text{ for } i=j \\\\\n0 \\text{ for }  i\\ne j\n\\end{cases}\n\\]\n\n\n\n\n\n\n\n\n\nNote\n\n\nThe Lagrange basis functions do not depend on the mesh function values, only on the mesh points. The mesh points do not need to be uniform, any mesh will do as long as all points are different."
+  },
+  {
+    "objectID": "postprocessing.html#interpolation-of-ux",
+    "href": "postprocessing.html#interpolation-of-ux",
+    "title": "Postprocessing and Interpolation",
+    "section": "Interpolation of \\(u'(x)\\)",
+    "text": "Interpolation of \\(u'(x)\\)\nThe solution has been obtained in mesh points \\(\\{u(x_j)\\}_{j=0}^N\\). How can we compute \\(u'(x)\\) for any given \\(x\\)?\n\nCan we use the derivative matrix \\(D^{(1)}\\) and thus\n\\[\nu' \\approx f = D^{(1)} u\n\\]\nsuch that the mesh function \\(f=\\{u'(x_j)\\}_{j=0}^N\\)?\n\n\nYes, but you need to interpolate \\(f\\) just like the mesh function \\(\\{u(x_j)\\}_{j=0}^N\\)\nIs there a better way?\n\n\nYes! Just take the derivative of the Lagrange function\n\\[\nu' \\approx L'(x) = \\sum_{j=0}^k u^j \\ell'_j(x)\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#interpolation-of-derivatives",
+    "href": "postprocessing.html#interpolation-of-derivatives",
+    "title": "Postprocessing and Interpolation",
+    "section": "Interpolation of derivatives",
+    "text": "Interpolation of derivatives\nThe solution has been obtained in mesh points \\(\\boldsymbol{u}=(u(x_j))_{j=0}^N\\). How can we compute \\(u'(x)\\) for any given \\(x\\)?\n\nCan we use the derivative matrix \\(D^{(1)}\\) and thus\n\\[\n\\boldsymbol{f} = D^{(1)} \\boldsymbol{u}\n\\]\nsuch that the mesh function \\(\\boldsymbol{f}=(u'(x_j))_{j=0}^N\\)?\n\n\nYes, but you then need to interpolate \\(\\boldsymbol{f}\\)!\nIs there a better way?\n\n\nYes! Just take the derivative of the Lagrange function\n\n\n\\[\nu' \\approx L'(x) = \\sum_{j=0}^k u^j \\ell'_j(x)\n\\]\n\n\nell2 = Lagrangebasis(xj[2:5], x=x) \nL = Lagrangefunction(u[2:5], ell2) \nf = L.diff(x, 1)\ndisplay(L)\ndisplay(f)\n\n\\(\\displaystyle 3.0 \\left(x - 0.8\\right) \\left(x - 0.6\\right) - 6.0 \\left(x - 0.8\\right) \\left(x - 0.4\\right) + 2.0 \\left(x - 0.6\\right) \\left(x - 0.4\\right)\\)\n\n\n\\(\\displaystyle 1.0 - 2.0 x\\)"
+  },
+  {
+    "objectID": "postprocessing.html#two-dimensional-interpolation",
+    "href": "postprocessing.html#two-dimensional-interpolation",
+    "title": "Postprocessing and Interpolation",
+    "section": "Two-dimensional interpolation",
+    "text": "Two-dimensional interpolation\nA solution in 2D is the mesh function\n\\[\nu_{ij} = u(x_i, y_j), \\quad i=0, 1, \\ldots, N \\, \\text{and} \\, j=0, 1, \\ldots, N\n\\]\nHow do we use \\(\\boldsymbol{u} = (u_{ij})_{i,j=0}^N\\) to compute \\(u(x)\\) for any \\(x\\)?\n\n\n\n\n\n\n\n2D interpolation\n\n\nWe need to do interpolation in 2D!"
+  },
+  {
+    "objectID": "postprocessing.html#if-the-problem-is-two-dimensional-then-we-have-the-solution-as-a-mesh-function",
+    "href": "postprocessing.html#if-the-problem-is-two-dimensional-then-we-have-the-solution-as-a-mesh-function",
+    "title": "Postprocessing and Interpolation",
+    "section": "If the problem is two-dimensional, then we have the solution as a mesh function",
+    "text": "If the problem is two-dimensional, then we have the solution as a mesh function\n\\[\nu_{ij} = u(x_i, y_j), \\quad i=0, 1, \\ldots, N \\, \\text{and} \\, j=0, 1, \\ldots, N\n\\]\nHow do we use \\(U = (u_{ij})_{i,j=0}^N\\) to compute \\(u(x, y)\\) for any point \\((x, y)\\) in the domain?\n\n\n\n\n\n\n\n2D interpolation\n\n\nWe need to do interpolation in 2D!"
+  },
+  {
+    "objectID": "postprocessing.html#d-interpolation-1",
+    "href": "postprocessing.html#d-interpolation-1",
+    "title": "Postprocessing and Interpolation",
+    "section": "2D-interpolation",
+    "text": "2D-interpolation\nWe consider first a simple function\n\\[\nu(x, y) = x(1-x)y(1-y), \\quad x, y \\in \\Omega = [0, 1]^2\n\\]\nand we want to find \\(u(0.55, 0.65)\\) from the mesh function \\((u(x_i, y_j))_{i,j=0}^{10}\\).\n\ndef mesh2D(Nx, Ny, Lx, Ly, sparse=False):\n  x = np.linspace(0, Lx, Nx+1)\n  y = np.linspace(0, Ly, Ny+1)\n  return np.meshgrid(x, y, indexing='ij', sparse=sparse)\n\nN = 10\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = xij*(1-xij)*yij*(1-yij)\nplt.figure(figsize=(3, 3))\nplt.contourf(xij, yij, U)\nplt.plot(0.55, 0.65, 'ro')"
+  },
+  {
+    "objectID": "postprocessing.html#d",
+    "href": "postprocessing.html#d",
+    "title": "Postprocessing and Interpolation",
+    "section": "2D",
+    "text": "2D"
+  },
+  {
+    "objectID": "postprocessing.html#in-2d-we-need-to-choose-interpolation-points-in-2d",
+    "href": "postprocessing.html#in-2d-we-need-to-choose-interpolation-points-in-2d",
+    "title": "Postprocessing and Interpolation",
+    "section": "In 2D we need to choose interpolation points in 2D",
+    "text": "In 2D we need to choose interpolation points in 2D"
+  },
+  {
+    "objectID": "postprocessing.html#in-2d-we-need-to-choose-interpolation-points-in-2d-surrounding-the-point-of-interest",
+    "href": "postprocessing.html#in-2d-we-need-to-choose-interpolation-points-in-2d-surrounding-the-point-of-interest",
+    "title": "Postprocessing and Interpolation",
+    "section": "In 2D we need to choose interpolation points in 2D surrounding the point of interest",
+    "text": "In 2D we need to choose interpolation points in 2D surrounding the point of interest"
+  },
+  {
+    "objectID": "postprocessing.html#d-lagrange-interpolation-polynomials-makes-use-of-tensor-product-basis-functions",
+    "href": "postprocessing.html#d-lagrange-interpolation-polynomials-makes-use-of-tensor-product-basis-functions",
+    "title": "Postprocessing and Interpolation",
+    "section": "2D Lagrange interpolation polynomials makes use of tensor product basis functions",
+    "text": "2D Lagrange interpolation polynomials makes use of tensor product basis functions\n\\[\nL(x, y) = \\sum_{m=0}^k\\sum_{n=0}^l u^{m,n} \\ell_{m}(x) \\ell_{n}(y),\n\\]\nHere one (tensor product) basis function is\n\\[\n\\psi_{mn}(x, y) = \\ell_{m}(x) \\ell_{n}(y)\n\\]\nand\n\\[\nu^{m,n}  \\quad m=0, \\ldots, k \\quad \\text{and} \\quad n=0, \\ldots, l\n\\]\nare the \\((k+1)(l+1)\\) mesh points used for the interpolation.\n\nTwo sets of mesh points: \\((x^0, \\ldots, x^k)\\) and \\((y^0, \\ldots, y^l)\\)\n\\(\\{\\ell_m(x)\\}_{m=0}^k\\) and \\(\\{\\ell_n(y)\\}_{n=0}^l\\) are computed exactly as in 1D."
+  },
+  {
+    "objectID": "postprocessing.html#d-lagrange",
+    "href": "postprocessing.html#d-lagrange",
+    "title": "Postprocessing and Interpolation",
+    "section": "2D Lagrange",
+    "text": "2D Lagrange\n\nxij, yij = mesh2D(N, N, 1, 1, False) \ny = sp.Symbol('y')\nlx = Lagrangebasis(xij[5:7, 0], x=x)\nly = Lagrangebasis(yij[0, 6:8], x=y)\n\ndef Lagrangefunction2D(u, basisx, basisy):\n  N, M = u.shape\n  f = 0\n  for i in range(N):\n    for j in range(M):\n      f += basisx[i]*basisy[j]*u[i, j]\n  return f\n\nf = Lagrangefunction2D(U[5:7, 6:8], lx, ly)\nprint('The 2D Lagrange polynomial is:')\nsp.nsimplify(sp.simplify(f), tolerance=1e-8)\n\nThe 2D Lagrange polynomial is:\n\n\n\\(\\displaystyle \\frac{3 x y}{100} - \\frac{21 x}{500} - \\frac{9 y}{100} + \\frac{63}{500}\\)\n\n\nCompare with exact. Not perfect since only linear interpolation.\n\nue = x*(1-x)*y*(1-y)\nprint('Numerical          Exact')\nprint(f.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n0.0551250000000000 0.0563062500000000"
+  },
+  {
+    "objectID": "postprocessing.html#d-interpolation-with-more-points",
+    "href": "postprocessing.html#d-interpolation-with-more-points",
+    "title": "Postprocessing and Interpolation",
+    "section": "2D interpolation with more points",
+    "text": "2D interpolation with more points\n\nlx = Lagrangebasis(xij[5:8, 0], x=x)\nly = Lagrangebasis(yij[0, 5:8], x=y)\nL2 = Lagrangefunction2D(u2[5:8, 5:8], lx, ly)\nprint('Numerical          Exact')\nprint(L2.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n0.0563062500000000 0.0563062500000000"
+  },
+  {
+    "objectID": "postprocessing.html#improve-accuracy-using-more-interpolation-points",
+    "href": "postprocessing.html#improve-accuracy-using-more-interpolation-points",
+    "title": "Postprocessing and Interpolation",
+    "section": "Improve accuracy using more interpolation points",
+    "text": "Improve accuracy using more interpolation points\n\nlx = Lagrangebasis(xij[5:8, 0], x=x)\nly = Lagrangebasis(yij[0, 5:8], x=y)\nL2 = Lagrangefunction2D(U[5:8, 5:8], lx, ly)\nprint('Numerical          Exact')\nprint(L2.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n0.0563062500000000 0.0563062500000000"
+  },
+  {
+    "objectID": "postprocessing.html#in-2d-we-need-partial-derivatives",
+    "href": "postprocessing.html#in-2d-we-need-partial-derivatives",
+    "title": "Postprocessing and Interpolation",
+    "section": "In 2D we need partial derivatives",
+    "text": "In 2D we need partial derivatives\nUsing finite difference matrices is possible, but requires interpolation of outcome:\n\\[ \\small\n\\left(\\frac{\\partial u}{\\partial x}(x_i, y_j)\\right)_{i,j=0}^{N} = D^{(1)} U \\quad \\text{and} \\quad \\left(\\frac{\\partial u}{\\partial y}(x_i, y_j)\\right)_{i,j=0}^{N} =  U (D^{(1)})^T.\n\\]\n\nAs in 1D take the derivatives of the Lagrange polynomials:\n\\[ \\small\n\\frac{\\partial u}{\\partial x} = \\frac{\\partial L(x, y)}{\\partial x} = \\sum_{m=0}^k\\sum_{n=0}^l u^{m,n} \\frac{\\partial \\ell_{m}(x)}{\\partial x} \\ell_{n}(y)\n\\] \\[ \\small\n\\frac{\\partial u}{\\partial y} = \\frac{\\partial L(x, y)}{\\partial y} = \\sum_{m=0}^k\\sum_{n=0}^l u^{m,n} \\ell_{m}(x) \\frac{\\partial \\ell_{n}(y)}{\\partial y}\n\\]\nVerification:\n\ndLx = sp.diff(L2, x)\ndLy = sp.diff(L2, y)\nprint('Numerical          Exact')\nprint(dLx.subs({x: 0.55, y: 0.65}), sp.diff(ue, x).subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n-0.0227500000000000 -0.0227500000000000"
+  },
+  {
+    "objectID": "postprocessing.html#other-tools-for-interpolation-are-available",
+    "href": "postprocessing.html#other-tools-for-interpolation-are-available",
+    "title": "Postprocessing and Interpolation",
+    "section": "Other tools for interpolation are available",
+    "text": "Other tools for interpolation are available\nScipy.interpolate\n\nfrom scipy.interpolate import interpn\nprint('Numerical          Exact')\nprint(interpn((xij[5:8, 0], yij[0, 5:8]), U[5:8, 5:8], np.array([0.55, 0.65])), ue.subs({x: 0.55, y: 0.65}))\n\nNumerical          Exact\n[0.055125] 0.0563062500000000\n\n\nDefaults to linear interpolation, so not very accurate.\n\nEasy to use more points and cubic interpolation:\n\nprint('Numerical          Exact') \nprint(interpn((xij[5:9, 0], yij[0, 5:9]), U[5:9, 5:9], np.array([0.55, 0.65]), method='cubic'), ue.subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n[0.05630625] 0.0563062500000000"
+  },
+  {
+    "objectID": "postprocessing.html#how-to-compute-errors-in-2d",
+    "href": "postprocessing.html#how-to-compute-errors-in-2d",
+    "title": "Postprocessing and Interpolation",
+    "section": "How to compute errors in 2D",
+    "text": "How to compute errors in 2D\nFor the numerical solution \\(u\\) and the exact solution \\(u^{e}\\) the \\(L^2\\) error norm can in general, for any domain \\(\\Omega\\) and number of dimensions, be defined as\n\\[\n\\|u-u^{e}\\|_{L^2(\\Omega)} = \\sqrt{\\int_{\\Omega} (u-u^{e})^2 d\\Omega}.\n\\]\nIn 2D \\(\\Omega = [0, L_x] \\times [0, L_y]\\) and the integral becomes\n\\[\n\\|u-u^{e}\\|_{L^2(\\Omega)} = \\sqrt{\\int_{0}^{L_x}\\int_0^{L_y}(u-u^{e})^2 dy dx}.\n\\]\n\nNumerical integration can be performed using, e.g., the midpoint rule\n\\[\nI(u)  = \\sum_{i=0}^{N_x-1} \\sum_{j=0}^{N_y-1} u((i+0.5)\\Delta x, (j+0.5) \\Delta y) \\Delta x \\Delta y \\approx \\int_{0}^{L_x}\\int_0^{L_y}u(x,y) dy dx.\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#midpoint-integration",
+    "href": "postprocessing.html#midpoint-integration",
+    "title": "Postprocessing and Interpolation",
+    "section": "Midpoint integration",
+    "text": "Midpoint integration\n\n\n\n\n\n\n\n\n\nAll values \\(u(x, y)\\) are required in the center of computational cells and not in nodes.\n\\[\n\\| u-u^{e} \\|_{L^2} = \\sqrt{I(u - u^{e})}\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#numerical-midpoint-integration-tested",
+    "href": "postprocessing.html#numerical-midpoint-integration-tested",
+    "title": "Postprocessing and Interpolation",
+    "section": "Numerical midpoint integration tested",
+    "text": "Numerical midpoint integration tested\n\nN = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um**2*dx*dy))\n\nI(U, 1/N, 1/N)\n\n0.09552823074589575\n\n\nCompared to the exact integral\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))).n())\n\n0.09586332023451888\n\n\n\nThe error norm \\(\\|u-u^{e}\\|_{L^2} = I(u-u^{e})\\) is\n\nI(U-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)\n\n5.108490959653866e-18\n\n\nwhich is very small because the Lagrange interpolator happens to be exact for all the midpoints for this function. It is not zero in general."
+  },
+  {
+    "objectID": "postprocessing.html#just-like-for-the-1d-case-there-is-a-simplification-using-the-small-ell2-norm-instead",
+    "href": "postprocessing.html#just-like-for-the-1d-case-there-is-a-simplification-using-the-small-ell2-norm-instead",
+    "title": "Postprocessing and Interpolation",
+    "section": "Just like for the 1D case there is a simplification using the small \\(\\ell^2\\) norm instead",
+    "text": "Just like for the 1D case there is a simplification using the small \\(\\ell^2\\) norm instead\n\\[\n\\|(u-u_e)\\|_{\\ell^2} = \\sqrt{ \\Delta x \\Delta y \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} (u_{ij}-u^{e}_{ij})^2 }.\n\\]\nThis is an approximation of the numerical integration using the trapezoidal method\nImplementation:\n\ndef l2_error(u, dx, dy):\n    return np.sqrt(dx*dy*np.sum(u**2))\nl2_error(u2-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)\n\n1.00866469481632e-17"
+  },
+  {
+    "objectID": "postprocessing.html#numerical-integration-can-also-for-example-use-the-trapezoidal-or-simpson-methods",
+    "href": "postprocessing.html#numerical-integration-can-also-for-example-use-the-trapezoidal-or-simpson-methods",
+    "title": "Postprocessing and Interpolation",
+    "section": "Numerical integration can also, for example, use the trapezoidal or Simpson methods",
+    "text": "Numerical integration can also, for example, use the trapezoidal or Simpson methods\nTrapezoidal:\n\ndef I_trapz(u, dx, dy):\n  return np.sqrt(np.trapz(np.trapz(u**2, dx=dy, axis=1), dx=dx))\nI_trapz(U, 1/N, 1/N)\n\n0.09592899344305951\n\n\nSimpson’s rule:\n\ndef I_simps(u, dx, dy):\n  from scipy.integrate import simpson as simp\n  return np.sqrt(simp(simp(u**2, dx=dy, axis=1), dx=dx))\nI_simps(U, 1/N, 1/N)\n\n0.09586418448463656\n\n\nExact:\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))).n())\n\n0.09586332023451888"
+  },
+  {
+    "objectID": "postprocessing.html#just-like-for-the-1d-case-there-is-a-simplification-for-l2-using-the-small-ell2-norm-instead",
+    "href": "postprocessing.html#just-like-for-the-1d-case-there-is-a-simplification-for-l2-using-the-small-ell2-norm-instead",
+    "title": "Postprocessing and Interpolation",
+    "section": "Just like for the 1D case there is a simplification for \\(L^2\\) using the small \\(\\ell^2\\) norm instead",
+    "text": "Just like for the 1D case there is a simplification for \\(L^2\\) using the small \\(\\ell^2\\) norm instead\n\\[\n\\|(u-u_e)\\|_{\\ell^2} = \\sqrt{ \\Delta x \\Delta y \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} (u_{ij}-u^{e}_{ij})^2 }.\n\\]\nThis is an approximation of the numerical integration using the trapezoidal method\nImplementation:\n\ndef l2_error(u, dx, dy):\n  return np.sqrt(dx*dy*np.sum(u**2))\nl2_error(U-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)\n\n1.00866469481632e-17"
+  },
+  {
+    "objectID": "postprocessing.html#integration-over-boundary",
+    "href": "postprocessing.html#integration-over-boundary",
+    "title": "Postprocessing and Interpolation",
+    "section": "Integration over boundary",
+    "text": "Integration over boundary\nIn many real problems we are not interested in the solution at a point, but rather in average values, or values integrated over a boundary."
+  },
+  {
+    "objectID": "postprocessing.html#our-computational-domain-is-simpler-and-boundary-integrals-are-simpler-as-well",
+    "href": "postprocessing.html#our-computational-domain-is-simpler-and-boundary-integrals-are-simpler-as-well",
+    "title": "Postprocessing and Interpolation",
+    "section": "Our computational domain is simpler and boundary integrals are simpler as well",
+    "text": "Our computational domain is simpler and boundary integrals are simpler as well\n\n\n\n\n\n\n\n\n\n\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} u(x=L_x, y) dy\n\\]\n\nnp.trapz(U[-1], dx=1/N, axis=0) \n\n0.0\n\n\nIntegrate over boundary at \\(y=L_y\\)\n\\[\n\\int_{0}^{L_x} u(x, y=L_y) dx\n\\]\n\nnp.trapz(U[:, -1], dx=1/N, axis=0) \n\n0.0"
+  },
+  {
+    "objectID": "postprocessing.html#friction-requires-derivatives",
+    "href": "postprocessing.html#friction-requires-derivatives",
+    "title": "Postprocessing and Interpolation",
+    "section": "Friction requires derivatives",
+    "text": "Friction requires derivatives\n\n\n\n\n\n\n\n\n\n\n\nGradient in normal direction\n\\[\n\\int_{\\Gamma} \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\n\\]\n\nIntegrate gradient at \\(y=0\\)\n\\[\n\\int_{0}^{L_x} \\frac{\\partial u}{\\partial y}(x, y=0) dx\n\\]\n\ndudy = (N/2)*(-3*U[:, 0] + 4*U[:, 1] - U[:, 2])\nnp.trapz(dudy, dx=1/N)\n\n0.4601188642377852\n\n\n\ndudye = sp.diff(ue, y)\nfloat(sp.integrate(dudye.subs(y, 0), (x, 0, 1)).n())\n\n0.4596976941318603\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} \\frac{\\partial u}{\\partial x}(x=L_x, y) dy\n\\]\n\ndudx = (N/2)*(3*U[-1] - 4*U[-2] + U[-3])\nnp.trapz(dudx, dx=1/N) \n\n-0.08567622273572727"
+  },
+  {
+    "objectID": "postprocessing.html#friction-requires-derivatives-use-forward-or-backward-stencils",
+    "href": "postprocessing.html#friction-requires-derivatives-use-forward-or-backward-stencils",
+    "title": "Postprocessing and Interpolation",
+    "section": "Friction requires derivatives, use forward or backward stencils",
+    "text": "Friction requires derivatives, use forward or backward stencils\n\n\n\n\n\n\n\n\n\n\n\nGradient in normal direction\n\\[\n\\int_{\\Gamma} \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\n\\]\n\nIntegrate gradient at \\(x=1\\)\n\\[\n\\int_{0}^{L_y} \\frac{\\partial u}{\\partial x}(x=L_x, y) dy\n\\]\n\nduy = (N/2)*(-3*u2[:, 0] + 4*u2[:, 1] - u2[:, 2])\nnp.trapz(duy, dx=1/N)\n\n0.4601188642377852\n\n\n\ndudye = sp.diff(ue, y)\nfloat(sp.integrate(dudye.subs(y, 0), (x, 0, 1)).n())\n\n0.4596976941318603\n\n\nIntegrate over boundary at \\(y=1\\)\n\\[\n\\int_{0}^{L_x} \\frac{\\partial u}{\\partial y}(x, y=L_y) dx\n\\]\n\nduy = (N/2)*(-3*u2[0] + 4*u2[1] - u2[2])\nnp.trapz(duy, dx=1/N) \n\n-0.15854507179346725"
+  },
+  {
+    "objectID": "postprocessing.html#two-dimensional-wave-equation-1",
+    "href": "postprocessing.html#two-dimensional-wave-equation-1",
+    "title": "Postprocessing and Interpolation",
+    "section": "Two-dimensional wave equation",
+    "text": "Two-dimensional wave equation\n\\[\n\\frac{\\partial^2 u}{\\partial t^2} = c^2 \\nabla^2 u, \\quad \\Omega = (0, L_x) \\times (0, L_y), t \\in (0, T]\n\\]\nWe use an initial condition \\(u(x, y, 0) = I(x, y)\\) and \\(\\frac{\\partial u}{\\partial t}(x, y, 0)=0\\) and homogeneous Dirichlet boundary conditions \\(u(x, y, t)=0\\) for the entire boundary.\n\nFor 2D waves we have frequencies in two directions\n\\[\n\\boldsymbol{k} = k_x \\boldsymbol{i} + k_y \\boldsymbol{j}\n\\]\n\n\nAny solution to the wave equation can be written as combinations of waves\n\\[\nu(x, y, t) = g(k_x x + k_y y - |\\boldsymbol{k}|ct)\n\\]\n\n\n\n\n\n\nNote\n\n\nTry to validate by inserting for \\(u(x, y, t)= g(k_x x + k_y y - |\\boldsymbol{k}|ct)\\) into the wave equation. Use for example a variable \\(\\alpha = k_x x + k_y y - |\\boldsymbol{k}|ct\\) and the chain rule, such that \\(\\frac{\\partial g}{\\partial t} = \\frac{\\partial g}{\\partial \\alpha} \\frac{\\partial \\alpha}{\\partial t}\\) etc."
+  },
+  {
+    "objectID": "postprocessing.html#fourier-exponentials-are-solution-in-a-periodic-domain",
+    "href": "postprocessing.html#fourier-exponentials-are-solution-in-a-periodic-domain",
+    "title": "Postprocessing and Interpolation",
+    "section": "Fourier exponentials are solution in a periodic domain",
+    "text": "Fourier exponentials are solution in a periodic domain\n\\[\nu(x, y, t) = e^{\\imath (\\boldsymbol{k} \\cdot \\boldsymbol{x} - \\omega t)}\n\\]\nwhere \\(\\omega = |\\boldsymbol{k}| c\\)."
+  },
+  {
+    "objectID": "postprocessing.html#fourier-exponentials-are-solutions-in-a-periodic-domain",
+    "href": "postprocessing.html#fourier-exponentials-are-solutions-in-a-periodic-domain",
+    "title": "Postprocessing and Interpolation",
+    "section": "Fourier exponentials are solutions in a periodic domain",
+    "text": "Fourier exponentials are solutions in a periodic domain\n\\[\nu(x, y, t) = e^{\\hat{\\imath} (\\boldsymbol{k} \\cdot \\boldsymbol{x} + \\omega t)}\n\\]\nwhere \\(\\omega = |\\boldsymbol{k}| c\\) and \\(\\hat{\\imath}=\\sqrt{-1}\\).\n\n\n\n\n\n\nNote\n\n\n\\(\\boldsymbol{x} = x \\boldsymbol{i} + y \\boldsymbol{j}\\) and \\(\\boldsymbol{k} = k_x \\boldsymbol{i} + k_y \\boldsymbol{j}\\), such that \\(\\boldsymbol{k} \\cdot \\boldsymbol{x} = k_x x + k_y y\\).\n\n\n\n\nA mesh solution is then\n\\[\n\\begin{align}\nu^n_{ij} &= u(x_i, y_j, t_n) = e^{\\hat{\\imath} (i k_x \\Delta x + j k_y \\Delta y + \\omega n \\Delta t)} \\\\\n&=(e^{\\hat{\\imath} \\omega \\Delta t})^n e^{\\hat{\\imath} (i k_x \\Delta x + j k_y \\Delta y)} \\\\\n&= A^n E(i, j)\n\\end{align}\n\\]\nwith amplification factor \\(A=e^{\\hat{\\imath} \\omega \\Delta t}\\) and \\(E(i, j) = e^{\\hat{\\imath} (i k_x \\Delta x + j k_y \\Delta y)}\\)."
+  },
+  {
+    "objectID": "postprocessing.html#discretization-of-the-wave-equation-in-2d",
+    "href": "postprocessing.html#discretization-of-the-wave-equation-in-2d",
+    "title": "Postprocessing and Interpolation",
+    "section": "Discretization of the wave equation in 2D",
+    "text": "Discretization of the wave equation in 2D\nFor all internal points we have the second order accurate \\[\n\\frac{u^{n+1}_{i,j} - 2u^n_{i,j} + u^{n-1}_{i, j}}{\\Delta t^2} =\nc^2 \\left(\\frac{u^n_{i+1,j} - 2u^n_{i,j} + u^n_{i-1, j}}{\\Delta x^2} + \\frac{u^n_{i,j+1} - 2u^n_{i,j} + u^n_{i, j-1}}{\\Delta y^2}\\right)\n\\]\n\nor on vectorized form using \\(U^n = \\Big( u(x_i, y_j, n \\Delta t)\\Big)_{i,j=0}^{N, N}\\) and \\(D_x^{(2)}\\) and \\(D_y^{(2)}\\) as second derivative matrices for \\(x\\) and \\(y\\) directions, respectively\n\\[\n\\frac{U^{n+1}-2U^n+U^{n-1}}{\\Delta t^2} = c^2 \\left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \\right).\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#stability",
+    "href": "postprocessing.html#stability",
+    "title": "Postprocessing and Interpolation",
+    "section": "Stability",
+    "text": "Stability\nWe have\n\\[\n\\frac{u^{n+1}_{i,j} - 2u^n_{i,j} + u^{n-1}_{i, j}}{\\Delta t^2} =\nc^2 \\left(\\frac{u^n_{i+1,j} - 2u^n_{i,j} + u^n_{i-1, j}}{\\Delta x^2} + \\frac{u^n_{i,j+1} - 2u^n_{i,j} + u^n_{i, j-1}}{\\Delta y^2}\\right)\n\\]\n\nTo calculate the stability of this scheme we need to insert for \\(u^n_{ij} = A^n E(i, j)\\) and compute the amplification factor \\(A\\). For stability we require\n\\[\n|A| \\le 1\n\\]\nThis is the same stability criterion as used in the 1D case."
+  },
+  {
+    "objectID": "postprocessing.html#stability-1",
+    "href": "postprocessing.html#stability-1",
+    "title": "Postprocessing and Interpolation",
+    "section": "Stability",
+    "text": "Stability\n\\[\nA - 2 + A^{-1} =\nc^2 \\Delta t^2 \\left( \\frac{ e^{\\hat{\\imath} k_x \\Delta x} - 2 + e^{- \\hat{\\imath} k_x \\Delta x} }{\\Delta x^2} + \\frac{ e^{\\hat{\\imath} k_y \\Delta y} - 2 + e^{- \\hat{\\imath} k_y \\Delta y} }{\\Delta y^2} \\right)\n\\]\ncan be written as\n\\[\nA + A^{-1} = \\beta\n\\]\nwith\n\\[\n\\beta =  2 + 2 c^2 \\Delta t^2 \\left(\\frac{\\cos (k_x \\Delta x) - 1}{\\Delta x^2} + \\frac{\\cos (k_y \\Delta y) - 1}{\\Delta y^2} \\right)\n\\]\nwhere we have used \\(e^{\\hat{\\imath} x} + e^{-\\hat{\\imath} x} = 2\\cos x\\).\n\n\n\n\n\n\nNote\n\n\nThe derivation is more or less exactly as for the wave equation in 1D."
+  },
+  {
+    "objectID": "postprocessing.html#from-lecture-5-we-know-that",
+    "href": "postprocessing.html#from-lecture-5-we-know-that",
+    "title": "Postprocessing and Interpolation",
+    "section": "From lecture 5 we know that",
+    "text": "From lecture 5 we know that\n\\[\nA + A^{-1} = \\beta\n\\]\nimplies that \\(|A|=1\\) when\n\\[\n-2 \\le \\beta \\le 2\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#from-lecture-5-we-remember-that",
+    "href": "postprocessing.html#from-lecture-5-we-remember-that",
+    "title": "Postprocessing and Interpolation",
+    "section": "From lecture 5 we remember that",
+    "text": "From lecture 5 we remember that\n\\[\nA + A^{-1} = \\beta\n\\]\nimplies that \\(|A|=1\\) when\n\\[\n-2 \\le \\beta \\le 2\n\\]\nHence, for stability we need\n\\[\n-2 \\le 2 + 2 c^2 \\Delta t^2 \\left(\\frac{\\cos (k_x \\Delta x) - 1}{\\Delta x^2} + \\frac{\\cos (k_y \\Delta y) - 1}{\\Delta y^2} \\right) \\le 2\n\\]\nor\n\\[\n-2 \\le c^2 \\Delta t^2 \\left(\\frac{\\cos (k_x \\Delta x) - 1}{\\Delta x^2} + \\frac{\\cos (k_y \\Delta y) - 1}{\\Delta y^2} \\right) \\le 0\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#stability-limit-on-time-step",
+    "href": "postprocessing.html#stability-limit-on-time-step",
+    "title": "Postprocessing and Interpolation",
+    "section": "Stability limit on time step",
+    "text": "Stability limit on time step\nSince \\(\\cos (k_x \\Delta x)\\) and \\(\\cos (k_y \\Delta y)\\) are at worst \\(-1\\) each, we get from \\[ \\small\n-2 \\le c^2 \\Delta t^2 \\left(\\frac{\\cos (k_x \\Delta x) - 1}{\\Delta x^2} + \\frac{\\cos (k_y \\Delta y) - 1}{\\Delta y^2} \\right) \\le 0\n\\]\nthat\n\\[ \\small\n-2 \\le c^2 \\Delta t^2 \\left( \\frac{-2}{\\Delta x^2} + \\frac{-2}{\\Delta y^2} \\right)\n\\]\nwhich is simplified further into\n\\[ \\small\n\\left(\\frac{c \\Delta t}{\\Delta x} \\right)^2 + \\left(\\frac{c \\Delta t}{\\Delta y} \\right)^2 \\le 1\n\\]\nThis is the stability limit on \\(\\Delta t\\) for the 2D wave equation. If \\(\\Delta x = \\Delta y = h\\), then\n\\[ \\small\n\\frac{c \\Delta t}{h} \\le \\frac{1}{\\sqrt{2}}\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#insert-for-un_ij-an-ei-j-in-the-discretized-wave-equation",
+    "href": "postprocessing.html#insert-for-un_ij-an-ei-j-in-the-discretized-wave-equation",
+    "title": "Postprocessing and Interpolation",
+    "section": "Insert for \\(u^n_{ij} = A^n E(i, j)\\) in the discretized wave equation",
+    "text": "Insert for \\(u^n_{ij} = A^n E(i, j)\\) in the discretized wave equation\n\\[ \\small\n\\begin{equation}\n\\begin{split}\n\\frac{(A^{n+1} - 2A^n + A^{n-1})E(i, j)}{\\Delta t^2} &=\nc^2 A^n \\Big\\{ \\\\\n    & \\frac{ E(i+1, j) - 2E(i, j) +  E(i-1, j)}{\\Delta x^2} \\\\\n+ & \\frac{E(i, j+1) - 2E(i, j) + e(i, j-1)}{\\Delta y^2} \\Big\\}\n\\end{split}\n\\end{equation}\n\\]\nDivide by \\(A^n E(i, j)\\) and multiply by \\(\\Delta t^2\\) in order to find \\(A\\). We also use that, e.g.,\n\\[ \\small\n\\frac{E(i+1, j)}{E(i, j)} = \\frac{e^{\\hat{\\imath}((i+1)k_x \\Delta x + j k_y \\Delta y)}}{e^{\\hat{\\imath}(i k_x \\Delta x + j k_y \\Delta y)}} = e^{\\hat{\\imath} k_x \\Delta x}\n\\]\n\\[ \\small\n\\frac{E(i, j-1)}{E(i, j)} = \\frac{e^{\\hat{\\imath}(ik_x \\Delta x + (j-1) k_y \\Delta y)}}{e^{\\hat{\\imath}(i k_x \\Delta x + j k_y \\Delta y)}} = e^{- \\hat{\\imath} k_y \\Delta y}\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#after-some-manipulations-we-get",
+    "href": "postprocessing.html#after-some-manipulations-we-get",
+    "title": "Postprocessing and Interpolation",
+    "section": "After some manipulations we get",
+    "text": "After some manipulations we get\n\\[\nA - 2 + A^{-1} =\nc^2 \\Delta t^2 \\left( \\frac{ e^{\\hat{\\imath} k_x \\Delta x} - 2 + e^{- \\hat{\\imath} k_x \\Delta x} }{\\Delta x^2} + \\frac{ e^{\\hat{\\imath} k_y \\Delta y} - 2 + e^{- \\hat{\\imath} k_y \\Delta y} }{\\Delta y^2} \\right)\n\\]\nwhich can be written as\n\\[\nA + A^{-1} = \\beta\n\\]\nwith\n\\[\n\\beta =  2 + 2 c^2 \\Delta t^2 \\left(\\frac{\\cos (k_x \\Delta x) - 1}{\\Delta x^2} + \\frac{\\cos (k_y \\Delta y) - 1}{\\Delta y^2} \\right)\n\\]\nwhere we have used \\(e^{\\hat{\\imath} x} + e^{-\\hat{\\imath} x} = 2\\cos x\\).\n\n\n\n\n\n\nNote\n\n\nThe derivation is more or less exactly as for the wave equation in 1D."
+  },
+  {
+    "objectID": "postprocessing.html#implementation",
+    "href": "postprocessing.html#implementation",
+    "title": "Postprocessing and Interpolation",
+    "section": "Implementation",
+    "text": "Implementation\ndef D2(N):\n  D = sparse.diags([1, -2, 1], [-1, 0, 1], (N+1, N+1), 'lil')\n  D[0, :4] = 2, -5, 4, -1\n  D[-1, -4:] = -1, 4, -5, 2\n  return D\n\ndef solver(N, L, Nt, cfl=0.5, c=1, store_data=10, u0=lambda x, y: np.exp(-40*((x-0.6)**2+(y-0.5)**2))):\n  xij, yij = mesh2D(N, N, L, L)\n  Unp1, Un, Unm1 = np.zeros((3, N+1, N+1))\n  Unm1[:] = u0(xij, yij)\n  dx = L / N\n  D = D2(N)/dx**2\n  dt = cfl*dx/c\n  Un[:] = Unm1[:] + 0.5*(c*dt)**2*(D @ Un + Un @ D.T)\n  plotdata = {0: Unm1.copy()}\n  for n in range(1, Nt):\n    Unp1[:] = 2*Un - Unm1 + (c*dt)**2*(D @ Un + Un @ D.T)\n    # Set boundary conditions\n    # Swap solutions\n    # Store plotdata\n  return xij, yij, plotdata"
+  },
+  {
+    "objectID": "postprocessing.html#test-solver",
+    "href": "postprocessing.html#test-solver",
+    "title": "Postprocessing and Interpolation",
+    "section": "Test solver",
+    "text": "Test solver\nCFL = 0.5\nxij, yij, data = solver(40, 1, 501, cfl=CFL, store_data=5)\n\nfig, ax = plt.subplots(subplot_kw={\"projection\": \"3d\"})\nframes = []\nfor n, val in data.items():\n  frame = ax.plot_wireframe(xij, yij, val, rstride=2, cstride=2);\n  frames.append([frame])\n\nani = animation.ArtistAnimation(fig, frames, interval=400, blit=True,  repeat_delay=1000)"
+  },
+  {
+    "objectID": "postprocessing.html#test-solver-with-slightly-higher-than-allowed-cfl",
+    "href": "postprocessing.html#test-solver-with-slightly-higher-than-allowed-cfl",
+    "title": "Postprocessing and Interpolation",
+    "section": "Test solver with slightly higher than allowed CFL",
+    "text": "Test solver with slightly higher than allowed CFL\nCFL = 0.71\nxij, yij, data = solver(40, 1, 171, cfl=CFL, store_data=5)\n\nfig, ax = plt.subplots(subplot_kw={\"projection\": \"3d\"})\nframes = []\nfor n, val in data.items():\n  frame = ax.plot_wireframe(xij, yij, val, rstride=2, cstride=2);\n  frames.append([frame])\n\nani = animation.ArtistAnimation(fig, frames, interval=400, blit=True,  repeat_delay=1000)"
+  },
+  {
+    "objectID": "postprocessing.html#stability-considerations-make-use-of-fourier-exponentials-as-solutions-in-a-periodic-domain",
+    "href": "postprocessing.html#stability-considerations-make-use-of-fourier-exponentials-as-solutions-in-a-periodic-domain",
+    "title": "Postprocessing and Interpolation",
+    "section": "Stability considerations make use of Fourier exponentials as solutions in a periodic domain",
+    "text": "Stability considerations make use of Fourier exponentials as solutions in a periodic domain\n\\[\nu(x, y, t) = e^{\\hat{\\imath} (\\boldsymbol{k} \\cdot \\boldsymbol{x} + \\omega t)}\n\\]\nwhere \\(\\omega = |\\boldsymbol{k}| c\\) and \\(\\hat{\\imath}=\\sqrt{-1}\\).\n\n\n\n\n\n\nNote\n\n\n\\(\\boldsymbol{x} = x \\boldsymbol{i} + y \\boldsymbol{j}\\) and \\(\\boldsymbol{k} = k_x \\boldsymbol{i} + k_y \\boldsymbol{j}\\), such that \\(\\boldsymbol{k} \\cdot \\boldsymbol{x} = k_x x + k_y y\\).\n\n\n\n\nA mesh solution is then\n\\[\n\\begin{align}\nu^n_{ij} &= u(x_i, y_j, t_n) = e^{\\hat{\\imath} (i k_x \\Delta x + j k_y \\Delta y + \\omega n \\Delta t)} \\\\\n&=(e^{\\hat{\\imath} \\omega \\Delta t})^n e^{\\hat{\\imath} (i k_x \\Delta x + j k_y \\Delta y)} \\\\\n&= A^n E(i, j)\n\\end{align}\n\\]\nwith amplification factor \\(A=e^{\\hat{\\imath} \\omega \\Delta t}\\) and \\(E(i, j) = e^{\\hat{\\imath} (i k_x \\Delta x + j k_y \\Delta y)}\\)."
+  },
+  {
+    "objectID": "postprocessing.html#stability-of-discretization",
+    "href": "postprocessing.html#stability-of-discretization",
+    "title": "Postprocessing and Interpolation",
+    "section": "Stability of discretization",
+    "text": "Stability of discretization\nWe have\n\\[\n\\frac{u^{n+1}_{i,j} - 2u^n_{i,j} + u^{n-1}_{i, j}}{\\Delta t^2} =\nc^2 \\left(\\frac{u^n_{i+1,j} - 2u^n_{i,j} + u^n_{i-1, j}}{\\Delta x^2} + \\frac{u^n_{i,j+1} - 2u^n_{i,j} + u^n_{i, j-1}}{\\Delta y^2}\\right)\n\\]\n\nTo calculate the stability of this scheme we need to insert for \\(u^n_{ij} = A^n E(i, j)\\) and compute the amplification factor \\(A\\). For stability we require\n\\[\n|A| \\le 1\n\\]\nThis is the same stability criterion as used in the 1D case."
+  },
+  {
+    "objectID": "postprocessing.html#how-to-specify-initial-conditions",
+    "href": "postprocessing.html#how-to-specify-initial-conditions",
+    "title": "Postprocessing and Interpolation",
+    "section": "How to specify initial conditions",
+    "text": "How to specify initial conditions\nThe initial condition \\(\\frac{\\partial u}{\\partial t}(x, y, 0) = 0\\) can be implemented like we did in lecture 5 for the wave equation with one spatial dimension. We use a ghost node:\n\\[\n\\frac{\\partial u}{\\partial t}(x, y, t=0) = 0 = \\frac{U^1-U^{-1}}{2 \\Delta t} \\rightarrow U^1 = U^{-1},\n\\]\nAnd we use the PDE for \\(n=0\\)\n\\[\n\\frac{U^{1}-2U^0+U^{-1}}{\\Delta t^2} = c^2 \\left( D^{(2)}_x U^0 + U^0 (D^{(2)}_y)^T \\right),\n\\]\nsuch that\n\\[\nU^1 = U^0 + \\frac{c^2 \\Delta t^2}{2} \\left( D^{(2)}_x U^0 + U^0 (D^{(2)}_y)^T \\right).\n\\]"
+  },
+  {
+    "objectID": "postprocessing.html#ths-solution-algorithm-for-the-2d-wave-equation",
+    "href": "postprocessing.html#ths-solution-algorithm-for-the-2d-wave-equation",
+    "title": "Postprocessing and Interpolation",
+    "section": "Ths solution algorithm for the 2D wave equation",
+    "text": "Ths solution algorithm for the 2D wave equation\n\nSpecify \\(U^0\\) and \\(U^1\\) from initial conditions\nfor n in (1, 2, …, \\(N_t-1\\)) compute\n\n\\(U^{n+1} = 2U^n - U^{n-1} + (c\\Delta t)^2 \\left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \\right)\\)\nApply boundary conditions to \\(U^{n+1}\\)\nSwap \\(U^{n-1} \\leftarrow U^n\\) and \\(U^n \\leftarrow U^{n+1}\\) if using only three solution vectors"
+  },
+  {
+    "objectID": "postprocessing.html#insert-for-small-un_ij-an-ei-j-in-the-discretized-wave-equation",
+    "href": "postprocessing.html#insert-for-small-un_ij-an-ei-j-in-the-discretized-wave-equation",
+    "title": "Postprocessing and Interpolation",
+    "section": "Insert for \\(\\small u^n_{ij} = A^n E(i, j)\\) in the discretized wave equation",
+    "text": "Insert for \\(\\small u^n_{ij} = A^n E(i, j)\\) in the discretized wave equation\n\\[ \\small\n\\begin{equation}\n\\begin{split}\n\\frac{(A^{n+1} - 2A^n + A^{n-1})E(i, j)}{\\Delta t^2} &=\nc^2 A^n \\Big\\{ \\\\\n    & \\frac{ E(i+1, j) - 2E(i, j) +  E(i-1, j)}{\\Delta x^2} \\\\\n+ & \\frac{E(i, j+1) - 2E(i, j) + E(i, j-1)}{\\Delta y^2} \\Big\\}\n\\end{split}\n\\end{equation}\n\\]\nDivide by \\(A^n E(i, j)\\) and multiply by \\(\\Delta t^2\\) in order to find \\(A\\). We also use that, e.g.,\n\\[ \\small\n\\frac{E(i+1, j)}{E(i, j)} = \\frac{e^{\\hat{\\imath}((i+1)k_x \\Delta x + j k_y \\Delta y)}}{e^{\\hat{\\imath}(i k_x \\Delta x + j k_y \\Delta y)}} = e^{\\hat{\\imath} k_x \\Delta x}\n\\]\n\\[ \\small\n\\frac{E(i, j-1)}{E(i, j)} = \\frac{e^{\\hat{\\imath}(ik_x \\Delta x + (j-1) k_y \\Delta y)}}{e^{\\hat{\\imath}(i k_x \\Delta x + j k_y \\Delta y)}} = e^{- \\hat{\\imath} k_y \\Delta y}\n\\]"
   }
 ]
