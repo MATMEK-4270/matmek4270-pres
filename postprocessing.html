@@ -431,7 +431,7 @@ Prof.&nbsp;Mikael Mortensen, University of Oslo
 <p><span class="math display">\[
 u(x) = x(1-x)
 \]</span></p>
-<div id="596cd69b" class="cell" data-execution_count="1">
+<div id="eb45539d" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -450,11 +450,11 @@ u(x) = x(1-x)
 </section>
 <section id="linear-interpolation-using-sympy" class="slide level2 smaller">
 <h2>Linear interpolation using Sympy</h2>
-<div id="759e0485" class="cell" data-execution_count="2">
+<div id="ba333c2c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>x <span class="op">=</span> sp.Symbol(<span class="st">'x'</span>)</span>
 <span id="cb1-2"><a></a>uo <span class="op">=</span> u[<span class="dv">3</span>] <span class="op">+</span> (u[<span class="dv">4</span>]<span class="op">-</span>u[<span class="dv">3</span>])<span class="op">/</span>(xj[<span class="dv">4</span>]<span class="op">-</span>xj[<span class="dv">3</span>])<span class="op">*</span>(x<span class="op">-</span>xj[<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7859a313" class="cell" data-execution_count="3">
+<div id="577ad0c9" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -541,7 +541,7 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 <p><span class="math display">\[
 \{\ell_j(x)\}_{j=0}^k
 \]</span></p>
-<div id="9b84a764" class="cell" data-execution_count="4">
+<div id="c4a2a142" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="kw">def</span> Lagrangebasis(xj, x<span class="op">=</span>x):</span>
 <span id="cb2-2"><a></a>  <span class="co">"""Construct Lagrange basis for points in xj</span></span>
 <span id="cb2-3"><a></a></span>
@@ -568,15 +568,15 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 </section>
 <section id="the-basis-for-linear-interpolation-of-our-first-example-is" class="slide level2 smaller">
 <h2>The basis for linear interpolation of our first example is</h2>
-<div id="28ec5dc4" class="cell" data-execution_count="5">
+<div id="2fab6221" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>ell <span class="op">=</span> Lagrangebasis(xj[<span class="dv">3</span>:<span class="dv">5</span>], x<span class="op">=</span>x)</span>
 <span id="cb3-2"><a></a>ell</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="153">
+<div class="cell-output cell-output-display" data-execution_count="190">
 <pre><code>[4.0 - 5.0*x, 5.0*x - 3.0]</code></pre>
 </div>
 </div>
 <p>We can plot these two linear functions between <span class="math inline">\(x_3\)</span> and <span class="math inline">\(x_4\)</span></p>
-<div id="1d33a21e" class="cell" data-execution_count="6">
+<div id="5bd521ba" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>))</span>
 <span id="cb5-2"><a></a>plt.plot(xj, u, <span class="st">'bo'</span>)</span>
 <span id="cb5-3"><a></a>xf <span class="op">=</span> np.linspace(xj[<span class="dv">3</span>], xj[<span class="dv">4</span>], <span class="dv">10</span>)</span>
@@ -599,7 +599,7 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 \]</span></p>
 <div class="columns">
 <div class="column">
-<div id="ea2af0fb" class="cell" data-execution_count="7">
+<div id="6a1c4c7f" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">def</span> Lagrangefunction(u, basis):</span>
 <span id="cb6-2"><a></a>  <span class="co">"""Return Lagrange polynomial</span></span>
 <span id="cb6-3"><a></a></span>
@@ -616,7 +616,7 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 <span id="cb6-14"><a></a>  <span class="cf">return</span> f</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column">
-<div id="ed2055a9" class="cell" data-execution_count="8">
+<div id="8deddbbc" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>L <span class="op">=</span> Lagrangefunction(u[<span class="dv">3</span>:<span class="dv">5</span>], ell)</span>
 <span id="cb7-2"><a></a>xf <span class="op">=</span> np.linspace(xj[<span class="dv">3</span>]<span class="op">-</span><span class="fl">0.1</span>, xj[<span class="dv">4</span>]<span class="op">+</span><span class="fl">0.1</span>, <span class="dv">10</span>)</span>
 <span id="cb7-3"><a></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>))</span>
@@ -639,7 +639,7 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 <div class="columns">
 <div class="column">
 <h4 id="choose-x0-x1-x2-x_2-x_3-x_4">Choose <span class="math inline">\((x^0, x^1, x^2) = (x_2, x_3, x_4)\)</span></h4>
-<div id="b452f6ab" class="cell" data-execution_count="9">
+<div id="6afee7cd" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>ell2 <span class="op">=</span> Lagrangebasis(xj[<span class="dv">2</span>:<span class="dv">5</span>], x<span class="op">=</span>x) </span>
 <span id="cb8-2"><a></a>L <span class="op">=</span> Lagrangefunction(u[<span class="dv">2</span>:<span class="dv">5</span>], ell2)</span>
 <span id="cb8-3"><a></a>xf <span class="op">=</span> np.linspace(xj[<span class="dv">2</span>], xj[<span class="dv">4</span>], <span class="dv">10</span>)</span>
@@ -657,7 +657,7 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 </div>
 </div><div class="column">
 <h4 id="choose-x0-x1-x2-x_3-x_4-x_5">Choose <span class="math inline">\((x^0, x^1, x^2) = (x_3, x_4, x_5)\)</span></h4>
-<div id="0d601810" class="cell" data-execution_count="10">
+<div id="6cf673dc" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>ell3 <span class="op">=</span> Lagrangebasis(xj[<span class="dv">3</span>:<span class="dv">6</span>], x<span class="op">=</span>x) </span>
 <span id="cb9-2"><a></a>L <span class="op">=</span> Lagrangefunction(u[<span class="dv">3</span>:<span class="dv">6</span>], ell3)</span>
 <span id="cb9-3"><a></a>xf <span class="op">=</span> np.linspace(xj[<span class="dv">3</span>], xj[<span class="dv">5</span>], <span class="dv">10</span>)</span>
@@ -680,7 +680,7 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 <h2>With three nodes the Lagrange basis functions are second order polynomials</h2>
 <div class="columns">
 <div class="column">
-<div id="bf26a1d2" class="cell" data-execution_count="11">
+<div id="cf95e965" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>)) </span>
 <span id="cb10-2"><a></a>ell2 <span class="op">=</span> Lagrangebasis(xj[<span class="dv">2</span>:<span class="dv">5</span>], x<span class="op">=</span>x) </span>
 <span id="cb10-3"><a></a>plt.plot(xj, u, <span class="st">'bo-'</span>)</span>
@@ -754,7 +754,7 @@ L(x) = \sum_{j=0}^k u^j \ell_j(x)
 u' \approx L'(x) = \sum_{j=0}^k u^j \ell'_j(x)
 \]</span></p>
 </div><div class="column">
-<div id="e4b1f174" class="cell" data-execution_count="12">
+<div id="c8f675b1" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>ell2 <span class="op">=</span> Lagrangebasis(xj[<span class="dv">2</span>:<span class="dv">5</span>], x<span class="op">=</span>x) </span>
 <span id="cb11-2"><a></a>L <span class="op">=</span> Lagrangefunction(u[<span class="dv">2</span>:<span class="dv">5</span>], ell2) </span>
 <span id="cb11-3"><a></a>f <span class="op">=</span> L.diff(x, <span class="dv">1</span>)</span>
@@ -800,7 +800,7 @@ u_{ij} = u(x_i, y_j), \quad i=0, 1, \ldots, N \, \text{and} \, j=0, 1, \ldots, N
 u(x, y) = x(1-x)y(1-y), \quad x, y \in \Omega = [0, 1]^2
 \]</span></p>
 <p>and we want to find <span class="math inline">\(u(0.55, 0.65)\)</span> from the mesh function <span class="math inline">\((u(x_i, y_j))_{i,j=0}^{10}\)</span>.</p>
-<div id="88d989d5" class="cell" data-execution_count="13">
+<div id="e58bac65" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="kw">def</span> mesh2D(Nx, Ny, Lx, Ly, sparse<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb12-2"><a></a>  x <span class="op">=</span> np.linspace(<span class="dv">0</span>, Lx, Nx<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb12-3"><a></a>  y <span class="op">=</span> np.linspace(<span class="dv">0</span>, Ly, Ny<span class="op">+</span><span class="dv">1</span>)</span>
@@ -825,7 +825,7 @@ u(x, y) = x(1-x)y(1-y), \quad x, y \in \Omega = [0, 1]^2
 <h2>In 2D we need to choose interpolation points in 2D surrounding the point of interest</h2>
 <div class="columns">
 <div class="column">
-<div id="c2c4dfcb" class="cell" data-execution_count="14">
+<div id="dab8026a" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -835,7 +835,7 @@ u(x, y) = x(1-x)y(1-y), \quad x, y \in \Omega = [0, 1]^2
 </div>
 </div>
 </div><div class="column">
-<div id="6866f654" class="cell" data-execution_count="15">
+<div id="a05db896" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -868,7 +868,7 @@ u^{m,n}  \quad m=0, \ldots, k \quad \text{and} \quad n=0, \ldots, l
 </section>
 <section id="d-lagrange" class="slide level2 smaller">
 <h2>2D Lagrange</h2>
-<div id="7a98dd20" class="cell" data-execution_count="16">
+<div id="588560d7" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>xij, yij <span class="op">=</span> mesh2D(N, N, <span class="dv">1</span>, <span class="dv">1</span>, <span class="va">False</span>) </span>
 <span id="cb13-2"><a></a>y <span class="op">=</span> sp.Symbol(<span class="st">'y'</span>)</span>
 <span id="cb13-3"><a></a>lx <span class="op">=</span> Lagrangebasis(xij[<span class="dv">5</span>:<span class="dv">7</span>, <span class="dv">0</span>], x<span class="op">=</span>x)</span>
@@ -888,12 +888,12 @@ u^{m,n}  \quad m=0, \ldots, k \quad \text{and} \quad n=0, \ldots, l
 <div class="cell-output cell-output-stdout">
 <pre><code>The 2D Lagrange polynomial is:</code></pre>
 </div>
-<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="164">
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="201">
 <p><span class="math inline">\(\displaystyle \frac{3 x y}{100} - \frac{21 x}{500} - \frac{9 y}{100} + \frac{63}{500}\)</span></p>
 </div>
 </div>
 <p>Compare with exact. Not perfect since only linear interpolation.</p>
-<div id="8404ae4b" class="cell" data-execution_count="17">
+<div id="9e9e1324" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>ue <span class="op">=</span> x<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>x)<span class="op">*</span>y<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>y)</span>
 <span id="cb15-2"><a></a><span class="bu">print</span>(<span class="st">'Numerical          Exact'</span>)</span>
 <span id="cb15-3"><a></a><span class="bu">print</span>(f.subs({x: <span class="fl">0.55</span>, y: <span class="fl">0.65</span>}), ue.subs({x: <span class="fl">0.55</span>, y: <span class="fl">0.65</span>})) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -905,7 +905,7 @@ u^{m,n}  \quad m=0, \ldots, k \quad \text{and} \quad n=0, \ldots, l
 </section>
 <section id="improve-accuracy-using-more-interpolation-points" class="slide level2 smaller">
 <h2>Improve accuracy using more interpolation points</h2>
-<div id="14d3637e" class="cell" data-execution_count="18">
+<div id="e77db02e" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a>lx <span class="op">=</span> Lagrangebasis(xij[<span class="dv">5</span>:<span class="dv">8</span>, <span class="dv">0</span>], x<span class="op">=</span>x)</span>
 <span id="cb17-2"><a></a>ly <span class="op">=</span> Lagrangebasis(yij[<span class="dv">0</span>, <span class="dv">5</span>:<span class="dv">8</span>], x<span class="op">=</span>y)</span>
 <span id="cb17-3"><a></a>L2 <span class="op">=</span> Lagrangefunction2D(U[<span class="dv">5</span>:<span class="dv">8</span>, <span class="dv">5</span>:<span class="dv">8</span>], lx, ly)</span>
@@ -931,7 +931,7 @@ u^{m,n}  \quad m=0, \ldots, k \quad \text{and} \quad n=0, \ldots, l
 \frac{\partial u}{\partial y} = \frac{\partial L(x, y)}{\partial y} = \sum_{m=0}^k\sum_{n=0}^l u^{m,n} \ell_{m}(x) \frac{\partial \ell_{n}(y)}{\partial y}
 \]</span></p>
 <p>Verification:</p>
-<div id="0638551c" class="cell" data-execution_count="19">
+<div id="e77fc403" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a>dLx <span class="op">=</span> sp.diff(L2, x)</span>
 <span id="cb19-2"><a></a>dLy <span class="op">=</span> sp.diff(L2, y)</span>
 <span id="cb19-3"><a></a><span class="bu">print</span>(<span class="st">'Numerical          Exact'</span>)</span>
@@ -946,7 +946,7 @@ u^{m,n}  \quad m=0, \ldots, k \quad \text{and} \quad n=0, \ldots, l
 <section id="other-tools-for-interpolation-are-available" class="slide level2 smaller">
 <h2>Other tools for interpolation are available</h2>
 <h4 id="scipy.interpolate">Scipy.interpolate</h4>
-<div id="b28cba5a" class="cell" data-execution_count="20">
+<div id="760818bc" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a></a><span class="im">from</span> scipy.interpolate <span class="im">import</span> interpn</span>
 <span id="cb21-2"><a></a><span class="bu">print</span>(<span class="st">'Numerical          Exact'</span>)</span>
 <span id="cb21-3"><a></a><span class="bu">print</span>(interpn((xij[<span class="dv">5</span>:<span class="dv">8</span>, <span class="dv">0</span>], yij[<span class="dv">0</span>, <span class="dv">5</span>:<span class="dv">8</span>]), U[<span class="dv">5</span>:<span class="dv">8</span>, <span class="dv">5</span>:<span class="dv">8</span>], np.array([<span class="fl">0.55</span>, <span class="fl">0.65</span>])), ue.subs({x: <span class="fl">0.55</span>, y: <span class="fl">0.65</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -958,7 +958,7 @@ u^{m,n}  \quad m=0, \ldots, k \quad \text{and} \quad n=0, \ldots, l
 <p>Defaults to linear interpolation, so not very accurate.</p>
 <div class="fragment">
 <p>Easy to use more points and cubic interpolation:</p>
-<div id="c8e213cb" class="cell" data-execution_count="21">
+<div id="6ae05667" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a><span class="bu">print</span>(<span class="st">'Numerical          Exact'</span>) </span>
 <span id="cb23-2"><a></a><span class="bu">print</span>(interpn((xij[<span class="dv">5</span>:<span class="dv">9</span>, <span class="dv">0</span>], yij[<span class="dv">0</span>, <span class="dv">5</span>:<span class="dv">9</span>]), U[<span class="dv">5</span>:<span class="dv">9</span>, <span class="dv">5</span>:<span class="dv">9</span>], np.array([<span class="fl">0.55</span>, <span class="fl">0.65</span>]), method<span class="op">=</span><span class="st">'cubic'</span>), ue.subs({x: <span class="fl">0.55</span>, y: <span class="fl">0.65</span>})) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -987,7 +987,7 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 </section>
 <section id="midpoint-integration" class="slide level2 smaller">
 <h2>Midpoint integration</h2>
-<div id="22e35db6" class="cell" data-execution_count="22">
+<div id="a4e37706" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -998,12 +998,12 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 </div>
 <p>All values <span class="math inline">\(u(x, y)\)</span> are required in the center of computational cells and not in nodes.</p>
 <p><span class="math display">\[
-\| u-u^{e} \|_{L^2} = \sqrt{I(u - u^{e})}
+\| u-u^{e} \|_{L^2} = \sqrt{I((u - u^{e})^2)}
 \]</span></p>
 </section>
 <section id="numerical-midpoint-integration-tested" class="slide level2 smaller">
 <h2>Numerical midpoint integration tested</h2>
-<div id="cdaf521b" class="cell" data-execution_count="23">
+<div id="12eb2b21" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a>N <span class="op">=</span> <span class="dv">20</span></span>
 <span id="cb25-2"><a></a>xij, yij <span class="op">=</span> mesh2D(N, N, <span class="dv">1</span>, <span class="dv">1</span>, <span class="va">False</span>)</span>
 <span id="cb25-3"><a></a>U <span class="op">=</span> np.cos(xij)<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>xij)<span class="op">*</span>np.sin(yij)<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>yij)</span>
@@ -1011,56 +1011,56 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 <span id="cb25-5"><a></a></span>
 <span id="cb25-6"><a></a><span class="kw">def</span> I(u, dx, dy):</span>
 <span id="cb25-7"><a></a>  um <span class="op">=</span> (u[:<span class="op">-</span><span class="dv">1</span>, :<span class="op">-</span><span class="dv">1</span>]<span class="op">+</span>u[<span class="dv">1</span>:, :<span class="op">-</span><span class="dv">1</span>]<span class="op">+</span>u[:<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>:]<span class="op">+</span>u[<span class="dv">1</span>:, <span class="dv">1</span>:])<span class="op">/</span><span class="dv">4</span></span>
-<span id="cb25-8"><a></a>  <span class="cf">return</span> np.sqrt(np.<span class="bu">sum</span>(um<span class="op">**</span><span class="dv">2</span><span class="op">*</span>dx<span class="op">*</span>dy))</span>
+<span id="cb25-8"><a></a>  <span class="cf">return</span> np.sqrt(np.<span class="bu">sum</span>(um<span class="op">*</span>dx<span class="op">*</span>dy))</span>
 <span id="cb25-9"><a></a></span>
 <span id="cb25-10"><a></a>I(U, <span class="dv">1</span><span class="op">/</span>N, <span class="dv">1</span><span class="op">/</span>N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="171">
-<pre><code>0.09552823074589575</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="208">
+<pre><code>0.2696557024695919</code></pre>
 </div>
 </div>
 <p>Compared to the exact integral</p>
-<div id="cef3c048" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a><span class="bu">float</span>(sp.sqrt(sp.integrate(sp.integrate(ue<span class="op">**</span><span class="dv">2</span>, (y, <span class="dv">0</span>, <span class="dv">1</span>)), (x, <span class="dv">0</span>, <span class="dv">1</span>))).n())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="172">
-<pre><code>0.09586332023451888</code></pre>
+<div id="b00331fd" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a><span class="bu">float</span>(sp.sqrt(sp.integrate(sp.integrate(ue, (y, <span class="dv">0</span>, <span class="dv">1</span>)), (x, <span class="dv">0</span>, <span class="dv">1</span>))).n())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="209">
+<pre><code>0.26995448271292816</code></pre>
 </div>
 </div>
 <div class="fragment">
-<p>The error norm <span class="math inline">\(\|u-u^{e}\|_{L^2} = I(u-u^{e})\)</span> is</p>
-<div id="07762404" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a>I(U<span class="op">-</span>sp.lambdify((x, y), ue)(xij, yij), <span class="dv">1</span><span class="op">/</span>N, <span class="dv">1</span><span class="op">/</span>N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="173">
-<pre><code>5.108490959653866e-18</code></pre>
+<p>The error norm <span class="math inline">\(\|u-u^{e}\|_{L^2} = \sqrt{I((u-u^{e})^2)}\)</span> is</p>
+<div id="836d8dab" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a>np.sqrt(I((U<span class="op">-</span>sp.lambdify((x, y), ue)(xij, yij))<span class="op">**</span><span class="dv">2</span>, <span class="dv">1</span><span class="op">/</span>N, <span class="dv">1</span><span class="op">/</span>N))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="210">
+<pre><code>3.1759481967064892e-09</code></pre>
 </div>
 </div>
-<p>which is very small because the Lagrange interpolator happens to be exact for all the midpoints for this function. It is not zero in general.</p>
+<p>which is very small because the Lagrange interpolator happens to be close to exact exact for all the midpoints for this function. It is not zero in general.</p>
 </div>
 </section>
 <section id="numerical-integration-can-also-for-example-use-the-trapezoidal-or-simpson-methods" class="slide level2 smaller">
 <h2>Numerical integration can also, for example, use the trapezoidal or Simpson methods</h2>
 <p>Trapezoidal:</p>
-<div id="442f8d80" class="cell" data-execution_count="26">
+<div id="2d7d40e1" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a><span class="kw">def</span> I_trapz(u, dx, dy):</span>
 <span id="cb31-2"><a></a>  <span class="cf">return</span> np.sqrt(np.trapz(np.trapz(u<span class="op">**</span><span class="dv">2</span>, dx<span class="op">=</span>dy, axis<span class="op">=</span><span class="dv">1</span>), dx<span class="op">=</span>dx))</span>
 <span id="cb31-3"><a></a>I_trapz(U, <span class="dv">1</span><span class="op">/</span>N, <span class="dv">1</span><span class="op">/</span>N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="174">
+<div class="cell-output cell-output-display" data-execution_count="211">
 <pre><code>0.09592899344305951</code></pre>
 </div>
 </div>
 <p>Simpson’s rule:</p>
-<div id="83af9170" class="cell" data-execution_count="27">
+<div id="7ad01652" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a><span class="kw">def</span> I_simps(u, dx, dy):</span>
 <span id="cb33-2"><a></a>  <span class="im">from</span> scipy.integrate <span class="im">import</span> simpson <span class="im">as</span> simp</span>
 <span id="cb33-3"><a></a>  <span class="cf">return</span> np.sqrt(simp(simp(u<span class="op">**</span><span class="dv">2</span>, dx<span class="op">=</span>dy, axis<span class="op">=</span><span class="dv">1</span>), dx<span class="op">=</span>dx))</span>
 <span id="cb33-4"><a></a>I_simps(U, <span class="dv">1</span><span class="op">/</span>N, <span class="dv">1</span><span class="op">/</span>N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="175">
+<div class="cell-output cell-output-display" data-execution_count="212">
 <pre><code>0.09586418448463656</code></pre>
 </div>
 </div>
 <p>Exact:</p>
-<div id="3ed8135c" class="cell" data-execution_count="28">
+<div id="a69f3d15" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a><span class="bu">float</span>(sp.sqrt(sp.integrate(sp.integrate(ue<span class="op">**</span><span class="dv">2</span>, (y, <span class="dv">0</span>, <span class="dv">1</span>)), (x, <span class="dv">0</span>, <span class="dv">1</span>))).n())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="176">
+<div class="cell-output cell-output-display" data-execution_count="213">
 <pre><code>0.09586332023451888</code></pre>
 </div>
 </div>
@@ -1072,11 +1072,11 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 \]</span></p>
 <p>This is an approximation of the numerical integration using the trapezoidal method</p>
 <p>Implementation:</p>
-<div id="a91e436e" class="cell" data-execution_count="29">
+<div id="60d67d6b" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a></a><span class="kw">def</span> l2_error(u, dx, dy):</span>
 <span id="cb37-2"><a></a>  <span class="cf">return</span> np.sqrt(dx<span class="op">*</span>dy<span class="op">*</span>np.<span class="bu">sum</span>(u<span class="op">**</span><span class="dv">2</span>))</span>
 <span id="cb37-3"><a></a>l2_error(U<span class="op">-</span>sp.lambdify((x, y), ue)(xij, yij), <span class="dv">1</span><span class="op">/</span>N, <span class="dv">1</span><span class="op">/</span>N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="177">
+<div class="cell-output cell-output-display" data-execution_count="214">
 <pre><code>1.00866469481632e-17</code></pre>
 </div>
 </div>
@@ -1090,7 +1090,7 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 <h2>Our computational domain is simpler and boundary integrals are simpler as well</h2>
 <div class="columns">
 <div class="column">
-<div id="22b48933" class="cell" data-execution_count="30">
+<div id="144915b7" class="cell" data-execution_count="30">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1104,9 +1104,9 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 <p><span class="math display">\[
 \int_{0}^{L_y} u(x=L_x, y) dy
 \]</span></p>
-<div id="2d2aa7be" class="cell" data-execution_count="31">
+<div id="76be6139" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a></a>np.trapz(U[<span class="op">-</span><span class="dv">1</span>], dx<span class="op">=</span><span class="dv">1</span><span class="op">/</span>N, axis<span class="op">=</span><span class="dv">0</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="179">
+<div class="cell-output cell-output-display" data-execution_count="216">
 <pre><code>0.0</code></pre>
 </div>
 </div>
@@ -1114,9 +1114,9 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 <p><span class="math display">\[
 \int_{0}^{L_x} u(x, y=L_y) dx
 \]</span></p>
-<div id="4a57a2c4" class="cell" data-execution_count="32">
+<div id="73330034" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a></a>np.trapz(U[:, <span class="op">-</span><span class="dv">1</span>], dx<span class="op">=</span><span class="dv">1</span><span class="op">/</span>N, axis<span class="op">=</span><span class="dv">0</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="180">
+<div class="cell-output cell-output-display" data-execution_count="217">
 <pre><code>0.0</code></pre>
 </div>
 </div>
@@ -1127,7 +1127,7 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 <h2>Friction requires derivatives</h2>
 <div class="columns">
 <div class="column">
-<div id="a0e58ed7" class="cell" data-execution_count="33">
+<div id="b2b68ae9" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1145,17 +1145,17 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 <p><span class="math display">\[
 \int_{0}^{L_x} \frac{\partial u}{\partial y}(x, y=0) dx
 \]</span></p>
-<div id="08692245" class="cell" data-execution_count="34">
+<div id="3ca1554a" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a></a>dudy <span class="op">=</span> (N<span class="op">/</span><span class="dv">2</span>)<span class="op">*</span>(<span class="op">-</span><span class="dv">3</span><span class="op">*</span>U[:, <span class="dv">0</span>] <span class="op">+</span> <span class="dv">4</span><span class="op">*</span>U[:, <span class="dv">1</span>] <span class="op">-</span> U[:, <span class="dv">2</span>])</span>
 <span id="cb43-2"><a></a>np.trapz(dudy, dx<span class="op">=</span><span class="dv">1</span><span class="op">/</span>N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="182">
+<div class="cell-output cell-output-display" data-execution_count="219">
 <pre><code>0.4601188642377852</code></pre>
 </div>
 </div>
-<div id="4bd6a9a4" class="cell" data-execution_count="35">
+<div id="fbfb089b" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a></a>dudye <span class="op">=</span> sp.diff(ue, y)</span>
 <span id="cb45-2"><a></a><span class="bu">float</span>(sp.integrate(dudye.subs(y, <span class="dv">0</span>), (x, <span class="dv">0</span>, <span class="dv">1</span>)).n())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="183">
+<div class="cell-output cell-output-display" data-execution_count="220">
 <pre><code>0.4596976941318603</code></pre>
 </div>
 </div>
@@ -1163,10 +1163,10 @@ I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta 
 <p><span class="math display">\[
 \int_{0}^{L_y} \frac{\partial u}{\partial x}(x=L_x, y) dy
 \]</span></p>
-<div id="5ce6d179" class="cell" data-execution_count="36">
+<div id="863cccc5" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a></a>dudx <span class="op">=</span> (N<span class="op">/</span><span class="dv">2</span>)<span class="op">*</span>(<span class="dv">3</span><span class="op">*</span>U[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>U[<span class="op">-</span><span class="dv">2</span>] <span class="op">+</span> U[<span class="op">-</span><span class="dv">3</span>])</span>
 <span id="cb47-2"><a></a>np.trapz(dudx, dx<span class="op">=</span><span class="dv">1</span><span class="op">/</span>N) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="184">
+<div class="cell-output cell-output-display" data-execution_count="221">
 <pre><code>-0.08567622273572727</code></pre>
 </div>
 </div>

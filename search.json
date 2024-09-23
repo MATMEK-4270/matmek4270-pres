@@ -1824,14 +1824,14 @@
     "href": "postprocessing.html#midpoint-integration",
     "title": "Postprocessing and Interpolation",
     "section": "Midpoint integration",
-    "text": "Midpoint integration\n\n\n\n\n\n\n\n\n\nAll values \\(u(x, y)\\) are required in the center of computational cells and not in nodes.\n\\[\n\\| u-u^{e} \\|_{L^2} = \\sqrt{I(u - u^{e})}\n\\]"
+    "text": "Midpoint integration\n\n\n\n\n\n\n\n\n\nAll values \\(u(x, y)\\) are required in the center of computational cells and not in nodes.\n\\[\n\\| u-u^{e} \\|_{L^2} = \\sqrt{I((u - u^{e})^2)}\n\\]"
   },
   {
     "objectID": "postprocessing.html#numerical-midpoint-integration-tested",
     "href": "postprocessing.html#numerical-midpoint-integration-tested",
     "title": "Postprocessing and Interpolation",
     "section": "Numerical midpoint integration tested",
-    "text": "Numerical midpoint integration tested\n\nN = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um**2*dx*dy))\n\nI(U, 1/N, 1/N)\n\n0.09552823074589575\n\n\nCompared to the exact integral\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))).n())\n\n0.09586332023451888\n\n\n\nThe error norm \\(\\|u-u^{e}\\|_{L^2} = I(u-u^{e})\\) is\n\nI(U-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)\n\n5.108490959653866e-18\n\n\nwhich is very small because the Lagrange interpolator happens to be exact for all the midpoints for this function. It is not zero in general."
+    "text": "Numerical midpoint integration tested\n\nN = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um*dx*dy))\n\nI(U, 1/N, 1/N)\n\n0.2696557024695919\n\n\nCompared to the exact integral\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue, (y, 0, 1)), (x, 0, 1))).n())\n\n0.26995448271292816\n\n\n\nThe error norm \\(\\|u-u^{e}\\|_{L^2} = \\sqrt{I((u-u^{e})^2)}\\) is\n\nnp.sqrt(I((U-sp.lambdify((x, y), ue)(xij, yij))**2, 1/N, 1/N))\n\n3.1759481967064892e-09\n\n\nwhich is very small because the Lagrange interpolator happens to be close to exact exact for all the midpoints for this function. It is not zero in general."
   },
   {
     "objectID": "postprocessing.html#just-like-for-the-1d-case-there-is-a-simplification-using-the-small-ell2-norm-instead",
