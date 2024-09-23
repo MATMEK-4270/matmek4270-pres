@@ -654,7 +654,7 @@ plt.text(2.5, 1.6, r"$u(\frac{5\Delta x}{2}, \frac{3\Delta y}{2})$", horizontala
 All values $u(x, y)$ are required in the center of computational cells and not in nodes.
 
 $$
-\| u-u^{e} \|_{L^2} = \sqrt{I(u - u^{e})}
+\| u-u^{e} \|_{L^2} = \sqrt{I((u - u^{e})^2)}
 $$
 
 ## Numerical midpoint integration tested {.smaller}
@@ -668,7 +668,7 @@ ue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)
 
 def I(u, dx, dy):
   um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4
-  return np.sqrt(np.sum(um**2*dx*dy))
+  return np.sqrt(np.sum(um*dx*dy))
 
 I(U, 1/N, 1/N)
 ```
@@ -677,17 +677,17 @@ Compared to the exact integral
 
 ```{python}
 #| echo : true 
-float(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))).n())
+float(sp.sqrt(sp.integrate(sp.integrate(ue, (y, 0, 1)), (x, 0, 1))).n())
 ```
 ::: {.fragment}
 
-The error norm $\|u-u^{e}\|_{L^2} = I(u-u^{e})$ is
+The error norm $\|u-u^{e}\|_{L^2} = \sqrt{I((u-u^{e})^2)}$ is
 
 ```{python}
 #| echo : true
-I(U-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)
+np.sqrt(I((U-sp.lambdify((x, y), ue)(xij, yij))**2, 1/N, 1/N))
 ```
-which is very small because the Lagrange interpolator happens to be exact for all the midpoints for this function. It is not zero in general.
+which is very small because the Lagrange interpolator happens to be close to exact exact for all the midpoints for this function. It is not zero in general.
 
 :::
 
