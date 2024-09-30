@@ -2014,5 +2014,544 @@
     "title": "Postprocessing and Interpolation",
     "section": "Insert for \\(\\small u^n_{ij} = A^n E(i, j)\\) in the discretized wave equation",
     "text": "Insert for \\(\\small u^n_{ij} = A^n E(i, j)\\) in the discretized wave equation\n\\[ \\small\n\\begin{equation}\n\\begin{split}\n\\frac{(A^{n+1} - 2A^n + A^{n-1})E(i, j)}{\\Delta t^2} &=\nc^2 A^n \\Big\\{ \\\\\n    & \\frac{ E(i+1, j) - 2E(i, j) +  E(i-1, j)}{\\Delta x^2} \\\\\n+ & \\frac{E(i, j+1) - 2E(i, j) + E(i, j-1)}{\\Delta y^2} \\Big\\}\n\\end{split}\n\\end{equation}\n\\]\nDivide by \\(A^n E(i, j)\\) and multiply by \\(\\Delta t^2\\) in order to find \\(A\\). We also use that, e.g.,\n\\[ \\small\n\\frac{E(i+1, j)}{E(i, j)} = \\frac{e^{\\hat{\\imath}((i+1)k_x \\Delta x + j k_y \\Delta y)}}{e^{\\hat{\\imath}(i k_x \\Delta x + j k_y \\Delta y)}} = e^{\\hat{\\imath} k_x \\Delta x}\n\\]\n\\[ \\small\n\\frac{E(i, j-1)}{E(i, j)} = \\frac{e^{\\hat{\\imath}(ik_x \\Delta x + (j-1) k_y \\Delta y)}}{e^{\\hat{\\imath}(i k_x \\Delta x + j k_y \\Delta y)}} = e^{- \\hat{\\imath} k_y \\Delta y}\n\\]"
+  },
+  {
+    "objectID": "functions.html#function-approximation-with-global-functions",
+    "href": "functions.html#function-approximation-with-global-functions",
+    "title": "Function approximation with global functions",
+    "section": "Function approximation with global functions",
+    "text": "Function approximation with global functions\nConsider a generic function\n\\[\nu(x), \\quad x \\in [a, b],\n\\]\nwhere \\(u(x)\\) can by anything, like \\(u(x)=\\exp(\\sin(2\\pi x))\\), \\(u(x) = x^x\\), etc., etc.\nWe want to find an approximation to \\(u(x)\\) using\n\\[\nu(x) \\approx u_N(x) = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x)\n\\]\nwhere \\(\\psi_k(x)\\) is a global basis function defined on the entire domain \\([a, b]\\)."
+  },
+  {
+    "objectID": "functions.html#function-spaces",
+    "href": "functions.html#function-spaces",
+    "title": "Function approximation with global functions",
+    "section": "Function spaces",
+    "text": "Function spaces\n\\[\nu_N(x) = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x)\n\\]\n\n\\(\\psi_k(x)\\) is a basis function\n\\(\\{\\psi_k\\}_{k=0}^N\\) is a basis\n\\(\\{\\hat{u}_k\\}_{k=0}^N\\) are expansion coefficients (the unknown)\n\\(V_N = \\text{span}\\{\\psi_k\\}_{k=0}^N\\) is a function space\n\nFor example, \\(V_N = \\text{span}\\{x^k\\}_{k=0}^N\\) is the space of all polynomials of order less than or equal to \\(N\\). But it is more common to call this space \\(\\mathbb{P}_N\\)."
+  },
+  {
+    "objectID": "functions.html#in-the-approximation",
+    "href": "functions.html#in-the-approximation",
+    "title": "Function approximation with global functions",
+    "section": "In the approximation",
+    "text": "In the approximation\n\\[\nu_N(x) = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x) \\tag{1}\n\\]\n\n\\(\\psi_k(x)\\) is a basis function\n\\(\\{\\psi_k\\}_{k=0}^N\\) is a basis\n\\(\\{\\hat{u}_k\\}_{k=0}^N\\) are expansion coefficients (the unknowns)\n\\(V_N = \\text{span}\\{\\psi_k\\}_{k=0}^N\\) is a function space (which is a vector space)\n\n\nFor example, \\(V_N = \\text{span}\\{x^k\\}_{k=0}^N\\) is the space of all polynomials of order less than or equal to \\(N\\). (More commonly referred to as \\(\\mathbb{P}_N\\))\n\n\nIf we say that \\(u_N \\in V_N\\), then we mean that \\(u_N\\) can be written as \\((1)\\) and that \\(u_N\\) is a vector in the vector space (or function space) \\(V_N\\)."
+  },
+  {
+    "objectID": "functions.html#lets-consider-a-simple-example",
+    "href": "functions.html#lets-consider-a-simple-example",
+    "title": "Function approximation with global functions",
+    "section": "Lets consider a simple example",
+    "text": "Lets consider a simple example\nLet \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)."
+  },
+  {
+    "objectID": "functions.html#let-ux-10x-12-1-for-xin-12",
+    "href": "functions.html#let-ux-10x-12-1-for-xin-12",
+    "title": "Function approximation with global functions",
+    "section": "Let \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)",
+    "text": "Let \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)\n\n\n\n\n\n\n\n\n\nLet \\(V_N = \\{1, x\\}\\) be the space of all straight lines.\nWhat is the best approximation \\(u_N \\in V_N\\) to the function \\(u(x)\\)?\n\nHow do we decide what is best? All we know is that\n\\[\nu_N(x) = \\hat{u}_0 + \\hat{u}_1 x.\n\\]\nHow to find the best \\(\\{\\hat{u}_0, \\hat{u}_1\\}\\)?"
+  },
+  {
+    "objectID": "functions.html#how-to-find-the-best-approximations",
+    "href": "functions.html#how-to-find-the-best-approximations",
+    "title": "Function approximation with global functions",
+    "section": "How to find the best approximations?",
+    "text": "How to find the best approximations?\n\n\nThe least squares method\nThe Galerkin method\nThe collocation method"
+  },
+  {
+    "objectID": "functions.html#how-to-find-the-best-approximation",
+    "href": "functions.html#how-to-find-the-best-approximation",
+    "title": "Function approximation with global functions",
+    "section": "How to find the best approximation?",
+    "text": "How to find the best approximation?\nWhat options are there? Who decides what is best?\n\n\n\nThe three methods covered in this class are\n\nThe least squares method\nThe Galerkin method\nThe collocation method\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe first two are variational methods, whereas the third is an interpolation method.\nEach method will give us \\(N+1\\) equations for the \\(N+1\\) unknowns \\(\\{\\hat{u}_k\\}_{k=0}^N\\)!\n\n\n\nA variational method derives equations by using integration over the domain\nA collocation method derives equations at different points in the mesh"
+  },
+  {
+    "objectID": "functions.html#variational-methods",
+    "href": "functions.html#variational-methods",
+    "title": "Function approximation with global functions",
+    "section": "Variational methods",
+    "text": "Variational methods\nSince a variational method derives equations by integrating over the domain, we need to define a special notation. The \\(L^2\\) inner product is defined as\n\\[\n\\left(f, g \\right) = \\int_{\\Omega} f(x)g(x) d\\Omega,\n\\]\nfor two real functions \\(f(x)\\) and \\(g(x)\\) (complex functions have a slightly different inner product). The symbol \\(\\Omega\\) here represents the domain of interest. For our first example \\(\\Omega = [1, 2]\\).\n\n\n\n\n\n\nNote\n\n\nSometimes the inner product is written as \\(\\left(f, g \\right)_{L^2(\\Omega)}\\), in order to clarify that it is the \\(L^2\\) inner product on a certain domain. Normally, the \\(L^2(\\Omega)\\) subscript will be dropped."
+  },
+  {
+    "objectID": "functions.html#the-small-l2omega-norm",
+    "href": "functions.html#the-small-l2omega-norm",
+    "title": "Function approximation with global functions",
+    "section": "The \\(\\small L^2(\\Omega)\\) norm",
+    "text": "The \\(\\small L^2(\\Omega)\\) norm\nThe inner product is used to define an \\(L^2(\\Omega)\\) norm\n\\[\n\\|u\\| = \\sqrt{(u, u)}\n\\]\nThe norm gives us a measure for the length or size of a vector.\nThe \\(\\small L^2(\\Omega)\\) error norm\nIf we define the pointwise error as\n\\[\ne(x) = u(x) - u_N(x)\n\\]\nthen the \\(L^2(\\Omega)\\) error norm\n\\[\n\\| e \\| = \\sqrt{(e, e)} = \\sqrt{\\int_{\\Omega} e^2 dx}\n\\]\ngives us a measure of the error over the entire domain"
+  },
+  {
+    "objectID": "functions.html#back-to-our-example---how-do-we-find-the-best-possible-u_n-approx-u",
+    "href": "functions.html#back-to-our-example---how-do-we-find-the-best-possible-u_n-approx-u",
+    "title": "Function approximation with global functions",
+    "section": "Back to our example - how do we find the best possible \\(u_N \\approx u\\)?",
+    "text": "Back to our example - how do we find the best possible \\(u_N \\approx u\\)?\nIf we use the error\n\\[\ne(x) = u(x) - u_N(x)\n\\]\nthen the \\(L^2\\) error norm \\(\\|e\\|\\) represents the error integrated over the entire domain.\n\n\n\n\n\n\n\nIdea!\n\n\nWhy don’t we find \\(u_N\\) such that it minimizes the \\(L^2\\) error norm!\n\n\n\n\n\n\n\\(\\longrightarrow\\) The Least squares method!"
+  },
+  {
+    "objectID": "functions.html#the-least-squares-method-for-function-approximation",
+    "href": "functions.html#the-least-squares-method-for-function-approximation",
+    "title": "Function approximation with global functions",
+    "section": "The least squares method for function approximation",
+    "text": "The least squares method for function approximation\nWe want to approximate\n\\[\nu_N(x) \\approx u(x)\n\\]\nusing a function space \\(V_N\\) for \\(u_N\\). The pointwise error in \\(u_N\\) is defined as\n\\[\ne(x) = u(x) - u_N(x)\n\\]\nDefine the square of the \\(L^2\\) error norm\n\\[\nE = \\| e\\|^2 = (e, e)\n\\]\nThe least squares method is to find \\(u_N \\in V_N\\) such that\n\\[\n\\frac{\\partial E}{\\partial \\hat{u}_j} = 0, \\quad j=0, 1, \\ldots, N.\n\\]"
+  },
+  {
+    "objectID": "functions.html#the-least-squares-method",
+    "href": "functions.html#the-least-squares-method",
+    "title": "Function approximation with global functions",
+    "section": "The least squares method",
+    "text": "The least squares method\nFind \\(u_N \\in V_N\\) such that\n\\[\n\\frac{\\partial E}{\\partial \\hat{u}_j} = 0, \\quad j=0, 1, \\ldots, N\n\\]\nThis gives us \\(N+1\\) equations for \\(N+1\\) unknowns \\(\\{\\hat{u}_j\\}_{j=0}^N\\).\n\nBut how can we compute \\(\\frac{\\partial E}{\\partial \\hat{u}_j}\\)?\n\n\n\\[\n\\frac{\\partial E}{ \\partial \\hat{u}_j} = \\frac{\\partial }{\\partial \\hat{u}_j} \\int_{\\Omega} e^2 dx = \\int_{\\Omega} 2e \\frac{\\partial e}{\\partial \\hat{u}_j}dx\n\\]\n\n\nInsert for \\(e(x)=u(x)-u_N(x)=u(x)-\\sum_{k=0}^N \\hat{u}_k \\psi_k\\)\n\\[\n\\frac{\\partial E}{ \\partial \\hat{u}_j} = \\int 2\\left( u-\\sum_{k=0}^N \\hat{u}_k \\psi_k \\right) \\overbrace{\\frac{\\partial}{\\partial \\hat{u}_j} \\left(u - \\sum_{k=0}^N \\hat{u}_k \\psi_k \\right)}^{-\\psi_j} dx\n\\]"
+  },
+  {
+    "objectID": "functions.html#lsm-continued",
+    "href": "functions.html#lsm-continued",
+    "title": "Function approximation with global functions",
+    "section": "LSM continued",
+    "text": "LSM continued\nHow can we compute \\(\\frac{\\partial E}{\\partial \\hat{u}_k}\\)?\n\nStraightforward\n\\[\n\\frac{\\partial E}{ \\partial \\hat{u}_k} = \\frac{\\partial }{\\partial \\hat{u}_k} \\int e^2 dx = \\int 2e \\frac{\\partial e}{\\partial \\hat{u}_k}dx\n\\]\n\n\nInsert for \\(u_N = \\sum_{j=0}^N \\hat{u}_j \\psi_j\\)\n\\[\n\\begin{align}\n\\frac{\\partial E}{ \\partial \\hat{u}_k} &= \\int 2\\left( u-\\sum_{j=0}^N \\hat{u}_j \\psi_j \\right) \\underbrace{\\frac{\\partial}{\\partial \\hat{u}_k} \\left(u - \\sum_{j=0}^N \\hat{u}_j \\psi_j \\right)}_{=-\\psi_k} dx \\\\\n&=-2 \\int\\left( u-\\sum_{j=0}^N \\hat{u}_j \\psi_j \\right)  \\psi_k  dx\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "functions.html#section",
+    "href": "functions.html#section",
+    "title": "Function approximation with global functions",
+    "section": "",
+    "text": "Legendre polynomials also have very good approximation properties, meaning that a Legendre series converges very quickly\n\\[\nu_N(x) = \\sum_{k=0}^N \\hat{u}_k P_k(x)\n\\]"
+  },
+  {
+    "objectID": "functions.html#lsm-continued-1",
+    "href": "functions.html#lsm-continued-1",
+    "title": "Function approximation with global functions",
+    "section": "LSM continued",
+    "text": "LSM continued\n\\[\n\\frac{\\partial E}{ \\partial \\hat{u}_k} = 0\n\\]\ngives us that\n\\[\n\\int u \\psi_j dx = \\sum_{k=0}^N\\int \\psi_k \\psi_j dx \\hat{u}_k\n\\]"
+  },
+  {
+    "objectID": "functions.html#if-we-now-set-smallfracpartial-e-partial-hatu_k0-then",
+    "href": "functions.html#if-we-now-set-smallfracpartial-e-partial-hatu_k0-then",
+    "title": "Function approximation with global functions",
+    "section": "If we now set \\(\\small\\frac{\\partial E}{ \\partial \\hat{u}_k}=0\\), then",
+    "text": "If we now set \\(\\small\\frac{\\partial E}{ \\partial \\hat{u}_k}=0\\), then\n\\[\n\\frac{\\partial E}{ \\partial \\hat{u}_k} = -\\int 2\\left( u-\\sum_{j=0}^N \\hat{u}_j \\psi_j \\right) \\psi_k dx = 0\n\\]\n\\[\n\\longrightarrow \\int u \\psi_j dx = \\sum_{k=0}^N\\int \\psi_k \\psi_j dx \\hat{u}_k, \\quad j=0,1, \\ldots, N.\n\\]\ngives us \\(N+1\\) equations for the \\(N+1\\) unknown \\(\\{\\hat{u}_k\\}_{k=0}^N\\)\n\n\nBack to the example: \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1, 2]\\)\nFind \\(u_N \\in \\mathbb{P}_1\\) (meaning find \\(\\hat{u}_0\\) and \\(\\hat{u}_1\\)) such that\n\\[\n\\frac{\\partial E}{\\partial \\hat{u}_0}=0 \\text{ and } \\frac{\\partial E}{\\partial \\hat{u}_1}=0\n\\]\nTwo equations for two unknowns."
+  },
+  {
+    "objectID": "functions.html#implement-in-sympy",
+    "href": "functions.html#implement-in-sympy",
+    "title": "Function approximation with global functions",
+    "section": "Implement in Sympy",
+    "text": "Implement in Sympy\n\nfrom IPython.display import display\n\ndef inner(u, v, domain=(-1, 1), x=x):\n    return sp.integrate(u*v, (x, domain[0], domain[1]))\n\nu0, u1 = sp.symbols('u0,u1')\nerr = u-(u0+u1*x)\nE = inner(err, err, (1, 2))\neq1 = sp.Eq(sp.diff(E, u0, 1), 0)\neq2 = sp.Eq(sp.diff(E, u1, 1), 0)\ndisplay(eq1)\ndisplay(eq2)\n\n\\(\\displaystyle 2 u_{0} + 3 u_{1} - \\frac{14}{3} = 0\\)\n\n\n\\(\\displaystyle 3 u_{0} + \\frac{14 u_{1}}{3} - \\frac{26}{3} = 0\\)\n\n\nSolve the equations\n\nuhat = sp.solve((eq1, eq2), (u0, u1))\nprint(uhat) \nprint(f\"uN = {uhat[u0]} + {uhat[u1]}x\")\n\n{u0: -38/3, u1: 10}\nuN = -38/3 + 10x"
+  },
+  {
+    "objectID": "functions.html#implement-the-2-equations-in-sympy",
+    "href": "functions.html#implement-the-2-equations-in-sympy",
+    "title": "Function approximation with global functions",
+    "section": "Implement the 2 equations in Sympy",
+    "text": "Implement the 2 equations in Sympy\n\ndef inner(u, v, domain=(-1, 1), x=x):\n    return sp.integrate(u*v, (x, domain[0], domain[1]))\n\nu0, u1 = sp.symbols('u0,u1')\nerr = u-(u0+u1*x)\nE = inner(err, err, (1, 2))\neq1 = sp.Eq(sp.diff(E, u0, 1), 0)\neq2 = sp.Eq(sp.diff(E, u1, 1), 0)\ndisplay(eq1)\ndisplay(eq2)\n\n\\(\\displaystyle 2 u_{0} + 3 u_{1} - \\frac{14}{3} = 0\\)\n\n\n\\(\\displaystyle 3 u_{0} + \\frac{14 u_{1}}{3} - \\frac{26}{3} = 0\\)\n\n\n\n\n\nuhat = sp.solve((eq1, eq2), (u0, u1))\nprint(uhat) \n\n{u0: -38/3, u1: 10}\n\n\nThe LSM best fit equation is\n\n\nuN = -38/3 + 10x"
+  },
+  {
+    "objectID": "functions.html#linear-algebra-approach",
+    "href": "functions.html#linear-algebra-approach",
+    "title": "Function approximation with global functions",
+    "section": "Linear algebra approach",
+    "text": "Linear algebra approach\n\\[\n\\underbrace{\\int u \\psi_j dx}_{b_j} = \\sum_{k=0}^N \\underbrace{\\int \\psi_k \\psi_j dx}_{a_{jk}} \\underbrace{\\hat{u}_k}_{x_k}, \\quad j=0,1, \\ldots, N.\n\\] \\[\n\\boldsymbol{b} = A \\boldsymbol{x} \\longrightarrow \\boldsymbol{x} = A^{-1} \\boldsymbol{b}\n\\]\nAssemble mass matrix \\(a_{jk}=\\int \\psi_k \\psi_j dx\\) and vector \\(b_j = \\int u \\psi_j dx\\)\n\nA = sp.zeros(2, 2)\nb = sp.zeros(2, 1)\npsi = (sp.S(1), x)\nu = 10*(x-1)**2-1\nfor i in range(2):\n    for j in range(2):\n        A[i, j] = sp.integrate(psi[i]*psi[j], (x, 1, 2))\n    b[i] = sp.integrate(psi[i]*u, (x, 1, 2))\nprint(A)\nprint(A**(-1) @ b)\n\nMatrix([[1, 3/2], [3/2, 7/3]])\nMatrix([[-38/3], [10]])\n\n\nSame result as before!"
+  },
+  {
+    "objectID": "functions.html#the-galerkin-method",
+    "href": "functions.html#the-galerkin-method",
+    "title": "Function approximation with global functions",
+    "section": "The Galerkin method",
+    "text": "The Galerkin method\nThe error is required to be orthogonal to the basis functions (for the \\(L^2\\) inner product)\n\\[\n(e, \\psi_j) = 0, \\quad  j = 0, 1, \\ldots, N.\n\\]\nAgain \\(N+1\\) equations for \\(N+1\\) unknowns.\n\nNot as much work as the least squares method, and even easier to implement in Sympy:\n\neq1 = sp.Eq(inner(err, 1, domain=(1, 2)), 0)\neq2 = sp.Eq(inner(err, x, domain=(1, 2)), 0)\ndisplay(eq1)\ndisplay(eq2) \n\n\\(\\displaystyle - u_{0} - \\frac{3 u_{1}}{2} + \\frac{7}{3} = 0\\)\n\n\n\\(\\displaystyle - \\frac{3 u_{0}}{2} - \\frac{7 u_{1}}{3} + \\frac{13}{3} = 0\\)\n\n\n\nsp.solve((eq1, eq2), (u0, u1))\n\n{u0: -38/3, u1: 10}"
+  },
+  {
+    "objectID": "functions.html#the-galerkin-formulation-of-the-problem-is",
+    "href": "functions.html#the-galerkin-formulation-of-the-problem-is",
+    "title": "Function approximation with global functions",
+    "section": "The Galerkin formulation of the problem is",
+    "text": "The Galerkin formulation of the problem is\nFind \\(u_N \\in V_N\\) such that\n\\[\n(e, v) = 0, \\quad \\forall \\, v \\in V_N\n\\]\nHere \\(v\\) is often referred to as a test function, whereas \\(u_N\\) is referred to as a trial function.\nAlternative formulation:\nFind \\(u_N \\in V_N\\) such that\n\\[\n(e, \\psi_j) = 0, \\quad  j = 0, 1, \\ldots, N.\n\\]\n\n\n\n\n\n\n\nNote\n\n\nIn order to satisfy \\((e, v)=0\\) for all \\(v \\in V_N\\), we can insert for \\(v=\\sum_{j=0}^N\\hat{v}_j \\psi_j\\) such that\n\\[\n\\sum_{j=0}^N (e, \\psi_j) \\hat{v}_j =0.\n\\] In order for this to always be satisfied, we require that \\((e, \\psi_j)=0\\) for all \\(j=0,1,\\ldots, N\\)."
+  },
+  {
+    "objectID": "functions.html#the-linear-algebra-problem-for-the-galerkin-method",
+    "href": "functions.html#the-linear-algebra-problem-for-the-galerkin-method",
+    "title": "Function approximation with global functions",
+    "section": "The linear algebra problem for the Galerkin method",
+    "text": "The linear algebra problem for the Galerkin method\nWe have the \\(N+1\\) equations\n\\[\n(e, \\psi_i) = 0, \\quad  i = 0, 1, \\ldots, N.\n\\]\nInsert for \\(e=u-u_N\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j \\psi_j\\) to get\n\\[\n(u - \\sum_{j=0}^N \\hat{u}_j \\psi_j, \\psi_i) = 0, \\quad i =0, 1, \\ldots, N\n\\]\nand thus the linear algebra problem \\(A \\boldsymbol{x} = \\boldsymbol{b}\\):\n\\[\n\\sum_{j=0}^N \\underbrace{(\\psi_j, \\psi_i)}_{a_{ij}} \\, \\underbrace{\\hat{u}_j}_{x_j} = \\underbrace{(u, \\psi_i)}_{b_i}, \\quad i=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#orthogonality-is-a-big-deal",
+    "href": "functions.html#orthogonality-is-a-big-deal",
+    "title": "Function approximation with global functions",
+    "section": "Orthogonality is a big deal!",
+    "text": "Orthogonality is a big deal!\nIf we choose basis \\(\\{\\psi_j\\}_{j=0}^N\\) such that all basis functions are orthonormal, then\n\\[\na_{ij} = (\\psi_j, \\psi_i) = \\delta_{ij} = \\begin{cases}\n1 \\text{ if } i = j, \\\\\n0 \\text{ if } i \\ne j.\n\\end{cases}\n\\]\nand thus\n\\[\nA\\boldsymbol{x} = \\boldsymbol{b} \\rightarrow \\boldsymbol{x} = \\boldsymbol{b} \\quad \\text{or} \\quad \\hat{u}_j = (u, \\psi_j), \\quad j=0, 1, \\ldots, N\n\\]\n\nIf the basis functions are merely orthogonal, then\n\\[\n(\\psi_j, \\psi_i) = \\|\\psi_i\\|^2 \\delta_{ij},\n\\]\nwhere \\(\\|\\psi_i\\|^2\\) is the squared \\(L^2\\) norm of \\(\\psi_i\\). We can still easily solve the linear algebra system (because \\(A\\) is a diagonal matrix)\n\\[\n\\hat{u}_i = \\frac{(u, \\psi_i)}{\\|\\psi_i\\|^2} \\quad \\text{for } i=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#polynomial-basis-functions",
+    "href": "functions.html#polynomial-basis-functions",
+    "title": "Function approximation with global functions",
+    "section": "Polynomial basis functions",
+    "text": "Polynomial basis functions\nThe monomial basis\n\\[\n\\{x^n \\}_{n=0}^N,\n\\]\nis a basis for \\(\\mathbb{P}_N\\). However, it is not a good basis. This is because the basis functions are not orthogonal and the mass matrix \\(A\\) is ill conditioned. In short, this means it is difficult to solve \\(A\\boldsymbol{x}=\\boldsymbol{b}\\) with good accuracy using finite precision computers.\nThe basis functions are shown below for \\(x\\in [-1, 1]\\)"
+  },
+  {
+    "objectID": "functions.html#legendre-polynomials",
+    "href": "functions.html#legendre-polynomials",
+    "title": "Function approximation with global functions",
+    "section": "Legendre polynomials",
+    "text": "Legendre polynomials\nLegendre polynomials are defined on the domain \\(\\Omega = [-1, 1]\\) as\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\nThe first 5 Legendre polynomials are plotted below"
+  },
+  {
+    "objectID": "functions.html#the-legendre-polynomials-are-l2-orthogonal-on-omega-1-1",
+    "href": "functions.html#the-legendre-polynomials-are-l2-orthogonal-on-omega-1-1",
+    "title": "Function approximation with global functions",
+    "section": "The Legendre polynomials are \\(L^2\\) orthogonal on \\(\\Omega=[-1, 1]\\)",
+    "text": "The Legendre polynomials are \\(L^2\\) orthogonal on \\(\\Omega=[-1, 1]\\)\n\\[\n(P_j, P_i)_{L^2(-1, 1)} =  \\frac{2}{2j+1}\\delta_{ij}.\n\\]\nOrthogonality in the \\(L^2\\) inner product space makes the Legendre polynomials very popular in the world of numerical methods!\nUsing \\(|P_i|^2 = \\frac{2}{2i+1}\\) we get that\n\\[\n\\hat{u}_j = \\frac{(u, P_j)}{|P_j|^2} = \\frac{2j+1}{2}(u, P_j)\n\\]\n\n\n\n\n\n\nNote\n\n\nThis requires that the domain of \\(u(x)\\) is \\([-1, 1]\\)"
+  },
+  {
+    "objectID": "functions.html#error-in-legendre-approximations",
+    "href": "functions.html#error-in-legendre-approximations",
+    "title": "Function approximation with global functions",
+    "section": "Error in Legendre approximations",
+    "text": "Error in Legendre approximations\nThe smooth function \\(u(x)\\) can be exactly represented as\n\\[\nu(x) = \\sum_{k=0}^{\\infty} \\hat{u}_k P_k(x)\n\\]\nFor all \\(k \\le N\\) the series for \\(u(x)\\) and the series for \\(u_N(x)\\) have exactly the same coefficients \\(\\hat{u}_k\\). Hence the error in the approximation \\(u_N\\) is easily computed as\n\\[\ne(x) = u(x) - u_N(x) = \\sum_{k=N+1}^{\\infty} \\hat{u}_k P_k(x)\n\\]\nSpectral convergence - it can be shown that\n\\[\n\\| u - u_N\\| \\sim \\| \\hat{u}_{N+1}\\| \\sim e^{-\\mu N}, \\quad \\mu \\in \\mathbb{R}^+\n\\]\nExponential convergence!"
+  },
+  {
+    "objectID": "functions.html#if-the-physical-domain-is-different-from--1-1-then-we-need-to-map",
+    "href": "functions.html#if-the-physical-domain-is-different-from--1-1-then-we-need-to-map",
+    "title": "Function approximation with global functions",
+    "section": "If the physical domain is different from \\([-1, 1]\\), then we need to map",
+    "text": "If the physical domain is different from \\([-1, 1]\\), then we need to map\nLet \\(X\\) be the coordinate in the computational (reference) domain \\([A, B]\\), where \\(A\\) and \\(B\\) are real numbers. A linear (affine) mapping, from the computational coordinate \\(X\\) to the physical coordinate \\(x\\) is then\n\\[\n\\begin{equation}\nx = a + \\frac{b-a}{B-A}(X-A).\n\\end{equation}\n\\]\nThe reverse mapping is\n\\[\n\\begin{equation}\nX = A + \\frac{B-A}{b-a}(x-a).\n\\end{equation}\n\\]\nThese mappings are valid for any basis function."
+  },
+  {
+    "objectID": "functions.html#the-legendre-polynomials-are-l2-orthogonal-on-the-reference-domain-omega-1-1",
+    "href": "functions.html#the-legendre-polynomials-are-l2-orthogonal-on-the-reference-domain-omega-1-1",
+    "title": "Function approximation with global functions",
+    "section": "The Legendre polynomials are \\(L^2\\) orthogonal on the reference domain \\(\\Omega=[-1, 1]\\)",
+    "text": "The Legendre polynomials are \\(L^2\\) orthogonal on the reference domain \\(\\Omega=[-1, 1]\\)\n\\[\n(P_j, P_i)_{L^2(-1, 1)} =  \\frac{2}{2j+1}\\delta_{ij}.\n\\]\nOrthogonality in the \\(L^2\\) inner product space makes the Legendre polynomials very popular!\nUsing \\(\\|P_j\\|^2 = \\frac{2}{2j+1}\\) we get that\n\\[\n\\hat{u}_j = \\frac{(u, P_j)}{\\|P_j\\|^2} = \\frac{2j+1}{2}(u, P_j)\n\\]\n\n\n\n\n\n\nNote\n\n\nThis requires that the domain of \\(u(x)\\) is \\([-1, 1]\\)"
+  },
+  {
+    "objectID": "functions.html#if-the-physical-domain-a-b-is-different-from--1-1-then-we-need-to-map",
+    "href": "functions.html#if-the-physical-domain-a-b-is-different-from--1-1-then-we-need-to-map",
+    "title": "Function approximation with global functions",
+    "section": "If the physical domain \\([a, b]\\) is different from \\([-1, 1]\\), then we need to map",
+    "text": "If the physical domain \\([a, b]\\) is different from \\([-1, 1]\\), then we need to map\nMany well-known basis functions work only on a given reference domain\n\nSines and cosines \\([-\\pi, \\pi]\\)\nLegendre polynomials \\([-1, 1]\\)\nBernstein polynomials \\([0, 1]\\)\nBessel functions \\([0, \\infty]\\)\n\nLet \\(X\\) be the coordinate in the computational (reference) domain \\([A, B]\\), where \\(A\\) and \\(B\\) are real numbers. A linear (affine) mapping, from the computational coordinate \\(X\\) to the physical coordinate \\(x\\) is then\n\\[\n\\begin{equation}\nx = a + \\frac{b-a}{B-A}(X-A).\n\\end{equation}\n\\]\nThe reverse mapping is\n\\[\n\\begin{equation}\nX = A + \\frac{B-A}{b-a}(x-a).\n\\end{equation}\n\\]\nThese mappings are valid for any basis function."
+  },
+  {
+    "objectID": "functions.html#if-the-physical-domain-a-b-is-different-from-the-reference-domain-then-we-need-to-map",
+    "href": "functions.html#if-the-physical-domain-a-b-is-different-from-the-reference-domain-then-we-need-to-map",
+    "title": "Function approximation with global functions",
+    "section": "If the physical domain \\([a, b]\\) is different from the reference domain, then we need to map",
+    "text": "If the physical domain \\([a, b]\\) is different from the reference domain, then we need to map\nMany well-known basis functions work only on a given reference domain\n\n\n\nSines and cosines \\([0, \\pi]\\)\nLegendre polynomials \\([-1, 1]\\)\n\n\n\nBernstein polynomials \\([0, 1]\\)\nChebyshev polynomials \\([-1, 1]\\)\n\n\n\n\nLet \\(X\\) be the coordinate in the computational (reference) domain \\([A, B]\\) and \\(x\\) be the coordinate in the true physical domain \\([a, b]\\). A linear (affine) mapping, from \\(X\\) to \\(x\\) (and back) is then\n\\[\nX \\in [A, B] \\quad \\text{and} \\quad x \\in [a, b]\n\\]\n\\[\nx = a + \\frac{b-a}{B-A}(X-A) \\quad \\text{and} \\quad  X = A + \\frac{B-A}{b-a}(x-a)\n\\]"
+  },
+  {
+    "objectID": "functions.html#the-mapping-makes-it-possible-to-use-legendre-polynomials-in-any-domain-a-b",
+    "href": "functions.html#the-mapping-makes-it-possible-to-use-legendre-polynomials-in-any-domain-a-b",
+    "title": "Function approximation with global functions",
+    "section": "The mapping makes it possible to use Legendre polynomials in any domain \\([a, b]\\)",
+    "text": "The mapping makes it possible to use Legendre polynomials in any domain \\([a, b]\\)\nThe basis functions \\(\\psi_j(x)\\) are simply\n\\[\n\\psi_j(x) = P_j(X(x)) \\quad X \\in [-1, 1], \\quad x \\in [a, b]\n\\]\n\\[\nX(x) = -1 + \\frac{2}{b-a}(x-a)\n\\]\n\n\nxj = np.linspace(1, 2, 100)\nA, B = -1, 1\na, b = 1, 2\nXj = -1 + (B-A)/(b-a)*(xj-a)\nplt.figure(figsize=(6, 3.5))\nlegend = []\np = np.zeros(100)\nfor n in range(5):\n    l = sp.legendre(n, x)\n    p[:] = sp.lambdify(x, l)(Xj)\n    plt.plot(xj, p)\n    legend.append(f'$P_{n}(X(x))$')\nplt.title(r'$\\psi_j(x)=P_j(X(x))$')\nplt.xlabel('x')\nplt.legend(legend);"
+  },
+  {
+    "objectID": "functions.html#the-mapping-complicates-the-inner-product-slightly",
+    "href": "functions.html#the-mapping-complicates-the-inner-product-slightly",
+    "title": "Function approximation with global functions",
+    "section": "The mapping complicates the inner product slightly",
+    "text": "The mapping complicates the inner product slightly\nThe Galerkin method is defined on the true domain using \\(L^2([a, b])\\)\n\\[\n(u(x) - u_N(x), \\psi_j(x))_{L^2([a,b])}= \\int_{a}^b (u(x)-u_N(x)) \\psi_j(x) dx = 0, \\quad j=0,1,\\ldots, N.\n\\]\nInsert for \\(u_N = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x)\\) and rearrange\n\\[\n\\sum_{k=0}^N \\int_{a}^b \\psi_k(x)  \\psi_j(x) \\, dx \\, \\hat{u}_k =  \\int_{a}^b u(x) \\psi_j(x) dx, \\quad  j = 0, 1, \\ldots, N.\n\\]\nSo far just regular Galerkin. Now introduce \\(\\psi_j(x) = P_j(X(x))\\) and integrate with a change of variables \\(\\frac{dx}{dX} = \\frac{b-a}{2}\\). The limits are then \\(X(a)=-1\\) and \\(X(b)=1\\)\n\\[\n\\sum_{j=0}^N \\int_{-1}^1 P_k(X)  P_j(X)\\, \\frac{dx}{dX} \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, \\frac{dx}{dX} \\, dX, \\quad j=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#section-1",
+    "href": "functions.html#section-1",
+    "title": "Function approximation with global functions",
+    "section": "",
+    "text": "Legendre polynomials also have very good approximation properties, meaning that a Legendre series converges very quickly\n\\[\nu_N(x) = \\sum_{k=0}^N \\hat{u}_k P_k(x)\n\\]"
+  },
+  {
+    "objectID": "functions.html#legendre-polynomials-1",
+    "href": "functions.html#legendre-polynomials-1",
+    "title": "Function approximation with global functions",
+    "section": "Legendre polynomials",
+    "text": "Legendre polynomials\n\\[\n\\sum_{j=0}^N \\int_{-1}^1 P_k(X)  P_j(X) \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, dX, \\quad j=0, 1, \\ldots, N\n\\]\nwhich can be written as\n\\[\n\\sum_{k=0}^N  (P_k(X), P_j(X))_{L^2(-1, 1)} \\, \\hat{u}_k = (u(x(X)), P_j(X))_{L^2(-1, 1)}\n\\]"
+  },
+  {
+    "objectID": "functions.html#the-mapping-complicates-the-inner-product",
+    "href": "functions.html#the-mapping-complicates-the-inner-product",
+    "title": "Function approximation with global functions",
+    "section": "The mapping complicates the inner product",
+    "text": "The mapping complicates the inner product\nThe Galerkin method is defined on the true domain using \\(L^2([a, b])\\)\n\\[\n(u(x) - u_N(x), \\psi_j(x))_{L^2([a,b])}= \\int_{a}^b (u(x)-u_N(x)) \\psi_j(x) dx = 0, \\quad j=0,1,\\ldots, N.\n\\]\nInsert for \\(u_N = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x)\\) and rearrange\n\\[\n\\sum_{k=0}^N \\int_{a}^b \\psi_k(x)  \\psi_j(x) \\, dx \\, \\hat{u}_k =  \\int_{a}^b u(x) \\psi_j(x) dx, \\quad  j = 0, 1, \\ldots, N.\n\\]\nSo far just regular Galerkin.\n\nNow introduce \\(\\psi_j(x) = P_j(X(x))\\) and integrate with a change of variables \\(x\\rightarrow X\\). The new integration limits are then \\(X(a)=-1\\) and \\(X(b)=1\\)\n\\[\n\\sum_{j=0}^N \\int_{-1}^1 P_k(X)  P_j(X)\\, \\cancel{\\frac{dx}{dX}} \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, \\cancel{\\frac{dx}{dX}} \\, dX, \\quad j=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#the-mapping-complicates-ctd",
+    "href": "functions.html#the-mapping-complicates-ctd",
+    "title": "Function approximation with global functions",
+    "section": "The mapping complicates ctd",
+    "text": "The mapping complicates ctd\n\\[\n\\sum_{j=0}^N \\int_{-1}^1 P_k(X)  P_j(X) \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, dX, \\quad j=0, 1, \\ldots, N\n\\]\nwhich can be written as\n\\[\n\\sum_{k=0}^N  (P_k(X), P_j(X))_{L^2(-1, 1)} \\, \\hat{u}_k = (u(x(X)), P_j(X))_{L^2(-1, 1)}\n\\]"
+  },
+  {
+    "objectID": "functions.html#the-mapping-complicates",
+    "href": "functions.html#the-mapping-complicates",
+    "title": "Function approximation with global functions",
+    "section": "The mapping complicates …",
+    "text": "The mapping complicates …\nWe get the linear system with inner products over the reference domain\n\\[\n\\sum_{j=0}^N \\int_{-1}^1 P_k(X)  P_j(X) \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, dX, \\quad j=0, 1, \\ldots, N\n\\]\nwhich can be written as\n\\[\n\\sum_{k=0}^N  \\underbrace{(P_k(X), P_j(X))_{L^2(-1, 1)}}_{\\frac{2}{2j+1} \\delta_{kj}} \\, \\hat{u}_k = (u(x(X)), P_j(X))_{L^2(-1, 1)}\n\\]\nsuch that\n\\[\n\\hat{u}_j = \\frac{2j+1}{2} \\left( u(x(X)), P_j(X) \\right)_{L^2(-1, 1)} \\quad j=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#implementation-of-the-mapped-inner-product",
+    "href": "functions.html#implementation-of-the-mapped-inner-product",
+    "title": "Function approximation with global functions",
+    "section": "Implementation of the mapped inner product",
+    "text": "Implementation of the mapped inner product\nThe following inner product is valid for any mapping\n\ndef inner(u, v, domain, ref_domain=(-1, 1)):\n  A, B = ref_domain\n  a, b = domain\n  X = a + (b-a)*(x-A)/(B-A)\n  us = u.subs(x, X) #  u(x(X))\n  return sp.integrate(us*v, (x, A, B))\n\n\nFor example, for our \\(u(x)=10(x-1)^2-1\\) in the domain \\(\\Omega = [a, b] = [1, 2]\\) we get\n\nuhat = lambda u, j: (2*j+1) * inner(u, sp.legendre(j, x), (1, 2))/2\nu = 10*(x-1)**2-1 \nu0, u1 = uhat(u, 0), uhat(u, 1)\nprint(u0, u1) \nprint(f\"uN(x) = {u0}+{u1}X(x)\")\n\n7/3 5\nuN(x) = 7/3+5X(x)\n\n\nThe Legendre polynomials use the reference coordinate \\(X\\), whereas the true function \\(u_N(x)\\) is a function of \\(x\\) from the true space.\n\n\n\n\n\n\nNote\n\n\nThe inner product implemented here is using Sympy’s integrate function, which may be too slow or not find the solution at all. It is normally better to use scipy.integrate.quad"
+  },
+  {
+    "objectID": "functions.html#plot-the-legendre-approximation",
+    "href": "functions.html#plot-the-legendre-approximation",
+    "title": "Function approximation with global functions",
+    "section": "Plot the Legendre approximation",
+    "text": "Plot the Legendre approximation\n\nplt.figure(figsize=(4, 3))\nxj = np.linspace(1, 2, 100)\nXj = -1 + 2/(b-a)*(xj-a)\nplt.plot(xj, sp.lambdify(x, u)(xj))\nplt.plot(xj, uhat(u, 0) + uhat(u, 1)*Xj, 'r:')\nplt.legend(['$10(x-1)^2-1$', f'{uhat(u, 0)} + {uhat(u, 1)}X(x)']);\n\n\n\n\n\n\n\n\nThe result is exactly the same as was found with the monomial basis \\(\\{1, x\\}\\).\n\n\n\n\n\n\nTip\n\n\nNumpy has a complete module dedicated to Legendre polynomials"
+  },
+  {
+    "objectID": "functions.html#the-collocation-method",
+    "href": "functions.html#the-collocation-method",
+    "title": "Function approximation with global functions",
+    "section": "The collocation method",
+    "text": "The collocation method\nTakes a very different approach than the variational methods, but the objective is still to find \\(u_N \\in V_N\\) such that\n\\[\nu_N(x) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x)\n\\]\nThe collocation method requires that for some \\(N+1\\) chosen mesh points \\(\\{x_j\\}_{j=0}^N\\) the following \\(N+1\\) equations are satisfied\n\\[\nu(x_i) - u_N(x_i) = 0, \\quad i = 0, 1, \\ldots, N.\n\\]\nInserting for \\(u_N(x_i)\\) we get the \\(N+1\\) linear algebra equations\n\\[\n\\sum_{j=0}^N \\hat{u}_j \\underbrace{\\psi_{j}(x_i)}_{a_{ij}} = u(x_i) \\longrightarrow\n\\sum_{j=0}^N a_{ij} \\hat{u}_j = u(x_i), \\quad i=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#linear-algebra",
+    "href": "functions.html#linear-algebra",
+    "title": "Function approximation with global functions",
+    "section": "Linear algebra",
+    "text": "Linear algebra\nwhich can be written as the linear algebra system\n\\[\n\\sum_{j} a_{ij} \\hat{u}_j = u_i,\n\\]\nwhere the matrix components \\(a_{ij} = \\psi_j(x_i)\\) and \\(u_i = u(x_i)\\)."
+  },
+  {
+    "objectID": "functions.html#the-lagrange-interpolation-method-described-in-lecture-7-is-a-collocation-method",
+    "href": "functions.html#the-lagrange-interpolation-method-described-in-lecture-7-is-a-collocation-method",
+    "title": "Function approximation with global functions",
+    "section": "The Lagrange interpolation method described in lecture 7 is a collocation method",
+    "text": "The Lagrange interpolation method described in lecture 7 is a collocation method\nThe Lagrange basis functions \\(\\ell_j(x)\\) are defined for points \\(\\{x_j\\}_{j=0}^N\\) such that\n\\[ \\small\n\\ell_j(x) = \\prod_{\\substack{0 \\le m \\le N \\\\ m \\ne j}} \\frac{x-x_m}{x_j-x_m} \\quad \\text{and} \\quad \\ell_j(x_i) = \\delta_{ij} = \\begin{cases} 1 \\quad &\\text{for } i=j \\\\\n0 \\quad &\\text{for }  i\\ne j\n\\end{cases}\n\\]\nHence the matrix \\(a_{ij}= \\psi_j(x_i)=\\delta_{ij}\\) and we can simply use the coefficients\n\\[ \\small\n\\hat{u}_j = u(x_j) \\quad \\text{such that}\\quad u_N(x)=\\sum_{j=0}^Nu(x_j) \\ell_j(x)\n\\]\nThere is no integration and the method is often favored for its simplicity. There is a problem though. How do you choose the collocation points?!\n\n\n\n\n\n\nNote\n\n\nThe Lagrange polynomial here is using all \\(N+1\\) mesh points. This is different from lecture 7, where we only used a few mesh points close to the interpolation point."
+  },
+  {
+    "objectID": "functions.html#lagrange-collocation-method-for-ux10x-12-1-xin12",
+    "href": "functions.html#lagrange-collocation-method-for-ux10x-12-1-xin12",
+    "title": "Function approximation with global functions",
+    "section": "Lagrange collocation method for \\(u(x)=10(x-1)^2-1, x\\in[1,2]\\)",
+    "text": "Lagrange collocation method for \\(u(x)=10(x-1)^2-1, x\\in[1,2]\\)\nThe approximation using two collocation points (linear function, \\(u_N \\in V_N=\\text{span}\\{1, x\\}\\)) is\n\\[\nu_N(x) = \\hat{u}_0 \\ell_0(x) + \\hat{u}_1 \\ell_1(x),\n\\]\nor more simply\n\\[\nu_N(x) = u(x_0) \\ell_0(x) + u(x_1) \\ell_1(x).\n\\]\nWe can choose the end points \\(x_0=1\\) and \\(x_1=2\\) and reuse the two functions Lagrangebasis and Lagrangefunction from lecture 7. The result is then as shown on the next slide"
+  },
+  {
+    "objectID": "functions.html#collocation",
+    "href": "functions.html#collocation",
+    "title": "Function approximation with global functions",
+    "section": "Collocation",
+    "text": "Collocation\n\n\nfrom lagrange import Lagrangebasis, Lagrangefunction\nxj = np.linspace(1, 2, 100)\nu = 10*(x-1)**2-1\nxp = np.array([1, 2])\nell = Lagrangebasis(xp)\nL = Lagrangefunction([u.subs(x, xi) for xi in xp], ell)\nplt.figure(figsize=(5, 3))\nplt.plot(xj, sp.lambdify(x, u)(xj), 'b')\nplt.plot(xj, sp.lambdify(x, L)(xj), 'r:')\nplt.plot(xp, [u.subs(x, xi) for xi in xp], 'bo')\nplt.legend(['$u(x)$', '$u_N(x), (x_0=1, x_1=2)$']);\n\n\n\n\n\n\n\n\n\n\n\nUse three points and the approximation is perfect because \\(u(x)\\) is a 2nd order polynomial\n\n\nxp = np.array([1, 1.5, 2]) \nell = Lagrangebasis(xp)\nL = Lagrangefunction([u.subs(x, xi) for xi in xp], ell)\nplt.figure(figsize=(5, 3))\nplt.plot(xj, sp.lambdify(x, u)(xj), 'b')\nplt.plot(xj, sp.lambdify(x, L)(xj), 'r:')\nplt.plot(xp, [u.subs(x, xi) for xi in xp], 'bo')\nplt.legend(['$u(x)$', '$(x_0, x_1, x_2) = (1, 1.5, 2)$']);"
+  },
+  {
+    "objectID": "functions.html#high-order-interpolation-on-uniform-grids-is-a-bad-idea",
+    "href": "functions.html#high-order-interpolation-on-uniform-grids-is-a-bad-idea",
+    "title": "Function approximation with global functions",
+    "section": "High order interpolation on uniform grids is a bad idea",
+    "text": "High order interpolation on uniform grids is a bad idea\nLets consider a more difficult function\n\\[\nu(x) = \\frac{1}{1+25x^2}, \\quad x \\in [-1, 1],\n\\]\nand attempt to approximate it with Lagrange polynomials on a uniform grid.\nUse\n\\[\\begin{align}\nN &= 15 \\\\\nx_i &= -1 + \\frac{2i}{N}, \\quad i=0, 1, \\ldots, N \\\\\nu(x_i) &= u_N(x_i) = \\sum_{j=0}^N u(x_j) \\ell_j(x_i), \\quad i=0, 1, \\ldots, N\n\\end{align}\\]"
+  },
+  {
+    "objectID": "functions.html#implementation",
+    "href": "functions.html#implementation",
+    "title": "Function approximation with global functions",
+    "section": "Implementation",
+    "text": "Implementation\n\n\nu = 1/(1+25*x**2)\nN = 15\nxj = np.linspace(-1, 1, N+1)\nuj = sp.lambdify(x, u)(xj)\nell = Lagrangebasis(xj)\nL = Lagrangefunction(uj, ell)\nyj = np.linspace(-1, 1, 1000)\nplt.figure(figsize=(6, 4))\nplt.plot(xj, uj, 'bo')\nplt.plot(yj, sp.lambdify(x, u)(yj))\nplt.plot(yj, sp.lambdify(x, L)(yj), 'r:')\nax = plt.gca()\nax.set_ylim(-0.5, 2.2);\n\n\n\n\n\n\n\n\n\n\nLarge over and undershoots in the approximation Lagrange polynomial!\nRunge’s phenomenon! Interpolation on uniform grids may lead to large over and undershoots.\nWhy?"
+  },
+  {
+    "objectID": "functions.html#runges-phenomenon",
+    "href": "functions.html#runges-phenomenon",
+    "title": "Function approximation with global functions",
+    "section": "Runge’s phenomenon",
+    "text": "Runge’s phenomenon\nDefine the monic polynomial with roots in \\(\\{x_j\\}_{j=0}^N\\) as\n\\[\np_N(x) = \\prod_{j=0}^N (x-x_j)\n\\]\nIt can be shown that the error in the Lagrange polynomial \\(u_N(x)\\) using \\(\\{x_j\\}_{j=0}^N\\) is\n\\[\nu(x)-u_N(x)=\\frac{u^{(N)}(\\xi)}{(N+1)!}p_N(x)\n\\]\nfor some \\(\\xi \\in [a, b]\\).\nHence, large errors occur when \\(p_N(x)\\) is large or \\(u^{(N)}(\\xi) = \\frac{d^N u}{dx^N}(\\xi)\\) is large.\nLets look at \\(p_N(x)\\), which is independent of the function \\(u(x)\\)!"
+  },
+  {
+    "objectID": "functions.html#plot-the-monic-polynomial-at-uniform-and-chebyshev-mesh",
+    "href": "functions.html#plot-the-monic-polynomial-at-uniform-and-chebyshev-mesh",
+    "title": "Function approximation with global functions",
+    "section": "Plot the monic polynomial at uniform and Chebyshev mesh",
+    "text": "Plot the monic polynomial at uniform and Chebyshev mesh\n\npp = np.poly(xp)\npc = np.poly(xc)\nxj = np.linspace(-1, 1, 1000)\nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 3))\nax1.plot(xj, np.polyval(pp, xj)); ax2.plot(xj, np.polyval(pc, xj))\nax1.set_title('Uniform grid'); ax2.set_title('Chebyshev grid');\n\n\n\n\n\n\n\n\nUniform roots lead to large oscillations near the edges, whereas Chebyshev points leads to a polynomial with near uniform magnitude."
+  },
+  {
+    "objectID": "functions.html#plot-the-monic-polynomial-small-pxprod_j0n-x-x_j-at-uniform-and-chebyshev-mesh",
+    "href": "functions.html#plot-the-monic-polynomial-small-pxprod_j0n-x-x_j-at-uniform-and-chebyshev-mesh",
+    "title": "Function approximation with global functions",
+    "section": "Plot the monic polynomial \\(\\small p(x)=\\prod_{j=0}^N (x-x_j)\\) at uniform and Chebyshev mesh",
+    "text": "Plot the monic polynomial \\(\\small p(x)=\\prod_{j=0}^N (x-x_j)\\) at uniform and Chebyshev mesh\n\npp = np.poly(xp); pc = np.poly(xc)\nxj = np.linspace(-1, 1, 1000)\nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 3))\nax1.plot(xj, np.polyval(pp, xj)); ax2.plot(xj, np.polyval(pc, xj))\nax1.plot(xp, np.zeros(N+1), 'bo'); ax2.plot(xc, np.zeros(N+1), 'bo')\nax1.set_title('Uniform grid'); ax2.set_title('Chebyshev grid');\n\n\n\n\n\n\n\n\nUniform roots lead to large oscillations near the edges, whereas Chebyshev points leads to a polynomial with near uniform oscillations. Large oscillations in \\(p(x)\\) leads to large derivatives of \\(p(x)\\) near the edges and thus poor approximations. Remember the error term in Taylor expansions is \\(\\sim p^{(n)}(x)\\)."
+  },
+  {
+    "objectID": "functions.html#compute-the-lagrange-polynomial-using-chebyshev-points",
+    "href": "functions.html#compute-the-lagrange-polynomial-using-chebyshev-points",
+    "title": "Function approximation with global functions",
+    "section": "Compute the Lagrange polynomial using Chebyshev points",
+    "text": "Compute the Lagrange polynomial using Chebyshev points\n\n\nxj = np.cos(np.arange(N+1)*np.pi/N)\nuj = sp.lambdify(x, u)(xj)\nell = Lagrangebasis(xj)\nL = Lagrangefunction(uj, ell)\nplt.figure(figsize=(6, 4))\nplt.plot(xj, uj, 'bo')\nplt.plot(yj, sp.lambdify(x, u)(yj))\nplt.gca().set_ylim(-0.5, 2.2);\nplt.plot(yj, sp.lambdify(x, L)(yj), 'r:');\n\n\n\n\n\n\n\n\n\n\nOnly small oscillations - interpolation is converging using more points!"
+  },
+  {
+    "objectID": "functions.html#how-about-the-variational-method-and-uxfrac1125x2",
+    "href": "functions.html#how-about-the-variational-method-and-uxfrac1125x2",
+    "title": "Function approximation with global functions",
+    "section": "How about the variational method and \\(u(x)=\\frac{1}{1+25x^2}\\)?",
+    "text": "How about the variational method and \\(u(x)=\\frac{1}{1+25x^2}\\)?\nLets try Legendre polynomials. There is no need for mapping since the domain is \\([-1, 1]\\). And there are no mesh points! The Legendre coefficients are\n\\[\n\\hat{u}_j = \\frac{2j+1}{2}(u, P_j), \\quad j=0, 1, ...\n\\]\n\n\nu = 1/(1+25*x**2)\nuj = lambda u, j: (2*j+1) * inner(sp.legendre(j, x), u, (-1, 1))/2\nul = []\nfor n in range(40):\n  ul.append(uj(u, n).n())\n\nxj = np.linspace(-1, 1, 1000)\nuj = sp.lambdify(x, u)(xj)\nfig, (ax1, ax2) = plt.subplots(2, 1)\nax1.semilogy(ul, '+')\nax2.plot(xj, Legendre(ul[:17])(xj))\nax2.plot(yj, sp.lambdify(x, L)(yj), 'r:')\nax2.set_ylim(-0.5, 2.2);\nax2.legend(['Legendre', 'Lagrange on Chebyshev'])"
+  },
+  {
+    "objectID": "functions.html#large-oscillations-in-p_nx-occur-when-the-interpolation-uses-a-uniform-mesh",
+    "href": "functions.html#large-oscillations-in-p_nx-occur-when-the-interpolation-uses-a-uniform-mesh",
+    "title": "Function approximation with global functions",
+    "section": "Large oscillations in \\(p_N(x)\\) occur when the interpolation uses a uniform mesh",
+    "text": "Large oscillations in \\(p_N(x)\\) occur when the interpolation uses a uniform mesh\nLets use both a uniform mesh and Chebyshev points:\n\\[\nx_j = \\cos(j \\pi / N)\n\\]\n\n\n\n\n\n\n\n\n\nConstruct \\(p_N(x)\\) using wither uniform mesh or Chebyshev nodes.."
+  },
+  {
+    "objectID": "functions.html#high-order-interpolation-on-uniform-grids-is-bad",
+    "href": "functions.html#high-order-interpolation-on-uniform-grids-is-bad",
+    "title": "Function approximation with global functions",
+    "section": "High order interpolation on uniform grids is bad",
+    "text": "High order interpolation on uniform grids is bad\nLets consider a more difficult function\n\\[\nu(x) = \\frac{1}{1+25x^2}, \\quad x \\in [-1, 1],\n\\]\nand attempt to approximate it with Lagrange polynomials on a uniform grid.\nUse\n\\[\\begin{align}\nN &= 15 \\\\\nx_i &= -1 + \\frac{2i}{N}, \\quad i=0, 1, \\ldots, N \\\\\nu(x_i) &= u_N(x_i) = \\sum_{j=0}^N u(x_j) \\ell_j(x_i), \\quad i=0, 1, \\ldots, N\n\\end{align}\\]"
+  },
+  {
+    "objectID": "functions.html#the-monic-p_nx-can-be-created-for-any-mesh",
+    "href": "functions.html#the-monic-p_nx-can-be-created-for-any-mesh",
+    "title": "Function approximation with global functions",
+    "section": "The monic \\(p_N(x)\\) can be created for any mesh",
+    "text": "The monic \\(p_N(x)\\) can be created for any mesh\nLets use both a uniform mesh and Chebyshev points:\n\\[\nx_j = -1 + \\frac{2j}{N} \\quad \\text{and} \\quad x_j = \\cos(j \\pi / N), \\quad j=0, 1, \\ldots, N\n\\]\n\n\n\n\n\n\n\n\n\nWe see that Chebyshev points are clustered near the edges\nLets construct \\(p_N(x)\\) using either the uniform mesh or Chebyshev nodes.."
+  },
+  {
+    "objectID": "functions.html#plot-the-monic-polynomial-small-p_nxprod_j0n-x-x_j-at-uniform-and-chebyshev-mesh",
+    "href": "functions.html#plot-the-monic-polynomial-small-p_nxprod_j0n-x-x_j-at-uniform-and-chebyshev-mesh",
+    "title": "Function approximation with global functions",
+    "section": "Plot the monic polynomial \\(\\small p_N(x)=\\prod_{j=0}^N (x-x_j)\\) at uniform and Chebyshev mesh",
+    "text": "Plot the monic polynomial \\(\\small p_N(x)=\\prod_{j=0}^N (x-x_j)\\) at uniform and Chebyshev mesh\n\nxp = np.linspace(-1, 1, N+1); xc = np.cos(np.arange(N+1)*np.pi/N) \npp = np.poly(xp); pc = np.poly(xc)\nxj = np.linspace(-1, 1, 1000)\nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 3))\nax1.plot(xj, np.polyval(pp, xj)); ax2.plot(xj, np.polyval(pc, xj))\nax1.plot(xp, np.zeros(N+1), 'bo'); ax2.plot(xc, np.zeros(N+1), 'bo')\nax1.set_title('Uniform grid'); ax2.set_title('Chebyshev grid');\n\n\n\n\n\n\n\n\n\nA uniform mesh leads to large oscillations near the edges, whereas Chebyshev points leads to a polynomial with near uniform oscillations.\nThe oscillations on the uniform mesh grow even larger when increasing \\(N\\)."
+  },
+  {
+    "objectID": "functions.html#how-about-the-variational-method-and-small-uxfrac1125x2",
+    "href": "functions.html#how-about-the-variational-method-and-small-uxfrac1125x2",
+    "title": "Function approximation with global functions",
+    "section": "How about the variational method and \\(\\small u(x)=\\frac{1}{1+25x^2}\\)?",
+    "text": "How about the variational method and \\(\\small u(x)=\\frac{1}{1+25x^2}\\)?\nLets try Legendre polynomials. There is no need for mapping since the domain is \\([-1, 1]\\). And there are no mesh points! The Legendre coefficients are\n\\[\n\\hat{u}_j = \\frac{2j+1}{2}(u, P_j), \\quad j=0, 1, ...\n\\]\n\n\n\nu = 1/(1+25*x**2)\nuj = lambda u, j: (2*j+1) * inner(sp.legendre(j, x), u, (-1, 1))/2\nul = []\nfor n in range(40):\n  ul.append(uj(u, n).n())\n\nxj = np.linspace(-1, 1, 1000)\nuj = sp.lambdify(x, u)(xj)\nfig, (ax1, ax2) = plt.subplots(2, 1)\nax1.semilogy(ul, '+')\nax2.plot(xj, Legendre(ul[:17])(xj))\nax2.plot(yj, sp.lambdify(x, L)(yj), 'r:')\nax2.set_ylim(-0.5, 2.2);\nax2.legend(['Legendre', 'Lagrange on Chebyshev'])"
+  },
+  {
+    "objectID": "functions.html#the-variational-method-and-small-uxfrac1125x2",
+    "href": "functions.html#the-variational-method-and-small-uxfrac1125x2",
+    "title": "Function approximation with global functions",
+    "section": "The variational method and \\(\\small u(x)=\\frac{1}{1+25x^2}\\)",
+    "text": "The variational method and \\(\\small u(x)=\\frac{1}{1+25x^2}\\)\nLets try Legendre polynomials. There is no need for mapping since the domain is \\([-1, 1]\\). And there are no mesh points! The Legendre coefficients are\n\\[\n\\hat{u}_j = \\frac{2j+1}{2}(u, P_j), \\quad j=0, 1, ...\n\\]\n\n\n\n# Use scipy to compute integral\nfrom numpy.polynomial import Legendre \nfrom scipy.integrate import quad \ndef innern(u, v):\n    uj = lambda xj: sp.lambdify(x, u)(xj)*v(xj)\n    return quad(uj, -1, 1)[0]\n\nu = 1/(1+25*x**2)\nuhat = lambda u, j: (2*j+1) * innern(u, Legendre.basis(j))/2\nul = [uhat(u, n) for n in range(40)]\n\nxj = np.linspace(-1, 1, 1000)\nuj = sp.lambdify(x, u)(xj)\nfig, (ax1, ax2) = plt.subplots(2, 1)\nax1.semilogy(abs(np.array(ul)), '+')\nax2.plot(xj, Legendre(ul[:17])(xj))\nax2.plot(yj, sp.lambdify(x, L)(yj), 'r:')\nax2.set_ylim(-0.5, 2.2);\nax1.legend(['Legendre coefficients magnitude'])\nax2.legend(['Legendre', 'Lagrange on Chebyshev'])"
+  },
+  {
+    "objectID": "functions.html#boundary-issues",
+    "href": "functions.html#boundary-issues",
+    "title": "Function approximation with global functions",
+    "section": "Boundary issues",
+    "text": "Boundary issues\nLets consider a slightly different problem\n\\[\nu(x) = 10(x-1)^2 -1, \\quad x \\in [0, 1]\n\\]\nand attempt to find \\(u_N \\in V_N = \\text{span}\\{\\sin((j+1)\\pi x)\\}_{j=0}^N\\) with the Galerkin method.\nThe sines are orthogonal such that the mass matrix becomes diagonal\n\\[\n\\int_0^1 \\sin((j+1) \\pi x) \\sin((i + 1) \\pi x) dx = \\frac{1}{2} \\delta_{ij}.\n\\]\nHence we can easily get the coefficients with the Galerkin method\n\\[\n\\hat{u}_i = 2 \\left( u(x),  \\sin((i+1) \\pi x) \\right)_{L^2(0, 1)}.\n\\]"
+  },
+  {
+    "objectID": "functions.html#implementation-1",
+    "href": "functions.html#implementation-1",
+    "title": "Function approximation with global functions",
+    "section": "Implementation",
+    "text": "Implementation\n\n\nu = 10*(x-1)**2-1\nuhat = lambda u, i: 2*inner(u, sp.sin((i+1)*sp.pi*x), (0, 1), (0, 1))\nul = []\nfor i in range(15):\n    ul.append(uhat(u, i).n())\n\nul = np.array(ul, dtype=float)\ndef uN(uh, xj):\n    N = len(xj)\n    uj = np.zeros(N)\n    for i, ui in enumerate(uh):\n        uj[:] += ui*np.sin((i+1)*np.pi*xj)\n    return uj\n\nxj = np.linspace(0, 1, 100)\nplt.figure(figsize=(6,4))\nplt.plot(xj, 10*(xj-1)**2-1, 'b')\nplt.plot(xj, uN(ul[:(3+1)], xj), 'g:')\nplt.plot(xj, uN(ul[:(12+1)], xj), 'r-')\nplt.legend(['$u(x)$', 'N=3', 'N=12']);\n\n\n\n\n\n\n\n\n\n\nWhat is wrong?\n\nAll basis functions are zero at the domain boundaries! And as such\n\\[\nu_N(0)=u_N(1)=0\n\\]"
+  },
+  {
+    "objectID": "functions.html#solution-add-a-basis-function-with-nonzero-boundary-values",
+    "href": "functions.html#solution-add-a-basis-function-with-nonzero-boundary-values",
+    "title": "Function approximation with global functions",
+    "section": "Solution, add a basis function with nonzero boundary values",
+    "text": "Solution, add a basis function with nonzero boundary values\n\\[\nu_N(x) = B(x) + \\tilde{u}_N(x) = B(x) + \\sum_{j=0}^N \\hat{u}_j \\sin((j+1) \\pi x),\n\\]\nand use \\(\\tilde{u}_N\\in V_N\\) with homogeneous boundary values. \\(B(x)\\) can be\n\\[\nB(x) = u(1)x + u(0)(1-x)\n\\]\nsuch that\n\\[\nu_N(0)=B(0)=u(0) \\quad \\text{and} \\quad u_N(1)=B(1)=u(1)\n\\]\n\nThe variational problem becomes: Find \\(\\tilde{u}_N \\in V_N\\) such that\n\\[\n(B + \\tilde{u}_N - u, v) = 0 \\quad \\forall \\, v \\in V_N\n\\]"
+  },
+  {
+    "objectID": "functions.html#sines-with-boundary-values",
+    "href": "functions.html#sines-with-boundary-values",
+    "title": "Function approximation with global functions",
+    "section": "Sines with boundary values",
+    "text": "Sines with boundary values\nFind \\(\\tilde{u}_N \\in V_N\\) such that \\[\n(B + \\tilde{u}_N - u, v) = 0 \\quad \\forall \\, v \\in V_N\n\\]\nInsert for \\(\\tilde{u}_N=\\sum_{j=0}^N \\hat{u}_j \\sin((j+1)\\pi x)\\) and \\(v=\\sin((i+1)\\pi x)\\)\n\\[\n\\left(\\sum_{j=0}^N \\hat{u}_j \\sin((j+1)\\pi x)+B-u, \\sin((i+1)\\pi x) \\right) = 0, \\quad i=0, 1, \\ldots, N\n\\]\nand using the orthogonality of the sines we get\n\\[\n\\hat{u}_i = 2 \\left(u-B, \\sin((i+1)\\pi x) \\right) \\quad i=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#result-using-boundary-function-small-bx",
+    "href": "functions.html#result-using-boundary-function-small-bx",
+    "title": "Function approximation with global functions",
+    "section": "Result using boundary function \\(\\small B(x)\\)",
+    "text": "Result using boundary function \\(\\small B(x)\\)\n\n\nuc = []\nB = u.subs(x, 0)*(1-x) + u.subs(x, 1)*x\nfor i in range(15):\n    uc.append(uhat(u-B, i).n())\n\nuc = np.array(uc, dtype=float)\ndef uNc(uh, xj):\n    N = len(xj)\n    uj = u.subs(x, 0)*(1-xj) + u.subs(x, 1)*xj\n    for i, ui in enumerate(uh):\n        uj[:] += ui*np.sin((i+1)*np.pi*xj)\n    return uj\n\nplt.figure(figsize=(6,4))\nplt.plot(xj, 10*(xj-1)**2-1, 'b')\nplt.plot(xj, uNc(uc[:(3+1)], xj), 'g:')\nplt.plot(xj, uNc(uc[:(12+1)], xj), 'r--')\nplt.legend(['$u(x)$', 'N=3', 'N=12']);"
+  },
+  {
+    "objectID": "functions.html#how-about-the-legendre-method",
+    "href": "functions.html#how-about-the-legendre-method",
+    "title": "Function approximation with global functions",
+    "section": "How about the Legendre method?",
+    "text": "How about the Legendre method?\nLegendre polynomials \\(P_j(x)\\) are such that the boundary values are nonzero\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1)=1\n\\]\nHence there is no need for boundary functions or adjustments\n\nuhat = lambda u, j: (2*j+1) * inner(u, sp.legendre(j, x), (0, 1))/2\nuL = [uhat(u, i) for i in range(6)]\nplt.figure(figsize=(8, 3.5))\nplt.plot(xj, Legendre(uL, domain=(0, 1))(xj), 'b')\nplt.plot(xj, 10*(xj-1)**2-1, 'r:'); plt.legend([r'$u_N(x)$', r'$u(x)$'])\nprint(uL)\n\n[7/3, -5, 5/3, 0, 0, 0]"
+  },
+  {
+    "objectID": "functions.html#summary-of-variational-methods",
+    "href": "functions.html#summary-of-variational-methods",
+    "title": "Function approximation with global functions",
+    "section": "Summary of variational methods",
+    "text": "Summary of variational methods\nWe want to approximate \\(u(x)\\) with \\(u_N(x) \\in V_N\\)\n\\[\nu_N(x) \\approx u(x)\n\\]\nusing the inner product\n\\[\n(f, g) = \\int_a^b f(x)g(x)dx\n\\]\n\n\n\nLeast squares method\nFind \\(u_N \\in V_N\\) such that\n\\[\n\\frac{\\partial E}{\\partial \\hat{u}_j} = 0, \\quad j=0,1,\\ldots, N\n\\]\nwhere \\(E=(u-u_N, u-u_N)\\).\nMinimizing the \\(L^2\\) error norm.\n\nGalerkin method\nFind \\(u_N \\in V_N\\) such that\n\\[\n(u-u_N, v) = 0, \\quad \\forall \\, v \\in V_N\n\\]\nOr equivalently\n\\[\n(u-u_N, \\psi_j) = 0, \\quad j=0,1,\\ldots, N\n\\]\nError orthogonal to the test functions"
+  },
+  {
+    "objectID": "functions.html#if-we-now-set-smallfracpartial-e-partial-hatu_j0-then",
+    "href": "functions.html#if-we-now-set-smallfracpartial-e-partial-hatu_j0-then",
+    "title": "Function approximation with global functions",
+    "section": "If we now set \\(\\small\\frac{\\partial E}{ \\partial \\hat{u}_j}=0\\), then",
+    "text": "If we now set \\(\\small\\frac{\\partial E}{ \\partial \\hat{u}_j}=0\\), then\n\\[\n\\frac{\\partial E}{ \\partial \\hat{u}_j} = -\\int 2\\left( u-\\sum_{k=0}^N \\hat{u}_k \\psi_k \\right) \\psi_j dx = 0\n\\]\n\\[\n\\longrightarrow \\int u \\psi_j dx = \\sum_{k=0}^N\\int \\psi_k \\psi_j dx \\hat{u}_k, \\quad j=0,1, \\ldots, N\n\\]\ngives us \\(N+1\\) linear equations for the \\(N+1\\) unknown \\(\\{\\hat{u}_k\\}_{k=0}^N\\)\n\n\nBack to the example: \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1, 2]\\)\nFind \\(u_N \\in \\mathbb{P}_1\\) (meaning find \\(\\hat{u}_0\\) and \\(\\hat{u}_1\\)) such that\n\\[\n\\frac{\\partial E}{\\partial \\hat{u}_0}=0 \\text{ and } \\frac{\\partial E}{\\partial \\hat{u}_1}=0\n\\]\nTwo equations for two unknowns."
+  },
+  {
+    "objectID": "functions.html#affine-map",
+    "href": "functions.html#affine-map",
+    "title": "Function approximation with global functions",
+    "section": "Affine map",
+    "text": "Affine map\n\n\nEquations are defined in the real domain \\([a, b]\\)\nEquations are solved in the computational domain \\([A, B]\\)"
+  },
+  {
+    "objectID": "functions.html#an-example-of-spectral-exponential-convergence",
+    "href": "functions.html#an-example-of-spectral-exponential-convergence",
+    "title": "Function approximation with global functions",
+    "section": "An example of spectral (exponential) convergence",
+    "text": "An example of spectral (exponential) convergence\nLets appriximate the smooth function\n\\[\nu = e^{\\cos(x)}, \\quad x \\in [-1, 1]\n\\]\nand monitor the \\(L^2\\) error as we increase \\(N\\).\n\n\ndef L2_error(uh, ue):\n    uej = sp.lambdify(x, ue)\n    err = []\n    for n in range(0, 40, 2):\n        uf = lambda xj: (Legendre(uh[:(n+1)])(xj)\n                         -uej(xj))**2\n        err.append(np.sqrt(quad(uf, -1, 1)[0]))\n    return err\nu = sp.exp(sp.cos(x))\n# Compute Legendre coefficients\nuh = [uhat(u, n) for n in range(0, 40)]\nplt.figure(figsize=(6, 3))\nplt.loglog(np.arange(0, 40, 2), L2_error(uh, u), 'ko')\nplt.title('$L^2 error$');plt.xlabel('N');\n\n\n\n\n\n\n\n\n\n\n\nExponentially fast convergence rate!\nError does not go down further due to machine precision."
+  },
+  {
+    "objectID": "functions.html#solution-add-a-boundary-function-with-nonzero-boundary-values",
+    "href": "functions.html#solution-add-a-boundary-function-with-nonzero-boundary-values",
+    "title": "Function approximation with global functions",
+    "section": "Solution, add a boundary function with nonzero boundary values",
+    "text": "Solution, add a boundary function with nonzero boundary values\n\\[\nu_N(x) = B(x) + \\tilde{u}_N(x) = B(x) + \\sum_{j=0}^N \\hat{u}_j \\sin((j+1) \\pi x),\n\\]\nand use \\(\\tilde{u}_N\\in V_N\\) with homogeneous boundary values. \\(B(x)\\) can be\n\\[\nB(x) = u(1)x + u(0)(1-x)\n\\]\nsuch that\n\\[\nu_N(0)=B(0)=u(0) \\quad \\text{and} \\quad u_N(1)=B(1)=u(1)\n\\]\n\nThe variational problem becomes: Find \\(\\tilde{u}_N \\in V_N\\) such that\n\\[\n(B + \\tilde{u}_N - u, v) = 0 \\quad \\forall \\, v \\in V_N\n\\]"
+  },
+  {
+    "objectID": "functions.html#linear-algebra-problem-for-the-galerkin-method",
+    "href": "functions.html#linear-algebra-problem-for-the-galerkin-method",
+    "title": "Function approximation with global functions",
+    "section": "Linear algebra problem for the Galerkin method",
+    "text": "Linear algebra problem for the Galerkin method\nWe have the \\(N+1\\) equations\n\\[\n(e, \\psi_i) = 0, \\quad  i = 0, 1, \\ldots, N.\n\\]\nInsert for \\(e=u-u_N=u-\\sum_{j=0}^N \\hat{u}_j \\psi_j\\) to get\n\\[\n(u - \\sum_{j=0}^N \\hat{u}_j \\psi_j, \\psi_i) = 0, \\quad i =0, 1, \\ldots, N\n\\]\nand thus the linear algebra problem \\(A \\boldsymbol{x} = \\boldsymbol{b}\\):\n\\[\n\\sum_{j=0}^N \\underbrace{(\\psi_j, \\psi_i)}_{a_{ij}} \\, \\underbrace{\\hat{u}_j}_{x_j} = \\underbrace{(u, \\psi_i)}_{b_i}, \\quad i=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#legendre-polynomials-are-much-better-basis-functions",
+    "href": "functions.html#legendre-polynomials-are-much-better-basis-functions",
+    "title": "Function approximation with global functions",
+    "section": "Legendre polynomials are much better basis functions",
+    "text": "Legendre polynomials are much better basis functions\nLegendre polynomials are defined on the domain \\(\\Omega = [-1, 1]\\) as the recursion\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\n\n\nThe first 5 Legendre polynomials are plotted on the right"
+  },
+  {
+    "objectID": "functions.html#if-the-physical-domain-a-b-is-different-from-the-reference-domain--1-1-then-we-need-to-map",
+    "href": "functions.html#if-the-physical-domain-a-b-is-different-from-the-reference-domain--1-1-then-we-need-to-map",
+    "title": "Function approximation with global functions",
+    "section": "If the physical domain \\([a, b]\\) is different from the reference domain \\([-1, 1]\\), then we need to map",
+    "text": "If the physical domain \\([a, b]\\) is different from the reference domain \\([-1, 1]\\), then we need to map\nMany well-known basis functions work only on a given reference domain\n\n\n\nSines and cosines \\([0, \\pi]\\)\nLegendre polynomials \\([-1, 1]\\)\n\n\n\nBernstein polynomials \\([0, 1]\\)\nChebyshev polynomials \\([-1, 1]\\)\n\n\n\n\nLet \\(X\\) be the coordinate in the computational (reference) domain \\([A, B]\\) and \\(x\\) be the coordinate in the true physical domain \\([a, b]\\). A linear (affine) mapping, from \\(X\\) to \\(x\\) (and back) is then\n\\[\nX \\in [A, B] \\quad \\text{and} \\quad x \\in [a, b]\n\\]\n\\[\nx = a + \\frac{b-a}{B-A}(X-A) \\quad \\text{and} \\quad  X = A + \\frac{B-A}{b-a}(x-a)\n\\]"
+  },
+  {
+    "objectID": "functions.html#important-topics-of-todays-lecture",
+    "href": "functions.html#important-topics-of-todays-lecture",
+    "title": "Function approximation with global functions",
+    "section": "Important topics of todays lecture",
+    "text": "Important topics of todays lecture\n\nApproximation of smooth functions \\(u(x)\\) using global basis functions\nVariational methods\n\nThe least squares method\nThe Galerkin method\n\nThe collocation method\nRunge’s phenomenon\nLegendre polynomials\nSpectral convergence"
+  },
+  {
+    "objectID": "functions.html#example-ux-10x-12-1-for-xin-12",
+    "href": "functions.html#example-ux-10x-12-1-for-xin-12",
+    "title": "Function approximation with global functions",
+    "section": "Example: \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)",
+    "text": "Example: \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)\n\n\n\n\n\n\n\n\n\nLet \\(V_N = \\{1, x\\}\\) be the space of all straight lines.\nWhat is the best approximation \\(u_N \\in V_N\\) to the function \\(u(x)\\)?\n\nHow do we decide what is best? All we know is that\n\\[\nu_N(x) = \\hat{u}_0 + \\hat{u}_1 x.\n\\]\nHow to find the best \\(\\{\\hat{u}_0, \\hat{u}_1\\}\\)?"
+  },
+  {
+    "objectID": "functions.html#we-get-the-linear-system-with-inner-products-over-the-reference-domain",
+    "href": "functions.html#we-get-the-linear-system-with-inner-products-over-the-reference-domain",
+    "title": "Function approximation with global functions",
+    "section": "We get the linear system with inner products over the reference domain",
+    "text": "We get the linear system with inner products over the reference domain\n\\[\n\\sum_{j=0}^N \\int_{-1}^1 P_k(X)  P_j(X) \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, dX, \\quad j=0, 1, \\ldots, N\n\\]\nwhich can be written as\n\\[\n\\sum_{k=0}^N  \\underbrace{(P_k(X), P_j(X))_{L^2(-1, 1)}}_{\\frac{2}{2j+1} \\delta_{kj}} \\, \\hat{u}_k = (u(x(X)), P_j(X))_{L^2(-1, 1)}\n\\]\nsuch that\n\\[\n\\hat{u}_j = \\frac{2j+1}{2} \\left( u(x(X)), P_j(X) \\right)_{L^2(-1, 1)} \\quad j=0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "functions.html#summary",
+    "href": "functions.html#summary",
+    "title": "Function approximation with global functions",
+    "section": "Summary",
+    "text": "Summary\n\n\nWe have been approximating \\(u(x)\\) by \\(u_N \\in V_N = \\text{span}\\{\\psi_j\\}_{j=0}^N\\), meaning that we have found \\(\\small u_N(x) = \\sum_{j=0}^N \\hat{u_j} \\psi_j(x)\\)\nWe have found the unknown expansion coefficients \\(\\{\\hat{u}_j\\}_{j=0}^N\\) using\n\nVariational methods\n\nThe least squares method\nThe Galerkin method\n\nCollocation - an interpolation method\n\nInterpolation on uniform grids is bad for large \\(N\\) due to Runge’s phenomenon\nBasis functions are often defined on a reference domain, and problems thus need mapping.\nSome basis functions, like sines, have zero boundary values and need an additional boundary function for convergence.\nLegendre polynomials lead to spectral convergence (for smooth functions \\(u(x)\\))."
+  },
+  {
+    "objectID": "functions.html#the-galerkin-method-is-a-more-popular-variational-method-for-solving-differential-equations",
+    "href": "functions.html#the-galerkin-method-is-a-more-popular-variational-method-for-solving-differential-equations",
+    "title": "Function approximation with global functions",
+    "section": "The Galerkin method is a more popular variational method for solving differential equations",
+    "text": "The Galerkin method is a more popular variational method for solving differential equations\nHere the error is required to be orthogonal to the basis functions (for the \\(L^2\\) inner product)\n\\[\n(e, \\psi_j) = 0, \\quad  j = 0, 1, \\ldots, N.\n\\]\nAgain \\(N+1\\) equations for \\(N+1\\) unknowns.\n\nNot as much work as the least squares method, and even easier to implement in Sympy:\n\neq1 = sp.Eq(inner(err, 1, domain=(1, 2)), 0)\neq2 = sp.Eq(inner(err, x, domain=(1, 2)), 0)\ndisplay(eq1)\ndisplay(eq2) \n\n\\(\\displaystyle - u_{0} - \\frac{3 u_{1}}{2} + \\frac{7}{3} = 0\\)\n\n\n\\(\\displaystyle - \\frac{3 u_{0}}{2} - \\frac{7 u_{1}}{3} + \\frac{13}{3} = 0\\)\n\n\n\nsp.solve((eq1, eq2), (u0, u1))\n\n{u0: -38/3, u1: 10}"
   }
 ]
