@@ -2202,7 +2202,7 @@
     "href": "functions.html#error-in-legendre-approximations",
     "title": "Function approximation with global functions",
     "section": "Error in Legendre approximations",
-    "text": "Error in Legendre approximations\nThe smooth function \\(u(x)\\) can be exactly represented as\n\\[\nu(x) = \\sum_{k=0}^{\\infty} \\hat{u}_k P_k(x)\n\\]\nFor all \\(k \\le N\\) the series for \\(u(x)\\) and the series for \\(u_N(x)\\) have exactly the same coefficients \\(\\hat{u}_k\\). Hence the error in the approximation \\(u_N\\) is easily computed as\n\\[\ne(x) = u(x) - u_N(x) = \\sum_{k=N+1}^{\\infty} \\hat{u}_k P_k(x)\n\\]\nSpectral convergence - it can be shown that\n\\[\n\\| u - u_N\\| \\sim \\| \\hat{u}_{N+1}\\| \\sim e^{-\\mu N}, \\quad \\mu \\in \\mathbb{R}^+\n\\]\nExponential convergence!"
+    "text": "Error in Legendre approximations\nThe smooth function \\(u(x)\\) can be exactly represented as\n\\[\nu(x) = \\sum_{k=0}^{\\infty} \\hat{u}_k P_k(x)\n\\]\nFor all \\(k \\le N\\) the series for \\(u(x)\\) and the series for \\(u_N(x)\\) have exactly the same coefficients \\(\\hat{u}_k\\). Hence the error in the approximation \\(u_N\\) is easily computed as\n\\[\ne(x) = u(x) - u_N(x) = \\sum_{k=N+1}^{\\infty} \\hat{u}_k P_k(x)\n\\]\nSpectral convergence - it can be shown that\n\\[\n\\| u - u_N\\| \\sim | \\hat{u}_{N+1}| \\sim e^{-\\mu N}, \\quad \\mu \\in \\mathbb{R}^+\n\\]\nExponential convergence!"
   },
   {
     "objectID": "functions.html#if-the-physical-domain-is-different-from--1-1-then-we-need-to-map",
