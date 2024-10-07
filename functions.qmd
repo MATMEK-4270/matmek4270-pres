@@ -1077,7 +1077,7 @@ $$
 Spectral convergence - it can be shown that
 
 $$
-\| u - u_N\| \sim \| \hat{u}_{N+1}\| \sim e^{-\mu N}, \quad \mu \in \mathbb{R}^+
+\| u - u_N\| \sim | \hat{u}_{N+1}| \sim e^{-\mu N}, \quad \mu \in \mathbb{R}^+
 $$
 
 Exponential convergence! 

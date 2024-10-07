@@ -10,3 +10,4 @@ author: "Prof. Mikael Mortensen, University of Oslo"
 * [Lecture 5 - Finite difference methods for the wave equation](wave.qmd)
 * [Lecture 7 - Postprocessing and interpolation](postprocessing.qmd)
 * [Lecture 8 - Function approximation with global functions](functions.qmd)
+* [Lecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions](chebyshev.qmd)
