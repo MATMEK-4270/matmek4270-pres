@@ -1572,7 +1572,7 @@
     "href": "index.html",
     "title": "Presentations for MATMEK-4270",
     "section": "",
-    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions"
+    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions\nLecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions"
   },
   {
     "objectID": "wave.html#the-finite-difference-stencil-makes-use-of-5-neighboring-points-1",
