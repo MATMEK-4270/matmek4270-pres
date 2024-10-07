@@ -2553,5 +2553,495 @@
     "title": "Function approximation with global functions",
     "section": "The Galerkin method is a more popular variational method for solving differential equations",
     "text": "The Galerkin method is a more popular variational method for solving differential equations\nHere the error is required to be orthogonal to the basis functions (for the \\(L^2\\) inner product)\n\\[\n(e, \\psi_j) = 0, \\quad  j = 0, 1, \\ldots, N.\n\\]\nAgain \\(N+1\\) equations for \\(N+1\\) unknowns.\n\nNot as much work as the least squares method, and even easier to implement in Sympy:\n\neq1 = sp.Eq(inner(err, 1, domain=(1, 2)), 0)\neq2 = sp.Eq(inner(err, x, domain=(1, 2)), 0)\ndisplay(eq1)\ndisplay(eq2) \n\n\\(\\displaystyle - u_{0} - \\frac{3 u_{1}}{2} + \\frac{7}{3} = 0\\)\n\n\n\\(\\displaystyle - \\frac{3 u_{0}}{2} - \\frac{7 u_{1}}{3} + \\frac{13}{3} = 0\\)\n\n\n\nsp.solve((eq1, eq2), (u0, u1))\n\n{u0: -38/3, u1: 10}"
+  },
+  {
+    "objectID": "chebyshev.html#chebyshev-polynomials",
+    "href": "chebyshev.html#chebyshev-polynomials",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Chebyshev polynomials",
+    "text": "Chebyshev polynomials\nThe Chebyshev polynomials are an often preferred alternative to Legendre:\n\\[\nT_k(x) = \\cos(k \\cos^{-1}(x)), \\quad k = 0, 1, \\ldots \\quad x \\in [-1, 1]\n\\]\n\n\nAs recursion: \\[ \\small\n\\begin{align*}\nT_0(x) &= 1, \\\\\nT_1(x) &= x, \\\\\nT_2(x) &= 2x^2-1, \\\\\n&\\vdots \\\\\nT_{j+1}(x) &= 2xT_{j}(x) - T_{j-1}(x).\n\\end{align*}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\nFor \\(T_N(x)\\) all extrema points (max and mins) and all roots are, respectively\n\\[\n\\begin{align}\nx_j &= \\cos\\left(\\frac{j \\pi}{N}\\right),  &j=0, 1, \\ldots, N \\\\\nx_j &= \\cos\\left( \\frac{(2j+1)\\pi}{2N}\\right),  &j=0, 1, \\ldots, N-1\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#chebyshev-polynomials-as-a-basis",
+    "href": "chebyshev.html#chebyshev-polynomials-as-a-basis",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Chebyshev polynomials as a basis",
+    "text": "Chebyshev polynomials as a basis\nThe Chebyshev polynomials \\(\\{T_j\\}_{j=0}^N\\) also form a basis for \\(\\mathbb{P}_N\\). However, the Chebyshev polynomials are not orthogonal in the \\(L^2(-1, 1)\\) space!\n\\[\n(T_i, T_j)_{L^2(\\Omega)} \\ne \\|T_i\\|^2 \\delta_{ij}\n\\]\n\nThe Chebyshev polynomials are, on the other hand, orthogonal in a special weighted inner product space.\nWe define the weighted \\(L^2_{\\omega}(\\Omega)\\) inner product as\n\\[\n(f, g)_{L^2_{w}(\\Omega)} = \\int_{\\Omega} f(x)g(x)\\omega(x)d\\Omega,\n\\]\nwhich is more commonly written as \\((f, g)_{\\omega}\\). The weight function \\(\\omega(x)\\) is positive (almost everywhere) and a weighted norm is\n\\[\n\\|u\\|_{\\omega} = \\sqrt{(u, u)_{\\omega}}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#function-approximations-with-chebyshev-polynomials",
+    "href": "chebyshev.html#function-approximations-with-chebyshev-polynomials",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Function approximations with Chebyshev polynomials",
+    "text": "Function approximations with Chebyshev polynomials\nThe Chebyshev polynomials are orthogonal if \\(\\omega(x) = (1-x^2)^{-1/2}\\) and \\(x\\in [-1,1]\\). We get\n\\[\n(T_i, T_j)_{\\omega} = \\|T_i\\|_{\\omega}^2 \\delta_{ij}\n\\]\nwhere \\(\\|T_i\\|_{\\omega}^2 = \\frac{c_i \\pi}{2}\\) and \\(c_i=1\\) for \\(i&gt;0\\) and \\(c_0=2\\).\nThe Galerkin method for approximating a smooth function \\(u(x)\\) is now:\nFind \\(u_N \\in \\mathbb{P}_N\\) such that\n\\[\n(u-u_N, v)_{\\omega} = 0, \\quad \\forall \\, v \\in \\mathbb{P}_N\n\\]\n\nWe get the linear algebra problem by inserting for \\(v=T_i\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j T_j\\)\n\\[\n\\sum_{j=0}^N(T_j, T_i)_{\\omega} \\hat{u}_j = (u, T_i)_{\\omega} \\rightarrow \\hat{u}_i = \\frac{(u, T_i)_{\\omega}}{\\|T_i\\|^2}, \\quad \\quad i=0,1,\\ldots, N\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#mapping-to-reference-domain",
+    "href": "chebyshev.html#mapping-to-reference-domain",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Mapping to reference domain",
+    "text": "Mapping to reference domain\nWith a physical domain \\(x\\in [a, b]\\) and a reference \\(X\\in [-1, 1]\\), we now have the basis function\n\\[\n\\psi_i(x) = T_i(X(x)), \\quad i=0,1,\\ldots, N\n\\]\nand the inner product to compute is\n\\[\n(u(x)-u_N(x), \\psi_i(x))_{\\omega} = \\int_{a}^b (u(x)-u_N(x)) \\psi_i(x) \\omega(x) dx = 0, \\quad i=0, 1, \\ldots, N\n\\]\n\nAs for Legendre we use a change of variables \\(x\\rightarrow X\\), but there is also a weight function that requires mapping\n\\[\n\\omega(x) = \\tilde{\\omega}(X) = \\frac{1}{\\sqrt{1-X^2}}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#mapping",
+    "href": "chebyshev.html#mapping",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "Mapping",
+    "text": "Mapping\n\\[\n\\sum_{j=0}^N \\int_{-1}^1 T_j(X)  T_i(x) \\omega(X) \\, \\frac{dx}{dX} \\, dX \\, \\hat{u}_j =  \\int_{-1}^1 u(x(X)) T_i(X) \\omega(X) \\, \\frac{dx}{dX} \\, dX\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#the-mapped-problem-becomes",
+    "href": "chebyshev.html#the-mapped-problem-becomes",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "The mapped problem becomes",
+    "text": "The mapped problem becomes\nfor all \\(i=0,1,\\ldots, N\\):\n\\[\n\\sum_{j=0}^N \\overbrace{\\int_{-1}^1 T_j(X)  T_i(X) \\tilde{\\omega}(X) \\, \\cancel{\\frac{dx}{dX}} \\, dX}^{\\|T_i\\|\\delta_{ij}} \\, \\hat{u}_j =  \\overbrace{\\int_{-1}^1 u(x(X)) T_i(X) \\tilde{\\omega}(X) \\, \\cancel{\\frac{dx}{dX}} \\, dX}^{(u(x(X)), T_i)_{\\omega}}\n\\]\nand finally (using \\(\\|T_i\\|^2=\\frac{c_i \\pi}{2}\\))\n\\[\n\\hat{u}_i = \\frac{2}{c_i \\pi}\\left(u(x(X)), T_i\\right)_{L^2_{\\omega}(-1,1)}, \\quad i=0, 1, \\ldots, N\n\\]\nThe procedure is exactly like for Legendre polynomials, but with a weighted inner product using \\(L^2_{\\omega}(-1,1)\\) instead of \\(L^2(-1,1)\\)."
+  },
+  {
+    "objectID": "chebyshev.html#the-weighted-inner-product-requires-some-extra-attention",
+    "href": "chebyshev.html#the-weighted-inner-product-requires-some-extra-attention",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "The weighted inner product requires some extra attention",
+    "text": "The weighted inner product requires some extra attention\n\\[\n(f, T_i)_{\\omega} = \\int_{-1}^1 \\frac{f(x(X))T_i(X)}{\\sqrt{1-X^2}}dX\n\\]\n\nSince \\(T_i(X) = \\cos(i \\cos^{-1}(X))\\) a change of variables \\(X=\\cos \\theta\\) leads to \\(T_i(\\cos \\theta) = \\cos(i \\theta)\\). Using the change of variables for the integral:\n\\[\n(f, T_i)_{\\omega} = \\int_{\\pi}^{0} \\frac{f(x(\\cos \\theta))T_i(\\cos \\theta)}{\\sqrt{1-\\cos^2 \\theta}} \\frac{d \\cos \\theta}{d \\theta} d\\theta.\n\\]\n\n\nInsert for \\(1-\\cos^2\\theta = \\sin^2\\theta\\) and swap both the direction of the integration and the sign:\n\\[\n(f, T_i)_{\\omega}= \\int_{0}^{\\pi} f(x(\\cos \\theta))T_i(\\cos \\theta) d\\theta.\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#weighted-inner-product-continued",
+    "href": "chebyshev.html#weighted-inner-product-continued",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Weighted inner product continued",
+    "text": "Weighted inner product continued\n\\[\n(f, T_i)_{\\omega}= \\int_{0}^{\\pi} f(x(\\cos \\theta))T_i(\\cos \\theta) d\\theta.\n\\]\nUsing \\(T_i(\\cos \\theta) = \\cos (i \\theta)\\) we get the much simpler integral\n\\[\n(f, T_i)_{\\omega} = \\int_{0}^{\\pi} f(x(\\cos \\theta))\\cos (i \\theta) d\\theta.\n\\]\nUsing this integral, we get the Chebyshev coefficients\n\\[\n\\hat{u}_i = \\frac{2}{c_i \\pi}\\int_{0}^{\\pi} u(x(\\cos \\theta)) \\cos(i \\theta) d\\theta, \\quad  i=0, 1, \\ldots, N\n\\]\nLets try this with an example."
+  },
+  {
+    "objectID": "chebyshev.html#implementation",
+    "href": "chebyshev.html#implementation",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "Implementation",
+    "text": "Implementation\n\nimport numpy as np\nimport sympy as sp\n\nx = sp.Symbol('x', real=True)\nk = sp.Symbol('k', integer=True, positive=True)\n\nTk = lambda k, x: sp.cos(k * sp.acos(x))\ncj = lambda j: 2 if j == 0 else 1\n\ndef innerw(u, v, domain, ref_domain=(-1, 1)):\n    A, B = ref_domain\n    a, b = domain\n    # map u(x(X)) to use reference coordinate X.\n    # Note that x is here ref coord.\n    us = u.subs(x, a + (b-a)*(x-A)/(B-A))\n    # Change variables x=cos(theta)\n    us = sp.simplify(us.subs(x, sp.cos(x)), inverse=True)\n    vs = sp.simplify(v.subs(x, sp.cos(x)), inverse=True)\n    return sp.integrate(us*vs, (x, 0, sp.pi))"
+  },
+  {
+    "objectID": "chebyshev.html#implementation-of-the-weighted-inner-product",
+    "href": "chebyshev.html#implementation-of-the-weighted-inner-product",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Implementation of the weighted inner product",
+    "text": "Implementation of the weighted inner product\n\nx = sp.Symbol('x', real=True)\nk = sp.Symbol('k', integer=True, positive=True)\n\nTk = lambda k, x: sp.cos(k * sp.acos(x))\ncj = lambda j: 2 if j == 0 else 1\n\ndef innerw(u, v, domain, ref_domain=(-1, 1)):\n    A, B = ref_domain\n    a, b = domain\n    # map u(x(X)) to use reference coordinate X.\n    # Note that small x here in the end will be ref coord.\n    us = u.subs(x, a + (b-a)*(x-A)/(B-A))\n    # Change variables x=cos(theta)\n    us = sp.simplify(us.subs(x, sp.cos(x)), inverse=True) # X=cos(theta)\n    vs = sp.simplify(v.subs(x, sp.cos(x)), inverse=True)  # X=cos(theta)\n    return sp.integrate(us*vs, (x, 0, sp.pi))\n\n\n\n\n\n\n\nNote\n\n\nWe use the Sympy function simplify with inverse=True, which is required for Sympy to use that \\(\\cos^{-1}(\\cos x) = x\\), which is not necessarily true."
+  },
+  {
+    "objectID": "chebyshev.html#try-with-small-10x-12-1-xin-12",
+    "href": "chebyshev.html#try-with-small-10x-12-1-xin-12",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "Try with \\(\\small 10(x-1)^2-1, x\\in [1,2]\\)",
+    "text": "Try with \\(\\small 10(x-1)^2-1, x\\in [1,2]\\)\n\nfrom numpy.polynomial import Chebyshev\nu = 10*(x-1)**2-1\nuhat = lambda u, j: 2 / (cj(j) * sp.pi) * innerw(u, Tk(j, x), (1, 2))\n\nplt.figure(figsize=(8, 4))\nxj = np.linspace(1, 2, 100)\nuhj = [uhat(u, j) for j in range(6)]\nC2 = Chebyshev(uhj[:2], domain=(1, 2))\nC3 = Chebyshev(uhj[:3], domain=(1, 2))\nplt.plot(xj, sp.lambdify(x, u)(xj), 'b')\nplt.plot(xj, C2(xj), 'r:')\nplt.plot(xj, C3(xj), 'g--')\nplt.legend(['$10(x-1)^2-1$', f'{C2}', f'{C3}']);"
+  },
+  {
+    "objectID": "chebyshev.html#try-with-small-ux10x-12-1-xin-12",
+    "href": "chebyshev.html#try-with-small-ux10x-12-1-xin-12",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Try with \\(\\small u(x)=10(x-1)^2-1, x\\in [1,2]\\)",
+    "text": "Try with \\(\\small u(x)=10(x-1)^2-1, x\\in [1,2]\\)\n\nfrom numpy.polynomial import Chebyshev\nu = 10*(x-1)**2-1\nuhat = lambda u, j: 2 / (cj(j) * sp.pi) * innerw(u, Tk(j, x), (1, 2))\nplt.figure(figsize=(8, 3.5))\nxj = np.linspace(1, 2, 100)\nuhj = [uhat(u, j) for j in range(6)]\nC2, C3 = Chebyshev(uhj[:2], domain=(1, 2)), Chebyshev(uhj[:3], domain=(1, 2))\nplt.plot(xj, sp.lambdify(x, u)(xj), 'b')\nplt.plot(xj, C2(xj), 'r:'); plt.plot(xj, C3(xj), 'g--')\nplt.plot(xj, 7/3+5*(-1+2*(xj-1)), 'm--')\nplt.legend(['$10(x-1)^2-1$', f'{C2}', f'{C3}', 'Legendre: 7/3+5$P_1(x)$']);\n\n\n\n\n\n\n\n\nDifferent from Legendre for the linear profile. But not by much. Why is it different?"
+  },
+  {
+    "objectID": "chebyshev.html#try-more-difficult-function-with-numerical-integration",
+    "href": "chebyshev.html#try-more-difficult-function-with-numerical-integration",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Try more difficult function with numerical integration",
+    "text": "Try more difficult function with numerical integration\n\\[\nu(x) = e^{\\cos x}, \\quad x \\in [-1,1]\n\\]\nUse numerical integration and change of variables\n\nfrom scipy.integrate import quad\ndef innerwn(u, v, domain, ref_domain=(-1, 1)):\n    A, B = ref_domain\n    a, b = domain\n    us = u.subs(x, a + (b-a)*(x-A)/(B-A)) # u(x(X))\n    us = sp.simplify(us.subs(x, sp.cos(x)), inverse=True) # X=cos(theta)\n    vs = sp.simplify(v.subs(x, sp.cos(x)), inverse=True)  # X=cos(theta)\n    return quad(sp.lambdify(x, us*vs), 0, np.pi)[0]\nu = sp.exp(sp.cos(x))\n#uhat = lambda u, j: 2 / (cj(j) * sp.pi) * innerw(u, Tk(j, x), (-1, 1)) # slow\nuhatn = lambda u, j: 2 / (cj(j) * np.pi) * innerwn(u, Tk(j, x), (-1, 1))\n\nRemember, we are computing for \\(i=0, 1, \\ldots, N\\)\n\\[\n\\hat{u}_i = \\frac{2}{c_i \\pi} \\int_{-1}^1 u(x(X)) T_i(X) \\tilde{\\omega}(X) dX = \\frac{2}{c_i \\pi}\\int_{0}^{\\pi} u(x(\\cos \\theta)) \\cos(i \\theta) d\\theta\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#compare-with-legendre",
+    "href": "chebyshev.html#compare-with-legendre",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Compare with Legendre",
+    "text": "Compare with Legendre\n\n\n# Compute Chebyshev coefficients:\nN = 25\nuc = [uhatn(u, n) for n in range(N)]\n\n# Compute Legendre coefficients:\nfrom numpy.polynomial import Legendre\ndef innern(u, v):\n    uj = lambda xj: sp.lambdify(x, u)(xj)*v(xj)\n    return quad(uj, -1, 1)[0]\nuhatj = lambda u, j: (2*j+1) * innern(u, Legendre.basis(j))/2\nul = [uhatj(u, n) for n in range(N)]\n\nplt.figure(figsize=(5, 3))\nplt.semilogy(np.arange(0, N, 2), uc[::2], '+',\n             np.arange(0, N, 2), ul[::2], 'ko', fillstyle='none')\nplt.title('Coefficients $\\hat{u}_j$')\nplt.legend(['Chebyshev', 'Legendre']);\n\n\n\n\n\n\n\n\n\n\nVery similar convergence. Chebyshev coefficients are slightly smaller than Legendre. How about the \\(L^2\\) error?"
+  },
+  {
+    "objectID": "chebyshev.html#l2-error",
+    "href": "chebyshev.html#l2-error",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "\\(L^2\\) error",
+    "text": "\\(L^2\\) error\n\ndef L2_error(uh, ue, space=Legendre):\n    xj = np.linspace(-1, 1, 1000)\n    uej = sp.lambdify(x, ue)(xj)\n    err = []\n    for n in range(0, len(uh), 2):\n        uj = space(uh[:(n+1)])(xj).astype(float)\n        err.append(np.sqrt(np.trapz((uj-uej)**2, dx=xj[1]-xj[0])))\n    return err\n\nerrc = L2_error(uc, u, Chebyshev)\nerrl = L2_error(ul, u, Legendre)\n\nplt.figure(figsize=(5, 3))\nplt.loglog(np.arange(0, N, 2), errc, '+',\n           np.arange(0, N, 2), errl, 'ko', fillstyle='none')\nplt.legend(['Chebyshev', 'Legendre']);"
+  },
+  {
+    "objectID": "chebyshev.html#the-least-squares-method",
+    "href": "chebyshev.html#the-least-squares-method",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "The least squares method",
+    "text": "The least squares method\nThe least squares method is also similar, using \\(E_{\\omega}=\\|e\\|^2_{\\omega}\\):\nFind \\(u_N \\in \\mathbb{P}_N\\) such that\n\\[\n\\frac{\\partial E_{\\omega}}{\\partial \\hat{u}_j}=0, \\quad j=0,1, \\ldots, N\n\\]\n\nWe get the linear algebra problem using\n\\[\n\\frac{\\partial E_{\\omega}}{\\partial \\hat{u}_j} = \\frac{\\partial}{\\partial \\hat{u}_j} \\int_{-1}^1 e^2 \\omega dx = \\int_{-1}^1 2e \\frac{\\partial e}{\\partial \\hat{u}_j} \\omega dx\n\\]\nInsert for \\(e(x)=u(x)-u_N(x) = u(x)-\\sum_{k=0}^N \\hat{u}_k T_k\\) and you get exactly the same linear equations as for the Galerkin method."
+  },
+  {
+    "objectID": "chebyshev.html#l2-error---esqrtint_-11-e2-dx-not-weighted",
+    "href": "chebyshev.html#l2-error---esqrtint_-11-e2-dx-not-weighted",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "\\(L^2\\) error - \\(\\|e\\|=\\sqrt{\\int_{-1}^1 e^2 dx}\\) (not weighted)",
+    "text": "\\(L^2\\) error - \\(\\|e\\|=\\sqrt{\\int_{-1}^1 e^2 dx}\\) (not weighted)\n\ndef L2_error(uh, ue, space=Legendre):\n    xj = np.linspace(-1, 1, 1000)\n    uej = sp.lambdify(x, ue)(xj)\n    err = []\n    for n in range(0, len(uh), 2):\n        uj = space(uh[:(n+1)])(xj).astype(float)\n        err.append(np.sqrt(np.trapz((uj-uej)**2, dx=xj[1]-xj[0])))\n    return err\n\nerrc = L2_error(uc, u, Chebyshev)\nerrl = L2_error(ul, u, Legendre)\n\nplt.figure(figsize=(5, 3))\nplt.loglog(np.arange(0, N, 2), errc, '+',\n           np.arange(0, N, 2), errl, 'ko', fillstyle='none')\nplt.legend(['Chebyshev', 'Legendre']);"
+  },
+  {
+    "objectID": "chebyshev.html#approximations-in-2d",
+    "href": "chebyshev.html#approximations-in-2d",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "Approximations in 2D",
+    "text": "Approximations in 2D\nWe can approximate a two-dimensional function \\(u(x, y)\\) using a two-dimensional function space \\(W\\), such that\n\\[\nu(x, y) \\approx u_{N}(x, y) = \\sum_{i=0}^M \\hat{u}_{i}\\Psi_{i}(x, y),\n\\]\nwhere \\(\\Psi_{i}(x, y)\\) is a two-dimensional basis function and \\(\\{\\Psi_i(x, y)\\}_{i=0}^M\\) is a basis for the function space \\(W = \\text{span}\\{\\Psi_i(x, y)\\}_{i=0}^M\\). Just like in one dimensional space we will write \\(u_N\\) for the series expansion that approximates \\(u\\).\nThere are not all that many two-dimensional basis functions and a more common approach is to use one basis function for the \\(x\\)-direction and another for the \\(y\\)-direction\n\\[\nu_N(x, y) = \\sum_{i=0}^M\\sum_{j=0}^N \\hat{u}_{ij}\\psi_{i}(x) \\varphi_j(y).\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#section",
+    "href": "chebyshev.html#section",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "",
+    "text": "The discrete cosine transform of type 1 is defined to transform the real numbers \\((y_i)_{i=0}^N\\) into \\((Y_i)_{i=0}^N\\) such that\n\\[\nY_i = y_0 + (-1)^{i}y_N + 2\\sum_{j=1}^{N-1}y_j \\cos(ij\\pi / N), \\quad i=0,1,\\ldots, N\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#section-1",
+    "href": "chebyshev.html#section-1",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "",
+    "text": "The function space \\(W\\) is the tensor product of \\(V_x\\) and \\(V_y\\). The function space \\(W\\) has a basis that is formed as the tensor product of the basis for \\(V_x\\) and \\(V_y\\). The 2D basis function \\(\\Psi_{ij}\\) is the tensor product of \\(\\psi_i(x)\\) and \\(\\varphi_j(y)\\)\n\\[\n\\Psi_{ij}(x, y) = \\psi_i(x) \\varphi_j(y).\n\\]\nThis is also called the outer product, and sometimes also the dyadic product."
+  },
+  {
+    "objectID": "chebyshev.html#we-can-approximate-a-two-dimensional-function-ux-y-using-a-two-dimensional-function-space-w",
+    "href": "chebyshev.html#we-can-approximate-a-two-dimensional-function-ux-y-using-a-two-dimensional-function-space-w",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "We can approximate a two-dimensional function \\(u(x, y)\\) using a two-dimensional function space \\(W\\)",
+    "text": "We can approximate a two-dimensional function \\(u(x, y)\\) using a two-dimensional function space \\(W\\)\nIn 2D we will try to find \\(u_N(x,y) \\in W\\), which implies:\n\\[\nu(x, y) \\approx u_{N}(x, y) = \\sum_{i=0}^M \\hat{u}_{i}\\Psi_{i}(x, y),\n\\]\n\n\\(\\Psi_{i}(x, y)\\) is a two-dimensional basis function\n\\(\\{\\Psi_i\\}_{i=0}^M\\) is a basis\n\\(W = \\text{span}\\{\\Psi_i\\}_{i=0}^M\\) is a 2D function space."
+  },
+  {
+    "objectID": "chebyshev.html#section-2",
+    "href": "chebyshev.html#section-2",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "",
+    "text": "The function space \\(W\\) is the tensor product of \\(V_x\\) and \\(V_y\\). The function space \\(W\\) has a basis that is formed as the tensor product of the basis for \\(V_x\\) and \\(V_y\\). The 2D basis function \\(\\Psi_{ij}\\) is the tensor product of \\(\\psi_i(x)\\) and \\(\\varphi_j(y)\\)\n\\[\n\\Psi_{ij}(x, y) = \\psi_i(x) \\varphi_j(y).\n\\]\nThis is also called the outer product, and sometimes also the dyadic product."
+  },
+  {
+    "objectID": "chebyshev.html#use-one-basis-function-for-each-direction",
+    "href": "chebyshev.html#use-one-basis-function-for-each-direction",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Use one basis function for each direction",
+    "text": "Use one basis function for each direction\nThere are not all that many two-dimensional basis functions and a more common approach is to use one basis function for the \\(x\\)-direction and another for the \\(y\\)-direction\n\\[\nu_N(x, y) = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} \\hat{u}_{ij}\\psi_{i}(x) \\varphi_j(y).\n\\]\n\n\n\n\n\n\nNote\n\n\nThe unknowns \\(\\{\\hat{u}_{ij}\\}_{i,j=0}^{N_x,N_y}\\) are now in the form of a matrix. The total number of unknowns: \\(N+1=(N_x+1)\\cdot (N_y+1)\\).\n\n\n\n\nThe most straightforward approach is to use the same basis functions for both directions. For example, with a Chebyshev basis\n\\[\nu_N(x, y) = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} \\hat{u}_{ij}T_{i}(x)T_j(y).\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#two-dimensional-functionspaces",
+    "href": "chebyshev.html#two-dimensional-functionspaces",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "Two-dimensional functionspaces",
+    "text": "Two-dimensional functionspaces\nRemember lecture 6. Cartesian grids.\n\\[\n\\boldsymbol{x}=(0, \\Delta x, \\ldots, N_x\\Delta x) \\quad \\boldsymbol{y}=(0, \\Delta y, \\ldots, N_x\\Delta y), \\quad L_x=N_x \\Delta x, L_y=N_y \\Delta y\n\\]\n\\[\n\\text{2D-mesh} \\rightarrow \\boldsymbol{x} \\times \\boldsymbol{y} = \\{(x, y) | x \\in \\boldsymbol{x} \\text{ and } y \\in \\boldsymbol{y}\\}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#we-can-approximate-a-two-dimensional-function-ux-y-using-a-two-dimensional-function-space-w_n",
+    "href": "chebyshev.html#we-can-approximate-a-two-dimensional-function-ux-y-using-a-two-dimensional-function-space-w_n",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "We can approximate a two-dimensional function \\(u(x, y)\\) using a two-dimensional function space \\(W_N\\)",
+    "text": "We can approximate a two-dimensional function \\(u(x, y)\\) using a two-dimensional function space \\(W_N\\)\nIn 2D we will try to find \\(u_N(x,y) \\in W_N\\), which implies:\n\\[\nu(x, y) \\approx u_{N}(x, y) = \\sum_{i=0}^N \\hat{u}_{i}\\Psi_{i}(x, y),\n\\]\n\n\\(\\Psi_{i}(x, y)\\) is a two-dimensional basis function\n\\(\\{\\Psi_i\\}_{i=0}^N\\) is a basis\n\\(W_N = \\text{span}\\{\\Psi_i\\}_{i=0}^N\\) is a 2D function space."
+  },
+  {
+    "objectID": "chebyshev.html#we-can-approximate-a-two-dimensional-function-small-ux-y-using-a-two-dimensional-function-space-small-w_n",
+    "href": "chebyshev.html#we-can-approximate-a-two-dimensional-function-small-ux-y-using-a-two-dimensional-function-space-small-w_n",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "We can approximate a two-dimensional function \\(\\small u(x, y)\\) using a two-dimensional function space \\(\\small W_N\\)",
+    "text": "We can approximate a two-dimensional function \\(\\small u(x, y)\\) using a two-dimensional function space \\(\\small W_N\\)\nIn 2D we will try to find \\(u_N(x,y) \\in W_N\\), which implies:\n\\[\nu(x, y) \\approx u_{N}(x, y) = \\sum_{i=0}^N \\hat{u}_{i}\\Psi_{i}(x, y),\n\\]\n\n\\(\\Psi_{i}(x, y)\\) is a two-dimensional basis function\n\\(\\{\\Psi_i\\}_{i=0}^N\\) is a basis\n\\(W_N = \\text{span}\\{\\Psi_i\\}_{i=0}^N\\) is a 2D function space."
+  },
+  {
+    "objectID": "chebyshev.html#two-dimensional-function-spaces",
+    "href": "chebyshev.html#two-dimensional-function-spaces",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Two-dimensional function spaces",
+    "text": "Two-dimensional function spaces\nWe can define two one-dimensional function spaces for the two directions as\n\\[\nV_{N_x} = \\text{span}\\{\\psi_i\\}_{i=0}^{N_x} \\quad \\text{and} \\quad V_{N_y} = \\text{span}\\{\\varphi_i\\}_{i=0}^{N_y}\n\\]\nwith a 2D domain \\(\\Omega\\) created as Cartesian products of two 1D domains:\n\\[\n{I}_x = [a, b] \\quad \\text{and} \\quad {I}_y = [c, d] \\rightarrow \\Omega = I_x \\times I_y\n\\]\nA two-dimensional function space can then be created as\n\\[\nW_N = V_{N_x} \\otimes V_{N_y}, \\quad (x, y) \\in \\Omega.\n\\]\n\\(W_N\\) is the tensor product of \\(V_{N_x}\\) and \\(V_{N_y}\\)\n\nSimilarly,\n\\[\n\\Psi_{ij}(x, y) = \\psi_i(x) \\varphi_j(y)\n\\]\n\\(\\Psi_{ij}\\) is the tensor product (or outer product) of \\(\\psi_i\\) and \\(\\varphi_j\\)."
+  },
+  {
+    "objectID": "chebyshev.html#the-cartesian-grid",
+    "href": "chebyshev.html#the-cartesian-grid",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "The Cartesian grid",
+    "text": "The Cartesian grid\nRemember lecture 6. Cartesian grids.\n\\[\n\\boldsymbol{x}=(0, \\Delta x, \\ldots, N_x\\Delta x) \\quad \\boldsymbol{y}=(0, \\Delta y, \\ldots, N_x\\Delta y), \\quad L_x=N_x \\Delta x, L_y=N_y \\Delta y\n\\]\n\\[\n\\text{2D-mesh} \\rightarrow \\boldsymbol{x} \\times \\boldsymbol{y} = \\{(x, y) | x \\in \\boldsymbol{x} \\text{ and } y \\in \\boldsymbol{y}\\}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#the-tensor-product-is-a-cartesian-product-with-multiplication",
+    "href": "chebyshev.html#the-tensor-product-is-a-cartesian-product-with-multiplication",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "The tensor product is a Cartesian product with multiplication",
+    "text": "The tensor product is a Cartesian product with multiplication\nConsider the Cartesian product of the two sequences \\((1, 2, 3)\\) and \\((4, 5)\\) and compare with the tensor product\n\n\nCartesian product: \\[\n(1, 2, 3) \\times (4, 5) = \\begin{bmatrix}\n(1, 4) \\\\\n(1, 5) \\\\\n(2, 4) \\\\\n(2, 5) \\\\\n(3, 4) \\\\\n(3, 5) \\\\\n\\end{bmatrix}\n\\]\n\nTensor product: \\[\n(1, 2, 3) \\otimes (4, 5) = \\begin{bmatrix}\n1 \\cdot 4 \\\\\n1 \\cdot 5 \\\\\n2 \\cdot 4 \\\\\n2 \\cdot 5 \\\\\n3 \\cdot 4 \\\\\n3 \\cdot 5\n\\end{bmatrix}\n=\n\\begin{bmatrix}\n4 \\\\\n5 \\\\\n8 \\\\\n10 \\\\\n12 \\\\\n15\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#tensor-product-of-functions",
+    "href": "chebyshev.html#tensor-product-of-functions",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Tensor product of functions",
+    "text": "Tensor product of functions\n\n\nCartesian product: \\[\n(\\psi_0, \\psi_1) \\times (\\varphi_0, \\varphi_1) = \\begin{bmatrix}\n\\left(\\psi_0, \\varphi_0\\right) \\\\\n\\left(\\psi_0, \\varphi_1\\right) \\\\\n\\left(\\psi_1, \\varphi_0\\right) \\\\\n\\left(\\psi_1, \\varphi_1\\right)\n\\end{bmatrix}\n\\]\n\nTensor product: \\[\n(\\psi_0, \\psi_1) \\otimes (\\varphi_0, \\varphi_1) = \\begin{bmatrix}\n\\psi_0 \\cdot \\varphi_0 \\\\\n\\psi_0 \\cdot \\varphi_1 \\\\\n\\psi_1 \\cdot \\varphi_0 \\\\\n\\psi_1 \\cdot \\varphi_1\n\\end{bmatrix}\n\\]\n\n\nThis tensor product is the basis for \\(W_N\\):\n\\[\n\\{\\psi_0\\psi_0, \\psi_0\\psi_1, \\psi_1\\psi_0, \\psi_1\\psi_1\\}\n\\]\n\nwhich can also be arranged in matrix notation \\(\\{\\psi_i\\varphi_j\\}_{i,j=0}^{1,1}\\) (\\(i\\) is row, \\(j\\) is column)\n\\[\n(\\psi_0, \\psi_1) \\otimes (\\varphi_0, \\varphi_1) =  \n\\begin{bmatrix}\n\\psi_0 \\\\\n\\psi_1\n\\end{bmatrix}\n\\begin{bmatrix}\n\\varphi_0 & \\varphi_1\n\\end{bmatrix} =\n\\begin{bmatrix}\n\\psi_0 \\cdot \\varphi_0, \\psi_0 \\cdot \\varphi_1 \\\\\n\\psi_1 \\cdot \\varphi_0, \\psi_1 \\cdot \\varphi_1\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#example-of-tensor-product-basis",
+    "href": "chebyshev.html#example-of-tensor-product-basis",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Example of tensor product basis",
+    "text": "Example of tensor product basis\nUse the space of all linear functions in both \\(x\\) and \\(y\\) directions\n\\[\nV_{N_x} = \\text{span}\\{1, x\\} \\quad \\text{and} \\quad V_{N_y} = \\text{span}\\{1, y\\}\n\\]\n\n\nCartesian product\n\\[\n(1, x) \\times (1, y) = \\begin{bmatrix}\n(1, 1) \\\\\n(1, y) \\\\\n(x, 1) \\\\\n(x, y)\n\\end{bmatrix}\n\\]\n\nTensor product\n\\[\n(1, x) \\otimes (1, y) = \\begin{bmatrix}\n1 \\\\\ny \\\\\nx \\\\\nxy\n\\end{bmatrix}\n\\]\n\n\n\nNumpy naturally arranges the outer product into matrix form:\n\n\ny = sp.Symbol('y')\nVx = np.array([1, x])\nVy = np.array([1, y])\nW = np.outer(Vx, Vy)\nprint(W)\n\n\n[[1 y]\n [x x*y]]"
+  },
+  {
+    "objectID": "chebyshev.html#we-have-a-function-space-and-a-basis-now-its-time-to-approximate-small-uxy",
+    "href": "chebyshev.html#we-have-a-function-space-and-a-basis-now-its-time-to-approximate-small-uxy",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "We have a function space and a basis, now it’s time to approximate \\(\\small u(x,y)\\)",
+    "text": "We have a function space and a basis, now it’s time to approximate \\(\\small u(x,y)\\)\nThe variational methods require the \\(L^2(\\Omega)\\) inner product\n\\[\n\\begin{align*}\n(f, g)_{L^2(\\Omega)} &= \\int_{\\Omega} f g \\, d\\Omega, \\\\\n&= \\int_{I_x}\\int_{I_y} f(x,y)g(x,y)dxdy.\n\\end{align*}\n\\]\n\n\n\n\n\n\nNote\n\n\nThe first line is identical to the definition used for the 1D case and is valid for any domain \\(\\Omega\\), not just Cartesian product domains. The only difference for 2D is that \\(f\\) and \\(g\\) now are functions of both \\(x\\) and \\(y\\) and the the integral over the domain is a double integral."
+  },
+  {
+    "objectID": "chebyshev.html#galerkin-for-2d-approximations",
+    "href": "chebyshev.html#galerkin-for-2d-approximations",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Galerkin for 2D approximations",
+    "text": "Galerkin for 2D approximations\nWe want to approximate\n\\[\nu(x, y) \\approx u_N(x, y)\n\\]\nThe Galerkin method is then: find \\(u_N \\in W_N\\) such that\n\\[\n(u - u_N, v) = 0, \\quad \\forall \\, v \\in W_N \\tag{1}\n\\]\n\nIn order to solve the problem we just choose basis functions and solve (1). For example, use Legendre polynomials in both \\(x\\) and \\(y\\)-directions.\n\\[\nV_{N_x} = \\text{span}\\{P_i\\}_{i=0}^{N_x}, \\quad \\text{and} \\quad V_{N_y} = \\text{span}\\{P_j\\}_{j=0}^{N_y}\n\\]\n\\[\nW_N = V_{N_x} \\otimes V_{N_y} = \\text{span}\\{P_iP_j\\}_{i,j=0}^{N_x, N_y}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#example-small-ux-y-exp-x22y-0.52-x-y-in--1-1-times--1-1",
+    "href": "chebyshev.html#example-small-ux-y-exp-x22y-0.52-x-y-in--1-1-times--1-1",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "Example: \\(\\small u(x, y) = \\exp(-(x^2+2(y-0.5)^2)), (x, y) \\in [-1, 1] \\times [-1, 1]\\)",
+    "text": "Example: \\(\\small u(x, y) = \\exp(-(x^2+2(y-0.5)^2)), (x, y) \\in [-1, 1] \\times [-1, 1]\\)\nThis means to compute\n\\[\n\\int_{-1}^1\\int_{-1}^1 \\left(u - \\sum_{i=0}^N \\sum_{j=0}^N \\hat{u}_{ij} P_i(x)P_j(y)\\right) P_m(x)P_n(y) dx dy = 0, \\quad \\forall (m, n) \\in \\mathcal{I}_N^2,\n\\]\nwhere the index set \\(\\mathcal{I}_N = \\{0, 1, \\ldots, N\\}\\) and \\(\\mathcal{I}_N^2 = \\mathcal{I}_N \\times \\mathcal{I}_N\\). The test function \\(v\\) is here the tensor product basis function \\(P_m(x)P_n(y)\\).\nEquation {eq}`eq-project2D` provides $(N+1)^2$ equations for the $(N+1)^2$ unknown in $\\hat{U} = (\\hat{u}_{ij})_{i,j=0}^N$."
+  },
+  {
+    "objectID": "chebyshev.html#example",
+    "href": "chebyshev.html#example",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Example:",
+    "text": "Example:\n\\[ \\small\nu(x, y)=\\exp(-(x^2+2(y-0.5)^2)), (x, y) \\in [-1, 1] \\times [-1, 1]\n\\]\nFind \\(u_N \\in W_N = V_{N_x} \\otimes V_{N_y}\\) using Legendre polynomials for both directions. With Galerkin: find \\(u_N \\in W_N\\) such that\n\\[\n(u-u_N,v)=0 \\quad \\forall \\, v \\in W_N\n\\]\n\nFind the matrix \\(U=\\{u_{ij}\\}_{i,j=0}^{N_x,N_y}\\), \\(u_{ij}=(u, P_iP_j)\\)\nFind the matrix \\(A=\\{a_{ij}\\}_{i,j=0}^{N_x,N_y}\\), \\(a_{ij}=\\|P_i\\|^2 \\delta_{ij}\\)\nCompute \\(\\hat{U} = A^{-1} U A^{-1}\\)\n\n\nimport scipy.sparse as sparse\nfrom scipy.integrate import dblquad\nue = sp.exp(-(x**2+2*(y-sp.S.Half)**2))\nuh = lambda i, j: dblquad(sp.lambdify((x, y), ue*sp.legendre(i, x)*sp.legendre(j, y)), -1, 1, -1, 1, epsabs=1e-12)[0]\nN = 8\nuij = np.zeros((N+1, N+1))\nfor i in range(N+1):\n    for j in range(N+1):\n        uij[i, j] = uh(i, j)\nA_inv = sparse.diags([(2*np.arange(N+1)+1)/2], [0], (N+1, N+1))\nuhat_ij = A_inv @ uij @ A_inv"
+  },
+  {
+    "objectID": "chebyshev.html#the-inner-product-with-double-integral-becomes-a-bit-messy",
+    "href": "chebyshev.html#the-inner-product-with-double-integral-becomes-a-bit-messy",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "The inner product with double integral becomes a bit messy",
+    "text": "The inner product with double integral becomes a bit messy\nWe compute \\((u - u_N, v)\\) using\n\\[\nv = P_m(x)P_n(y) \\quad \\text{and} \\quad u_N = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y}\\hat{u}_{ij} P_i(x) P_j(y)\n\\]\n\nIt becomes a bit messy, with 4 different indices:\n\\[\n\\int_{-1}^1\\int_{-1}^1 \\left(u - \\sum_{i=0}^N \\sum_{j=0}^N \\hat{u}_{ij} P_i(x)P_j(y)\\right) P_m(x)P_n(y) dx dy\n\\]\nNote that the unknown coefficients \\(\\hat{u}_{ij}\\) are independent of space and we can simplify the double integrals by separating them into one integral for \\(x\\) and one for \\(y\\). We get\n\\[\n\\int_{-1}^1 \\int_{-1}^1 P_i(x)P_j(y) P_m(x)P_n(y) dx dy = \\underbrace{\\int_{-1}^1 P_i(x)P_m(x)dx}_{a_{mi}}  \\underbrace{\\int_{-1}^1 P_j(y) P_n(y) dy}_{a_{nj}}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#the-linear-algebra-problem-becomes",
+    "href": "chebyshev.html#the-linear-algebra-problem-becomes",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "The linear algebra problem becomes",
+    "text": "The linear algebra problem becomes\nUsing for the right hand side \\((u, v)\\) \\[\nu_{mn} = \\int_{-1}^1 \\int_{-1}^1 u(x, y) P_m(x)P_n(y) dx dy\n\\]\nwhere \\(U = \\{u_{mn}\\}_{m,n=0}^{N_x, N_y}\\) is a matrix of coefficients.\n\\((u - u_N, v) = 0\\) thus becomes the linear algebra problem\n\\[\n\\sum_{i=0}^{N_x} \\sum_{j=0}^{N_y} a_{mi}a_{nj} \\hat{u}_{ij} = u_{mn}, (m,n) \\in (0, \\ldots, N_x)\\times (0, \\ldots, N_y)\n\\]\nIn matrix form this is\n\\[\nA \\hat{U} A = U,\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#we-now-compute-u---u_n-v-using",
+    "href": "chebyshev.html#we-now-compute-u---u_n-v-using",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "We now compute \\((u - u_N, v)\\) using",
+    "text": "We now compute \\((u - u_N, v)\\) using\n\\[\nv = P_m(x)P_n(y) \\quad \\text{and} \\quad u_N = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y}\\hat{u}_{ij} P_i(x) P_j(y)\n\\]\n\nIt becomes a bit messy, with 4 different indices:\n\\[\n\\int_{-1}^1\\int_{-1}^1 \\left(u - \\sum_{i=0}^N \\sum_{j=0}^N \\hat{u}_{ij} P_i(x)P_j(y)\\right) P_m(x)P_n(y) dx dy\n\\]\n\n\nNote that the unknown coefficients \\(\\hat{u}_{ij}\\) are independent of space and we can simplify the double integrals by separating them into one integral for \\(x\\) and one for \\(y\\). For example\n\\[\n\\int_{-1}^1 \\int_{-1}^1 P_i(x)P_j(y) P_m(x)P_n(y) dx dy = \\underbrace{\\int_{-1}^1 P_i(x)P_m(x)dx}_{a_{mi}}  \\underbrace{\\int_{-1}^1 P_j(y) P_n(y) dy}_{a_{nj}}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#solve-the-linear-algebra-problem",
+    "href": "chebyshev.html#solve-the-linear-algebra-problem",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Solve the linear algebra problem",
+    "text": "Solve the linear algebra problem\n\\[\n\\begin{align}\n\\sum_{i=0}^{N_x} \\sum_{j=0}^{N_y} a_{mi}a_{nj} \\hat{u}_{ij} &= u_{mn}, \\quad (m,n)\\in (0, \\ldots, N_x) \\times (0, \\ldots, N_y) \\\\\n\\longrightarrow A \\hat{U} A &= U\n\\end{align}\n\\]\nCan solve for \\(U\\) with the vec-trick (\\(\\text{vec}(A \\hat{U} A^T) = (A \\otimes A) \\text{vec}{(\\hat{U})}\\))\n\\[\n\\begin{align}\n(A \\otimes A) \\text{vec}(\\hat{U}) &= \\text{vec}(U) \\\\\n\\text{vec}(\\hat{U}) &= (A \\otimes A)^{-1} \\text{vec}(U)\n\\end{align}\n\\]\nHowever, since \\(A\\) here is a diagonal matrix and we only have one matrix \\((A\\hat{U}A)\\) it is actually much easier to just avoid the vectorization and solve directly\n\\[\n\\hat{U} = A^{-1} U A^{-1}.\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#breaking-down-small-u-u_n-v",
+    "href": "chebyshev.html#breaking-down-small-u-u_n-v",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Breaking down \\(\\small (u-u_N, v)\\)",
+    "text": "Breaking down \\(\\small (u-u_N, v)\\)\n\\[\n\\text{With} \\quad v = P_m(x)P_n(y) \\quad \\text{and} \\quad u_N = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y}\\hat{u}_{ij} P_i(x) P_j(y)\n\\]\n\\[\n(u-u_N, v)=0 \\rightarrow \\int_{-1}^1\\int_{-1}^1 \\left(u - \\sum_{i=0}^N \\sum_{j=0}^N \\hat{u}_{ij} P_i(x)P_j(y)\\right) P_m(x)P_n(y) dx dy = 0\n\\]\n\\[\n(u, v) = \\int_{-1}^1 \\int_{-1}^1 u(x, y) P_m(x)P_n(y) dx dy = u_{mn}\n\\]\n\\[\n(u_N, v) := \\sum_{i=0}^{N_x} \\sum_{j=0}^{N_y} a_{mi}a_{nj} \\hat{u}_{ij}\n\\]\n\n\\[\n(u-u_N,v)=0 \\longrightarrow \\boxed{ \\sum_{i=0}^{N_x} \\sum_{j=0}^{N_y} a_{mi}a_{nj} \\hat{u}_{ij} = u_{mn}}, \\quad (m, n) = (0, \\ldots, N_x) \\times (0, \\ldots, N_y)\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#evaluate-the-2d-solution",
+    "href": "chebyshev.html#evaluate-the-2d-solution",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Evaluate the 2D solution",
+    "text": "Evaluate the 2D solution\nWe have found \\(\\{\\hat{u}_{ij}\\}_{i,j=0}^{N_x,N_y}\\), so now we can evaluate\n\\[\nu_N(x, y) = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} \\hat{u}_{ij} P_i(x)P_j(y)\n\\]\nfor any \\(x, y\\), preferably within the domain \\([-1, 1] \\times [-1, 1]\\).\nHow to do this?\n\nA simple double for-loop will do, or on matrix-vector form to avoid the for-loop. Use \\(\\boldsymbol{P_x}=(P_0(x), \\ldots, P_{N_x})\\) and \\(\\boldsymbol{P_y}=(P_0(y), \\ldots, P_{N_y}(y))\\)\n\\[\n\\boldsymbol{P_x} \\hat{U} \\boldsymbol{P_{y}}^T =\n\\begin{bmatrix} P_0(x)&  \\ldots& P_{N_x}(x)\\end{bmatrix} \\begin{bmatrix} u_{0,0} & \\cdots & u_{0,N_y} \\\\\n\\vdots & \\ddots & \\vdots \\\\\nu_{N_x, 0} & \\cdots & u_{N_x,N_y}\n\\end{bmatrix}\n\\begin{bmatrix}\nP_0(y) \\\\\n\\vdots \\\\\nP_{N_y}(y)\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#evaluate-for-a-computational-mesh",
+    "href": "chebyshev.html#evaluate-for-a-computational-mesh",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Evaluate for a computational mesh",
+    "text": "Evaluate for a computational mesh\nIt is very common to compute the solution on a 2D computational Cartesian grid \\(\\boldsymbol{x}= (x_0, x_1, \\ldots, x_{N_x})\\) and \\(\\boldsymbol{y}=(y_0, y_1, \\ldots, y_{N_y})\\):\n\\[\n\\boldsymbol{x} \\times \\boldsymbol{y} = \\{(x, y) | x \\in \\boldsymbol{x} \\text{ and } y \\in \\boldsymbol{y}\\}\n\\]\n\\[\nu_N(x_i, y_j) = \\sum_{m=0}^N \\sum_{n=0}^N \\hat{u}_{mn} P_m(x_i)P_n(y_j).\n\\]\nFour nested for-loops, or a triple matrix product\n\\[\n\\begin{bmatrix} P_0(x_0)&  \\ldots& P_{N_x}(x_0) \\\\\n\\vdots&  \\ddots & \\vdots \\\\\nP_{0}(x_{N_x})&  \\ldots & P_{N_x}(x_{N_x})\n\\end{bmatrix} \\begin{bmatrix} \\hat{u}_{0,0} & \\cdots & \\hat{u}_{0,N_y} \\\\\n\\vdots & \\ddots & \\vdots \\\\\n\\hat{u}_{N_x, 0} & \\cdots & \\hat{u}_{N_x,N_y}\n\\end{bmatrix}\n\\begin{bmatrix}\nP_0(y_0)&  \\ldots& P_{0}(y_{N_y}) \\\\\n\\vdots&  \\ddots & \\vdots \\\\\nP_{N_y}(y_{0})&  \\ldots & P_{N_y}(y_{N_y})\n\\end{bmatrix}\n\\] If \\(\\boldsymbol{P_x} = \\{P_j(x_i)\\}_{i,j=0}^{N_x, N_x}\\) and \\(\\boldsymbol{P_y} = \\{P_j(y_i)\\}_{i,j=0}^{N_y, N_y}\\) this is simply:\n\\[\n\\boldsymbol{P_x} \\hat{U} \\boldsymbol{P_y}^T\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#check-accuracy",
+    "href": "chebyshev.html#check-accuracy",
+    "title": "Function approximation with Chebyshev polynomials and in more dimensions",
+    "section": "Check accuracy",
+    "text": "Check accuracy\n\nxi = np.linspace(-1, 1, N+1)\nV = np.polynomial.legendre.legvander(xi, N)\nU = V @ uhat_ij @ V.T\nxij, yij = np.meshgrid(xi, xi, indexing='ij', sparse=True)\nueij = sp.lambdify((x, y), ue)(xij, yij)\nnp.linalg.norm(U-ueij)\n\n7.519704442136278e-10"
+  },
+  {
+    "objectID": "chebyshev.html#check-accuracy-by-computing-the-ell2-error-norm",
+    "href": "chebyshev.html#check-accuracy-by-computing-the-ell2-error-norm",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Check accuracy by computing the \\(\\ell^2\\) error norm",
+    "text": "Check accuracy by computing the \\(\\ell^2\\) error norm\n\\[ \\small\n\\|u-u_N\\|_{\\ell^2} =\\sqrt{\\frac{4}{N_xN_y} \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} (u(x_i,y_j)-u_N(x_i,y_j))^2}\n\\]\n\n\ndef l2error(uh_ij): \n    N = uh_ij.shape[0]-1\n    xi = np.linspace(-1, 1, N+1)\n    U = eval2D(xi, xi, uh_ij)\n    xij, yij = np.meshgrid(xi, xi, indexing='ij', sparse=True)\n    ueij = sp.lambdify((x, y), ue)(xij, yij)\n    return np.linalg.norm(U-ueij)*(2/N)\n\ndef solve(N):\n    uij = np.zeros((N+1, N+1))\n    for i in range(N+1):\n        for j in range(N+1):\n            uij[i, j] = uh(i, j)\n    A_inv = sparse.diags([(2*np.arange(N+1)+1)/2], [0], (N+1, N+1))\n    return A_inv @ uij @ A_inv\n    \nerror = []\nfor n in range(4, 24, 2):\n    error.append(l2error(solve(n)))\nplt.figure(figsize=(5, 3))\nplt.semilogy(np.arange(4, 24, 2), error);"
+  },
+  {
+    "objectID": "chebyshev.html#short-recap",
+    "href": "chebyshev.html#short-recap",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Short recap",
+    "text": "Short recap\nWe want to find an approximation to \\(u(x)\\) using\n\\[\nu(x) \\approx u_N(x) = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x)\n\\]\n\n\n\nLeast squares method\nGalerkin method\nCollocation method (Lagrange interpolation)\n\n\n\n\\(\\psi_j\\) is a basis function\n\\(\\{\\psi_j\\}_{j=0}^N\\) is a basis\n\\(V_N = \\text{span}\\{\\psi_j\\}_{j=0}^N\\) is a function space\n\n\n\nThe variational methods make use of integrals over the domain. The \\(L^2(\\Omega)\\) inner product and norms are (in 1D, where \\(\\Omega=[a, b]\\))\n\\[\n(f, g)_{L^2(\\Omega)} = \\int_{\\Omega} f(x) g(x) \\, dx \\quad \\text{and} \\quad \\|f\\|_{L^2(\\Omega)} = \\sqrt{(f, f)_{L^2(\\Omega)}}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#legendre-polynomials",
+    "href": "chebyshev.html#legendre-polynomials",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Legendre polynomials",
+    "text": "Legendre polynomials\n\n\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#legendre-polynomials-are-very-good-global-basis-functions",
+    "href": "chebyshev.html#legendre-polynomials-are-very-good-global-basis-functions",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Legendre polynomials are very good global basis functions",
+    "text": "Legendre polynomials are very good global basis functions\n\n\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe Galerkin method to approximate \\(u(x) \\approx u_N(x)\\) with Legendre polynomials:\nFind \\(u_N \\in V_N (= \\text{span}\\{P_j\\}_{i=0}^N=\\mathbb{P}_N)\\) such that\n\\[\n(u-u_N, v)_{L^2(\\Omega)} = 0, \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\nInsert for \\(v=\\psi_i\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and solve for \\(\\{\\hat{u}_j\\}_{j=0}^N\\) \\(\\rightarrow\\) Done!\nRequires mapping if \\(\\Omega \\ne [-1, 1]\\)"
+  },
+  {
+    "objectID": "chebyshev.html#weight-function",
+    "href": "chebyshev.html#weight-function",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Weight function",
+    "text": "Weight function"
+  },
+  {
+    "objectID": "chebyshev.html#the-weight-function-favours-the-edges",
+    "href": "chebyshev.html#the-weight-function-favours-the-edges",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "The weight function favours the edges",
+    "text": "The weight function favours the edges\n\\[\n\\omega(x) = \\frac{1}{\\sqrt{1-x^2}}\n\\]\n\n\n\n\n\n\n\n\n\nSo the weighted Chebyshev approach has smaller errors towards the edges."
+  },
+  {
+    "objectID": "chebyshev.html#evaluate",
+    "href": "chebyshev.html#evaluate",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Evaluate",
+    "text": "Evaluate\n\ndef eval2D(xi, yi, uhat):\n    Vx = np.polynomial.legendre.legvander(xi, uhat.shape[0]-1)\n    Vy = np.polynomial.legendre.legvander(yi, uhat.shape[1]-1) \n    return Vx @ uhat @ Vy.T\n\nN = 20\nxi = np.linspace(-1, 1, N+1)\nU = eval2D(xi, xi, uhat_ij)\nxij, yij = np.meshgrid(xi, xi, indexing='ij', sparse=False)\nplt.contourf(xij, yij, U)"
+  },
+  {
+    "objectID": "chebyshev.html#implement-evaluate-in-2d",
+    "href": "chebyshev.html#implement-evaluate-in-2d",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Implement evaluate in 2D",
+    "text": "Implement evaluate in 2D\n\ndef eval2D(xi, yi, uhat):\n    Vx = np.polynomial.legendre.legvander(xi, uhat.shape[0]-1)\n    Vy = np.polynomial.legendre.legvander(yi, uhat.shape[1]-1) \n    return Vx @ uhat @ Vy.T\n\nN = 20\nxi = np.linspace(-1, 1, N+1)\nU = eval2D(xi, xi, uhat_ij)\nxij, yij = np.meshgrid(xi, xi, indexing='ij', sparse=False)\nplt.contourf(xij, yij, U)"
+  },
+  {
+    "objectID": "chebyshev.html#helpful-tools",
+    "href": "chebyshev.html#helpful-tools",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Helpful tools",
+    "text": "Helpful tools\nChebfun and Shenfun\nLets approximate \\(u(x, y)=\\exp(-(x^2+2(y-0.5)^2)), (x, y) \\in [-1, 1] \\times [-1, 1]\\) using Shenfun\n\nimport shenfun as sf \nue = sp.exp(-(x**2+2*(y-sp.S.Half)**2)) \nT = sf.FunctionSpace(20, 'C')\nW = sf.TensorProductSpace(sf.comm, (T, T))\nuN = sf.project(ue, W) # projection is Galerkin approximation\nxi, yj = W.local_mesh(True, kind='uniform')\nplt.contourf(xi, yj, uN.backward(mesh='uniform'))"
+  },
+  {
+    "objectID": "chebyshev.html#some-helpful-tools",
+    "href": "chebyshev.html#some-helpful-tools",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Some helpful tools",
+    "text": "Some helpful tools\nChebfun and Shenfun\nApproximate \\(u(x, y)=\\exp(-(x^2+2(y-0.5)^2)), (x, y) \\in [-1, 1]^2\\) using Shenfun:\n\nimport shenfun as sf \nue = sp.exp(-(x**2+2*(y-sp.S.Half)**2)) \nT = sf.FunctionSpace(20, 'C')\nW = sf.TensorProductSpace(sf.comm, (T, T))\nuN = sf.project(ue, W) # projection is Galerkin approximation\nxi, yj = W.local_mesh(True, kind='uniform')\nplt.contourf(xi, yj, uN.backward(mesh='uniform'))"
+  },
+  {
+    "objectID": "chebyshev.html#some-helpful-tools-chebfun-and-shenfun",
+    "href": "chebyshev.html#some-helpful-tools-chebfun-and-shenfun",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Some helpful tools: Chebfun and Shenfun",
+    "text": "Some helpful tools: Chebfun and Shenfun"
+  },
+  {
+    "objectID": "chebyshev.html#d-using-tensor-products",
+    "href": "chebyshev.html#d-using-tensor-products",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "2D using tensor products",
+    "text": "2D using tensor products\nApproximate \\(u(x, y)=\\exp(-(x^2+2(y-0.5)^2)), (x, y) \\in [-1, 1]^2\\) using Shenfun:\n\nue = sp.exp(-(x**2+2*(y-sp.S.Half)**2)) \nT = sf.FunctionSpace(20, 'Chebyshev')\nW = sf.TensorProductSpace(sf.comm, (T, T))\nuN = sf.project(ue, W) # projection is Galerkin approximation\nxi, yj = W.local_mesh(True, kind='uniform')\nplt.contourf(xi, yj, uN.backward(mesh='uniform'))"
+  },
+  {
+    "objectID": "chebyshev.html#plot-the-pointwise-error",
+    "href": "chebyshev.html#plot-the-pointwise-error",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Plot the pointwise error",
+    "text": "Plot the pointwise error\n\n\nxj = np.linspace(-1, 1, 1000)\nplt.figure(figsize=(5, 3))\nplt.plot(xj, uh(xj)-sp.lambdify(x, ue)(xj), 'r')\nplt.ticklabel_format(axis='y', style='sci', \n                     scilimits=(-5,-5))\nplt.gca().set_yticks([-1e-4, -5e-5, 0, 5e-5]);\n\n\n\n\n\n\n\n\n\n\nNote the oscillation in the error that is typical of a spactral method.\nWho thinks that Chebyshev can do better?\n\n\n\nV = sf.FunctionSpace(N+1, 'Chebyshev', \n                     domain=(-1, 1))\nuhc = sf.project(ue, V)\nplt.figure(figsize=(5, 3))\nplt.plot(xj, uhc(xj)-sp.lambdify(x, ue)(xj), 'r');"
+  },
+  {
+    "objectID": "chebyshev.html#legendre-polynomials-are-very-good-basis-functions",
+    "href": "chebyshev.html#legendre-polynomials-are-very-good-basis-functions",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Legendre polynomials are very good basis functions",
+    "text": "Legendre polynomials are very good basis functions\n\n\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe Galerkin method to approximate \\(u(x) \\approx u_N(x)\\) with Legendre polynomials:\nFind \\(u_N \\in V_N (= \\text{span}\\{P_j\\}_{i=0}^N=\\mathbb{P}_N)\\) such that\n\\[\n(u-u_N, v)_{L^2(\\Omega)} = 0, \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\nInsert for \\(v=\\psi_i\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and solve for \\(\\{\\hat{u}_j\\}_{j=0}^N\\) \\(\\rightarrow\\) Done!\nRequires mapping if \\(\\Omega \\ne [-1, 1]\\)"
+  },
+  {
+    "objectID": "chebyshev.html#shenfun-in-2d-using-tensor-products",
+    "href": "chebyshev.html#shenfun-in-2d-using-tensor-products",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Shenfun in 2D using tensor products",
+    "text": "Shenfun in 2D using tensor products\nApproximate \\(u(x, y)=\\exp(-(x^2+2(y-0.5)^2)), (x, y) \\in [-1, 1]^2\\):\n\nue = sp.exp(-(x**2+2*(y-sp.S.Half)**2)) \nT = sf.FunctionSpace(20, 'Chebyshev')\nW = sf.TensorProductSpace(sf.comm, (T, T))\nuN = sf.project(ue, W) # projection is Galerkin approximation\nxi, yj = W.local_mesh(True, kind='uniform')\nplt.contourf(xi, yj, uN.backward(mesh='uniform'))"
+  },
+  {
+    "objectID": "chebyshev.html#legendre-polynomials-are-very-good-basis-funcs",
+    "href": "chebyshev.html#legendre-polynomials-are-very-good-basis-funcs",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Legendre polynomials are very good basis funcs",
+    "text": "Legendre polynomials are very good basis funcs\n\n\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe Galerkin method to approximate \\(u(x) \\approx u_N(x)\\) with Legendre polynomials:\nFind \\(u_N \\in V_N (= \\text{span}\\{P_j\\}_{i=0}^N=\\mathbb{P}_N)\\) such that\n\\[\n(u-u_N, v)_{L^2(\\Omega)} = 0, \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\nInsert for \\(v=\\psi_i\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and solve for \\(\\{\\hat{u}_j\\}_{j=0}^N\\) \\(\\rightarrow\\) Done!\nRequires mapping if \\(\\Omega \\ne [-1, 1]\\)"
+  },
+  {
+    "objectID": "chebyshev.html#legendre-polynomials-are-a-very-good-basis",
+    "href": "chebyshev.html#legendre-polynomials-are-a-very-good-basis",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Legendre polynomials are a very good basis",
+    "text": "Legendre polynomials are a very good basis\n\n\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe Galerkin method to approximate \\(u(x) \\approx u_N(x)\\) with Legendre polynomials:\nFind \\(u_N \\in V_N (= \\text{span}\\{P_j\\}_{i=0}^N=\\mathbb{P}_N)\\) such that\n\\[\n(u-u_N, v)_{L^2(\\Omega)} = 0, \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\nInsert for \\(v=\\psi_i\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and solve for \\(\\{\\hat{u}_j\\}_{j=0}^N\\) \\(\\rightarrow\\) Done!\nRequires mapping if \\(\\Omega \\ne [-1, 1]\\)\nFinding \\(u_N \\in V_N\\) with Galerkin is often called a projection of \\(u(x)\\) onto \\(V_N\\)"
+  },
+  {
+    "objectID": "chebyshev.html#legendre-polynomials-form-a-very-good-basis",
+    "href": "chebyshev.html#legendre-polynomials-form-a-very-good-basis",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Legendre polynomials form a very good basis",
+    "text": "Legendre polynomials form a very good basis\n\n\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe Galerkin method to approximate \\(u(x) \\approx u_N(x)\\) with Legendre polynomials:\nFind \\(u_N \\in V_N (= \\text{span}\\{P_j\\}_{i=0}^N=\\mathbb{P}_N)\\) such that\n\\[\n(u-u_N, v)_{L^2(\\Omega)} = 0, \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\nInsert for \\(v=P_i\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j P_j\\) and solve to get \\(\\hat{u}_i=\\frac{(u, P_i)}{\\|P_i\\|^2}, i=0,1, \\ldots, N\\)\nRequires mapping if \\(\\Omega \\ne [-1, 1]\\)\nThe Galerkin method is also be referred to as a projection of \\(u(x)\\) onto \\(V_N\\)"
+  },
+  {
+    "objectID": "chebyshev.html#it-is-more-common-to-use-one-basis-function-for-each-direction",
+    "href": "chebyshev.html#it-is-more-common-to-use-one-basis-function-for-each-direction",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "It is more common to use one basis function for each direction",
+    "text": "It is more common to use one basis function for each direction\nThere are not all that many two-dimensional basis functions and a more common approach is to use one basis function for the \\(x\\)-direction and another for the \\(y\\)-direction\n\\[\nu_N(x, y) = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} \\hat{u}_{ij}\\psi_{i}(x) \\varphi_j(y).\n\\]\n\n\n\n\n\n\nNote\n\n\nThe unknowns \\(\\{\\hat{u}_{ij}\\}_{i,j=0}^{N_x,N_y}\\) are now in the form of a matrix. The total number of unknowns: \\(N+1=(N_x+1)\\cdot (N_y+1)\\).\n\n\n\n\nThe most straightforward approach is to use the same basis functions for both directions. For example, with a Chebyshev basis\n\\[\nu_N(x, y) = \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} \\hat{u}_{ij}T_{i}(x)T_j(y).\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#try-shenfun",
+    "href": "chebyshev.html#try-shenfun",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Try Shenfun",
+    "text": "Try Shenfun\nApproximate with Legendre polynomials through Shenfun and the Galerkin method\n\\[\nu(x)=\\frac{1}{1+25x^2} \\quad x \\in [-1, 1] \\rightarrow \\hat{u}_j = \\frac{2j+1}{2}(u, P_j)\n\\]\n\n\nimport shenfun as sf  \nN = 50\nue = 1./(1+25*x**2)\nV = sf.FunctionSpace(N+1, 'Legendre', domain=(-1, 1))\nv = sf.TestFunction(V)\nuh = (2*np.arange(N+1)+1)/2*sf.inner(ue, v) \nplt.figure(figsize=(6, 3))\nplt.plot(V.mesh(), uh.backward(), 'b', V.mesh(), sp.lambdify(x, ue)(V.mesh()), 'ro')\nplt.legend(['Legendre', 'Exact'])\n\n\n\n\n\n\n\n\n\n\nNote the implementation. Choose FunctionSpace and compute Legendre coefficients using the inner product, with \\(v=P_j\\) as a TestFunction for the function space V."
+  },
+  {
+    "objectID": "chebyshev.html#fast-chebyshev-transforms",
+    "href": "chebyshev.html#fast-chebyshev-transforms",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Fast Chebyshev transforms",
+    "text": "Fast Chebyshev transforms\nOne of the reasons why Chebyshev polynomials are so popular is the fact that you can transform fast between spectral and physical space\n\\[\nu_N(x_i) = \\sum_{j=0}^N \\hat{u}_j T_j(x_i), \\quad i=0, 1, \\ldots, N\n\\]\nHere\n\\[\n\\begin{matrix}\n\\text{Physical points} & \\boldsymbol{u} = (u_N(x_i))_{i=0}^N \\\\\n\\text{Spectral points} & \\boldsymbol{\\hat{u}} = (\\hat{u}_i)_{i=0}^N\n\\end{matrix}\n\\]\nSlow implementation: Using \\(\\boldsymbol{T} = (T_j(x_i))_{i,j=0}^{N, N}\\) we get\n\\[\n\\boldsymbol{u} = \\boldsymbol{T} \\boldsymbol{\\hat{u}}\n\\]\nwhich is computed in \\((2N+1)(N+1)\\) floating point operations, which scales as \\(\\mathcal{O}(N^2)\\)."
+  },
+  {
+    "objectID": "chebyshev.html#slow-chebyshev-transforms-implementation",
+    "href": "chebyshev.html#slow-chebyshev-transforms-implementation",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Slow Chebyshev transforms implementation",
+    "text": "Slow Chebyshev transforms implementation\n\nN = 10\nT = np.polynomial.chebyshev.chebvander(np.cos(np.arange(N)*np.pi/(N-1)), N)\nuhat = np.random.random(N+1)\nu = T @ uhat\nprint(u)\n\n[ 4.36800018 -0.00593321  1.37779832 -0.53597051  1.61093375  1.23534919\n  1.51810735  0.40889198  0.78576296  0.62724195]\n\n\nSlow because you use \\(\\mathcal{O}(N^2)\\) floating point operations and memory demanding because you need a matrix \\(\\boldsymbol{T} \\in \\mathbb{R}^{(N+1)\\times (N+1)}\\).\nLets describe a faster way to compute \\(\\boldsymbol{u}=(u_N(x_i))_{i=0}^N\\) from \\(\\boldsymbol{\\hat{u}}=(\\hat{u}_i)_{i=0}^N\\)"
+  },
+  {
+    "objectID": "chebyshev.html#fast-cosine-transform",
+    "href": "chebyshev.html#fast-cosine-transform",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Fast cosine transform",
+    "text": "Fast cosine transform\nLet\n\\[\nx_i = \\cos(i \\pi / N), \\quad i=0, 1, \\ldots, N\n\\]\nsuch that for \\(i=0, 1, \\ldots, N\\):\n\\[\n\\begin{align}\nu_N(x_i) &= \\sum_{j=0}^N \\hat{u}_j T_j(x_i)\\\\\nu_N(x_i) &= \\sum_{j=0}^N \\hat{u}_j \\cos(j i \\pi /N) \\\\\nu_N(x_i) &= \\hat{u}_0 + (-1)^{i}\\hat{u}_N + \\sum_{j=1}^{N-1} \\hat{u}_j \\cos(j i \\pi /N)\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#the-discrete-cosine-transform",
+    "href": "chebyshev.html#the-discrete-cosine-transform",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "The discrete cosine transform",
+    "text": "The discrete cosine transform\nThe discrete cosine transform of type 1 is defined to transform the real numbers \\(\\boldsymbol{y}=(y_i)_{i=0}^N\\) into \\(\\boldsymbol{Y}=(Y_i)_{i=0}^N\\) such that\n\\[\nY_i = y_0 + (-1)^{i}y_N + 2\\sum_{j=1}^{N-1}y_j \\cos(ij\\pi / N), \\quad i=0,1,\\ldots, N\n\\]\nThis operation can be evaluated in \\(\\mathcal{O}(N \\log_2 N)\\) floating point operations, using the Fast Fourier Transform (FFT). Vectorized:\n\\[\n\\boldsymbol{Y} = DCT^1(\\boldsymbol{y})\n\\]\nThe DCT is found in scipy and we will now use it to compute a fast Chebyshev transform."
+  },
+  {
+    "objectID": "chebyshev.html#fast-chebyshev-transform",
+    "href": "chebyshev.html#fast-chebyshev-transform",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Fast Chebyshev transform",
+    "text": "Fast Chebyshev transform\nWe have the \\(DCT^1\\) for any \\(\\boldsymbol{Y}\\) and \\(\\boldsymbol{y}\\) \\[ \\small\nY_i = y_0 + (-1)^{i}y_N + 2\\sum_{j=1}^{N-1}y_j \\cos(ij\\pi / N), \\quad i=0,1,\\ldots, N\n\\]\nWe want to compute the following using the fast \\(DCT^1\\) \\[ \\small\nu_N(x_i) = \\hat{u}_0 + (-1)^{i}\\hat{u}_N + \\sum_{j=1}^{N-1} \\hat{u}_j \\cos(j i \\pi /N), \\quad i=0,1,\\ldots, N \\tag{1}\n\\]\n\nRearrange (1) my multiplying by 2: \\[ \\small\n2u_N(x_i)-\\hat{u}_0-(-1)^{i}\\hat{u}_N = \\overbrace{\\hat{u}_0 + (-1)^{i}\\hat{u}_N + 2\\sum_{j=1}^{N-1}\\hat{u}_j \\cos(ij\\pi / N)}^{DCT^1(\\boldsymbol{\\hat{u}})_i}\n\\]\n\\[ \\small\nu_N(x_i) = \\frac{DCT^1(\\boldsymbol{\\hat{u}})_i + \\hat{u}_0 + (-1)^{i}\\hat{u}_N}{2}\n\\]"
+  },
+  {
+    "objectID": "chebyshev.html#fast-implementation",
+    "href": "chebyshev.html#fast-implementation",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Fast implementation",
+    "text": "Fast implementation\n\n\n\\[\n\\boldsymbol{u} = \\frac{DCT^1(\\boldsymbol{\\hat{u}}) + \\hat{u}_0 + I_m \\hat{u}_N}{2}\n\\]\nwhere\n\\[\nI_m = ((-1)^{i})_{i=0}^N\n\\]\n\n\nimport scipy\n\ndef evaluate_cheb_1(uhat):\n  N = len(uhat)\n  uj = scipy.fft.dct(uhat, type=1)\n  uj += uhat[0]\n  uj[::2] += uhat[-1]\n  uj[1::2] -= uhat[-1]\n  uj *= 0.5\n  return uj\n\nN = 1000\nxi = np.cos(np.arange(N+1)*np.pi/N)\nT = np.polynomial.chebyshev.chebvander(xi, N)\nuhat = np.ones(N+1)\nuj = T @ uhat\nuj_fast = evaluate_cheb_1(uhat)\nassert np.allclose(uj, uj_fast) \n\n\n\n\n\n\nTiming of regular transform:\n\n%timeit -q -o -n 10 uj = T @ uhat\n\n&lt;TimeitResult : 186 µs ± 95.6 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;\n\n\n\nTiming of fast transform:\n\n%timeit -q -o -n 10 uj_fast = evaluate_cheb_1(uhat)\n\n&lt;TimeitResult : 31.7 µs ± 36.7 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;"
+  },
+  {
+    "objectID": "chebyshev.html#legendre-polynomials-form-a-good-basis-for-mathbbp_n",
+    "href": "chebyshev.html#legendre-polynomials-form-a-good-basis-for-mathbbp_n",
+    "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
+    "section": "Legendre polynomials form a good basis for \\(\\mathbb{P}_N\\)",
+    "text": "Legendre polynomials form a good basis for \\(\\mathbb{P}_N\\)\n\n\n\\[ \\small\n\\begin{align*}\nP_0(x) &= 1, \\\\\nP_1(x) &= x, \\\\\nP_2(x) &= \\frac{1}{2}(3x^2-1), \\\\\n&\\vdots \\\\\n(j+1)P_{j+1}(x) &= (2j+1)xP_{j}(x) - j P_{j-1}(x).\n\\end{align*}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe Galerkin method to approximate \\(u(x) \\approx u_N(x)\\) with Legendre polynomials:\nFind \\(u_N \\in V_N (= \\text{span}\\{P_j\\}_{i=0}^N=\\mathbb{P}_N)\\) such that\n\\[\n(u-u_N, v)_{L^2(\\Omega)} = 0, \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\nInsert for \\(v=P_i\\) and \\(u_N=\\sum_{j=0}^N \\hat{u}_j P_j\\) and solve to get \\(\\hat{u}_i=\\frac{(u, P_i)}{\\|P_i\\|^2}, i=0,1, \\ldots, N\\)\nRequires mapping if \\(\\Omega \\ne [-1, 1]\\)\nThe Galerkin method is also be referred to as a projection of \\(u(x)\\) onto \\(V_N\\)"
   }
 ]
