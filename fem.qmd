@@ -1,0 +1,1066 @@
+---
+title: "Function approximation by the finite element method"
+subtitle: "MATMEK-4270"
+author: "Prof. Mikael Mortensen, University of Oslo"
+
+jupyter: shenfun
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    slide-number: true
+    preview-links: auto
+    css: styles.css
+    embed-resources: false
+
+pandoc:
+  to: revealjs
+  standalone: false
+  wrap: none
+  default-image-extension: png
+  html-math-method:
+    method: mathjax
+    url: >-
+      https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  slide-level: 2
+---
+
+## Short recap {.smaller}
+
+We have considered the approximation of functions $u(x), x \in \Omega =[a, b]$ using $u(x) \approx u_N(x)$ and
+
+$$
+u_N(x) = \sum_{i=0}^N \hat{u}_i \psi_i(x)
+$$
+
+* $\psi_i(x)$ have been **global** basis functions, defined on all of $\Omega = [a, b]$
+* $\{\hat{u}_i\}_{i=0}^N$ are the unknowns
+
+We have found $\{\hat{u}_i\}_{i=0}^N$ using 
+
+* The least squares method (variational)
+* The Galerkin method (variational)
+* The Collocation method (interpolation)
+
+## Advantages and disadvantages of the global variational methods {.smaller}
+
+::: {.columns}
+::: {.column}
+
+#### Advantages
+
+* Spectral accuracy
+* Efficient for orthogonal basis functions
+* No mesh
+
+:::
+::: {.column}
+
+#### Disadvantages 
+
+* Mainly feasible for simple domains, like lines and rectangles 
+* Inefficient for non-orthogonal basis functions
+
+:::
+:::
+
+Impossible to use for **unstructured meshes**, like
+
+![](./figures/dolfin_mesh.png){fig-align="center"}
+
+
+
+## The finite element method is a variational method using *local basis functions* {.smaller}
+
+::: {.columns}
+::: {.column}
+5 **global** basis functions
+
+```{python}
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+np.set_printoptions(precision=4)
+x = sp.Symbol('x')
+plt.figure(figsize=(6, 3))
+xj = np.linspace(-1, 1, 100)
+legend = []
+p = np.zeros(100)
+for n in range(5):
+    l = sp.legendre(n, x)
+    p[:] = sp.lambdify(x, l)(xj)
+    plt.plot(xj, p)
+    legend.append(f'$P_{n}(x)$')
+plt.legend(legend);
+```
+
+:::
+::: {.column}
+2 **local** piecewise linear basis functions
+
+```{python}
+xj = np.linspace(-1, 1, 8)
+psi0 = np.zeros(len(xj))
+psi0[2]=1
+psi1 = np.zeros(len(xj))
+psi1[3]=1
+fig = plt.figure(figsize=(6, 3))
+ax = fig.gca()
+plt.plot(xj, psi0, 'b')
+plt.plot(xj, psi1, 'r')
+plt.legend([r'$\psi_2(x)$', r'$\psi_3(x)$'])
+```
+
+:::
+:::
+
+::: {.fragment}
+
+::: {.callout-note appearance="simple"}
+
+The Galerkin formulation is the same whether you use a global approach with Legendre polynomials or a local FEM with piecewise linear polynomials. The difference lies all in the function spaces and the choice of basis.
+
+:::
+
+Find $u_N \in V_N (=\text{span}\{\psi_j\}_{j=0}^N)$ such that
+
+$$
+(u-u_N, v) = 0\quad \forall \, v \in V_N
+$$
+
+:::
+
+## Piecewise linear basis functions lead to piecewise linear approximations $\small u_N(x)$ {.smaller}
+
+```{python}
+xj = np.linspace(1, 2, 4)
+u = 10*(x-1)**2-1
+plt.plot(xj, sp.lambdify(x, u)(xj), 'b')
+xm = np.linspace(1, 2, 1000)
+plt.plot(xm, sp.lambdify(x, u)(xm), 'r')
+plt.plot(xj, sp.lambdify(x, u)(xj), 'bo')
+plt.legend(['Piecewise linear $u_N(x)$ using FEM', 'Exact solution', 'The solution in nodes'])
+```
+
+* With FEM $u_N(x)$ is defined everywhere in the domain $\Omega$ and not just in mesh points.
+* Interpolation is not needed since $u_N(x) = \sum_{j=0}^N\hat{u}_j \psi_j(x), \quad x \in \Omega$.
+
+## The finite element method is especially well suited for unstructured meshes in complex geometries {.smaller}
+
+![](./figures/structured-unstructured.png){fig-align="center"}
+
+But in this course we will learn FEM using first simple meshes that look like the structured.
+
+## The finite element mesh {.smaller}
+
+The domain $\Omega$ is divided into $N_e$ smaller, non-overlapping, subdomains $\Omega^{(e)}$, such that
+
+$$
+\Omega = \bigcup_{e=0}^{N_e-1} \Omega^{(e)}
+$$
+
+![](./figures/fe_mesh1D_P1.png){fig-align="center"}
+
+* The smaller subdomains between the blue lines are referred to as **elements**.
+* The red dots are referred to as **nodes**, just like for interpolation methods.
+
+## There may be many nodes inside each element {.smaller}
+
+
+![](./figures/fe_mesh1D_P2.png)
+
+The figure shows a mesh with 5 non-uniform nodes and 2 non-uniform elements
+
+Using more nodes inside each element is how the FEM can achieve higher order accuracy
+
+## Finite element basis functions {.smaller}
+
+![](./figures/fe_mesh1D_phi_2_3.png)
+
+An element with no internal nodes can at best use piecewise linear basis functions
+
+$$
+\psi_j(x) = \begin{cases}
+\frac{x-x_{j-1}}{x_{j}-x_{j-1}} \quad &x \in [x_{j-1}, x_{j}],\\
+\frac{x-x_{j+1}}{x_{j}-x_{j+1}} \quad &x \in [x_{j}, x_{j+1}],\\
+0 \quad &\text{otherwise},
+\end{cases}
+$$
+
+## The FEM is a variational method {.smaller}
+
+Use a continuous piecewise linear function space $V_N=\text{span}\{\psi_j\}_{j=0}^N$, where 
+
+$$
+\psi_j(x) = \begin{cases}
+\frac{x-x_{j-1}}{x_{j}-x_{j-1}} \quad &x \in [x_{j-1}, x_{j}]\\
+\frac{x-x_{j+1}}{x_{j}-x_{j+1}} \quad &x \in [x_{j}, x_{j+1}]\\
+0 \quad &\text{otherwise}
+\end{cases}
+$$
+
+To approximate a function $u(x), x \in \Omega = [a, b]$, we can now use the variational Galerkin method: Find $u_N \in V_N$ such that
+
+$$
+(u-u_N, v) = 0 \quad \forall \, v \in V_N
+$$
+
+We can still use $v=\psi_i$ and $u_N(x) = \sum_{j=0}^N \hat{u}_j \psi_j(x)$, exactly like for the global Galerkin method and obtain:
+
+$$
+\sum_{j=0}^N (\psi_j, \psi_i) \hat{u}_j = (u, \psi_i), \quad i=0,1,\ldots, N
+$$
+
+## The element mass matrix {.smaller}
+
+The mass matrix $A = (a_{ij})_{i,j=0}^N$ is
+
+$$
+a_{ij} = (\psi_j, \psi_i) = \int_{\Omega}\psi_j \psi_i dx, \quad (i, j) \in (0, \ldots, N)^2
+$$
+
+However, since each basis function is only non-zero on at most two elements, we usually assemble elementwise and add up (this works very well on unstructured meshes!)
+
+$$
+a_{ij} = \sum_{e=0}^{N_e-1} {a}_{ij}^{(e)} =  \sum_{e=0}^{N_e-1} \int_{\Omega^{(e)}} \psi_j \psi_i dx 
+$$
+
+We define the **element mass matrix** $A^{(e)} = ({a}^{(e)}_{ij})_{i,j=0}^N$ as
+
+$$
+{a}^{(e)}_{ij} = \int_{\Omega^{(e)}} \psi_j \psi_i dx, \quad (i, j) \in (0, \ldots, N)^2 
+$$
+
+::: {.callout-note appearance="minimal"}
+
+The finite element method is **much more difficult to implement** than global methods, because of the local basis functions and unstructured mesh. Yet, the unstructured mesh and local basis functions make the method **much more flexible**.
+
+:::
+
+## The element mass matrix is highly sparse {.smaller}
+
+$$
+{a}^{(e)}_{ij} = \int_{\Omega^{(e)}} \psi_j \psi_i dx, \quad 
+$$
+
+For piecewise linear basis functions there are only 2 non-zero basis functions per element. See element $\Omega^{(2)}$
+
+![](./figures/fe_mesh1D_phi_2_3.png){height="200" fig-align="center"}
+
+::: {.fragment}
+
+::: {.columns}
+::: {.column}
+
+The matrix ${A}^{(2)}$ will have only 4 non-zero items. So it is really a waste of memory using an $(N+1)\times (N+1)$ matrix.
+
+:::
+::: {.column}
+
+```{python}
+#| fig-align: center
+A = np.zeros((6, 6))
+A[2,2]=1
+A[2,3]=1
+A[3,2]=1
+A[3,3]=1
+plt.figure(figsize=(2,2))
+plt.spy(A, markersize=16)
+#plt.imshow(A, 'gray_r')
+plt.title('$A^{(2)}$')
+plt.gca().set_xticks(np.arange(6)-0.5)
+plt.gca().set_yticks(np.arange(6)-0.5)
+plt.grid(True)
+plt.tick_params(axis='both', which='both', bottom=False, top=False,  
+                left=False, labelbottom=False, labelleft=False, labeltop=False)
+#plt.axis('off')
+```
+
+:::
+:::
+
+:::
+
+## Define a local-to-global map $q(e, r)$ {.smaller}
+
+$$
+q(e, r) = de+r
+$$
+
+```{python}
+#| fig-align: center
+N = 7
+d = 2
+xj = np.linspace(-1, 1, N)
+plt.figure(figsize=(12, 3))
+plt.plot((xj[0], xj[-1]), (0, 0), 'k')
+plt.plot(xj, np.zeros(N), 'ro', markersize=16)
+for i in range(N//2+1):
+    plt.plot([xj[d*i], xj[d*i]], np.array([-0.07, 0.07]), 'b')
+plt.gca().set_ylim([-0.4, 0.2])
+for i in range(N):
+    plt.text(xj[i], -0.15, f"{i}", size=12)
+plt.text(-1.4, -0.15, "q(e, r):", size=16)
+for i in range(N//2):
+    plt.text(xj[d*i+1], -0.25, f"{i}", size=12)
+plt.text(-1.4, -0.25, "e:", size=16)
+for i in range(d+1):
+    plt.text(xj[1*d+i], -0.35, f"{i}", size=12)
+plt.text(-1.4, -0.35, "r (on e=1):", size=16)
+plt.text(-0.1, 0.15, "d=2", size=16)
+plt.axis('off')
+```
+
+Mapping local index $r \in (0, \ldots, d)$ on global element $e$ to the global index $q(e, r) \in (0, 1, \ldots, N)$. There are $d+1$ nodes per element.
+
+::: {.fragment}
+
+For unstructured meshed $q(e, r)$ needs to be stored explicitly ($r$ numbering is implicit):
+
+$$
+q = \Big \{ \begin{matrix}
+0: \begin{bmatrix}
+ 0 \\
+ 1 \\
+ 2
+\end{bmatrix} &
+1: \begin{bmatrix}
+ 2 \\
+ 3 \\
+ 4
+\end{bmatrix}
+&
+2: \begin{bmatrix}
+ 4 \\
+ 5 \\
+ 6
+\end{bmatrix}
+\end{matrix}
+\Big \}
+$$
+
+:::
+
+## Use a local dense element mass matrix {.smaller}
+
+With $d+1$ nonzero basis functions on element $e$ all the non-zero items of $A^{(e)}$ can be stored in the dense matrix:
+
+$$
+\tilde{A}^{(e)} = (\tilde{a}_{rs}^{(e)})_{r,s=0}^d
+$$
+
+$$
+\tilde{a}_{rs}^{(e)} = \int_{\Omega^{(e)}} \psi_{q(e,r)} \psi_{q(e,r)} dx
+$$
+
+
+::: {.callout-note}
+The matrix $\tilde{A}^{(e)}$ contains the same nonzero items as $A^{(e)}$, but $\tilde{A}^{(e)}\in \mathbb{R}^{(d+1) \times (d+1)}$ is dense, whereas $A^{(e)} \in \mathbb{R}^{(N+1)\times (N+1)}$ is highly sparse. 
+:::
+
+
+## Local to global mapping in assembly of $A$ {.smaller}
+
+![](./figures/movie.gif){fig-align="center" height="400"}
+
+* The 4 smaller matrices represent $\tilde{A}^{(0)}, \tilde{A}^{(1)}, \tilde{A}^{(2)}$ and $\tilde{A}^{(3)}$
+* Finite element assembly: add up for $e=0,1,\ldots, N_e-1$ and $(r,s) \in (0,1,\ldots, d)^2$
+$$
+\quad a_{q(e,r),q(e,s)} \mathrel{+}= \tilde{a}^{(e)}_{r,s}
+$$
+
+## Mapping to reference domain {.smaller}
+
+In assembling the matrix $A$ we need to compute the element matrix $\tilde{A}^{(e)}$ many times. Is this really necessary? The integrals
+
+$$
+\int_{\Omega^{(e)}} \psi_{q(e,r)} \psi_{q(e,s)} d\Omega,
+$$
+
+differ only in the domain, whereas the **shape of the basis functions** is the same regardless of domain. The piecewise linear basis functions are always straight lines.
+
+::: {.fragment}
+
+Let us map all elements to a reference domain $\Omega^r = [-1, 1]$. The affine map from $x \in \Omega^{(e)} = [x_{q(e,0)}, x_{q(e, d)}] = [x_L, x_R]$ to $X \in \Omega^r$ can be written for any element as
+
+$$
+x = \frac{1}{2}(x_L+x_R) + \frac{1}{2}(x_R-x_L)X
+$$
+
+Mapping back and forth is as usual
+
+$$
+X(x) \quad \text{or} \quad x(X)
+$$
+
+:::
+
+## Mapping finite element basis functions {.smaller}
+
+The basis functions $\psi_{q(e,r)}(x)$ are commonly mapped to the Lagrangian basis functions
+
+$$
+\psi_{q(e,r)}(x) = \ell_r(X) = \prod_{\substack{0 \le s \le d \\ s \ne r}} \frac{X-X_s}{X_r-X_s}
+$$
+
+where 
+
+$$
+X_r = -1 + \frac{2r}{d}, \quad r = 0, 1, \ldots, d
+$$
+
+and for piecewise linear basis functions ($d=1$) we get the following basis functions on the reference domain:
+
+$$
+\ell_0(X) = \frac{1}{2}(1-X) \quad \text{and} \quad \ell_1(X) = \frac{1}{2}(1+X)
+$$
+
+## Quadratic elements ($d=2$) {.smaller}
+
+For quadratic elements the Lagrange basis functions on the reference domain are
+
+$$
+(X_0, X_1, X_2) = (-1, 0, 1)
+$$
+
+$$
+\ell_0(X) = \frac{1}{2}X(1-X), \quad
+\ell_1(X) = (1-X^2), \quad
+\ell_2(X) = \frac{1}{2}X(1+X)
+$$
+
+```{python}
+#| fig-align: center
+from lagrange import Lagrangebasis, Lagrangefunction
+fig = plt.figure(figsize=(8, 4))
+xj = np.array([0, 0.5, 1])
+yj = np.linspace(0, 1, 100)
+l0, l1, l2 = Lagrangebasis(xj)
+plt.plot(yj, sp.lambdify(x, l0)(yj), 'k',
+         yj, sp.lambdify(x, l1)(yj), 'b',
+         yj, sp.lambdify(x, l2)(yj), 'r')
+ax = fig.gca()
+ax.text(1.05, 0.75, "$\\ell_2(X)$", horizontalalignment='center', size=16)
+ax.text(-0.05, 0.75, "$\\ell_0(X)$", horizontalalignment='center', size=16)
+ax.text(0.5, 0.85, "$\\ell_1(X)$", horizontalalignment='center', size=16)
+ax.text(0, -0.2, "$-1$", horizontalalignment='center', size=16)
+ax.text(0.5, -0.2, "$0$", horizontalalignment='center', size=16)
+ax.text(1, -0.2, "$1$", horizontalalignment='center', size=16)
+ax.text(0, -0.6, "$x_{q(e, 0)}$", size=16)
+ax.text(0.5, -0.6, "$x_{q(e, 1)}$", size=16)
+ax.text(1, -0.6, "$x_{q(e, 2)}$", size=16)
+ax.text(-0.15, -0.2, "$X_r:$", size=16)
+ax.text(0, -0.4, "0", size=16)
+ax.text(0.5, -0.4, "1", size=16)
+ax.text(1, -0.4, "2", size=16)
+ax.text(-0.15, -0.4, "$r:$", size=16)
+ax.axis('off');
+```
+
+## d=3 and $\small (X_0, X_1, X_2, X_3) = (-1, -1/3, 1/3, 1)$ {.smaller}
+
+$$
+\begin{matrix}
+\ell_0(X) = -\frac{9}{16}(X-1)(X-\tfrac{1}{3})(X+\tfrac{1}{3}) & \ell_1(X) = \frac{27}{16}(X-1)(X-\tfrac{1}{3})(X+{1}) \\ 
+\ell_2(X) = -\frac{27}{16}(X-1)(X+\tfrac{1}{3})(X+1) & \ell_3(X) = \frac{9}{16}(X-\tfrac{1}{3})(X+\tfrac{1}{3})(X+1)
+\end{matrix}
+$$
+
+```{python}
+#| fig-align: center
+from lagrange import Lagrangebasis, Lagrangefunction
+fig = plt.figure(figsize=(10, 5))
+xj = np.array([-1, -1/3, 1/3, 1])
+yj = np.linspace(-1, 1, 100)
+l0, l1, l2, l3 = Lagrangebasis(xj)
+plt.plot(yj, sp.lambdify(x, l0)(yj), 'k',
+         yj, sp.lambdify(x, l1)(yj), 'b',
+         yj, sp.lambdify(x, l2)(yj), 'r',
+         yj, sp.lambdify(x, l3)(yj), 'm')
+ax = fig.gca()
+ax.text(1.05, 0.75, "$\\ell_3(X)$", horizontalalignment='center', size=16)
+ax.text(0.5, 0.85, "$\\ell_2(X)$", horizontalalignment='center', size=16)
+ax.text(-0.5, 0.85, "$\\ell_1(X)$", horizontalalignment='center', size=16)
+ax.text(-1.05, 0.75, "$\\ell_0(X)$", horizontalalignment='center', size=16)
+ax.text(-1, -0.2, "$-1$", horizontalalignment='center', size=16)
+ax.text(-0.33, -0.2, "$-1/3$", horizontalalignment='center', size=16)
+ax.text(0.33, -0.2, "$1/3$", horizontalalignment='center', size=16)
+ax.text(1, -0.2, "$1$", horizontalalignment='center', size=16)
+ax.text(-1, -0.4, "0", size=16)
+ax.text(-0.33, -0.4, "1", size=16)
+ax.text(0.33, -0.4, "2", size=16)
+ax.text(1, -0.4, "3", size=16)
+ax.text(-1.15, -0.4, "$r:$", size=16)
+ax.text(-1.15, -0.2, "$X_r:$", size=16)
+ax.axis('off');
+```
+
+
+## Back to the element matrix {.smaller}
+
+Use a change of variables ($x\rightarrow X$ and $\psi_{q(e,r)}(x)=\ell_r(X)$) for the inner product:
+
+$$
+\begin{align*}
+\tilde{a}^{(e)}_{rs} &= \int_{\Omega^{(e)}} \psi_{q(e,r)}(x) \psi_{q(e,s)}(x) d\Omega, \\
+&= \int_{x_L}^{x_R} \psi_{q(e,r)}(x) \psi_{q(e,s)}(x) dx, \\
+&= \int_{-1}^1 \ell_{r}(X) \ell_{s}(X) \frac{dx}{dX} dX,
+\end{align*}
+$$
+
+where $dx/dX = h(e)/2$ and $h(e)=x_{q(e, d)}-x_{q(e, 0)}=x_R-x_L$, such that for any element, regardless of order $d$, we can compute the elements of the element matrix as
+
+$$
+\tilde{a}_{rs}^{(e)} = \frac{h(e)}{2}\int_{-1}^1 \ell_{r}(X) \ell_{s}(X) dX
+$$
+
+Note that the integral does not depend on element number $e$! 
+
+## Since the integral does not depend on the element {.smaller}
+
+
+then, instead of computing for each (linear) element:
+
+$$
+\tilde{A}^{(e)} = \begin{bmatrix} 
+\int_{\Omega^{(e)}} \psi_{q(e, 0)} \psi_{q(e, 0)} dx &
+\int_{\Omega^{(e)}} \psi_{q(e, 0)} \psi_{q(e, 1)} dx \\
+\int_{\Omega^{(e)}} \psi_{q(e, 1)} \psi_{q(e, 0)} dx &
+\int_{\Omega^{(e)}} \psi_{q(e, 1)} \psi_{q(e, 1)} dx
+\end{bmatrix},
+$$
+
+we can simply use:
+
+$$
+\tilde{A}^{(e)} = \frac{h(e)}{2}\begin{bmatrix} 
+\int_{-1}^1 \ell_{0} \ell_{0} dX &
+\int_{-1}^1 \ell_{0} \ell_{1} dX \\
+\int_{-1}^1 \ell_{1} \ell_{0} dX &
+\int_{-1}^1 \ell_{1} \ell_{1} dX
+\end{bmatrix}.
+$$
+
+with merely a different $h(e)$ for each element. 
+
+Similarly for higher $d$.
+
+## Sympy implementation element mass matrix {.smaller}
+
+Linear ($d=1$)
+```{python}
+#| echo : true
+h = sp.Symbol('h')
+l = Lagrangebasis([-1, 1])
+ae = lambda r, s: sp.integrate(l[r]*l[s], (x, -1, 1))
+A1e = h/2*sp.Matrix([[ae(0, 0), ae(0, 1)],[ae(1, 0), ae(1, 1)]])
+A1e
+```
+
+Quadratic ($d=2$)
+```{python}
+#| echo : true
+l = Lagrangebasis([-1, 0, 1])
+ae = lambda r, s: sp.integrate(l[r]*l[s], (x, -1, 1))
+A2e = h/2*sp.Matrix(np.array([[ae(i, j) for i in range(3) for j in range(3)]]).reshape(3, 3))
+A2e
+```
+
+## Complete assembly implementation {.smaller}
+
+```{python}
+#| echo : true 
+Ae = [A1e, A2e] # previously computed
+
+def get_element_boundaries(xj, e, d=1):
+    return xj[d*e], xj[d*(e+1)]
+
+def get_element_length(xj, e, d=1):
+    xL, xR = get_element_boundaries(xj, e, d=d)
+    return xR-xL
+
+def local_to_global_map(e, r=None, d=1): # q(e, r)
+    if r is None:
+        return slice(d*e, d*(e+1)+1)
+    return d*e+r
+
+def assemble_mass(xj, d=1):
+    N = len(xj)-1
+    Ne = N//d
+    A = np.zeros((N+1, N+1))
+    for elem in range(Ne):
+        hj = get_element_length(xj, elem, d=d)
+        s0 = local_to_global_map(elem, d=d)
+        A[s0, s0] += np.array(Ae[d-1].subs(h, hj), dtype=float)
+    return A
+```
+
+```{python}
+#| echo : true 
+#| output-location: column 
+N = 4
+xj = np.linspace(1, 2, N+1)
+A = assemble_mass(xj, d=1)
+print(A)
+```
+
+## Higher order mass matrix {.smaller}
+
+```{python}
+#| echo : true
+N = 8
+xj = np.linspace(1, 2, N+1)
+A = assemble_mass(xj, d=2)
+print(A)
+```
+
+::: {.columns}
+::: {.column}
+
+Sparsity pattern:
+
+::: {.callout-note}
+The internal nodes represent rows with only 3 nonzero items. The nodes on the boundary between two elements have rows containing 5 nonzero items.
+:::
+
+:::
+::: {.column}
+
+```{python}
+#| fig-align: left
+#| echo : false
+plt.figure(figsize=(4, 4)) 
+plt.spy(A, markersize=16)
+plt.gca().set_xticks(np.arange(N+1)-0.5)
+plt.gca().set_yticks(np.arange(N+1)-0.5)
+plt.grid(True)
+plt.tick_params(axis='both', which='both', bottom=False, top=False,  
+                left=False, labelbottom=False, labelleft=False, labeltop=False)
+```
+
+:::
+:::
+
+## Finite element assembly of a vector {.smaller}
+
+In solving for 
+
+$$
+\sum_{j=0}^N(\psi_j, \psi_i) \hat{u}_j = (u, \psi_i), \quad i=0,1,\ldots, N
+$$
+
+we also need the right hand side
+
+$$
+b_i = (u, \psi_i), \quad i = 0, 1, \ldots, N
+$$ 
+
+This inner product can also be evaluated **elementwise**, and mapped just like the mass matrix. We define the element vector similarly as the element matrix
+
+$$
+b_i^{(e)} = \int_{\Omega^{(e)}} u(x) \psi_{i}(x) dx, \quad i = 0, 1, \ldots, N
+$$
+
+$b_i^{(e)}$ will be highly sparse.
+
+## Define a dense local vector {.smaller}
+
+$$
+\tilde{b}^{(e)}_r = (u, \psi_{q(e, r)}) = \int_{\Omega^{(e)}} u(x) \psi_{q(e, r)}(x) dx, \quad r = 0, 1, \ldots, d
+$$
+
+Using as before $\psi_{q(e, r)}(x)=\ell_r(X)$ we get a mapping to the reference domain
+
+$$
+\tilde{b}^{(e)}_r = \frac{h(e)}{2}\int_{-1}^1 u(x(X)) \ell_{r}(X) dX, \quad r = 0, 1, \ldots, d
+$$
+
+::: {.callout-note}
+The vector $\boldsymbol{\tilde{b}}^{(e)}$ needs to be assembled with an integral for each element because of $u(x(X))$
+:::
+
+Assemble by adding up for all elements $e=0,1, \ldots, N_e-1$ and $r=0,1, \ldots, d$
+
+$$
+b_{q(e, r)} \mathrel{+}= \tilde{b}_r^{(e)}
+$$
+
+## Implementation $\small \boldsymbol{b}^{(e)}${.smaller}
+
+```{python}
+#| echo: true
+#| code-line-numbers : "|19-24"
+def map_true_domain(xj, e, d=1, x=x): # return x(X)
+    xL, xR = get_element_boundaries(xj, e, d=d)
+    hj = get_element_length(xj, e, d=d)
+    return (xL+xR)/2+hj*x/2
+
+def map_reference_domain(xj, e, d=1, x=x): # return X(x)
+    xL, xR = get_element_boundaries(xj, e, d=d)
+    hj = get_element_length(xj, e, d=d)
+    return (2*x-(xL+xR))/hj
+
+def map_u_true_domain(u, xj, e, d=1, x=x): # return u(x(X))
+    return u.subs(x, map_true_domain(xj, e, d=d, x=x))
+
+def assemble_b(u, xj, d=1):
+    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)
+    N = len(xj)-1
+    Ne = N//d
+    b = np.zeros(N+1)
+    for elem in range(Ne):
+        hj = get_element_length(xj, elem, d=d)
+        us = sp.lambdify(x, map_u_true_domain(u, xj, elem, d=d))
+        integ = lambda xj, r: us(xj)*l[r](xj)
+        for r in range(d+1):
+            b[local_to_global_map(elem, r, d)] += hj/2*quad(integ, -1, 1, args=(r,))[0]
+    return b
+```
+
+::: {.fragment}
+
+::: {.callout-note}
+
+We need to perform an integral by calling `quad` for each $r$ in each element.
+
+:::
+:::
+
+## Example: $\small u(x) = 10(x-1)^2-1, x \in [1, 2]$ {.smaller}
+
+Use the previously implemented `assemble_mass` and `assemble_b` to find the approximation of $u(x)$ using piecewise linear functions and FEM:
+
+```{python}
+#| echo : true 
+#| output-location: column 
+def assemble(u, N, domain=(-1, 1), d=1, xj=None):
+    mesh = np.linspace(domain[0], domain[1], N+1) if xj is None else xj
+    A = assemble_mass(mesh, d=d)
+    b = assemble_b(u, mesh, d=d)
+    return A, b
+
+N = 4
+xj = np.linspace(1, 2, N+1)
+A, b = assemble(10*(x-1)**2-1, N, d=1, xj=xj)
+uh = np.linalg.inv(A) @ b
+yj = np.linspace(1, 2, 1000)
+plt.figure(figsize=(6, 3.5))
+plt.plot(xj, uh, 'b-o', yj, 10*(yj-1)**2-1, 'r--')
+plt.legend(['FEM', 'Exact']);
+
+```
+
+::: {.callout-note}
+
+* Since we are using piecewise linear polynomials we can simply plot `uh` = $(u_N(x_i))_{i=0}^N=(\hat{u}_i)_{i=0}^N$ and `matplotlib` will correctly fill in a linear profile between the points.
+* The FEM solution $u_N(x_i) \ne u(x_i)$
+:::
+
+## Second order $(d=2)$ {.smaller}
+
+Check that a non-uniform mesh works as well:
+
+$$
+x_{2i} = 1+(\cos(2 \pi i / N) + 1)/2 \quad \text{and} \quad x_{2i+1} = \frac{x_{2i}+x_{2(i+1)}}{2}
+$$
+
+```{python}
+#| echo : true
+#| output-location: column 
+N = 6
+xj = np.zeros(N+1)
+xj[::2] = 1 + (np.cos(np.arange(N//2+1)*np.pi*2/N)[::-1] + 1)/2
+xj[1::2] = 0.5*(xj[:-1:2]+xj[2::2])
+A, b = assemble(10*(x-1)**2-1, N, d=2, xj=xj)
+uh = np.linalg.inv(A) @ b
+yj = np.linspace(1, 2, 1000)
+plt.figure(figsize=(6, 4))
+plt.plot(xj, uh, '-bo', yj, 10*(yj-1)**2-1, 'r--')
+plt.plot(xj[1::2], uh[1::2], 'go')
+plt.legend(['FEM 2nd order', 'Exact', 'Internal points']);
+```
+
+Why still linear interpolation? We need to use the higher order $u_N(x) = \sum_{j=0}^N\hat{u}_j \psi_j(x)$ between mesh points! $\rightarrow$ FEM evaluation
+
+## Finite element evaluation {.smaller}
+
+The finite element solution differs from the finite difference solution in that the solution is automatically defined everywhere within the domain.
+
+$$
+u_N(x) = \sum_{j=0}^N\hat{u}_j \psi_j(x)
+$$
+
+However, most basis functions will be zero at any location $x$. We need to find which element $x$ belongs to! And then evaluate only with non-zero basisfunctions
+
+$$
+u_N(x) = \sum_{r=0}^d \hat{u}_{q(e, r)} \ell_{r}(X), \quad x \in \Omega^{(e)}
+$$
+
+```{python}
+#| echo : true
+def fe_evaluate(uh, p, xj, d=1):
+    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)
+    elem = max(0, np.argmax(p <= xj[::d])-1) # find element containing p
+    Xx = map_reference_domain(xj, elem, d=d, x=p)
+    return Lagrangefunction(uh[d*elem:d*(elem+1)+1], l)(Xx)
+
+fe_evaluate(uh, 1.2, xj, d=2), 10*(1.2-1)**2-1
+```
+
+## Evaluate FEM for $N_d$ points {.smaller}
+
+$$
+u_N(x_i) = \sum_{r=0}^d \hat{u}_{q(e, r)} \ell_{r}(X(x_i)), \quad x \in \Omega^{(e)}, \quad i=0, 1, \ldots, N_d-1
+$$
+
+Just loop over scalar code for each point
+
+```{python}
+#| echo : true
+def fe_evaluate_v(uh, pv, xj, d=1):
+    uj = np.zeros(len(pv))
+    for i, p in enumerate(pv):
+        uj[i] = fe_evaluate(uh, p, xj, d)
+```
+
+::: {.fragment}
+
+Alternatively, use vectorization, but not really straightforward:
+
+```{python}
+#| echo : true
+def fe_evaluate_v(uh, pv, xj, d=1):
+    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)
+    # Find points inside elements
+    elem = (np.argmax((pv <= xj[::d, None]), axis=0)-1).clip(min=0)
+    xL = xj[:-1:d] # All left element boundaries
+    xR = xj[d::d]  # All right element boundaries
+    xm = (xL+xR)/2 # middle of all elements
+    hj = (xR-xL)   # length of all elements
+    Xx = 2*(pv-xm[elem])/hj[elem] # map pv to reference space all elements
+    dofs = np.array([uh[e*d+np.arange(d+1)] for e in elem], dtype=float)
+    V = np.array([lr(Xx) for lr in l], dtype=float) # All basis functions evaluated for all points
+    return np.sum(dofs * V.T, axis=1)
+```
+
+:::
+
+## More difficult example: $\small u(x)=e^{\cos x}$ {.smaller}
+
+Compute $L^2(\Omega)$ error and compare with **global** Chebyshev and Legendre methods
+
+::: {.columns}
+::: {.column}
+
+```{python}
+#| echo : true
+def L2_error(uh, ue, xj, d=1):
+    yj = np.linspace(-1, 1, 4*len(xj))
+    uhj = fe_evaluate_v(uh, yj, xj, d=d)
+    uej = ue(yj)
+    return np.sqrt(np.trapz((uhj-uej)**2, dx=yj[1]-yj[0]))
+
+u = sp.exp(sp.cos(x))
+ue = sp.lambdify(x, u)
+err = []
+err2 = []
+for n in range(2, 30, 4):
+    N = 2*n
+    xj = np.linspace(-1, 1, N+1)
+    A, b = assemble(u, N, (-1, 1), 1)
+    uh = np.linalg.inv(A) @ b
+    A2, b2 = assemble(u, N, (-1, 1), 2)
+    uh2 = np.linalg.inv(A2) @ b2
+    err.append(L2_error(uh, ue, xj, 1))
+    err2.append(L2_error(uh2, ue, xj, 2))
+```
+
+
+:::
+::: {.column}
+
+```{python}
+err_cl = np.load('./err_u.npy')
+plt.figure(figsize=(5, 3))
+plt.loglog(np.arange(0, 25, 2), err_cl[0], '+',
+           np.arange(0, 25, 2), err_cl[1], 'ko',
+           np.arange(2, 30, 4)*2, err, 'g',
+           np.arange(2, 30, 4)*2, err2, 'y',
+           fillstyle='none')
+plt.title("$L^2$-error")
+from plotslopes import slope_marker
+slope_marker((12, err[1]), (2, -1))
+slope_marker((20, err2[2]), (3, -1))
+plt.legend(['Chebyshev', 'Legendre', 'FEM d=1', 'FEM d=2']);
+```
+:::
+:::
+
+::: {.fragment}
+
+
+::: {.callout-note}
+
+This illustrates nicely **spectral** versus **finite order** accuracy. With $d=1$ the FEM obtains second order accuracy and the error disappears as the linear (in the loglog-plot) green curve with slope $-2$ (from error $\sim N^{-2}$). The spectral error on the other hand disappears exponentially as $\sim e^{-\mu N}$, faster than **any** finite order.
+
+:::
+:::
+
+##  {.smaller}
+
+![](./figures/fenics_banner.png)
+
+* Finite element software
+* Developed originally at Chalmers University of Technology and UiO 
+* Very flexible and easy to use 
+* Solves PDEs with many different finite elements, including Lagrange 
+
+## For installation: [https://github.com/FEniCS/dolfinx](https://github.com/FEniCS/dolfinx) {.smaller}
+
+### Anaconda 
+
+```{.bash}
+conda create -c conda-forge --name fenics fenics-dolfinx mpich pyvista
+```
+
+### Linux 
+
+```{.bash}
+sudo add-apt-repository ppa:fenics-packages/fenics
+sudo apt update
+sudo apt install fenicsx
+```
+
+### Docker
+
+```{.bash}
+docker run -ti dolfinx/dolfinx:stable
+```
+
+## First example - function approximation using piecewise linear Lagrange elements {.smaller}
+
+```{.python}
+from mpi4py import MPI
+from dolfinx import mesh, fem, cpp
+from dolfinx.fem.petsc import LinearProblem
+import ufl 
+from ufl import dx, inner
+
+msh = mesh.create_interval(MPI.COMM_SELF, 4, (-1, 1))
+V = fem.functionspace(msh, ("Lagrange", 1))
+u = ufl.TrialFunction(V)
+v = ufl.TestFunction(V)
+xp = ufl.SpatialCoordinate(msh)
+ue = ufl.exp(ufl.cos(xp[0]))
+a = inner(u, v) * dx
+L = inner(ue, v) * dx
+problem = LinearProblem(a, L)
+uh = problem.solve()
+```
+::: {.fragment}
+
+Alternatively assemble and solve linear problem yourself:
+
+```{.python}
+from scipy.sparse.linalg import spsolve
+A = fem.assemble_matrix(fem.form(a))
+b = fem.assemble_vector(fem.form(L))
+uh = fem.Function(V)
+uh.x.array[:] = spsolve(A.to_scipy(), b.array)
+```
+
+:::
+
+## Result 4 piecewise linear basis functions {.smaller}
+
+::: {.columns}
+::: {.column}
+
+### FEniCS
+
+```{.python}
+N = 100
+xj = np.zeros((N, 3))
+xj[:, 0] = np.linspace(-1, 1, N)
+data = cpp.geometry.determine_point_ownership(msh._cpp_object, xj, 1e-8)
+plt.plot(xj[:, 0], uh.eval(xj, data.dest_cells), 'b')
+plt.plot(xj[:, 0], sp.lambdify(x, sp.exp(sp.cos(x)))(xj[:, 0]), 'r')
+```
+
+![](./figures/dolfin_Lagrange_1.png){fig-align="center"}
+:::
+::: {.column}
+
+### Our implementation
+
+```{python}
+#| echo : true
+N = 4 
+A1, b1 = assemble(u, N, (-1, 1), 1)
+uN = np.linalg.inv(A1) @ b1
+plt.figure(figsize=(5.5, 3.8))
+plt.plot(np.linspace(-1, 1, N+1), uN, 'b')
+xj = np.linspace(-1, 1, 100)
+plt.plot(xj, sp.lambdify(x, u)(xj), 'r')
+```
+:::
+:::
+
+## Exactly the same result for the same method {.smaller}
+
+FEniCS uses exactly the same method with piecewise linear basis functions as we have described using Sympy/Numpy and as such we get exactly the same matrix/vectors:
+
+::: {.columns}
+::: {.column}
+### FEniCS
+```{.python}
+A.to_dense()
+```
+```{python}
+# Cheating here because dolfinx is not installed in this environment
+# Could not make dolfinx run with quarto
+# But the results are exactly identical, so it works for the presentation
+A1
+```
+
+```{.python}
+b.array
+```
+
+```{python}
+b1
+```
+```{.python}
+uh.x.array
+```
+
+```{python}
+uN
+```
+:::
+::: {.column}
+### Sympy/Numpy
+```{python}
+#| echo : true
+A1
+```
+
+```{python}
+#| echo : true
+b1
+```
+
+```{python}
+#| echo : true
+uN
+```
+
+:::
+:::
+
+## Summary {.smaller}
+
+* The finite element method (FEM) is a variational method using **local** basis functions.
+* The FEM uses the same Galerkin method as the methods using **global** basis functions. 
+* The FEM is assembled by running over all elements and assembling **local** matrices and vectors that are subsequently added to **global** matrices and vectors.
+* Since all assembly work is performed elementwise, the FEM is very well suited for **unstructured** meshes.

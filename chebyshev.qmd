@@ -206,7 +206,7 @@ $$
 We get the linear algebra problem by inserting for $v=T_i$ and $u_N=\sum_{j=0}^N \hat{u}_j T_j$
 
 $$
-\sum_{j=0}^N(T_j, T_i)_{\omega} \hat{u}_j = (u, T_i)_{\omega} \rightarrow \hat{u}_i = \frac{(u, T_i)_{\omega}}{\|T_i\|^2}, \quad \quad i=0,1,\ldots, N
+\sum_{j=0}^N(T_j, T_i)_{\omega} \hat{u}_j = (u, T_i)_{\omega} \rightarrow \hat{u}_i = \frac{(u, T_i)_{\omega}}{\|T_i\|_{\omega}^2}, \quad \quad i=0,1,\ldots, N
 $$
 
 :::
@@ -263,10 +263,10 @@ $$
 for all $i=0,1,\ldots, N$:
 
 $$
-\sum_{j=0}^N \overbrace{\int_{-1}^1 T_j(X)  T_i(X) \tilde{\omega}(X) \, \cancel{\frac{dx}{dX}} \, dX}^{\|T_i\|\delta_{ij}} \, \hat{u}_j =  \overbrace{\int_{-1}^1 u(x(X)) T_i(X) \tilde{\omega}(X) \, \cancel{\frac{dx}{dX}} \, dX}^{(u(x(X)), T_i)_{\omega}}
+\sum_{j=0}^N \overbrace{\int_{-1}^1 T_j(X)  T_i(X) \tilde{\omega}(X) \, \cancel{\frac{dx}{dX}} \, dX}^{\|T_i\|^2\delta_{ij}} \, \hat{u}_j =  \overbrace{\int_{-1}^1 u(x(X)) T_i(X) \tilde{\omega}(X) \, \cancel{\frac{dx}{dX}} \, dX}^{(u(x(X)), T_i)_{\omega}}
 $$
 
-and finally (using $\|T_i\|^2=\frac{c_i \pi}{2}$)
+and finally (using $\|T_i\|_{\omega}^2=\frac{c_i \pi}{2}$)
 
 $$
 \hat{u}_i = \frac{2}{c_i \pi}\left(u(x(X)), T_i\right)_{L^2_{\omega}(-1,1)}, \quad i=0, 1, \ldots, N
