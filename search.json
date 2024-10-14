@@ -3252,7 +3252,7 @@
     "href": "fem.html#higher-order-mass-matrix",
     "title": "Function approximation by the finite element method",
     "section": "Higher order mass matrix",
-    "text": "Higher order mass matrix\n\nN = 8\nxj = np.linspace(1, 2, N+1)\nA = assemble_mass(xj, d=2)\nprint(A)\n\n[[ 0.0333  0.0167 -0.0083  0.      0.      0.      0.      0.      0.    ]\n [ 0.0167  0.1333  0.0167  0.      0.      0.      0.      0.      0.    ]\n [-0.0083  0.0167  0.0667  0.0167 -0.0083  0.      0.      0.      0.    ]\n [ 0.      0.      0.0167  0.1333  0.0167  0.      0.      0.      0.    ]\n [ 0.      0.     -0.0083  0.0167  0.0667  0.0167 -0.0083  0.      0.    ]\n [ 0.      0.      0.      0.      0.0167  0.1333  0.0167  0.      0.    ]\n [ 0.      0.      0.      0.     -0.0083  0.0167  0.0667  0.0167 -0.0083]\n [ 0.      0.      0.      0.      0.      0.      0.0167  0.1333  0.0167]\n [ 0.      0.      0.      0.      0.      0.     -0.0083  0.0167  0.0333]]\n\n\n\n\nSparsity pattern:\n\n\n\n\n\n\nNote\n\n\nThe internal nodes represent rows with only 3 nonzero items. The nodes on the boundary between two elements have rows containing 5 nonzero items."
+    "text": "Higher order mass matrix\n\nN = 8\nxj = np.linspace(1, 2, N+1)\nA = assemble_mass(xj, d=2)\nprint(A)\n\n[[ 0.0333  0.0167 -0.0083  0.      0.      0.      0.      0.      0.    ]\n [ 0.0167  0.1333  0.0167  0.      0.      0.      0.      0.      0.    ]\n [-0.0083  0.0167  0.0667  0.0167 -0.0083  0.      0.      0.      0.    ]\n [ 0.      0.      0.0167  0.1333  0.0167  0.      0.      0.      0.    ]\n [ 0.      0.     -0.0083  0.0167  0.0667  0.0167 -0.0083  0.      0.    ]\n [ 0.      0.      0.      0.      0.0167  0.1333  0.0167  0.      0.    ]\n [ 0.      0.      0.      0.     -0.0083  0.0167  0.0667  0.0167 -0.0083]\n [ 0.      0.      0.      0.      0.      0.      0.0167  0.1333  0.0167]\n [ 0.      0.      0.      0.      0.      0.     -0.0083  0.0167  0.0333]]\n\n\n\n\nSparsity pattern:\n\n\n\n\n\n\nNote\n\n\n\nThe internal nodes represent rows with only 3 nonzero items. The nodes on the boundary between two elements have rows containing 5 nonzero items.\nThe mass matrix is not diagonal, but it is sparse."
   },
   {
     "objectID": "fem.html#finite-element-assembly-of-a-vector",
@@ -3378,7 +3378,7 @@
     "href": "fem.html#local-to-global-mapping-in-assembly-of-a",
     "title": "Function approximation by the finite element method",
     "section": "Local to global mapping in assembly of \\(A\\)",
-    "text": "Local to global mapping in assembly of \\(A\\)\n\n\n\n\n\n\nThe 4 smaller matrices represent \\(\\tilde{A}^{(0)}, \\tilde{A}^{(1)}, \\tilde{A}^{(2)}\\) and \\(\\tilde{A}^{(3)}\\)\nFinite element assembly: add up for \\(e=0,1,\\ldots, N_e-1\\) and \\((r,s) \\in (0,1,\\ldots, d)^2\\) \\[\n\\quad a_{q(e,r),q(e,s)} \\mathrel{+}= \\tilde{a}^{(e)}_{r,s}\n\\]"
+    "text": "Local to global mapping in assembly of \\(A\\)\n\n\n\n\n\nThe 4 smaller matrices represent \\(\\tilde{A}^{(0)}, \\tilde{A}^{(1)}, \\tilde{A}^{(2)}\\) and \\(\\tilde{A}^{(3)}\\)\nFinite element assembly: add up for \\(e=0,1,\\ldots, N_e-1\\) and \\((r,s) \\in (0,1,\\ldots, d)^2\\)\n\\[\n\\quad a_{q(e,r),q(e,s)} \\mathrel{+}= \\tilde{a}^{(e)}_{r,s}\n\\]"
   },
   {
     "objectID": "fem.html#fenics",
