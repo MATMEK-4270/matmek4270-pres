@@ -3350,7 +3350,7 @@
     "href": "fem.html#the-finite-element-method-is-especially-well-suited-for-unstructured-meshes-in-complex-geometries",
     "title": "Function approximation by the finite element method",
     "section": "The finite element method is especially well suited for unstructured meshes in complex geometries",
-    "text": "The finite element method is especially well suited for unstructured meshes in complex geometries\n\nBut in this course we will learn FEM using first simple meshes that look like the structured."
+    "text": "The finite element method is especially well suited for unstructured meshes in complex geometries\n\n\nStructured mesh\n\n\n\n\n\n\n\n\n\n\nUnstructured mesh\n\n\n\nBut in this course we will learn FEM using simple structured meshes."
   },
   {
     "objectID": "fem.html#the-fem-is-a-variational-method",
