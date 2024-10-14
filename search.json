@@ -3469,6 +3469,6 @@
     "href": "fem.html#summary",
     "title": "Function approximation by the finite element method",
     "section": "Summary",
-    "text": "Summary\n\nThe finite element method (FEM) is a variational method using local basis functions.\nThe FEM uses the same Galerkin method as the methods using global basis functions.\nThe FEM is assembled by running over all elements and assembling local matrices and vectors that are subsequently added to global matrices and vectors.\nSince all assembly work is performed elementwise, the FEM is very well suited for unstructured meshes."
+    "text": "Summary\n\n\nThe finite element method (FEM) is a variational method using local basis functions.\nThe FEM uses the same Galerkin method as the methods using global basis functions.\nThe FEM is assembled by running over all elements and assembling local matrices and vectors that are subsequently added to global matrices and vectors.\nSince all assembly work is performed elementwise, the FEM is very well suited for unstructured meshes."
   }
 ]
