@@ -1572,7 +1572,7 @@
     "href": "index.html",
     "title": "Presentations for MATMEK-4270",
     "section": "",
-    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions\nLecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions\nLecture 10 - Function approximation by the finite element method"
+    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions\nLecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions\nLecture 10 - Function approximation by the finite element method\nLecture 11 - Solving PDEs with the method of weighted residuals"
   },
   {
     "objectID": "wave.html#the-finite-difference-stencil-makes-use-of-5-neighboring-points-1",
@@ -3470,5 +3470,453 @@
     "title": "Function approximation by the finite element method",
     "section": "Summary",
     "text": "Summary\n\n\nThe finite element method (FEM) is a variational method using local basis functions.\nThe FEM uses the same Galerkin method as the methods using global basis functions.\nThe FEM is assembled by running over all elements and assembling local matrices and vectors that are subsequently added to global matrices and vectors.\nSince all assembly work is performed elementwise, the FEM is very well suited for unstructured meshes."
+  },
+  {
+    "objectID": "pdes.html#the-method-of-weighted-residuals",
+    "href": "pdes.html#the-method-of-weighted-residuals",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The method of weighted residuals",
+    "text": "The method of weighted residuals\nis defined such that\n\\[\n(\\mathcal{R}_N, v) = 0 \\quad \\forall \\, v \\in W\n\\]\nfor some (possibly different) functionspace \\(W\\).\nThis is a generic method, where the choice of \\(V_N\\) and \\(W\\) fully determines the method. Note the similarity to function approximation\n\\[\n(u_N - u, v) = 0\n\\]\nNow we have instead\n\\[\n(\\mathcal{L}(u_N)-f, v)=0\n\\]"
+  },
+  {
+    "objectID": "pdes.html#we-will-now-learn-to-approximate-ux-such-that-it-approximates-a-linear-equation",
+    "href": "pdes.html#we-will-now-learn-to-approximate-ux-such-that-it-approximates-a-linear-equation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "We will now learn to approximate \\(u(x)\\) such that it approximates a linear equation",
+    "text": "We will now learn to approximate \\(u(x)\\) such that it approximates a linear equation\nConsider any differential equation with operator \\(\\mathcal{L}\\)\n\\[\n\\mathcal{L}(u) = f\n\\]\nFor example\n\\[\n\\begin{align*}\nu  &= f \\\\\nu' &= f \\\\\nu'' &= f \\\\\nu'' +\\alpha u' + \\lambda u  &= f \\\\\n\\frac{d}{dx}\\left(\\alpha \\frac{d u}{dx}\\right) &= f\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#we-will-now-learn-to-approximate-ux-by-u_nx-such-that-it-approximates-a-linear-equation",
+    "href": "pdes.html#we-will-now-learn-to-approximate-ux-by-u_nx-such-that-it-approximates-a-linear-equation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "We will now learn to approximate \\(u(x)\\) by \\(u_N(x)\\) such that it approximates a linear equation",
+    "text": "We will now learn to approximate \\(u(x)\\) by \\(u_N(x)\\) such that it approximates a linear equation\nDefine any linear differential equation as\n\\[\n\\mathcal{L}(u) = f\n\\]\nwhere the generic operator \\(\\mathcal{L}\\) can represent anything, like\n\\[\n\\begin{align*}\nu  &= f \\\\\nu' &= f \\\\\nu'' &= f \\\\\nu'' +\\alpha u' + \\lambda u  &= f \\\\\n\\frac{d}{dx}\\left(\\alpha \\frac{d u}{dx}\\right) &= f\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#we-will-now-learn-to-approximate-small-ux-by-small-u_nx-such-that-it-approximates-a-linear-equation",
+    "href": "pdes.html#we-will-now-learn-to-approximate-small-ux-by-small-u_nx-such-that-it-approximates-a-linear-equation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "We will now learn to approximate \\(\\small u(x)\\) by \\(\\small u_N(x)\\) such that it approximates a linear equation",
+    "text": "We will now learn to approximate \\(\\small u(x)\\) by \\(\\small u_N(x)\\) such that it approximates a linear equation\n\\[\n\\mathcal{L}(u) = f\n\\]\nwhere the generic operator \\(\\mathcal{L}(u)\\) can represent anything, like\n\\[\n\\begin{align*}\nu  &= f \\\\\nu' &= f \\\\\nu'' &= f \\\\\nu'' +\\alpha u' + \\lambda u  &= f \\\\\n\\frac{d}{dx}\\left(\\alpha \\frac{d u}{dx}\\right) &= f\n\\end{align*}\n\\]\nUp until now we have only considered function approximations (\\(u=f\\)) such that\n\\[\nu(x) \\approx u_N(x)\n\\]"
+  },
+  {
+    "objectID": "pdes.html#the-residual",
+    "href": "pdes.html#the-residual",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The residual",
+    "text": "The residual\nDefine a residual that we ultimately want to be zero\n\\[\n\\mathcal{R} = \\mathcal{L}(u)-f\n\\]\nUse as always an approximation to \\(u(x)\\) that is \\(u_N \\in V_N\\) for some functionspace \\(V_N\\)\n\\[\nu_N(x) = \\sum_{j=0}^N\\hat{u}_j \\psi_j\n\\]\nand create a “numerical” residual\n\\[\n\\mathcal{R}_N = \\mathcal{L}(u_N)-f\n\\]\nwhere the unknowns are still \\(\\{\\hat{u}_j\\}_{j=0}^N\\)."
+  },
+  {
+    "objectID": "pdes.html#the-galerkin-method",
+    "href": "pdes.html#the-galerkin-method",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The Galerkin method",
+    "text": "The Galerkin method\nis as such a MWR where \\(W = V_N\\).\nLikewise, it can be shown that the least squares method\n\\[\n\\frac{\\partial (\\mathcal{R_N}, \\mathcal{R}_N)}{\\partial \\hat{u}_j} = 0, \\quad j = 0, 1, \\ldots, N,\n\\]"
+  },
+  {
+    "objectID": "pdes.html#the-method-of-weighted-residuals-mwr",
+    "href": "pdes.html#the-method-of-weighted-residuals-mwr",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The method of weighted residuals (MWR)",
+    "text": "The method of weighted residuals (MWR)\nis defined such that the residual must satisfy\n\\[\n(\\mathcal{R}_N, v) = 0 \\quad \\forall \\, v \\in W\n\\]\nfor some (possibly different) functionspace \\(W\\).\nThis is a generic method, where the choice of \\(V_N\\) and \\(W\\) fully determines the method.\n\nNote the similarity to function approximation\n\\[\n(u_N - u, v) = (e, v) = 0\n\\]\nNow we have instead the slightly more complicated\n\\[\n(\\mathcal{L}(u_N)-f, v) = (\\mathcal{R}_N, v) = 0\n\\]"
+  },
+  {
+    "objectID": "pdes.html#the-galerkin-method-is-a-mwr-with-wv_n",
+    "href": "pdes.html#the-galerkin-method-is-a-mwr-with-wv_n",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The Galerkin method is a MWR with \\(W=V_N\\)",
+    "text": "The Galerkin method is a MWR with \\(W=V_N\\)\nFind \\(u_N \\in V_N\\) such that\n\\[\n(\\mathcal{R}_N-f, v)=(\\mathcal{L}(u_N)-f, v)=0, \\quad \\forall \\, v \\in V_N\n\\]\nThe residual (or error) is orthogonal to all the test functions. We can also write this as\n\\[\n(\\mathcal{L}(u_N)-f, \\psi_j)=0, \\quad j=0,1,\\ldots, N\n\\]\n\n\nThe least squares method is a MWR with \\(\\small W=\\text{span}\\{\\frac{\\partial \\mathcal{R}_N}{\\partial \\hat{u}_j}\\}_{j=0}^N\\)\nsince \\[\n\\frac{\\partial (\\mathcal{R_N}, \\mathcal{R}_N)}{\\partial \\hat{u}_j} = 0, \\quad j = 0, 1, \\ldots, N\n\\]\ncan be written as\n\\[\n\\left(\\mathcal{R}_N, \\frac{\\partial \\mathcal{R}_N}{\\partial \\hat{u}_j}\\right)=0, \\quad j = 0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "pdes.html#the-collocation-method",
+    "href": "pdes.html#the-collocation-method",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The collocation method",
+    "text": "The collocation method\n\\[\n\\mathcal{R}_N(x_j) = 0, \\quad j = 0, 1, \\ldots, N\n\\]\ncan also be understood as a MWR. If we write the inner products as\n\\[\n(\\mathcal{R}_N, \\psi_j) = 0, \\quad j=0, 1, \\ldots, N\n\\]\nand use Dirac’s delta function as test functions \\(\\psi_j = \\delta(x-x_j)\\), then\n\\[\n(\\mathcal{R}_N, \\psi_j) = \\int_{\\Omega} \\mathcal{R}_N(x) \\delta(x-x_j) dx = \\mathcal{R}_N(x_j)\n\\]"
+  },
+  {
+    "objectID": "pdes.html#the-collocation-method-is-to-find",
+    "href": "pdes.html#the-collocation-method-is-to-find",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The collocation method is to find",
+    "text": "The collocation method is to find\n\\[\n\\mathcal{R}_N(x_j) = 0, \\quad j = 0, 1, \\ldots, N\n\\]\nfor some chosen mesh points \\(\\{x_j\\}_{j=0}^N\\).\n\nIf we write the inner products \\((\\mathcal{R}_N, v)\\) as\n\\[\n(\\mathcal{R}_N, \\psi_j) = 0, \\quad j=0, 1, \\ldots, N\n\\]\nand use Dirac’s delta function as test functions \\(\\psi_j = \\delta(x-x_j)\\), then\n\\[\n(\\mathcal{R}_N, \\psi_j) = \\int_{\\Omega} \\mathcal{R}_N(x) \\delta(x-x_j) dx = \\mathcal{R}_N(x_j)\n\\]\nSo the collocation method can technically also be considered a MWR!"
+  },
+  {
+    "objectID": "pdes.html#the-mwr-is-thus",
+    "href": "pdes.html#the-mwr-is-thus",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The MWR is thus",
+    "text": "The MWR is thus\nFind \\(u_N \\in V_N\\) such that\n\\[\n(\\mathcal{R}_N, v) = 0, \\quad \\forall v \\in W\n\\]\n\\(N+1\\) equations for \\(N+1\\) unknowns!\nFind \\(\\{\\hat{u}_j\\}_{j=0}^N\\) by choosing \\(N+1\\) test functions for \\(W\\). Choose test functions (basis functions for \\(W\\)) using either one of:\n\nGalerkin\nLeast squares\nCollocation"
+  },
+  {
+    "objectID": "pdes.html#first-example---poissons-equation",
+    "href": "pdes.html#first-example---poissons-equation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "First example - Poisson’s equation",
+    "text": "First example - Poisson’s equation\n\\[\n\\begin{align}\nu''(x) &= f(x), \\quad x \\in (-1, 1) \\\\\nu(-1) &= u(1) = 0\n\\end{align}\n\\]\nFind \\(u_N \\in V_N\\) such that\n\\[\n(u_N''-f, v) = 0, \\quad \\forall \\, v \\in W\n\\]\nHow to choose \\(V_N\\) and \\(W\\)? How do we satisfy the 2 boundary conditions?\n\nIf we choose all the trial functions \\(\\psi_j\\) such that\n\\[\n\\psi_j(\\pm 1) = 0\n\\]\nthen, regardless the values of \\(\\{\\hat{u}_j\\}_{j=0}^N\\)\n\\[\nu_N(\\pm 1) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(\\pm 1) = 0\n\\]"
+  },
+  {
+    "objectID": "pdes.html#possible-choices-for-trial-functions-in-v_n",
+    "href": "pdes.html#possible-choices-for-trial-functions-in-v_n",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Possible choices for trial functions in \\(V_N\\)",
+    "text": "Possible choices for trial functions in \\(V_N\\)\nThe domain is \\([-1, 1]\\), so a sensible choice for \\(j=0, 1, \\ldots\\) is\n\\[\n\\psi_j(x) = \\sin(\\pi (j+1) (x+1)/2)\n\\]\nThe \\((j+1)\\) is there because we start at \\(j=0\\) and \\(\\sin(0)=0\\) is not a basis function. The sines are alternating odd/even functions.\n\n\n\n\n\n\n\n\n\n\n\n\nIn comparison the (unmapped) sine functions \\(\\sin(\\pi(j+1)x), x \\in [-1, 1]\\) are odd for all integer \\(j \\ge 0\\)"
+  },
+  {
+    "objectID": "pdes.html#section-1",
+    "href": "pdes.html#section-1",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "",
+    "text": "Remember that\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1) = 1.\n\\]\nHence for any \\(j\\) all basis functions are zero\n\\[\n\\begin{align}\nP_j(-1) - P_{j+2}(-1) &= (-1)^j - (-1)^{j+2} = 0 \\\\\nP_j(1)-P_{j+2}(1) & =1-1=0\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#another-basis-can-be-created-from-legendre-polynomials",
+    "href": "pdes.html#another-basis-can-be-created-from-legendre-polynomials",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Another basis can be created from Legendre polynomials",
+    "text": "Another basis can be created from Legendre polynomials\n\n\n\\[\n\\psi_j(x) = P_j(x) - P_{j+2}(x)\n\\]\nAlternating odd/even\n\n\n\n\n\n\n\n\n\n\n\n\nRemember that\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1) = 1.\n\\]\nHence for any \\(j\\) all basis functions are zero\n\\[\n\\begin{align}\nP_j(-1) - P_{j+2}(-1) &= (-1)^j - (-1)^{j+2} = 0 \\\\\nP_j(1)-P_{j+2}(1) & =1-1=0\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#another-alternating-oddeven-basis-can-be-created-from-legendre-polynomials",
+    "href": "pdes.html#another-alternating-oddeven-basis-can-be-created-from-legendre-polynomials",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Another alternating odd/even basis can be created from Legendre polynomials",
+    "text": "Another alternating odd/even basis can be created from Legendre polynomials\n\n\n\\[\n\\begin{align}\n\\psi_j(x) &= P_j(x) - P_{j+2}(x)\\\\\n\\psi_j(\\pm 1) &= 0\n\\end{align}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\nRemember that\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1) = 1.\n\\]\nHence for any \\(j\\) all basis functions are zero\n\\[\n\\begin{align}\nP_j(-1) - P_{j+2}(-1) &= (-1)^j - (-1)^{j+2} = 0 \\\\\nP_j(1)-P_{j+2}(1) & =1-1=0\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#first-choice-for-trial-functions-in-v_n",
+    "href": "pdes.html#first-choice-for-trial-functions-in-v_n",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "First choice for trial functions in \\(V_N\\)",
+    "text": "First choice for trial functions in \\(V_N\\)\nThe domain is \\([-1, 1]\\), so a sensible choice for \\(j\\ge 0\\) is\n\\[\n\\psi_j(x) = \\sin(\\pi (j+1) (x+1)/2)\n\\]\nThe \\((j+1)\\) is there because we start at \\(j=0\\) and \\(\\sin(0)=0\\) is not a basis function. These sines are also alternating odd/even functions.\n\n\n\n\n\n\n\n\n\n\n\n\nIn comparison the (unmapped) sine functions \\(\\sin(\\pi(j+1)x), x \\in [-1, 1]\\) are odd for all integer \\(j \\ge 0\\)"
+  },
+  {
+    "objectID": "pdes.html#solve-poissons-equation",
+    "href": "pdes.html#solve-poissons-equation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Solve Poisson’s equation",
+    "text": "Solve Poisson’s equation\nInsert for \\(u_N=\\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and \\(v=\\psi_i\\) and obtain the linear algebra problem\n\\[\n\\sum_{j=0}^N \\left(\\psi''_j, \\psi_i  \\right) \\hat{u}_j = (f, \\psi_i), \\quad i = 0, 1, \\ldots, N\n\\]\n\n\nConsider using integration by parts\n\\[\n\\int_{a}^b u' v dx = -\\int_a^b u v' dx + [u v]_{a}^b\n\\]\nSet \\(u=u'\\) to obtain\n\\[\n\\int_{a}^b u'' v dx = -\\int_a^b u' v' dx + [u' v]_{a}^b\n\\]\n\n\n\\[\n\\longrightarrow \\left(\\psi''_j, \\psi_i  \\right) = -\\left( \\psi'_j, \\psi'_i \\right) + [\\psi'_j \\psi_i]_{-1}^1\n\\]"
+  },
+  {
+    "objectID": "pdes.html#poissons-equation-with-integration-by-parts",
+    "href": "pdes.html#poissons-equation-with-integration-by-parts",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Poisson’s equation with integration by parts",
+    "text": "Poisson’s equation with integration by parts\nSince \\(\\psi_j(\\pm 1) = 0\\) for all \\(j\\ge 0\\) we get that\n\\[\n\\left(\\psi''_j, \\psi_i  \\right) = -\\left( \\psi'_j, \\psi'_i \\right) + \\cancel{[\\psi'_j \\psi_i]_{-1}^1}\n\\]\nHence Poisson’s equation gets two alternative forms\n\\[\n\\sum_{j=0}^N \\left(\\psi''_j, \\psi_i  \\right) \\hat{u}_j = (f, \\psi_i), \\quad i = 0, 1, \\ldots, N \\tag{1}\n\\]\n\\[\n\\sum_{j=0}^N \\left(\\psi'_j, \\psi'_i  \\right) \\hat{u}_j = -(f, \\psi_i), \\quad i = 0, 1, \\ldots, N \\tag{2}\n\\]\n\n\n\n\n\n\nNote\n\n\nThe integration by parts is not really necessary here, as it is actually just as easy to compute \\(\\left(\\psi''_j, \\psi_i  \\right)\\) as \\(\\left(\\psi'_j, \\psi'_i  \\right)\\)!"
+  },
+  {
+    "objectID": "pdes.html#find-the-stiffness-matrix-psi_j-psi_i",
+    "href": "pdes.html#find-the-stiffness-matrix-psi_j-psi_i",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Find the stiffness matrix \\((\\psi''_j, \\psi_i)\\)",
+    "text": "Find the stiffness matrix \\((\\psi''_j, \\psi_i)\\)\n\\[\n\\begin{align*}\n(\\psi''_j, \\psi_i) &= \\Big((\\sin( \\pi (j+1)  (x+1)/2))'', \\, \\sin(\\pi (i+1)(x+1)/2) \\Big) \\\\\n    &= -\\frac{(j+1)^2\\pi^2}{4} \\Big(\\sin(\\pi (j+1)(x+1)/2), \\, \\sin(\\pi (i+1) (x+1)/2) \\Big) \\\\\n    &= -\\frac{(j+1)^2 \\pi^2}{4} \\delta_{ij}\n\\end{align*}\n\\]\n\nSolve problem\n\\[\n\\sum_{j=0}^N \\left(\\psi''_j, \\psi_i  \\right) \\hat{u}_j = (f, \\psi_i), \\quad i = 0, 1, \\ldots, N\n\\]\n\\[\n\\longrightarrow \\hat{u}_i = \\frac{-4}{(i+1)^2 \\pi^2}\\Big(f,\\, \\sin( \\pi (i+1)(x+1)/2)\\Big), \\quad i = 0, 1, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "pdes.html#implementation-using-the-method-of-manufactured-solution",
+    "href": "pdes.html#implementation-using-the-method-of-manufactured-solution",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation using the method of manufactured solution",
+    "text": "Implementation using the method of manufactured solution\n\nfrom scipy.integrate import quad\nx = sp.Symbol('x')\nue = (1-x**2)*sp.exp(sp.cos(sp.pi*(x-0.5)))\nf = ue.diff(x, 2) # manufactured f=u''\nuhat = lambda j: -(4/(j+1)**2/np.pi**2)*quad(sp.lambdify(x, f*sp.sin((j+1)*sp.pi*(x+1)/2)), -1, 1)[0]\nuh = [uhat(k) for k in range(200)]\nxj = np.linspace(-1, 1, 201)\nsines = np.sin(np.pi/2*(np.arange(len(uh))[None, :]+1)*(xj[:, None]+1))\nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 3))\nuej = sp.lambdify(x, ue)(xj)\nax1.plot(xj, uej, 'b', xj, sines[:, :1] @ np.array(uh)[:1], 'k:',\n         xj, sines @ np.array(uh), 'r--')\nax2.loglog(abs(np.array(uh)))\nax1.legend(['Exact', 'One coefficient', f'{200} coefficients'])\nax1.set_title('Solution');ax2.set_title(r'$|\\hat{u}|$');"
+  },
+  {
+    "objectID": "pdes.html#section",
+    "href": "pdes.html#section",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "",
+    "text": "These weights are readily available from scipy.interpolate.BarycentricInterpolator. We can then obtain the derivative matrix \\(d_{ij} = \\ell'_j(x_i)\\) as\n\\[\n\\begin{align*}\nd_{ij} &= \\frac{w_j}{w_i(x_i-x_j)}, \\quad i \\, \\neq j, \\\\\nd_{ii} &= -\\sum_{\\substack{j=0 \\\\ j \\ne i}}^N d_{ij}.\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#solve-poissons-equation-with-composite-legendre-basis",
+    "href": "pdes.html#solve-poissons-equation-with-composite-legendre-basis",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Solve Poisson’s equation with composite Legendre basis",
+    "text": "Solve Poisson’s equation with composite Legendre basis\nThe Legendre polynomials come with a lot of formulas, where two are \\[\n(P_j, P_i) = \\frac{2}{2i+1}\\delta_{ij} \\quad \\text{and} \\quad (2i+3)P_{i+1} = P'_{i+2}-P'_{i}\n\\]\nThe second is very useful for computing the diagonal (!) stiffness matrix\n\\[\n\\begin{align}\n(\\psi'_j, \\psi'_i) &= (P'_j-P'_{j+2}, P'_i-P'_{i+2}) \\\\\n&= (-(2j+3) P_{j+1}, -(2i+3)P_{i+1}) \\\\\n&= (2i+3)^2 (P_{j+1}, P_{i+1}) \\\\\n&= (2i+3)^2 \\frac{2}{2(i+1)+1} \\delta_{i+1,j+1} \\\\\n&= (4i+6)\\delta_{ij}\n\\end{align}\n\\]\n\n\\[\n\\text{Solve Poisson's equation: } \\longrightarrow \\hat{u}_i = \\frac{-\\left(f, \\psi_i\\right)}{4i+6}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#implementation",
+    "href": "pdes.html#implementation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation",
+    "text": "Implementation\n\nfrom numpy.polynomial import Legendre as Leg\npsi = lambda j: Leg.basis(j)-Leg.basis(j+2) \nfl = sp.lambdify(x, f)\ndef uv(xj, j): return psi(j)(xj) * fl(xj)\nuhat = lambda j: (-1/(4*j+6))*quad(uv, -1, 1, args=(j,))[0]\nN = 60\nuL = [uhat(j) for j in range(N)]\nj = sp.Symbol('j', integer=True, positive=True)\nV = np.polynomial.legendre.legvander(xj, N+1)\nPs = V[:, :-2] - V[:, 2:] \nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 3))\nax1.plot(xj, uej, 'b',\n         xj, Ps[:, :1] @ np.array(uL)[:1], 'k:',\n         xj, Ps @ np.array(uL), 'r--')\nax2.loglog(abs(np.array(uL)), '*')\nax1.legend(['Exact', 'One coefficient', f'{N} coefficients'])\nax1.set_title('Solution')\nax2.set_title(r'$|\\hat{u}|$');"
+  },
+  {
+    "objectID": "pdes.html#l2omega-error",
+    "href": "pdes.html#l2omega-error",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "\\(L^2(\\Omega)\\) error",
+    "text": "\\(L^2(\\Omega)\\) error\n\\[\nL^2(\\Omega) = \\sqrt{\\int_{-1}^1(u-u_e)^2dx}\n\\]\n\n\nuh = np.array(uh) \nuL = np.array(uL) \nerror = np.zeros((2, N))\nfor n in range(N):\n    us = sines[:, :n] @ uh[:n]\n    ul = Ps[:, :n] @ uL[:n]\n    error[0, n] = np.trapz((us-uej)**2, dx=(xj[1]-xj[0]))\n    error[1, n] = np.trapz((ul-uej)**2, dx=(xj[1]-xj[0]))\nplt.figure(figsize=(6, 2.5))\nplt.loglog(error.T)\nplt.legend(['Sines', 'Legendre'])\n\n\n\n\n\n\n\n\n\n\nWhy are the Legendre basis functions better than the sines?\n\nAll the sine basis functions \\(\\psi_j=\\sin(\\pi(j+1)(x+1)/2)\\) have have even derivatives equal to zero at the boundaries, unlike the manufactures solution…\n\\[\n\\frac{d^{2n} \\psi_j}{dx^{2n}}(\\pm 1) = 0, \\quad n=0, 1, \\ldots\n\\]"
+  },
+  {
+    "objectID": "pdes.html#l2omega-error-for-sines-and-legendre",
+    "href": "pdes.html#l2omega-error-for-sines-and-legendre",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "\\(L^2(\\Omega)\\) error for sines and Legendre",
+    "text": "\\(L^2(\\Omega)\\) error for sines and Legendre\n\\[\nL^2(\\Omega) = \\sqrt{\\int_{-1}^1(u-u_e)^2dx}\n\\]\n\n\nuh = np.array(uh) \nuL = np.array(uL) \nerror = np.zeros((2, N))\nfor n in range(N):\n    us = sines[:, :n] @ uh[:n]\n    ul = Ps[:, :n] @ uL[:n]\n    error[0, n] = np.trapz((us-uej)**2, dx=(xj[1]-xj[0]))\n    error[1, n] = np.trapz((ul-uej)**2, dx=(xj[1]-xj[0]))\nplt.figure(figsize=(6, 2.5))\nplt.loglog(error.T)\nplt.legend(['Sines', 'Legendre'])\n\n\n\n\n\n\n\n\n\n\nWhy are the Legendre basis functions better than the sines?\n\nAll the sine basis functions \\(\\psi_j=\\sin(\\pi(j+1)(x+1)/2)\\) have even derivatives equal to zero at the boundaries, unlike the chosen manufactured solution…\n\\[\n\\frac{d^{2n} \\psi_j}{dx^{2n}}(\\pm 1) = 0 \\rightarrow \\frac{d^{2n}u_N}{dx^{2n}}(\\pm 1)=0, \\quad n=0, 1, \\ldots\n\\]"
+  },
+  {
+    "objectID": "pdes.html#implementation-using-shenfun",
+    "href": "pdes.html#implementation-using-shenfun",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation using Shenfun",
+    "text": "Implementation using Shenfun\n\nfrom shenfun import FunctionSpace, TestFunction, TrialFunction, inner, Dx\n\nN = 60\nVN = FunctionSpace(N+3, 'L', bc=(0, 0)) # Chooses {P_j-P_{j+2}} basis\nu = TrialFunction(VN)\nv = TestFunction(VN)\nS = inner(Dx(u, 0, 1), Dx(v, 0, 1))\nb = inner(-f, v)\nuh = S.solve(b.copy())\nfig = plt.figure(figsize=(6, 3))\nplt.loglog(np.arange(0, N+1, 2), abs(uh[:-2:2]), '*');"
+  },
+  {
+    "objectID": "pdes.html#inhomogeneous-poisson",
+    "href": "pdes.html#inhomogeneous-poisson",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Inhomogeneous Poisson",
+    "text": "Inhomogeneous Poisson\n\\[\n\\begin{align}\nu''(x) &= f(x), \\quad x \\in (-1, 1) \\\\\nu(-1) &= a, u(1) = b\n\\end{align}\n\\]\nHow to handle the inhomogeneous boundary conditions?\n\nUse homogeneous \\(\\tilde{u}_N \\in V_N\\) and a boundary function \\(B(x)\\)\n\\[\nu_N(x) = B(x) + \\tilde{u}_N(x)\n\\]\nwhere \\(B(-1) = a\\) and \\(B(1) = b\\) such that\n\\[\nu_N(-1)=B(-1)=a \\quad \\text{and} \\quad u_N(1) = B(1) = b\n\\]\nA function that satisfies this in the current domain is\n\\[\nB(x) = \\frac{b}{2}(1+x) + \\frac{a}{2}(1-x)\n\\]"
+  },
+  {
+    "objectID": "pdes.html#solve-poisson",
+    "href": "pdes.html#solve-poisson",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Solve Poisson",
+    "text": "Solve Poisson\nInsert for \\(u_N\\) into \\((R_N, v) = 0\\):\n\\[\n\\Big( (B(x)+\\tilde{u}_N)'' - f, v \\Big) = 0\n\\]\nSince \\(B(x)\\) is linear \\(B''=0\\) and we get the homogeneous problem\n\\[\n\\Big( \\tilde{u}^{''}_N - f, v \\Big) = 0\n\\]\nSolve exactly as before for \\(\\tilde{u}_N\\) and the solution will be in the end\n\\[\nu_N(x) = B(x) + \\tilde{u}_N\n\\]"
+  },
+  {
+    "objectID": "pdes.html#implementation-1",
+    "href": "pdes.html#implementation-1",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation",
+    "text": "Implementation\n\n\nue = sp.exp(sp.cos(x-0.5))\nf = ue.diff(x, 2)\nfl = sp.lambdify(x, f)\ndef uv(xj, j): return psi(j)(xj) * fl(xj)\nuhat = lambda j: (-1/(4*j+6))*quad(uv, -1, 1, args=(j,))[0]\nN = 30\nutilde = [uhat(k) for k in range(N)]\na, b = ue.subs(x, -1), ue.subs(x, 1)\nB = b*(1+x)/2 + a*(1-x)/2\nM = 50\nxj = np.linspace(-1, 1, M+1)\nV = np.polynomial.legendre.legvander(xj, N+1)\nPs = V[:, :-2] - V[:, 2:]\nBs = sp.lambdify(x, B)(xj)\nfig, (ax1, ax2) = plt.subplots(2, 1, figsize=(9, 6))\nax1.plot(xj, sp.lambdify(x, ue)(xj), 'b',\n         xj, Ps[:, :1] @ np.array(utilde)[:1] + Bs, 'k:',\n         xj, Ps @ np.array(utilde) + Bs, 'r--')\nax2.loglog(abs(np.array(utilde)), '*')\nax1.legend(['Exact', 'One coefficient', f'{N} coefficients'])\nax1.set_title('Solution')\nax2.set_title(r'$|\\hat{u}|$');"
+  },
+  {
+    "objectID": "pdes.html#neumann-boundary-conditions",
+    "href": "pdes.html#neumann-boundary-conditions",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Neumann boundary conditions",
+    "text": "Neumann boundary conditions\n\\[\n\\begin{align}\nu''(x) &= f(x), \\quad x \\in (-1, 1) \\\\\nu'(\\pm 1) &= 0\n\\end{align}\n\\]\nThis problem is ill-defined because if \\(u\\) is a solution, then \\(u + c\\), where \\(c\\) is a constant, is also a solution!\nIf \\(u(x)\\) satisfies the above problem, then\n\\[\n(u+c)'' = u'' + \\cancel{c''} = f\\quad \\text{and} \\quad (u+c)'(\\pm 1) = u'(\\pm 1) = 0\n\\]\nWe need an additional constraint! One possibility is then to require\n\\[\n(u, 1) = \\int_{\\Omega} u(x) dx = c\n\\]"
+  },
+  {
+    "objectID": "pdes.html#the-well-defined-neumann-problem",
+    "href": "pdes.html#the-well-defined-neumann-problem",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The well-defined Neumann problem",
+    "text": "The well-defined Neumann problem\n\\[\n\\begin{align}\nu''(x) &= f(x), \\quad x \\in (-1, 1) \\\\\nu'(\\pm 1) &= 0 \\\\\n(u, 1) &= c\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#a-well-defined-neumann-problem",
+    "href": "pdes.html#a-well-defined-neumann-problem",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "A well-defined Neumann problem",
+    "text": "A well-defined Neumann problem\n\\[\n\\begin{align}\nu''(x) &= f(x), \\quad x \\in (-1, 1) \\\\\nu'(\\pm 1) &= 0 \\\\\n(u, 1) &= c\n\\end{align}\n\\]\nHow about basis functions?\n\nIf we choose basis functions \\(\\psi_j\\) that satisfy\n\\[\n\\psi'_j(\\pm 1) = 0, \\quad j=0, 1, \\ldots\n\\]\nthen\n\\[\nu'_N(\\pm 1) = \\sum_{j=0}^N \\hat{u}_j \\psi'_j(\\pm 1) = 0\n\\]"
+  },
+  {
+    "objectID": "pdes.html#neumann-basis-functions",
+    "href": "pdes.html#neumann-basis-functions",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Neumann basis functions",
+    "text": "Neumann basis functions\nSimplest possibility\n\\[\n\\psi_j = \\cos(\\pi j (x+1) / 2)\n\\]\nEasy to see that \\(\\psi'_j(x) = -j/2\\sin(j(x+1)/2)\\) and thus \\(\\psi'_j(\\pm 1) = 0\\). However, we also get that all odd derivatives are zero\n\\[\n\\frac{d^{2n+1} \\psi_j}{dx^{2n+1}}(\\pm 1) = 0, \\quad n=0, 1, \\ldots\n\\]\n\nLets try to find a basis function using Legendre polynomials instead\n\\[\n\\psi_j = P_j + b(j) P_{j+1} + a(j) P_{j+2}\n\\]\nand try to find \\(a(j)\\) and \\(b(j)\\) such that \\(\\psi'_j(\\pm 1) = 0\\)."
+  },
+  {
+    "objectID": "pdes.html#legendre-neumann-basis-function",
+    "href": "pdes.html#legendre-neumann-basis-function",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Legendre Neumann basis function",
+    "text": "Legendre Neumann basis function\n\\[\n\\psi_j = P_j + b(j)P_{j+1} + a(j) P_{j+2}\n\\]\n\\(\\text{Using boundary conditions:}  \\quad P'_j(-1) = \\frac{j(j+1)}{2}(-1)^j \\quad \\text{and} \\quad P'_j(1) = \\frac{j(j+1)}{2}\\)\nWe have two conditions and two unknowns\n\\[\\small\n\\begin{align}\n\\psi'_j(-1) &= P'_j(-1) + b(j)P'_{j+1}(-1) + a(j) P'_{j+2}(-1) \\\\\n&= \\left(\\frac{j(j+1)}{2}-b(j)\\frac{(j+1)(j+2)}{2} +a(j)\\frac{(j+2)(j+3)}{2}\\right)(-1)^j = 0\n\\end{align}\n\\]\n\\[ \\small\n\\psi'_j(1) = \\left(\\frac{j(j+1)}{2} + b(j) \\frac{(j+1)(j+2)}{2}+a(j)\\frac{(j+2)(j+3)}{2}\\right) = 0\n\\]\nSolve the two equations to find \\(a(j), b(j)\\) and thus the Neumann basis function \\(\\psi_j\\):\n\\[\nb(j)=0, \\, a(j) = - \\frac{j(j+1)}{(j+2)(j+3)} \\longrightarrow \\boxed{\\psi_j = P_j - \\frac{j(j+1)}{(j+2)(j+3)} P_{j+2}}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#solve-neumann-problem",
+    "href": "pdes.html#solve-neumann-problem",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Solve Neumann problem",
+    "text": "Solve Neumann problem\nUse the functionspace\n\\[\nV_N = \\text{span}\\Big \\{P_j - \\frac{j(j+1)}{(j+2)(j+3)} P_{j+2} \\Big \\}_{j=0}^N\n\\]\nand try to find \\(u_N \\in V_N\\).\nHowever, we remember also the constraint and that\n\\[\n(u, 1) = c \\rightarrow (u_N, P_0)= c\n\\]\nsince \\(\\psi_0 = P_0 = 1\\). Insert for \\(u_N\\) and use orthogonality of Legendre polynomials to get\n\\[\n\\Big(\\sum_{j=0}^N \\hat{u}_j (P_j - \\frac{j(j+1)}{(j+2)(j+3)} P_{j+2}), P_0\\Big) = (P_0, P_0) \\hat{u}_0 = 2 \\hat{u}_0 = c\n\\]\nSo we already know that \\(\\hat{u}_0=c/2\\) and only have unknowns \\(\\{\\hat{u}_{j}\\}_{j=1}^N\\) left!"
+  },
+  {
+    "objectID": "pdes.html#solve-neumann-with-galerkin",
+    "href": "pdes.html#solve-neumann-with-galerkin",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Solve Neumann with Galerkin",
+    "text": "Solve Neumann with Galerkin\nDefine\n\\[\n\\tilde{V}_N = \\text{span}\\Big\\{P_j - \\frac{j(j+1)}{(j+2)(j+3)} P_{j+2}\\Big\\}_{j=1}^N (= V_N \\backslash \\{P_0\\})\n\\]\nWith Galerkin: Find \\(\\tilde{u}_N \\in \\tilde{V}_N (= \\sum_{j=1}^N \\hat{u}_j \\psi_j)\\) such that\n\\[\n(\\tilde{u}^{''}_N - f, v) = 0, \\quad \\forall \\, v \\in \\tilde{V}_N\n\\]\nand use in the end\n\\[\nu_N = \\hat{u}_0 + \\tilde{u}_N = \\sum_{j=0}^N \\hat{u}_j \\psi_j\n\\]"
+  },
+  {
+    "objectID": "pdes.html#stiffness-matrix-for-neumann",
+    "href": "pdes.html#stiffness-matrix-for-neumann",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Stiffness matrix for Neumann",
+    "text": "Stiffness matrix for Neumann\n\\[\n(\\psi^{''}_j, \\psi_i) = -(\\psi^{'}_j, \\psi^{'}_i)\n\\]"
+  },
+  {
+    "objectID": "pdes.html#the-linear-algebra-problem",
+    "href": "pdes.html#the-linear-algebra-problem",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The linear algebra problem",
+    "text": "The linear algebra problem\nWe need to solve\n\\[\n\\sum_{j=1}^N(\\psi^{''}_j, \\psi_i) \\hat{u}_j = (f, \\psi_i), \\quad i=1,2, \\ldots, N\n\\]\nThe stiffness matrix for Neumann\n\\[\n(\\psi^{''}_j, \\psi_i) = -(\\psi^{'}_j, \\psi^{'}_i) = (\\psi_j, \\psi^{''}_i)\n\\]\nis fortunately diagonal (derivation later) and we can easily solve for \\(\\{\\hat{u}_i\\}_{i=1}^N\\)\n\\[\n(\\psi^{''}_j, \\psi_i) = a(j) (4j+6) \\delta_{ij}\n\\]\n\\[\n\\longrightarrow \\hat{u}_i = \\frac{(f, \\psi_i)}{a(i)(4i+6)}, \\quad i = 1, 2, \\ldots, N\n\\]"
+  },
+  {
+    "objectID": "pdes.html#derivation-of-psi_j-psi_i",
+    "href": "pdes.html#derivation-of-psi_j-psi_i",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Derivation of \\((\\psi^{''}_j, \\psi_i)\\)",
+    "text": "Derivation of \\((\\psi^{''}_j, \\psi_i)\\)\nThere is a series expansion for the second derivative \\(P^{''}_j\\)\n\\[\nP^{''}_j = \\sum_{\\substack{k=0 \\\\ k+j \\text{ even}}}^{j-2}c(k, j) P_k, \\, \\text{where}\\, c(k, j) = (k+1/2)(j(j+1)-k(k+1)) \\tag{1}\n\\]\nHence \\(P^{''}_N+a(N)P^{''}_{N+2}\\) is a Legendre series ending at \\(a(N)c(N-2, N)P_N\\). Consider\n\\[\n\\Big(P^{''}_j+a(j)P^{''}_{j+2}, \\, P_i + a(i)P_{i+2} \\Big)\n\\]\n\nBased on the orthogonality \\((P_i, P_j)=\\frac{2}{2j+1}\\delta_{ij}\\) and (1) we get that\n\nIf \\(i&gt;j\\) then \\(\\small(P^{''}_j+a(j)P^{''}_{j+2}, P_i + a(i)P_{i+2})=0\\) since \\(\\small P^{''}_{j+2}=\\sum_{k=0}^j c(k,j) P_k\\)\nIf \\(i&lt; j\\) then \\((P^{''}_j+a(j)P^{''}_{j+2}, P_i)=0\\) due to symmetry \\((\\psi^{''}_j, \\psi_i) = (\\psi_j, \\psi^{''}_i)\\)\n\nHence \\(\\Big(P^{''}_j+a(j)P^{''}_{j+2}, \\, P_i + a(i)P_{i+2} \\Big)\\) is diagonal!"
+  },
+  {
+    "objectID": "pdes.html#compute-psi_i-psi_i",
+    "href": "pdes.html#compute-psi_i-psi_i",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Compute \\((\\psi^{''}_i, \\psi_i)\\)",
+    "text": "Compute \\((\\psi^{''}_i, \\psi_i)\\)\nUsing again the expression \\(P^{''}_i = \\sum_{k=0}^{i-2} c(k, i) P_{k}\\)\n\\[ \\small\n\\begin{multline}\n\\Big(P^{''}_i+a(i)P^{''}_{i+2}, P_i+a(i)P_{i+2}\\Big) = \\\\ \\cancel{(P^{''}_i, P_i)} + \\cancel{a(i)(P^{''}_i, P_{i+2})} + a(i)(P^{''}_{i+2}, P_i) + \\cancel{a^2(i)(P^{''}_{i+2}, P_{i+2})}\n\\end{multline}\n\\]\nAll cancellations because of orthogonality and \\(P^{''}_i = \\sum_{k=0}^{i-2} (\\cdots) P_{k}\\)\n\\[ \\small\n\\begin{align}\na(i)(P^{''}_{i+2}, P_i) &= a(i) \\sum_{\\substack{k=0 \\\\ k+i \\text{ even}}}^{i} \\Big( (k+1/2)((i+2)(i+3)-k(k+1))P_k, \\, P_i \\Big) \\\\\n&= a(i)(i+1/2)((i+2)(i+3)-i(i+1)) (L_i, L_i) \\\\\n&= a(i)(4i+6)\n\\end{align}\n\\]\nHence we get the stiffness matrix\n\\[\n(\\psi^{''}_j, \\psi_i) = a(i) (4i+6) \\delta_{ij}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#implementation-2",
+    "href": "pdes.html#implementation-2",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation",
+    "text": "Implementation\nUse manufactured solution that we know satisfies the boundary conditions\n\\[\nu(x) = \\int (1-x^2)\\cos (x-1/2)dx\n\\]\n\nue = sp.integrate((1-x**2)*sp.cos(x-sp.S.Half), x)\nf = ue.diff(x, 2) # manufactured f\nc = sp.integrate(ue, (x, -1, 1)).n() # constraint c\npsi = lambda j: Leg.basis(j)-j*(j+1)/((j+2)*(j+3))*Leg.basis(j+2)\nfj = sp.lambdify(x, f)\ndef uv(xj, j): return psi(j)(xj) * fj(xj)\ndef a(j): return -j*(j+1)/((j+2)*(j+3))\nuhat = lambda j: 1/(a(j)*(4*j+6))*quad(uv, -1, 1, args=(j,))[0]\nN = 30; uh = np.zeros(N); uh[0] = c/2\nuh[1:] = [uhat(k) for k in range(1, N)]"
+  },
+  {
+    "objectID": "pdes.html#implementation-2-output",
+    "href": "pdes.html#implementation-2-output",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation",
+    "text": "Implementation"
+  },
+  {
+    "objectID": "pdes.html#more-about-neumann-boundary-conditions",
+    "href": "pdes.html#more-about-neumann-boundary-conditions",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "More about Neumann boundary conditions",
+    "text": "More about Neumann boundary conditions\nWe have used basis functions that satisfied\n\\[\n\\psi^{'}_j(\\pm 1) = 0\n\\]\nHowever, this was not strictly necessary! Neumann boundary conditions are often called natural conditions and we can implement them directly in the variational form:\n\\[\n(\\psi^{''}_j, \\psi_i) = -(\\psi^{'}_j, \\psi{'}_i) + [\\psi^{'}_j \\psi_i]_{-1}^{1}\n\\]\n\nEnforce boundary conditions weakly using \\(\\psi^{'}_j(-1)=a, \\psi^{'}_j(1)=b\\):\n\\[\n(\\psi^{''}_j, \\psi_i) = -(\\psi^{'}_j, \\psi{'}_i) + b \\psi_i(1) - a \\psi_i(-1)\n\\]\nHomogeneous Neumann (\\(a=b=0\\)):\n\\[\n(\\psi^{''}_j, \\psi_i) = -(\\psi^{'}_j, \\psi{'}_i)\n\\]"
+  },
+  {
+    "objectID": "pdes.html#implementation-3",
+    "href": "pdes.html#implementation-3",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation",
+    "text": "Implementation\nUsing basis function \\(\\psi_j(x) = P_j(x)\\) that have \\(\\psi^{'}_j(\\pm 1) \\ne 0\\)\n\npsi = lambda j: Leg.basis(j)\ndef uf(xj, j): return psi(j)(xj) * fj(xj)\ndef uv(xj, i, j): return -psi(i).deriv(1)(xj) * psi(j).deriv(1)(xj)\nfhat = lambda j: quad(uf, -1, 1, args=(j,))[0]\nN = 20\n# Compute the stiffness matrix (not diagonal)\nS = np.zeros((N, N))\nfor i in range(1, N):\n    for j in range(i, N):\n        S[i, j] = quad(uv, -1, 1, args=(i, j))[0]\n        S[j, i] = S[i, j]\nS[0, 0] = 1 # To fix constraint uh[0] = c/2\nfh = np.zeros(N); fh[0] = c/2\nfh[1:] = [fhat(k) for k in range(1, N)]\nfh = np.array(fh, dtype=float)\nuh = np.linalg.solve(S, fh)"
+  },
+  {
+    "objectID": "pdes.html#collocation",
+    "href": "pdes.html#collocation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Collocation",
+    "text": "Collocation\nConsider the Dirichlet problem\n\\[\n\\begin{align}\nu''(x) &= f(x), \\quad x \\in (-1, 1) \\\\\nu(-1) = a \\quad &\\text{and} \\quad u(1) = b\n\\end{align}\n\\]\nTo solve this problem with collocation we use a mesh \\(\\boldsymbol{x}=\\{x_i\\}_{i=0}^N\\), where \\(x_0=-1\\) and \\(x_N=1\\). The solution, using Lagrange polynomials, is\n\\[\nu_N(x) = \\sum_{i=0}^N \\hat{u}_i \\ell_i(x)\n\\]\nWe then require that the following \\(N+1\\) equations are satisfied\n\\[\n\\begin{align}\n\\mathcal{R}_N(x_i) &= 0, \\quad i=1, 2, \\ldots, N-1 \\\\\nu(x_0) = a \\quad &\\text{and} \\quad u(x_N) = b\n\\end{align}\n\\]\nwhere \\(\\mathcal{R}_N(x) = u^{''}_N(x)-f(x)\\)."
+  },
+  {
+    "objectID": "pdes.html#solve-by-inserting-for-u_n-in-mathcalr_n",
+    "href": "pdes.html#solve-by-inserting-for-u_n-in-mathcalr_n",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Solve by inserting for \\(u_N\\) in \\(\\mathcal{R}_N\\)",
+    "text": "Solve by inserting for \\(u_N\\) in \\(\\mathcal{R}_N\\)\nWe get the \\(N-1\\) equations for \\(\\{\\hat{u}_j\\}_{j=1}^{N-1}\\)\n\\[\n\\sum_{j=0}^N \\hat{u}_j \\ell''_j(x_i)  = f(x_i), \\quad i = 1, 2, \\ldots, N-1\n\\]\nin addition to the boundary conditions: \\(\\hat{u}_0=u_N(x_0)=a\\) and \\(\\hat{u}_N=u_N(x_N)=b\\).\nThe matrix \\(D^{(2)} = (d^{(2)}_{ij})=(\\ell^{''}_j(x_i))_{i,j=0}^N\\) is dense. How do we compute it?\n\n\n\n\n\n\nNote\n\n\nUsing the Sympy Lagrange functions is numerically unstable"
+  },
+  {
+    "objectID": "pdes.html#another-useful-form-of-the-lagrange-polynomials",
+    "href": "pdes.html#another-useful-form-of-the-lagrange-polynomials",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Another useful form of the Lagrange polynomials",
+    "text": "Another useful form of the Lagrange polynomials\n\\[\n\\ell_j(x) = \\prod_{\\substack{0 \\le m \\le N \\\\ m \\ne j}} \\frac{x-x_m}{x_j-x_m}\n\\]\nA small rearrangement leads to\n\\[\n\\ell_j(x) = \\ell(x) \\frac{w_j}{x-x_j},\n\\]\nwhere\n\\[\n\\ell(x) = \\prod^N_{\\substack{i=0}}(x-x_i) \\quad \\text{and} \\quad\nw_j = \\frac{1}{\\ell'(x_j)}= \\frac{1}{\\prod^N_{\\substack{i=0 \\\\ i \\neq j}} (x_j - x_i)}\n\\]\nHere \\((w_j)_{j=0}^N\\) are the barycentric weights. Scipy will give you these weights: from scipy.interpolate import BarycentricInterpolator"
+  },
+  {
+    "objectID": "pdes.html#the-main-advantage-of-the-barycentric-approach-is-numerical-stability",
+    "href": "pdes.html#the-main-advantage-of-the-barycentric-approach-is-numerical-stability",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "The main advantage of the Barycentric approach is numerical stability",
+    "text": "The main advantage of the Barycentric approach is numerical stability\nAnd we can obtain the derivative matrix \\(d_{ij} = \\ell'_j(x_i)\\) as\n\\[\n\\begin{align*}\nd_{ij} &= \\frac{w_j}{w_i(x_i-x_j)}, \\quad i \\, \\neq j, \\\\\nd_{ii} &= -\\sum_{\\substack{j=0 \\\\ j \\ne i}}^N d_{ij}.\n\\end{align*}\n\\]\n\n\n\nfrom scipy.interpolate import BarycentricInterpolator\ndef Derivative(xj):\n    w = BarycentricInterpolator(xj).wi\n    W = w[None, :] / w[:, None]\n    X = xj[:, None]-xj[None, :]\n    np.fill_diagonal(X, 1)\n    D = W / X\n    np.fill_diagonal(D, 0)\n    np.fill_diagonal(D, -np.sum(D, axis=1))\n    return D\n\n\n\n\n\n\n\n\nNumpy broadcasting!\n\n\nW is the matrix with items \\(w_j / w_i\\). \\(w_i\\) varies along the first axis and is thus w[:, None]. \\(w_j\\) varies along the second axis and is w[None, :]. Likewise \\(x_i\\) is xj[:, None] and \\(x_j\\) is xj[None, :]"
+  },
+  {
+    "objectID": "pdes.html#higher-order-derivatives",
+    "href": "pdes.html#higher-order-derivatives",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Higher order derivatives",
+    "text": "Higher order derivatives\n\\[\n\\begin{align*}\nd^{(n)}_{ij} &= \\frac{n}{x_i-x_j}\\left(\\frac{w_j}{w_i} d^{(n-1)}_{ii} - d^{(n-1)}_{ij} \\right), \\\\\nd^{(n)}_{ii} &= -\\sum_{\\substack{j=0 \\\\ j \\ne i}}^N d^{(n)}_{ij}.\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#higher-order-derivatives-can-be-computed-recursively",
+    "href": "pdes.html#higher-order-derivatives-can-be-computed-recursively",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Higher order derivatives can be computed recursively",
+    "text": "Higher order derivatives can be computed recursively\n\\[\n\\begin{align*}\nd^{(n)}_{ij} &= \\frac{n}{x_i-x_j}\\left(\\frac{w_j}{w_i} d^{(n-1)}_{ii} - d^{(n-1)}_{ij} \\right), \\\\\nd^{(n)}_{ii} &= -\\sum_{\\substack{j=0 \\\\ j \\ne i}}^N d^{(n)}_{ij}\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#higher-order-derivative-matrices-dn_ij-elln_jx_i-can-be-computed-recursively",
+    "href": "pdes.html#higher-order-derivative-matrices-dn_ij-elln_jx_i-can-be-computed-recursively",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Higher order derivative matrices \\(d^{n}_{ij} = \\ell^{(n)}_j(x_i)\\) can be computed recursively",
+    "text": "Higher order derivative matrices \\(d^{n}_{ij} = \\ell^{(n)}_j(x_i)\\) can be computed recursively\n\\[\n\\begin{align*}\nd^{(n)}_{ij} &= \\frac{n}{x_i-x_j}\\left(\\frac{w_j}{w_i} d^{(n-1)}_{ii} - d^{(n-1)}_{ij} \\right) \\\\\nd^{(n)}_{ii} &= -\\sum_{\\substack{j=0 \\\\ j \\ne i}}^N d^{(n)}_{ij}\n\\end{align*}\n\\]\n\ndef PolyDerivative(xj, m):\n    w = BarycentricInterpolator(xj).wi * (2*(len(xj)-1))\n    W = w[None, :] / w[:, None]\n    X = xj[:, None]-xj[None, :]\n    np.fill_diagonal(X, 1)\n    D = W / X\n    np.fill_diagonal(D, 0)\n    np.fill_diagonal(D, -np.sum(D, axis=1))\n    if m == 1: return D\n    D2 = np.zeros_like(D)\n    for k in range(2, m+1):\n        D2[:] = k / X * (W * D.diagonal()[:, None] - D)\n        np.fill_diagonal(D2, 0)\n        np.fill_diagonal(D2, -np.sum(D2, axis=1))\n        D[:] = D2\n    return D2"
+  },
+  {
+    "objectID": "pdes.html#and-then-we-solve-any-equation-by-replacing-the-ordinary-derivatives-with-derivative-matrices",
+    "href": "pdes.html#and-then-we-solve-any-equation-by-replacing-the-ordinary-derivatives-with-derivative-matrices",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "And then we solve any equation by replacing the ordinary derivatives with derivative matrices",
+    "text": "And then we solve any equation by replacing the ordinary derivatives with derivative matrices\n\\[\n\\begin{align}\nu''(x) &= f(x), \\quad x \\in (-1, 1) \\\\\nu(-1) = a \\quad &\\text{and} \\quad u(1) = b\n\\end{align}\n\\]\nLet \\(d^{(2)}_{ij} = \\ell^{''}_j(x_i)\\) for all \\(i=1, \\ldots, N-1\\), ident the first and last rows of \\(D^{(2)}\\) and set \\(f_0=a\\) and \\(f_N=b\\). Solve\n\\[\n\\sum_{j=0}^N d^{(2)}_{ij} \\hat{u}_j = f_i, \\quad i=0, 1, \\ldots, N\n\\]\nMatrix form using \\(\\boldsymbol{\\hat{u}} = (\\hat{u}_j)_{j=0}^N\\) and \\(\\boldsymbol{f} = (f_j)_{j=0}^N\\)\n\\[\nD^{(2)} \\boldsymbol{\\hat{u}} = \\boldsymbol{f}\n\\]\n\\[\n\\boldsymbol{\\hat{u}} = (D^{(2)})^{-1} \\boldsymbol{f}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#use-chebyshev-points-for-spectral-accuracy",
+    "href": "pdes.html#use-chebyshev-points-for-spectral-accuracy",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Use Chebyshev points for spectral accuracy",
+    "text": "Use Chebyshev points for spectral accuracy\n\\[\nx_i = \\cos(i \\pi / N)\n\\]\nThe barycentric weights are then simply\n\\[\nw_i = (-1)^{i} c_i, \\quad c_i = \\begin{cases} 0.5 \\quad i=0 \\text{ or } i = N \\\\\n1 \\quad \\text{ otherwise}\n\\end{cases} \\tag{1}\n\\]\n\nN = 8 \nxj = np.cos(np.arange(N+1)*np.pi/N)\nw = BarycentricInterpolator(xj).wi * 2*N\nw\n\narray([ 0.5, -1. ,  1. , -1. ,  1. , -1. ,  1. , -1. ,  0.5])\n\n\n\n\n\n\n\n\nNote\n\n\nThe weights are only relative, so we have here scaled by \\(2N\\) to get (1)"
+  },
+  {
+    "objectID": "pdes.html#implementation-for-poissons-equation",
+    "href": "pdes.html#implementation-for-poissons-equation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Implementation for Poisson’s equation",
+    "text": "Implementation for Poisson’s equation\n\ndef poisson_coll(N, f, bc=(0, 0)):\n    xj = np.cos(np.arange(N+1)*np.pi/N)[::-1]\n    D2 = PolyDerivative(xj, 2)      # Get second derivative matrix\n    D2[0, 0] = 1; D2[0, 1:] = 0      # ident first row\n    D2[-1, -1] = 1; D2[-1, :-1] = 0  # ident last row\n    fh = np.zeros(N+1)\n    fh[1:-1] = sp.lambdify(x, f)(xj[1:-1])\n    fh[0], fh[-1] = bc             # Fix boundary conditions\n    uh = np.linalg.solve(D2, fh)\n    return uh, D2\n\ndef l2_error(uh, ue):\n    uj = sp.lambdify(x, ue)\n    N = len(uh)-1\n    xj = np.cos(np.arange(N+1)*np.pi/N)[::-1]\n    L = BarycentricInterpolator(np.cos(np.arange(N+1)*np.pi/N)[::-1], yi=uh)\n    N = 4*len(uh) # Use denser mesh to compute L2-error\n    xj = np.linspace(-1, 1, N+1)\n    return np.sqrt(np.trapz((uj(xj)-L(xj).astype(float))**2, dx=2./N)) \n\n\n\nue = sp.exp(sp.cos(x-0.5))\nf = ue.diff(x, 2)\nbc = ue.subs(x, -1), ue.subs(x, 1)\nerr = []\nfor N in range(2, 46, 2):\n    uh, D = poisson_coll(N, f, bc=bc)\n    err.append(l2_error(uh, ue))\nfig = plt.figure(figsize=(6, 2.5))\nplt.loglog(np.arange(2, 46, 2), err, '*')\nplt.title(\"L2-error Posson's equation\");"
+  },
+  {
+    "objectID": "pdes.html#chebyshev-basis-functions",
+    "href": "pdes.html#chebyshev-basis-functions",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Chebyshev basis functions",
+    "text": "Chebyshev basis functions\n\nExactly the same approach as for Legendre, only with a weighted inner product \\[\n(u, v)_{\\omega} = \\int_{-1}^1 \\frac{u v}{\\sqrt{1-x^2}}dx\n\\]\n\n\n\nFor Dirichlet boundary conditions: Find \\(u_N \\in V_N = \\text{span}\\{T_i-T_{i+2}\\}_{i=0}^N\\) such that \\[\n(\\mathcal{R}_N, v)_{\\omega} = 0, \\quad \\forall \\, v \\in V_N\n\\] The basis functions \\(\\psi_i=T_i-T_{i+2}\\) satisfy \\(\\psi_i(\\pm 1)=0\\).\nFor Neumann boundary conditions, the basis functions are slightly different since \\[\nT'_k(-1) = (-1)^{k+1} k^2 \\quad \\text{and} \\quad T'_{k}(1) = k^2\n\\] The basis functions \\(\\phi_k = T_{k} - \\left(\\frac{k}{k+2}\\right)^2 T_{k+2}\\) satisfy \\(\\phi'_k(\\pm 1) = 0\\).\nInhomogeneous boundary conditions are handled like for Legendre with the same boundary function \\(B(x)\\)."
+  },
+  {
+    "objectID": "pdes.html#recap",
+    "href": "pdes.html#recap",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Recap",
+    "text": "Recap\nWe have until now considered the approximation of a function \\(u(x)\\) using a function space \\(V_N = \\text{span}\\{\\psi_j\\}_{j=0}^N\\)\n\\[\nu_N(x) \\approx u(x), \\quad u_N(x) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x)\n\\]\nIn order to find the unknowns (degrees of freedom) \\(\\{\\hat{u}_j\\}_{j=0}^N\\) we have considered the error \\(e=u_N-u\\) through various methods\n\nVariational methods\n\nGalerkin\nLeast squares\n\nCollocation\n\nLagrange polynomials"
+  },
+  {
+    "objectID": "pdes.html#we-will-now-learn-to-approximate-small-ux-by-small-u_nx-such-that-it-satisfies-a-linear-equation",
+    "href": "pdes.html#we-will-now-learn-to-approximate-small-ux-by-small-u_nx-such-that-it-satisfies-a-linear-equation",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "We will now learn to approximate \\(\\small u(x)\\) by \\(\\small u_N(x)\\) such that it satisfies a linear equation",
+    "text": "We will now learn to approximate \\(\\small u(x)\\) by \\(\\small u_N(x)\\) such that it satisfies a linear equation\n\\[\n\\mathcal{L}(u) = f\n\\]\nwhere the generic operator \\(\\mathcal{L}(u)\\) can represent anything, like\n\\[\n\\begin{align*}\nu  &= f \\\\\nu' &= f \\\\\nu'' &= f \\\\\nu'' +\\alpha u' + \\lambda u  &= f \\\\\n\\frac{d}{dx}\\left(\\alpha \\frac{d u}{dx}\\right) &= f\n\\end{align*}\n\\]\n\n\n\n\n\n\nNote\n\n\nFunction approximation is then simply the case \\(u=f\\), such that \\(u_N \\approx f\\)."
+  },
+  {
+    "objectID": "pdes.html#define-a-new-error-measure-the-residual",
+    "href": "pdes.html#define-a-new-error-measure-the-residual",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Define a new error measure (the residual)",
+    "text": "Define a new error measure (the residual)\nDefine a residual that we ultimately want to be zero\n\\[\n\\mathcal{R} = \\mathcal{L}(u)-f\n\\]\nand create a “numerical” residual\n\\[\n\\mathcal{R}_N = \\mathcal{L}(u_N)-f\n\\]\nwhere the unknowns are still \\(\\{\\hat{u}_j\\}_{j=0}^N\\)."
+  },
+  {
+    "objectID": "pdes.html#define-a-new-error-measure-the-residual-that-we-ultimately-want-to-be-zero",
+    "href": "pdes.html#define-a-new-error-measure-the-residual-that-we-ultimately-want-to-be-zero",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Define a new error measure (the residual) that we ultimately want to be zero",
+    "text": "Define a new error measure (the residual) that we ultimately want to be zero\n\\[\n\\mathcal{R} = \\mathcal{L}(u)-f\n\\]\nand create a “numerical” residual by inserting for \\(u = u_N\\)\n\\[\n\\mathcal{R}_N = \\mathcal{L}(u_N)-f\n\\]\nThe task now is to minmize \\(\\mathcal{R}_N\\) in order to find the unknowns that are still \\(\\{\\hat{u}_j\\}_{j=0}^N\\).\n\n\n\n\n\n\nNote\n\n\nFor function approximation \\(\\mathcal{R}_N = e = u_N - f = u_N - u\\)."
+  },
+  {
+    "objectID": "pdes.html#composite-legendre-neumann-basis",
+    "href": "pdes.html#composite-legendre-neumann-basis",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Composite Legendre Neumann basis",
+    "text": "Composite Legendre Neumann basis\n\\[\n\\psi_j = P_j + b(j)P_{j+1} + a(j) P_{j+2}\n\\]\n\\(\\text{Using boundary conditions:}  \\quad P'_j(-1) = \\frac{j(j+1)}{2}(-1)^j \\quad \\text{and} \\quad P'_j(1) = \\frac{j(j+1)}{2}\\)\n\nWe have two conditions and two unknowns\n\\[\\small\n\\begin{align}\n\\psi'_j(-1) &= P'_j(-1) + b(j)P'_{j+1}(-1) + a(j) P'_{j+2}(-1) \\\\\n&= \\left(\\frac{j(j+1)}{2}-b(j)\\frac{(j+1)(j+2)}{2} +a(j)\\frac{(j+2)(j+3)}{2}\\right)(-1)^j = 0\n\\end{align}\n\\]\n\\[ \\small\n\\psi'_j(1) = \\left(\\frac{j(j+1)}{2} + b(j) \\frac{(j+1)(j+2)}{2}+a(j)\\frac{(j+2)(j+3)}{2}\\right) = 0\n\\]\nSolve the two equations to find \\(a(j), b(j)\\) and thus the Neumann basis function \\(\\psi_j\\):\n\\[\nb(j)=0, \\, a(j) = - \\frac{j(j+1)}{(j+2)(j+3)} \\longrightarrow \\boxed{\\psi_j = P_j - \\frac{j(j+1)}{(j+2)(j+3)} P_{j+2}}\n\\]"
+  },
+  {
+    "objectID": "pdes.html#dense-stiffness-matrix",
+    "href": "pdes.html#dense-stiffness-matrix",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Dense stiffness matrix",
+    "text": "Dense stiffness matrix\nUsing basis function \\(\\psi_j = P_j\\) leads to a dense stiffness matrix\n\nplt.spy(S)"
+  },
+  {
+    "objectID": "pdes.html#dense-stiffness-matrix-psi_j-psi_i",
+    "href": "pdes.html#dense-stiffness-matrix-psi_j-psi_i",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Dense stiffness matrix \\((\\psi'_j, \\psi'_i)\\)",
+    "text": "Dense stiffness matrix \\((\\psi'_j, \\psi'_i)\\)\nUsing basis function \\(\\psi_j = P_j\\) leads to a dense stiffness matrix\n\nplt.spy(S)\n\n\n\n\n\n\n\n\nand thus the need for the linear algebra solve \\(\\boldsymbol{\\hat{u}} = S^{-1} \\boldsymbol{f}\\)\nuh = np.linalg.solve(S, fh)"
+  },
+  {
+    "objectID": "pdes.html#another-alternating-oddeven-basis-can-be-created-from-legendre-polynomials-p_jx",
+    "href": "pdes.html#another-alternating-oddeven-basis-can-be-created-from-legendre-polynomials-p_jx",
+    "title": "Solving PDEs with the method of weighted residuals",
+    "section": "Another alternating odd/even basis can be created from Legendre polynomials \\(P_j(x)\\)",
+    "text": "Another alternating odd/even basis can be created from Legendre polynomials \\(P_j(x)\\)\n\n\n\\[\n\\begin{align}\n\\psi_j(x) &= P_j(x) - P_{j+2}(x)\\\\\n\\psi_j(\\pm 1) &= 0\n\\end{align}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\nRemember that\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1) = 1.\n\\]\nHence for any \\(j\\) all basis functions are zero\n\\[\n\\begin{align}\nP_j(-1) - P_{j+2}(-1) &= (-1)^j - (-1)^{j+2} = 0 \\\\\nP_j(1)-P_{j+2}(1) & =1-1=0\n\\end{align}\n\\]"
   }
 ]
