@@ -37,7 +37,7 @@ $$
 
 ::: {.incremental}
 
-* We always use reference elements (triangles, tetrahedra)
+* We always use reference elements (lines, triangles, tetrahedra)
 * Matrices and vectors are assembled elementwise
 $$
 a_{ij} = (\psi_j, \psi_i) = \sum_{e=0}^{N_e-1} \int_{\Omega^{(e)}} \psi_j \psi_i d\Omega = \sum_{e=0}^{N_e-1} A_e 
@@ -60,7 +60,7 @@ where $\mathcal{R}_N = \mathcal{L}(u_N)-f$ is a residual and $\mathcal{L}(u)$ is
 
 ::: {.incremental}
 * All the complexity lies in the implementation, using elementwise integration and mapping to a reference domain.
-* It is very common to use integration by parts or Green's first identity in order to manipulate the variational equation and to incorporate **natural** Neumann boundary conditions.
+* It is very common (and some times necessary) to use integration by parts or Green's first identity in order to manipulate the variational equation and to incorporate **natural** Neumann boundary conditions.
 * Boundary conditions are **not** incorporated into the basis functions.
 * We will only use (local) Lagrange polynomials as basis functions, but there are many other options.
 :::
@@ -140,7 +140,7 @@ But piecewise polynomials cannot be differentiated twice!
 
 ::: {.fragment}
 
-Solution: integration by parts
+Solution: integration by parts $\left((u'', v) = -(u', v')+ [u'v]_{x=x_L}^{x=x_R}\right)$
 
 $$
 (u_N', v') = -(f, v) + [u_N'v]_{x=0}^{x=L}, \quad \forall \, v \in V_N
@@ -276,6 +276,10 @@ $$
 
 ::: {.callout-note}
 Note that the integral is independent of the actual element. All information about element $e$ is in the size $h(e)$.
+:::
+
+::: {.callout-note}
+For piecewise linear elements the integrand is constant! For higher order elements the integral requires some actual work!
 :::
 
 ## Implementation {.smaller}
@@ -551,9 +555,8 @@ $$
 S = assemble_q(xj, d, 1, 1)
 M = assemble_q(xj, d, 0, 0)
 b = assemble_b(f, xj, d=d)
-bc = (ue.diff(x, 1).subs(x, 0).n(), ue.diff(x, 1).subs(x, 10).n())
-b[0] += bc[0]   # specify u'(0)
-b[-1] -= bc[1]  # specify u'(L)
+b[0] += ue.diff(x, 1).subs(x, 0).n()    # specify u'(0)
+b[-1] -= ue.diff(x, 1).subs(x, 10).n()  # specify u'(L)
 uh = np.linalg.solve(-S+alpha*M, b)
 plt.figure(figsize=(10, 3))
 plt.plot(xj, uh)
@@ -622,6 +625,9 @@ for v0, v1 in zip(triangle_vertices, ref_vertices):
     ax.scatter(*v0, color='black', zorder=5)
     ax.scatter(*v1, color='black', zorder=5) 
 
+ax.text(0.05-2, 0.05, r'$\boldsymbol{x}_{q(e, 0)}$')
+ax.text(0.8-2, 0.15, r'$\boldsymbol{x}_{q(e, 1)}$')
+ax.text(0.37-2, 0.73, r'$\boldsymbol{x}_{q(e, 2)}$')
 ax.text(-0.1, -0.1, '(0, 0)')
 ax.text(0.9, -0.1, '(1, 0)')
 ax.text(-0.1, 1.05, '(0, 1)')
