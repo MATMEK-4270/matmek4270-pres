@@ -3938,7 +3938,7 @@
     "href": "fempdes.html#solving-pdes-with-fem",
     "title": "Solving PDEs with the FEM",
     "section": "Solving PDEs with FEM",
-    "text": "Solving PDEs with FEM\nThe Galerkin method is as always: Find \\(u_N \\in V_N\\) such that \\[\n(\\mathcal{R}_N, v) = 0, \\quad \\forall \\, v \\in V_N,\n\\] where \\(\\mathcal{R}_N = \\mathcal{L}(u_N)-f\\) is a residual and \\(\\mathcal{L}(u)\\) is some mathematical operator.\n\nChoose \\(V_N\\) and everything follows.\nInsert for \\(u_N = \\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and \\(v=\\psi_i\\) to obtain the linear algebra problem.\n\n\n\nAll the complexity lies in the implementation, using elementwise integration and mapping to a reference domain.\nIt is very common to use integration by parts or Green’s first identity in order to manipulate the variational equation and to incorporate natural Neumann boundary conditions.\nBoundary conditions are not incorporated into the basis functions.\nWe will only use (local) Lagrange polynomials as basis functions, but there are many other options."
+    "text": "Solving PDEs with FEM\nThe Galerkin method is as always: Find \\(u_N \\in V_N\\) such that \\[\n(\\mathcal{R}_N, v) = 0, \\quad \\forall \\, v \\in V_N,\n\\] where \\(\\mathcal{R}_N = \\mathcal{L}(u_N)-f\\) is a residual and \\(\\mathcal{L}(u)\\) is some mathematical operator.\n\nChoose \\(V_N\\) and everything follows.\nInsert for \\(u_N = \\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and \\(v=\\psi_i\\) to obtain the linear algebra problem.\n\n\n\nAll the complexity lies in the implementation, using elementwise integration and mapping to a reference domain.\nIt is very common (and some times necessary) to use integration by parts or Green’s first identity in order to manipulate the variational equation and to incorporate natural Neumann boundary conditions.\nBoundary conditions are not incorporated into the basis functions.\nWe will only use (local) Lagrange polynomials as basis functions, but there are many other options."
   },
   {
     "objectID": "fempdes.html#example---poissons-equation-with-inhomogeneous-dirichlet-boundary-conditions",
@@ -3952,7 +3952,7 @@
     "href": "fempdes.html#use-integration-by-parts",
     "title": "Solving PDEs with the FEM",
     "section": "Use integration by parts",
-    "text": "Use integration by parts\nThe variational Galerkin form is now to find \\(u_N \\in V_N\\) such that\n\\[\n(u_N'', v) = (f, v), \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\n\n\n\nBut piecewise polynomials cannot be differentiated twice!\n\n\n\n\nSolution: integration by parts\n\\[\n(u_N', v') = -(f, v) + [u_N'v]_{x=0}^{x=L}, \\quad \\forall \\, v \\in V_N\n\\]\nInserting for \\(u_N\\) and \\(v=\\psi_i\\) we get the linear algebra problem\n\\[\n\\sum_{j=0}^N(\\psi'_j, \\psi'_i) \\hat{u}_j = -(f, \\psi_i) + u'_N(L)\\psi_i(L) - u'_N(0)\\psi_i(0)\n\\]\nSince \\(\\psi_i(0)=1\\) for \\(i=0\\) and \\(\\psi_i(L)=1\\) for \\(i=N\\) and zero for all \\(i=1, 2, \\ldots, N-1\\) the last two terms are only relevant for \\(i=0\\) and \\(i=N\\)."
+    "text": "Use integration by parts\nThe variational Galerkin form is now to find \\(u_N \\in V_N\\) such that\n\\[\n(u_N'', v) = (f, v), \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\n\n\n\nBut piecewise polynomials cannot be differentiated twice!\n\n\n\n\nSolution: integration by parts \\(\\left((u'', v) = -(u', v')+ [u'v]_{x=x_L}^{x=x_R}\\right)\\)\n\\[\n(u_N', v') = -(f, v) + [u_N'v]_{x=0}^{x=L}, \\quad \\forall \\, v \\in V_N\n\\]\nInserting for \\(u_N\\) and \\(v=\\psi_i\\) we get the linear algebra problem\n\\[\n\\sum_{j=0}^N(\\psi'_j, \\psi'_i) \\hat{u}_j = -(f, \\psi_i) + u'_N(L)\\psi_i(L) - u'_N(0)\\psi_i(0)\n\\]\nSince \\(\\psi_i(0)=1\\) for \\(i=0\\) and \\(\\psi_i(L)=1\\) for \\(i=N\\) and zero for all \\(i=1, 2, \\ldots, N-1\\) the last two terms are only relevant for \\(i=0\\) and \\(i=N\\)."
   },
   {
     "objectID": "fempdes.html#dirichlet-boundary-conditions",
@@ -3987,7 +3987,7 @@
     "href": "fempdes.html#element-stiffness-matrix",
     "title": "Solving PDEs with the FEM",
     "section": "Element stiffness matrix",
-    "text": "Element stiffness matrix\nWe get\n\\[\n\\tilde{s}^{(e)}_{rs} = \\int_{-1}^1 \\frac{d \\ell_s(X)}{dX} \\frac{d \\ell_r(X)}{dX} \\frac{2}{h(e)} dX\n\\]\nwhich is also\n\\[\n\\tilde{s}^{(e)}_{rs} = \\frac{2}{h(e)} \\int_{-1}^1 \\ell'_s(X) \\ell'_r(X) dX\n\\]\n\n\n\n\n\n\nNote\n\n\nNote that the integral is independent of the actual element. All information about element \\(e\\) is in the size \\(h(e)\\)."
+    "text": "Element stiffness matrix\nWe get\n\\[\n\\tilde{s}^{(e)}_{rs} = \\int_{-1}^1 \\frac{d \\ell_s(X)}{dX} \\frac{d \\ell_r(X)}{dX} \\frac{2}{h(e)} dX\n\\]\nwhich is also\n\\[\n\\tilde{s}^{(e)}_{rs} = \\frac{2}{h(e)} \\int_{-1}^1 \\ell'_s(X) \\ell'_r(X) dX\n\\]\n\n\n\n\n\n\nNote\n\n\nNote that the integral is independent of the actual element. All information about element \\(e\\) is in the size \\(h(e)\\).\n\n\n\n\n\n\n\n\n\nNote\n\n\nFor piecewise linear elements the integrand is constant! For higher order elements the integral requires some actual work!"
   },
   {
     "objectID": "fempdes.html#implementation",
@@ -4064,7 +4064,7 @@
     "href": "fempdes.html#solve",
     "title": "Solving PDEs with the FEM",
     "section": "Solve",
-    "text": "Solve\nThe coefficient matrix \\(-S+\\alpha M\\) is unmodified (no identing first/last rows) and the right hand side \\(\\boldsymbol{b}\\) takes care of the Neumann boundary conditions\n\\[\n(-S+\\alpha M)\\boldsymbol{\\hat{u}} = \\boldsymbol{b} = \\begin{bmatrix}\n(f, \\psi_0)+J'_0(0) \\\\\n(f, \\psi_1) \\\\\n\\vdots \\\\\n(f, \\psi_{N-1}) \\\\\n(f, \\psi_N) - J'_0(10)\n\\end{bmatrix}\n\\]\n\n\nS = assemble_q(xj, d, 1, 1)\nM = assemble_q(xj, d, 0, 0)\nb = assemble_b(f, xj, d=d)\nbc = (ue.diff(x, 1).subs(x, 0).n(), ue.diff(x, 1).subs(x, 10).n())\nb[0] += bc[0]   # specify u'(0)\nb[-1] -= bc[1]  # specify u'(L)\nuh = np.linalg.solve(-S+alpha*M, b)\nplt.figure(figsize=(10, 3))\nplt.plot(xj, uh)\nplt.plot(xj, sp.lambdify(x, ue)(xj), 'k:')\nplt.legend([f'FEM d=1 N={N}', 'Exact']);"
+    "text": "Solve\nThe coefficient matrix \\(-S+\\alpha M\\) is unmodified (no identing first/last rows) and the right hand side \\(\\boldsymbol{b}\\) takes care of the Neumann boundary conditions\n\\[\n(-S+\\alpha M)\\boldsymbol{\\hat{u}} = \\boldsymbol{b} = \\begin{bmatrix}\n(f, \\psi_0)+J'_0(0) \\\\\n(f, \\psi_1) \\\\\n\\vdots \\\\\n(f, \\psi_{N-1}) \\\\\n(f, \\psi_N) - J'_0(10)\n\\end{bmatrix}\n\\]\n\n\nS = assemble_q(xj, d, 1, 1)\nM = assemble_q(xj, d, 0, 0)\nb = assemble_b(f, xj, d=d)\nb[0] += ue.diff(x, 1).subs(x, 0).n()    # specify u'(0)\nb[-1] -= ue.diff(x, 1).subs(x, 10).n()  # specify u'(L)\nuh = np.linalg.solve(-S+alpha*M, b)\nplt.figure(figsize=(10, 3))\nplt.plot(xj, uh)\nplt.plot(xj, sp.lambdify(x, ue)(xj), 'k:')\nplt.legend([f'FEM d=1 N={N}', 'Exact']);"
   },
   {
     "objectID": "fempdes.html#fem-in-multiple-dimensions",
