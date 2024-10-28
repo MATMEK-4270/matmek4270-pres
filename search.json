@@ -1572,7 +1572,7 @@
     "href": "index.html",
     "title": "Presentations for MATMEK-4270",
     "section": "",
-    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions\nLecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions\nLecture 10 - Function approximation by the finite element method\nLecture 11 - Solving PDEs with the method of weighted residuals"
+    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions\nLecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions\nLecture 10 - Function approximation by the finite element method\nLecture 11 - Solving PDEs with the method of weighted residuals\nLecture 12 - Solving PDEs with the FEM"
   },
   {
     "objectID": "wave.html#the-finite-difference-stencil-makes-use-of-5-neighboring-points-1",
@@ -3918,5 +3918,334 @@
     "title": "Solving PDEs with the method of weighted residuals",
     "section": "Another alternating odd/even basis can be created from Legendre polynomials \\(P_j(x)\\)",
     "text": "Another alternating odd/even basis can be created from Legendre polynomials \\(P_j(x)\\)\n\n\n\\[\n\\begin{align}\n\\psi_j(x) &= P_j(x) - P_{j+2}(x)\\\\\n\\psi_j(\\pm 1) &= 0\n\\end{align}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\nRemember that\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1) = 1.\n\\]\nHence for any \\(j\\) all basis functions are zero\n\\[\n\\begin{align}\nP_j(-1) - P_{j+2}(-1) &= (-1)^j - (-1)^{j+2} = 0 \\\\\nP_j(1)-P_{j+2}(1) & =1-1=0\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#solving-pdes-with-the-finite-element-method",
+    "href": "fempdes.html#solving-pdes-with-the-finite-element-method",
+    "title": "Solving PDEs with the FEM",
+    "section": "Solving PDEs with the finite element method",
+    "text": "Solving PDEs with the finite element method\nThe procedure for solving differential equations with the finite element method is much the same as for global basis functions. However\n\nBasis functions \\(\\psi_j(x)\\) are local \\[\nu_N(x) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x)\n\\]\n\n\n\nWe always use reference elements (triangles, tetrahedra)\nMatrices and vectors are assembled elementwise \\[\na_{ij} = (\\psi_j, \\psi_i) = \\sum_{e=0}^{N_e-1} \\int_{\\Omega^{(e)}} \\psi_j \\psi_i d\\Omega = \\sum_{e=0}^{N_e-1} A_e\n\\]\nIt is very common to use Lagrange polynomials for basis functions\nPDEs are normally not solved using tensor products in multiple dimensions"
+  },
+  {
+    "objectID": "fempdes.html#section",
+    "href": "fempdes.html#section",
+    "title": "Solving PDEs with the FEM",
+    "section": "",
+    "text": "\\[\nJ_{ij} = \\frac{\\partial x_j}{\\partial X_i} = \\sum_{r=0}^2 \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_i} (\\boldsymbol{x}_{q(e, r)})_j\\]\n\\[\n\\nabla_X \\tilde{\\psi} = \\underbrace{\\begin{bmatrix} \\frac{\\partial \\tilde{\\psi}_0}{\\partial X} & \\frac{\\partial \\tilde{\\psi}_1}{\\partial X} & \\frac{\\partial \\tilde{\\psi}_2}{\\partial X} \\\\[0.1cm]\n\\frac{\\partial \\tilde{\\psi}_0}{\\partial Y} & \\frac{\\partial \\tilde{\\psi}_1}{\\partial Y} & \\frac{\\partial \\tilde{\\psi}_2}{\\partial Y} \\\\[0.1cm] \\end{bmatrix}}_{\\mathbb{R}^{2 \\times 3}} \\quad \\text{and} \\quad \\boldsymbol{x}_{q(e)} = \\underbrace{\\begin{bmatrix} (\\boldsymbol{x}_{q(e, 0)})_0 & (\\boldsymbol{x}_{q(e, 0)})_1 \\\\\n(\\boldsymbol{x}_{q(e, 1)})_0 & (\\boldsymbol{x}_{q(e, 1)})_1 \\\\\n(\\boldsymbol{x}_{q(e, 2)})_0 & (\\boldsymbol{x}_{q(e, 2)})_1\n  \\end{bmatrix}}_{\\mathbb{R}^{3 \\times 2}}\n\\]\n\\[\nJ = \\nabla_X \\tilde{\\psi} \\cdot \\boldsymbol{x}_{q(e)}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#solving-pdes-with-fem",
+    "href": "fempdes.html#solving-pdes-with-fem",
+    "title": "Solving PDEs with the FEM",
+    "section": "Solving PDEs with FEM",
+    "text": "Solving PDEs with FEM\nThe Galerkin method is as always: Find \\(u_N \\in V_N\\) such that \\[\n(\\mathcal{R}_N, v) = 0, \\quad \\forall \\, v \\in V_N,\n\\] where \\(\\mathcal{R}_N = \\mathcal{L}(u_N)-f\\) is a residual and \\(\\mathcal{L}(u)\\) is some mathematical operator.\n\nChoose \\(V_N\\) and everything follows.\nInsert for \\(u_N = \\sum_{j=0}^N \\hat{u}_j \\psi_j\\) and \\(v=\\psi_i\\) to obtain the linear algebra problem.\n\n\n\nAll the complexity lies in the implementation, using elementwise integration and mapping to a reference domain.\nIt is very common to use integration by parts or Green’s first identity in order to manipulate the variational equation and to incorporate natural Neumann boundary conditions.\nBoundary conditions are not incorporated into the basis functions.\nWe will only use (local) Lagrange polynomials as basis functions, but there are many other options."
+  },
+  {
+    "objectID": "fempdes.html#example---poissons-equation-with-inhomogeneous-dirichlet-boundary-conditions",
+    "href": "fempdes.html#example---poissons-equation-with-inhomogeneous-dirichlet-boundary-conditions",
+    "title": "Solving PDEs with the FEM",
+    "section": "Example - Poisson’s equation with inhomogeneous Dirichlet boundary conditions",
+    "text": "Example - Poisson’s equation with inhomogeneous Dirichlet boundary conditions\n\\[\nu'' = f, \\quad x \\in (0, L), \\, u(0) = a, u(L) = b,\n\\]\nFirst choose \\(V_N\\). We can here use piecewise linear polynomials or even higher order\n\\[\nV_N = \\text{span}\\{\\psi_j(x)\\}_{j=0}^N\n\\]\nRemember\n\\[\n\\psi_j(x_i) = \\delta_{ij}\n\\]\nso each basis function is one in exactly one node and zero in all the others. Quadratic:"
+  },
+  {
+    "objectID": "fempdes.html#use-integration-by-parts",
+    "href": "fempdes.html#use-integration-by-parts",
+    "title": "Solving PDEs with the FEM",
+    "section": "Use integration by parts",
+    "text": "Use integration by parts\nThe variational Galerkin form is now to find \\(u_N \\in V_N\\) such that\n\\[\n(u_N'', v) = (f, v), \\quad \\forall \\, v \\in V_N\n\\]\n\n\n\n\n\n\nBut piecewise polynomials cannot be differentiated twice!\n\n\n\n\nSolution: integration by parts\n\\[\n(u_N', v') = -(f, v) + [u_N'v]_{x=0}^{x=L}, \\quad \\forall \\, v \\in V_N\n\\]\nInserting for \\(u_N\\) and \\(v=\\psi_i\\) we get the linear algebra problem\n\\[\n\\sum_{j=0}^N(\\psi'_j, \\psi'_i) \\hat{u}_j = -(f, \\psi_i) + u'_N(L)\\psi_i(L) - u'_N(0)\\psi_i(0)\n\\]\nSince \\(\\psi_i(0)=1\\) for \\(i=0\\) and \\(\\psi_i(L)=1\\) for \\(i=N\\) and zero for all \\(i=1, 2, \\ldots, N-1\\) the last two terms are only relevant for \\(i=0\\) and \\(i=N\\)."
+  },
+  {
+    "objectID": "fempdes.html#dirichlet-boundary-conditions",
+    "href": "fempdes.html#dirichlet-boundary-conditions",
+    "title": "Solving PDEs with the FEM",
+    "section": "Dirichlet boundary conditions",
+    "text": "Dirichlet boundary conditions\nWe have \\(N+1\\) equations for \\(N+1\\) unknowns \\(\\{\\hat{u}_i\\}_{i=0}^N\\) \\[\n\\sum_{j=0}^N(\\psi'_j, \\psi'_i) \\hat{u}_j = -(f, \\psi_i) + u'_N(L)\\psi_i(L) - u'_N(0)\\psi_i(0)\n\\]\nThe boundary term \\(u'_N(L)\\psi_i(L) - u'_N(0)\\psi_i(0)\\) can be used to specify Neumann boundary conditions. For Dirichlet we have\n\\[\nu(0) = u_N(x_0) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x_0) = \\psi_0(x_0) \\hat{u}_0 = \\hat{u}_0 = a\n\\]\nand\n\\[\nu(L) = u_N(x_N) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x_N) = \\psi_N(x_N) \\hat{u}_N = \\hat{u}_N = b.\n\\]\nHence \\(\\hat{u}_0=a\\) and \\(\\hat{u}_N=b\\) are determined from bcs, leaving \\(N-1\\) unknowns \\(\\{\\hat{u}_i\\}_{i=1}^{N-1}\\)"
+  },
+  {
+    "objectID": "fempdes.html#assembly",
+    "href": "fempdes.html#assembly",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assembly",
+    "text": "Assembly\n\\[\n\\sum_{j=0}^N(\\psi'_j, \\psi'_i) \\hat{u}_j = -(f, \\psi_i), \\quad i=1, 2, \\ldots, N-1\n\\]\n\\[\n\\hat{u}_0=a \\text{ and } \\hat{u}_N=b\n\\]\nMatrix form, using \\(s_{ij} = (\\psi'_j, \\psi'_i)\\) and \\(f_i = (f, \\psi_i)\\):\n\\[\n\\begin{bmatrix}\n1 & 0 & 0 & \\cdots & 0 \\\\\ns_{10} & s_{11}& s_{12} & \\cdots & s_{1N} \\\\\n\\vdots & \\vdots & \\vdots & \\ddots & \\cdots \\\\\ns_{N-1, 0} & s_{N-1, 1}& s_{N-1, 2}& \\cdots & s_{N-1,N} \\\\\n0 & \\cdots & 0 & 0 & 1\n\\end{bmatrix}\n\\begin{bmatrix}\n\\hat{u}_0 \\\\\n\\hat{u}_1 \\\\\n\\vdots \\\\\n\\hat{u}_{N-1} \\\\\n\\hat{u}_N\n\\end{bmatrix}\n=\n\\begin{bmatrix}\na \\\\\n-f_1 \\\\\n\\vdots \\\\\n-f_{N-1} \\\\\nb\n\\end{bmatrix}\n\\]\nNote the idented first and last row due to bcs. Also, most of the \\(s_{ij}\\) items will be zero since the basis functions are local."
+  },
+  {
+    "objectID": "fempdes.html#finite-element-assembly",
+    "href": "fempdes.html#finite-element-assembly",
+    "title": "Solving PDEs with the FEM",
+    "section": "Finite element assembly",
+    "text": "Finite element assembly\n\\[\ns_{ij} = (\\psi'_j, \\psi'_i) = \\sum_{e=0}^{N_e-1} \\int_{\\Omega^{(e)}} \\psi'_j \\psi'_i d\\Omega\n\\]\nWe will use the same notation as in lecture 10 and\n\\[\ns^{(e)}_{ij} = \\int_{\\Omega^{(e)}} \\psi'_j \\psi'_i d\\Omega\n\\]\nis the element stiffness matrix of shape \\((N+1) \\times (N+1)\\). We also use the same mapping from local to global degrees of freedom, and define a dense element matrix as\n\\[\n\\tilde{s}^{(e)}_{rs} = s^{(e)}_{q(e,r), q(e, s)}, \\, (r, s) \\in \\mathcal{I}_d^2\n\\]\nfor finite elements of order \\(d\\) and \\(\\mathcal{I}_d=\\{0, 1, \\ldots, d\\}\\). Remember that \\(d=1\\) for linear elements, and then higher order elements (\\(d&gt;1\\)) simply use more nodes within each element."
+  },
+  {
+    "objectID": "fempdes.html#mapping-to-reference-domain-omegar--1-1",
+    "href": "fempdes.html#mapping-to-reference-domain-omegar--1-1",
+    "title": "Solving PDEs with the FEM",
+    "section": "Mapping to reference domain \\(\\Omega^r = [-1, 1]\\)",
+    "text": "Mapping to reference domain \\(\\Omega^r = [-1, 1]\\)\nThe finite element stiffness matrix is implemented using a mapping to the reference domain \\(X\\in[-1, 1]\\), and the reference basis functions\n\\[\n\\psi_{q(e, r)}(x) = \\ell_r(X)\n\\]\nwhere the element is \\(\\Omega^{(e)} = [x_L, x_R]\\) and \\(h(e)=x_R-x_L\\), such that\n\\[\nx = \\frac{1}{2}(x_L+x_R) + \\frac{h(e)}{2}X \\quad \\text{and} \\quad\n\\frac{dx}{dX} = \\frac{h(e)}{2}\n\\]\nInserting this into the expression for \\(\\tilde{s}_{rs}\\):\n\\[\n\\begin{align*}\n\\tilde{s}^{(e)}_{rs} &= \\int_{\\Omega^{(e)}} \\frac{d \\psi_{q(e, s)}(x)}{dx} \\frac{d \\psi_{q(e, r)}(x)}{dx} dx, \\\\\n&= \\int_{-1}^1 \\frac{d \\ell_s(X)}{dX} \\frac{dX}{dx} \\frac{d \\ell_r(X)}{dX} \\frac{dX}{dx} \\frac{dx}{dX}dX\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#element-stiffness-matrix",
+    "href": "fempdes.html#element-stiffness-matrix",
+    "title": "Solving PDEs with the FEM",
+    "section": "Element stiffness matrix",
+    "text": "Element stiffness matrix\nWe get\n\\[\n\\tilde{s}^{(e)}_{rs} = \\int_{-1}^1 \\frac{d \\ell_s(X)}{dX} \\frac{d \\ell_r(X)}{dX} \\frac{2}{h(e)} dX\n\\]\nwhich is also\n\\[\n\\tilde{s}^{(e)}_{rs} = \\frac{2}{h(e)} \\int_{-1}^1 \\ell'_s(X) \\ell'_r(X) dX\n\\]\n\n\n\n\n\n\nNote\n\n\nNote that the integral is independent of the actual element. All information about element \\(e\\) is in the size \\(h(e)\\)."
+  },
+  {
+    "objectID": "fempdes.html#implementation",
+    "href": "fempdes.html#implementation",
+    "title": "Solving PDEs with the FEM",
+    "section": "Implementation",
+    "text": "Implementation\n\nfrom lagrange import Lagrangebasis, Lagrangefunction\nx, h = sp.symbols('x,h')\nl = Lagrangebasis([-1, 1])\nse = lambda r, s: sp.integrate(l[r].diff(x, 1)*l[s].diff(x, 1), (x, -1, 1))\nS1e = 2/h*sp.Matrix([[se(0, 0), se(0, 1)],[se(1, 0), se(1, 1)]])\nS1e\n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{1}{h} & - \\frac{1}{h}\\\\- \\frac{1}{h} & \\frac{1}{h}\\end{matrix}\\right]\\)\n\n\n\n\n\n\n\n\nNote\n\n\nFor Lagrange basis functions using just a few nodes the Sympy functions in the lagrange.py module are robust and efficient.\n\n\n\n\n\nl = Lagrangebasis([-1, 0, 1]) # 3 nodes per element\nS2e = 2/h*sp.Matrix(np.array([[se(i, j) for i in range(3) for j in range(3)]]).reshape(3, 3))\nS2e\n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{7}{3 h} & - \\frac{8}{3 h} & \\frac{1}{3 h}\\\\- \\frac{8}{3 h} & \\frac{16}{3 h} & - \\frac{8}{3 h}\\\\\\frac{1}{3 h} & - \\frac{8}{3 h} & \\frac{7}{3 h}\\end{matrix}\\right]\\)"
+  },
+  {
+    "objectID": "fempdes.html#completely-generic-implementation-for-any-matrix",
+    "href": "fempdes.html#completely-generic-implementation-for-any-matrix",
+    "title": "Solving PDEs with the FEM",
+    "section": "Completely generic implementation for any matrix",
+    "text": "Completely generic implementation for any matrix\nThe generic matrix\n\\[\nq^{(m,n)}_{ij} = \\left(\\frac{d^n \\psi_j}{dx^n}, \\frac{d^m \\psi_i}{dx^m} \\right)\n\\]\nrequires the generic element matrix\n\\[\n\\tilde{q}^{(e,m,n)}_{rs} =  \\int_{\\Omega^{(e)}} \\frac{d^n \\psi_{q(e, s)}}{dx^n} \\frac{d^m \\psi_{q(e, r)}}{dx^m}  dx\n\\]\nWe can now use that\n\\[\n\\frac{d^n \\psi_{q(e, r)}}{dx^n} = \\frac{d^{n-1} }{dx^{n-1}}\\left(\\frac{d \\psi_{q(e,r)}}{dx} \\right) = \\frac{d^{n-1}}{dx^{n-1}}\\left( \\frac{d \\ell_r}{dX}\\frac{dX}{dx}\\right) = \\frac{2}{h} \\frac{d^{n-1}}{dx^{n-1}}\\left( \\frac{d \\ell_r}{dX} \\right)\n\\]\nwhich recursively leads to\n\\[\n\\frac{d^n \\psi_{q(e, r)}}{dx^n} = \\left(\\frac{2}{h}\\right)^n \\frac{d^n \\ell_r}{dX^n}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#generic-element-matrix",
+    "href": "fempdes.html#generic-element-matrix",
+    "title": "Solving PDEs with the FEM",
+    "section": "Generic element matrix",
+    "text": "Generic element matrix\n\\[\n\\tilde{q}^{(e,m,n)}_{rs} =  \\int_{\\Omega^{(e)}} \\frac{d^n \\psi_{q(e, s)}}{dx^n} \\frac{d^m \\psi_{q(e, r)}}{dx^m}  dx \\quad \\text{and} \\quad \\frac{d^n \\psi_{q(e, r)}}{dx^n} = \\left(\\frac{2}{h}\\right)^n \\frac{d^n \\ell_r}{dX^n}\n\\]\nleads to\n\\[\n\\tilde{q}^{(e,m,n)}_{rs} = \\left(\\frac{h}{2}\\right)^{1-(m+n)} \\int_{-1}^1 \\ell^{(n)}_s(X) \\ell^{(m)}_r(X)  dX,\n\\]\nwhere \\(\\ell^{(n)}_r = \\frac{d^{n} \\ell_r}{dX^n}\\).\n\n\n\n\n\n\nNote\n\n\nThis represents all the element matrices you will ever need, and it is easily implemented using a few lines of Sympy code.\n\n\n\n\n\n\n\n\n\nNote\n\n\nHigher order of the derivatives \\((m, n)\\) requires higher order elements. Remember, piecewise linear elements can only be differentiated once."
+  },
+  {
+    "objectID": "fempdes.html#sympy-implementation-of-generic-matrix",
+    "href": "fempdes.html#sympy-implementation-of-generic-matrix",
+    "title": "Solving PDEs with the FEM",
+    "section": "Sympy implementation of generic matrix",
+    "text": "Sympy implementation of generic matrix\nUsing uniform nodes\n\\[\nX_j = -1 + \\frac{2j}{d}, \\quad j=0,1,\\ldots, d\n\\]\n\nXj = lambda d: np.array([sp.Rational(2*i, d) for i in np.arange(d+1)])-1 \nqe = lambda l, r, s, m, n: sp.integrate(l[r].diff(x, m)*l[s].diff(x, n), (x, -1, 1))\ndef Qe(d=1, m=0, n=0):\n    A = np.zeros((d+1, d+1), dtype=object)\n    l = Lagrangebasis(Xj(d))\n    for r in range(d+1):\n        for s in range(d+1):\n            A[r, s] = qe(l, r, s, m, n)\n    return (h/2)**(1-m-n)*sp.Matrix(A)\n\n\n\n\nQe(2, 1, 1) \n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{7}{3 h} & - \\frac{8}{3 h} & \\frac{1}{3 h}\\\\- \\frac{8}{3 h} & \\frac{16}{3 h} & - \\frac{8}{3 h}\\\\\\frac{1}{3 h} & - \\frac{8}{3 h} & \\frac{7}{3 h}\\end{matrix}\\right]\\)\n\n\n\n\nQe(3, 2, 2) \n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{81}{h^{3}} & - \\frac{405}{2 h^{3}} & \\frac{162}{h^{3}} & - \\frac{81}{2 h^{3}}\\\\- \\frac{405}{2 h^{3}} & \\frac{567}{h^{3}} & - \\frac{1053}{2 h^{3}} & \\frac{162}{h^{3}}\\\\\\frac{162}{h^{3}} & - \\frac{1053}{2 h^{3}} & \\frac{567}{h^{3}} & - \\frac{405}{2 h^{3}}\\\\- \\frac{81}{2 h^{3}} & \\frac{162}{h^{3}} & - \\frac{405}{2 h^{3}} & \\frac{81}{h^{3}}\\end{matrix}\\right]\\)"
+  },
+  {
+    "objectID": "fempdes.html#assemble-the-generic-matrix-q",
+    "href": "fempdes.html#assemble-the-generic-matrix-q",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assemble the generic matrix \\(Q\\)",
+    "text": "Assemble the generic matrix \\(Q\\)\n\\[\nq^{(m, n)}_{ij} = \\int_{\\Omega} \\psi^{(n)}_j \\psi^{(m)}_i dx = \\sum_{e=0}^{N_e-1} \\tilde{q}^{(e, m, n)}_{rs}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#assemble-the-generic-matrix-qmn",
+    "href": "fempdes.html#assemble-the-generic-matrix-qmn",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assemble the generic matrix \\(Q^{(m,n)}\\)",
+    "text": "Assemble the generic matrix \\(Q^{(m,n)}\\)\n\\[\nq^{(m, n)}_{ij} = \\int_{\\Omega} \\psi^{(n)}_j \\psi^{(m)}_i dx\n\\]\n\nFor all elements \\(e=0,\\ldots, N_e-1\\)\n\nFor all \\(r=0,\\ldots, d\\)\n\nFor all \\(s=0, \\ldots, d\\)\n\n\n\n\\[\n            q^{(m,n)}_{q(e,r),q(e,s)} += \\tilde{q}^{(e,m,n)}_{rs}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#implementation-1",
+    "href": "fempdes.html#implementation-1",
+    "title": "Solving PDEs with the FEM",
+    "section": "Implementation",
+    "text": "Implementation\n\nfrom fem import get_element_boundaries, get_element_length, local_to_global_map, map_u_true_domain, fe_evaluate_v\n\ndef assemble_q(xj, d=1, m=0, n=0):\n    N = len(xj)-1\n    Ne = N//d\n    A = np.zeros((N+1, N+1))\n    Q = Qe(d, m, n)\n    for elem in range(Ne):\n        hj = get_element_length(xj, elem, d=d)\n        s0 = local_to_global_map(elem, d=d)\n        A[s0, s0] += np.array(Q.subs(h, hj), dtype=float)\n    return A\n\nCreate mesh and assemble any generic, numerical matrix:\n\n\n\\(Q^{(1,1)}\\) using \\(d=1, N=6\\)\n\nN = 6\nxj = np.linspace(1, 2, N+1)\nS = assemble_q(xj, d=1, m=1, n=1)\nprint(S) \n\n[[ 6. -6.  0.  0.  0.  0.  0.]\n [-6. 12. -6.  0.  0.  0.  0.]\n [ 0. -6. 12. -6.  0.  0.  0.]\n [ 0.  0. -6. 12. -6.  0.  0.]\n [ 0.  0.  0. -6. 12. -6.  0.]\n [ 0.  0.  0.  0. -6. 12. -6.]\n [ 0.  0.  0.  0.  0. -6.  6.]]\n\n\n\n\\(Q^{(2,2)}\\) using \\(d=2, N=6\\)\n\nN = 6\nxj = np.linspace(1, 2, N+1)\nQ = assemble_q(xj, d=2, m=2, n=2)\nprint(Q) \n\n[[ 432. -864.  432.    0.    0.    0.    0.]\n [-864. 1728. -864.    0.    0.    0.    0.]\n [ 432. -864.  864. -864.  432.    0.    0.]\n [   0.    0. -864. 1728. -864.    0.    0.]\n [   0.    0.  432. -864.  864. -864.  432.]\n [   0.    0.    0.    0. -864. 1728. -864.]\n [   0.    0.    0.    0.  432. -864.  432.]]"
+  },
+  {
+    "objectID": "fempdes.html#solve-any-linear-differential-equation",
+    "href": "fempdes.html#solve-any-linear-differential-equation",
+    "title": "Solving PDEs with the FEM",
+    "section": "Solve any linear differential equation",
+    "text": "Solve any linear differential equation\nFor example the Helmholtz equation: \\[\nu''+\\alpha u = f, \\quad x \\in (0, 10)\n\\]\nFind \\(u_N \\in V_N\\) such that\n\\[\n-(u'_N, v') + \\alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \\quad \\forall \\, v \\in V_N\n\\]\nAssume manufactured solution \\(u(x)=J_0(x)\\), where \\(J_0(x)\\) is the 0 order Bessel function of the first kind. Use Dirichlet boundary conditions, \\(u(0)=J_0(0)\\) and \\(u(10)=J_0(10)\\), and thus neglect \\([u'_Nv]_{x=0}^{x=10}\\).\n\nN = 20 \nxj = np.linspace(0, 10, N+1)\nd = 1\nS = assemble_q(xj, d=d, m=1, n=1) \nM = assemble_q(xj, d=d, m=0, n=0)\nalpha = 10\n\n\\[\n(-S + \\alpha M)\\boldsymbol{\\hat{u}} = \\boldsymbol{b}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#assemble-right-hand-side-and-solve",
+    "href": "fempdes.html#assemble-right-hand-side-and-solve",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assemble right hand side and solve",
+    "text": "Assemble right hand side and solve\n\nue = sp.besselj(0, x)\nf = ue.diff(x, 2) + alpha*ue\ndef assemble_b(u, xj, d=1):\n    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)\n    N = len(xj)-1\n    b = np.zeros(N+1)\n    for elem in range(N//d):\n        hj = get_element_length(xj, elem, d=d)\n        us = sp.lambdify(x, map_u_true_domain(u, xj, elem, d=d))\n        integ = lambda xj, r: us(xj)*l[r](xj)\n        for r in range(d+1):\n            b[d*elem+r] += hj/2*quad(integ, -1, 1, args=(r,))[0]\n    return b\nb = assemble_b(f, xj, d=d)\nb[0], b[-1] = ue.subs(x, 0), ue.subs(x, 10)    # specify u(0) and u(L)\nA = -S+alpha*M\nA[0, :] = 0; A[0, 0] = 1    # ident first row for bc at u(0)\nA[-1, :] = 0; A[-1, -1] = 1 # ident last row for bc at u(L)\nuh = np.linalg.solve(A, b)"
+  },
+  {
+    "objectID": "fempdes.html#use-neumann-boundary-conditions-instead",
+    "href": "fempdes.html#use-neumann-boundary-conditions-instead",
+    "title": "Solving PDEs with the FEM",
+    "section": "Use Neumann boundary conditions instead",
+    "text": "Use Neumann boundary conditions instead\nFind \\(u_N \\in V_N\\) such that\n\\[\n-(u'_N, v') + \\alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \\quad \\forall \\, v \\in V_N\n\\]\nInsert for boundary conditions \\(u'(0)=J'_0(0)\\) and \\(u'(10)=J'_0(10)\\)\n\\[\n-(u'_N, \\psi_i') + \\alpha (u_N, \\psi_i) = (f, \\psi_i) - (J'_0(10)\\psi_i(10) - J'_0(10) \\psi_i(0)), \\quad i=0, 1, \\ldots, N\n\\]\n\n\n\n\n\n\nNote\n\n\nThe boundary term \\(J'_0(10)\\psi_i(10)\\) is only nonzero for \\(i=N\\) and \\(J'_0(0) \\psi_i(0)\\) is only nonzero for \\(i=0\\). This follows since \\(\\psi_i(x_j) = \\delta_{ij}\\) and \\(x_0=0\\) and \\(x_N=10\\).\n\n\n\n\n\n\n\n\n\nNote\n\n\nThe term \\((J'_0(10)\\psi_i(10) - J'_0(0) \\psi_i(0))\\) goes into \\(\\boldsymbol{b}\\), because it is a linear form containing the test function \\(\\psi_i\\) but not the trial function \\(\\psi_j\\)."
+  },
+  {
+    "objectID": "fempdes.html#solve",
+    "href": "fempdes.html#solve",
+    "title": "Solving PDEs with the FEM",
+    "section": "Solve",
+    "text": "Solve\nThe coefficient matrix \\(-S+\\alpha M\\) is unmodified (no identing first/last rows) and the right hand side \\(\\boldsymbol{b}\\) takes care of the Neumann boundary conditions\n\\[\n(-S+\\alpha M)\\boldsymbol{\\hat{u}} = \\boldsymbol{b} = \\begin{bmatrix}\n(f, \\psi_0)+J'_0(0) \\\\\n(f, \\psi_1) \\\\\n\\vdots \\\\\n(f, \\psi_{N-1}) \\\\\n(f, \\psi_N) - J'_0(10)\n\\end{bmatrix}\n\\]\n\n\nS = assemble_q(xj, d, 1, 1)\nM = assemble_q(xj, d, 0, 0)\nb = assemble_b(f, xj, d=d)\nbc = (ue.diff(x, 1).subs(x, 0).n(), ue.diff(x, 1).subs(x, 10).n())\nb[0] += bc[0]   # specify u'(0)\nb[-1] -= bc[1]  # specify u'(L)\nuh = np.linalg.solve(-S+alpha*M, b)\nplt.figure(figsize=(10, 3))\nplt.plot(xj, uh)\nplt.plot(xj, sp.lambdify(x, ue)(xj), 'k:')\nplt.legend([f'FEM d=1 N={N}', 'Exact']);"
+  },
+  {
+    "objectID": "fempdes.html#fem-in-multiple-dimensions",
+    "href": "fempdes.html#fem-in-multiple-dimensions",
+    "title": "Solving PDEs with the FEM",
+    "section": "FEM in multiple dimensions",
+    "text": "FEM in multiple dimensions\nBasis functions are usually multidimensional\n\\[\nu_N(x, y, z) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x, y, z)\n\\]\nThe Galerkin method is exactly the same: Find \\(u_N \\in V_N (=\\text{span}\\{\\psi_j\\}_{j=0}^N)\\) such that\n\\[\n(\\mathcal{L}(u_N)-f, v) = 0, \\quad \\forall \\, v \\in V_N\n\\]\nBut naturally the method is harder to implement. We need to use position vectors in real and reference space\n\\[\n\\boldsymbol{x} = x \\boldsymbol{i} + y \\boldsymbol{j} + z \\boldsymbol{k} \\quad \\text{and} \\quad \\boldsymbol{X} = X \\boldsymbol{i} + Y \\boldsymbol{j} + Z \\boldsymbol{k}\n\\]\n\\[\n\\text{Map basis functions: } \\psi_j(\\boldsymbol{x}) = \\tilde{\\psi}_j(\\boldsymbol{X})\n\\]\n\\[\n\\text{Global nodes: } \\boldsymbol{x}_i = (x_i, y_i, z_i), \\quad i=0,1, \\ldots, N\n\\]\n\\[\n\\text{Local nodes for triangles: }\\boldsymbol{X}_r = (X_r, Y_r, Z_r), \\quad r=0, 1, 2\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#the-tent-basis-functions-in-2d",
+    "href": "fempdes.html#the-tent-basis-functions-in-2d",
+    "title": "Solving PDEs with the FEM",
+    "section": "The tent basis functions in 2D",
+    "text": "The tent basis functions in 2D\nThe Lagrange basis functions are still defined by\n\\[\n\\psi_j(\\boldsymbol{x}_i) = \\delta_{ij}\n\\]\nand for 2D the piecewise linear basis function now look like “tents”"
+  },
+  {
+    "objectID": "fempdes.html#the-reference-triangle-and-reference-basis-functions",
+    "href": "fempdes.html#the-reference-triangle-and-reference-basis-functions",
+    "title": "Solving PDEs with the FEM",
+    "section": "The reference triangle and reference basis functions",
+    "text": "The reference triangle and reference basis functions\n\n\n\n\n\n\n\n\n\nThe reference triangle has three nodes \\(\\boldsymbol{X}_0= (0, 0), \\boldsymbol{X}_1= (1, 0)\\) and \\(\\boldsymbol{X}_2 = (0, 1)\\), and the three nonzero reference basis functions on this element are\n\\[\n\\tilde{\\psi}_0(X, Y) = 1-X-Y, \\quad \\tilde{\\psi}_1(X, Y) = X, \\quad \\tilde{\\psi}_2(X, Y) = Y\n\\]\nNote that the reference basis functions are mapped as\n\\[\n\\psi_{q(e, r)}(\\boldsymbol{x}) = \\tilde{\\psi}_r(\\boldsymbol{X})\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#reference-triangle-and-reference-basis-functions",
+    "href": "fempdes.html#reference-triangle-and-reference-basis-functions",
+    "title": "Solving PDEs with the FEM",
+    "section": "Reference triangle and reference basis functions",
+    "text": "Reference triangle and reference basis functions\n\n\n\n\n\n\n\n\n\nThe reference triangle has three nodes \\(\\boldsymbol{X}_0= (0, 0), \\boldsymbol{X}_1= (1, 0)\\) and \\(\\boldsymbol{X}_2 = (0, 1)\\), and the three nonzero, linear reference basis functions on this element are\n\\[\n\\tilde{\\psi}_0(X, Y) = 1-X-Y, \\quad \\tilde{\\psi}_1(X, Y) = X, \\quad \\tilde{\\psi}_2(X, Y) = Y\n\\]\n\\[\n\\psi_{q(e, r)}(\\boldsymbol{x}) = \\tilde{\\psi}_r(\\boldsymbol{X}) \\quad \\text{and} \\quad  \\boldsymbol{x}(\\boldsymbol{X}) = \\sum_{r} \\tilde{\\psi}_r(\\boldsymbol{X}) \\boldsymbol{x}_{q(e, r)}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#visualization",
+    "href": "fempdes.html#visualization",
+    "title": "Solving PDEs with the FEM",
+    "section": "Visualization",
+    "text": "Visualization"
+  },
+  {
+    "objectID": "fempdes.html#visualization-of-basis-functions-on-reference-triangle",
+    "href": "fempdes.html#visualization-of-basis-functions-on-reference-triangle",
+    "title": "Solving PDEs with the FEM",
+    "section": "Visualization of basis functions on reference triangle",
+    "text": "Visualization of basis functions on reference triangle"
+  },
+  {
+    "objectID": "fempdes.html#p2-elements",
+    "href": "fempdes.html#p2-elements",
+    "title": "Solving PDEs with the FEM",
+    "section": "P2 elements",
+    "text": "P2 elements\n\n\n\n\n\n\n\n\n\n\\[\n\\{\\boldsymbol{X}_i\\}_{i=0}^5=[(0, 0), (1, 0), (0, 1), (0.5, 0), (0.5, 0.5), (0, 0.5)]\n\\]\n\\[\n\\tilde{\\psi}_r(\\boldsymbol{X}_s) = \\delta_{rs}, \\quad (r, s) \\in (0, 1, \\ldots, 5)^2\n\\]\n\\[\n\\tilde{\\psi}_r(X, Y) = a^r_0 + a^r_1 X + a^r_2 Y + a^r_3 X^2 + a^r_4 XY + a^r_5 Y^2\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#visualization-of-p2-basis-functions",
+    "href": "fempdes.html#visualization-of-p2-basis-functions",
+    "title": "Solving PDEs with the FEM",
+    "section": "Visualization of P2 basis functions",
+    "text": "Visualization of P2 basis functions"
+  },
+  {
+    "objectID": "fempdes.html#p2-basis-functions",
+    "href": "fempdes.html#p2-basis-functions",
+    "title": "Solving PDEs with the FEM",
+    "section": "P2 basis functions",
+    "text": "P2 basis functions\nFor each \\(r\\in(0, 1, \\ldots, 5)\\) solve for \\(\\{a^r_s\\}_{s=0}^5\\) in\n\\[\n\\tilde{\\psi}_r(X, Y) = a^r_0 + a^r_1 X + a^r_2 Y + a^r_3 X^2 + a^r_4 XY + a^r_5 Y^2\n\\]\nsuch that the 6 equations \\(\\tilde{\\psi}_r({X}_s, Y_s) = \\delta_{rs}, s=0,1,\\ldots, 5\\), are satisfied.\n\nThe basis functions are then found as\n\\[\n\\begin{align}\n\\tilde{\\psi}_0(X, Y) &= 1-3X-3Y + 2X^2 + 4XY+2Y^2 \\\\\n\\tilde{\\psi}_1(X, Y) &= X (2X-1) \\\\\n\\tilde{\\psi}_2(X, Y) &= Y(2Y-1)\\\\\n\\tilde{\\psi}_3(X, Y) &= 4X (1-X-Y) \\\\\n\\tilde{\\psi}_4(X, Y) &= 4XY \\\\\n\\tilde{\\psi}_5(X, Y) &= 4Y (1-X-Y)\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#assembly-1",
+    "href": "fempdes.html#assembly-1",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assembly",
+    "text": "Assembly\n\n\n\n\n\n\n\n\n\n\\[\n\\int_{\\Omega^{(e)}} \\psi_j(\\boldsymbol{x}) \\cdot \\psi_i(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}^{(e)}} \\tilde{\\psi}_s(\\boldsymbol{X}) \\cdot \\tilde{\\psi}_r(\\boldsymbol{X}) \\det J d\\tilde{\\Omega}\n\\]\n\\[\n\\text{The Jacobian matrix:}\\quad (J)_{ij} = \\frac{\\partial x_j}{\\partial X_i}, \\quad \\det J = \\frac{\\partial x}{\\partial X}\\frac{\\partial y}{\\partial Y} - \\frac{\\partial x}{\\partial Y}\\frac{\\partial y}{\\partial X}\n\\]\n\\[\n\\text{For 2D Cartesian mesh: } \\quad d\\Omega = dxdy, \\quad d\\tilde{\\Omega} = dXdY\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#assembly-on-the-reference-domain",
+    "href": "fempdes.html#assembly-on-the-reference-domain",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assembly on the reference domain",
+    "text": "Assembly on the reference domain\n\n\n\n\n\n\n\n\n\n\\[ \\small\n\\int_{\\Omega^{(e)}} \\psi_j(\\boldsymbol{x}) \\cdot \\psi_i(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\tilde{\\psi}_s(\\boldsymbol{X}) \\cdot \\tilde{\\psi}_r(\\boldsymbol{X}) \\det J d\\tilde{\\Omega}\n\\]\nWe here use the Jacobian \\(J\\) of the transformation, defined such that \\[ \\small\n(J)_{ij} = \\frac{\\partial x_j}{\\partial X_i}, \\quad (J^{-1})_{ij} = \\frac{\\partial X_j}{\\partial x_i}\n\\]\n\\[\n\\text{2D Cartesian mesh: } \\quad d\\Omega = dxdy, \\quad d\\tilde{\\Omega} = dXdY, \\quad \\det J = \\frac{\\partial x}{\\partial X}\\frac{\\partial y}{\\partial Y} - \\frac{\\partial x}{\\partial Y}\\frac{\\partial y}{\\partial X}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#stiffness-matrix",
+    "href": "fempdes.html#stiffness-matrix",
+    "title": "Solving PDEs with the FEM",
+    "section": "Stiffness matrix",
+    "text": "Stiffness matrix\n\\[\n\\int_{\\Omega^{(e)}} \\nabla \\psi_j(\\boldsymbol{x}) \\cdot \\nabla \\psi_i(\\boldsymbol{x}) \\, d\\Omega\n\\]\nThe gradient of \\(\\psi_j\\) on index form is \\[\n(\\nabla \\psi_j)_i = \\frac{\\partial \\psi_j}{ \\partial x_i}\n\\]\nand with transformation to the reference domain (with summation on repeated indices)\n\\[\n\\frac{\\partial \\psi_{q(e, r)}(\\boldsymbol{x})}{\\partial x_i} =\\frac{\\partial \\tilde{\\psi}_r(\\boldsymbol{X})}{\\partial x_i} = \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_j}\\frac{\\partial X_j}{\\partial x_i}\n\\]\nUsing the inverse Jacobian we can write the last term as\n\\[\n\\frac{\\partial \\tilde{\\psi}_r}{\\partial X_j}\\frac{\\partial X_j}{\\partial x_i} = J_{ij}^{-1}  \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_j}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#stiffness-matrix-continued",
+    "href": "fempdes.html#stiffness-matrix-continued",
+    "title": "Solving PDEs with the FEM",
+    "section": "Stiffness matrix continued",
+    "text": "Stiffness matrix continued\nWe can also define this on matrix form using notation\n\\[\n\\nabla  u= \\begin{bmatrix} \\frac{\\partial u}{\\partial x} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial z}\n\\end{bmatrix} \\quad \\text{and} \\quad  \n\\nabla_X  u = \\begin{bmatrix} \\frac{\\partial u}{\\partial X} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Z} \\end{bmatrix}\n\\]\nWe then get\n\\[\n\\nabla \\psi_{q(e, r)} = J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r\n\\]\nand the stiffness matrix\n\\[\n\\boxed{\n\\int_{\\Omega^{(e)}} \\nabla \\psi_{q(e, s)}(\\boldsymbol{x}) \\cdot \\nabla \\psi_{q(e, r)}(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_s(\\boldsymbol{X})\\right) \\cdot \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r(\\boldsymbol{X})\\right) \\, \\text{det}J\\, d\\tilde{\\Omega}}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#greens-first-identity",
+    "href": "fempdes.html#greens-first-identity",
+    "title": "Solving PDEs with the FEM",
+    "section": "Green’s first identity",
+    "text": "Green’s first identity\nIn order to use piecewise linear (P1) elements for Poisson’s equation we need to use the “multidimensional integration by parts”\n\\[\n\\int_{\\Omega} \\nabla^2 u \\,v \\,d\\Omega = -\\int_{\\Omega} \\nabla u \\cdot \\nabla v \\, d \\Omega + \\oint_{\\partial \\Omega} \\nabla u \\cdot \\boldsymbol{n} \\, v \\, d \\sigma,\n\\]\nwhere \\(\\partial \\Omega\\) is the enclosing boundary of the domain \\(\\Omega\\), \\(\\boldsymbol{n}\\) is an outward pointing unit normal vector and \\(d\\sigma\\) is a line element in 2D and a surface element in 3D. With \\(L^2\\) inner product notation:\n\\[\n(\\nabla^2 u, v)_{L^2(\\Omega)} = - (\\nabla u, \\nabla v)_{L^2(\\Omega)} + (\\nabla u \\cdot \\boldsymbol{n}, v)_{L^2(\\partial \\Omega)}.\n\\]\n\n\n\n\n\n\nNote\n\n\nPiecewise linear basis functions have only one nonzero derivative in each direction. So for P1 elements \\((\\nabla^2u, v)=0\\), but \\((\\nabla u, \\nabla v)\\) may be nonzero."
+  },
+  {
+    "objectID": "fempdes.html#mapping-to-reference-domain-omega--1-1",
+    "href": "fempdes.html#mapping-to-reference-domain-omega--1-1",
+    "title": "Solving PDEs with the FEM",
+    "section": "Mapping to reference domain \\(\\Omega = [-1, 1]\\)",
+    "text": "Mapping to reference domain \\(\\Omega = [-1, 1]\\)\nThe finite element stiffness matrix is implemented using a mapping to the reference domain \\(X\\in[-1, 1]\\), and the reference basis functions\n\\[\n\\psi_{q(e, r)}(x) = \\ell_r(X)\n\\]\nwhere the element is \\(\\Omega^{(e)} = [x_L, x_R]\\) and \\(h(e)=x_R-x_L\\), such that\n\\[\nx = \\frac{1}{2}(x_L+x_R) + \\frac{h(e)}{2}X \\quad \\text{and} \\quad\n\\frac{dx}{dX} = \\frac{h(e)}{2}\n\\]\nInserting this into the expression for \\(\\tilde{s}_{rs}\\):\n\\[\n\\begin{align*}\n\\tilde{s}^{(e)}_{rs} &= \\int_{\\Omega^{(e)}} \\frac{d \\psi_{q(e, s)}(x)}{dx} \\frac{d \\psi_{q(e, r)}(x)}{dx} dx, \\\\\n&= \\int_{-1}^1 \\frac{d \\ell_s(X)}{dX} \\frac{dX}{dx} \\frac{d \\ell_r(X)}{dX} \\frac{dX}{dx} \\frac{dx}{dX}dX\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#mapping-to-reference-domain-tildeomega--1-1",
+    "href": "fempdes.html#mapping-to-reference-domain-tildeomega--1-1",
+    "title": "Solving PDEs with the FEM",
+    "section": "Mapping to reference domain \\(\\tilde{\\Omega} = [-1, 1]\\)",
+    "text": "Mapping to reference domain \\(\\tilde{\\Omega} = [-1, 1]\\)\nThe finite element stiffness matrix is implemented using a mapping to the reference domain \\(X\\in[-1, 1]\\), and the reference basis functions\n\\[\n\\psi_{q(e, r)}(x) = \\ell_r(X)\n\\]\nwhere the element is \\(\\Omega^{(e)} = [x_L, x_R]\\) and \\(h(e)=x_R-x_L\\), such that\n\\[\nx = \\frac{1}{2}(x_L+x_R) + \\frac{h(e)}{2}X \\quad \\text{and} \\quad\n\\frac{dx}{dX} = \\frac{h(e)}{2}\n\\]\nInserting this into the expression for \\(\\tilde{s}_{rs}\\):\n\\[\n\\begin{align*}\n\\tilde{s}^{(e)}_{rs} &= \\int_{\\Omega^{(e)}} \\frac{d \\psi_{q(e, s)}(x)}{dx} \\frac{d \\psi_{q(e, r)}(x)}{dx} dx, \\\\\n&= \\int_{-1}^1 \\frac{d \\ell_s(X)}{dX} \\frac{dX}{dx} \\frac{d \\ell_r(X)}{dX} \\frac{dX}{dx} \\frac{dx}{dX}dX\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#implementation-2",
+    "href": "fempdes.html#implementation-2",
+    "title": "Solving PDEs with the FEM",
+    "section": "Implementation",
+    "text": "Implementation\n\n\nFor each triangle in the mesh we have\n\nA local to global map, mapping local element number and node \\(e, r\\) to global nodes \\(q(e, r)\\)\nThe three nodes \\(\\boldsymbol{x}_{q(e, r)}\\) for \\(r=0,1,2\\)\nA coordinate map: \\(\\boldsymbol{x}(\\boldsymbol{X}) = \\sum_{r} \\tilde{\\psi}_r(\\boldsymbol{X}) \\boldsymbol{x}_{q(e, r)}\\), where \\(\\begin{align} \\tilde{\\psi}_0(X, Y) &= 1-X-Y \\\\ \\tilde{\\psi}_1(X, Y) &= X \\\\ \\tilde{\\psi}_2(X, Y) &= Y \\end{align}\\)\n\n\n\n\n\n\n\n\n\n\n\n\n\nFrom this we can easily compute the Jacobian\n\\[\nJ_{ij} = \\frac{\\partial x_j}{\\partial X_i} = \\sum_{r=0}^2 \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_i} (\\boldsymbol{x}_{q(e, r)})_j\\]"
+  },
+  {
+    "objectID": "fempdes.html#for-each-triangle-compute-the-jacobian",
+    "href": "fempdes.html#for-each-triangle-compute-the-jacobian",
+    "title": "Solving PDEs with the FEM",
+    "section": "For each triangle compute the Jacobian",
+    "text": "For each triangle compute the Jacobian\n\\[\nJ_{ij} = \\frac{\\partial x_j}{\\partial X_i} = \\sum_{r=0}^2 \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_i} (\\boldsymbol{x}_{q(e, r)})_j\\]\n\\[\n\\nabla_X \\tilde{\\psi} = \\underbrace{\\begin{bmatrix} \\frac{\\partial \\tilde{\\psi}_0}{\\partial X} & \\frac{\\partial \\tilde{\\psi}_1}{\\partial X} & \\frac{\\partial \\tilde{\\psi}_2}{\\partial X} \\\\[0.1cm]\n\\frac{\\partial \\tilde{\\psi}_0}{\\partial Y} & \\frac{\\partial \\tilde{\\psi}_1}{\\partial Y} & \\frac{\\partial \\tilde{\\psi}_2}{\\partial Y} \\\\[0.1cm] \\end{bmatrix}}_{\\mathbb{R}^{2 \\times 3}} \\quad \\text{and} \\quad \\boldsymbol{x}_{q(e)} = \\underbrace{\\begin{bmatrix} (\\boldsymbol{x}_{q(e, 0)})_0 & (\\boldsymbol{x}_{q(e, 0)})_1 \\\\\n(\\boldsymbol{x}_{q(e, 1)})_0 & (\\boldsymbol{x}_{q(e, 1)})_1 \\\\\n(\\boldsymbol{x}_{q(e, 2)})_0 & (\\boldsymbol{x}_{q(e, 2)})_1\n  \\end{bmatrix}}_{\\mathbb{R}^{3 \\times 2}}\n\\]\nNote that \\(\\tilde{\\psi}_r\\) here are the linear basis functions, such that\n\\[\n\\begin{align} \\tilde{\\psi}_0(X, Y) &= 1-X-Y \\\\ \\tilde{\\psi}_1(X, Y) &= X \\\\ \\tilde{\\psi}_2(X, Y) &= Y \\end{align} \\quad \\rightarrow \\nabla_X \\tilde{\\psi} = \\begin{bmatrix} -1 & 1 & 0 \\\\ -1 & 0 & 1 \\end{bmatrix}\n\\]\n\\[\n\\boxed{J = \\nabla_X \\tilde{\\psi} \\cdot \\boldsymbol{x}_{q(e)} \\in \\mathbb{R}^{2 \\times 2} }\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#implementation-summary",
+    "href": "fempdes.html#implementation-summary",
+    "title": "Solving PDEs with the FEM",
+    "section": "Implementation summary",
+    "text": "Implementation summary\n\nFor each element collect the true coordinates of the nodes \\(\\boldsymbol{x}_{q(e)}\\)\nUse a precomputed matrix \\(\\nabla_X \\tilde{\\psi}\\) and compute the Jacobian \\(J\\)\nCompute the inverse of the Jacobian \\(J^{-1}\\)\nAssemble element matrix, for example stiffness \\[\n\\int_{\\Omega^{(e)}} \\nabla \\psi_{q(e, s)}(\\boldsymbol{x}) \\cdot \\nabla \\psi_{q(e, r)}(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_s(\\boldsymbol{X})\\right) \\cdot \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r(\\boldsymbol{X})\\right) \\, \\text{det}J\\, d\\tilde{\\Omega}\n\\] For piecewise linear elements the integrand is a constant and you only need to compute the area of each cell. For higher order elements the integral requires some work!\nAdd element matrix to global matrix (finite element assembly). For all \\(e\\) and \\(r\\) and \\(s\\) do \\[\na_{q(e, r), q(e, s)} \\mathrel += \\tilde{a}_{rs}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#summary",
+    "href": "fempdes.html#summary",
+    "title": "Solving PDEs with the FEM",
+    "section": "Summary",
+    "text": "Summary\n\nThe finite element method is easily adapted to complex meshes consisting of triangles in 2D or tetrahedra in 3D.\n\n\n\nThe implementation is mapping the true cells to reference triangles or tetrahedra. The mapping involves a Jacobian that is easy to compute from the linear Lagrange basis functions and cell nodes.\nHigher order elements use internal points on each element.\nGreen’s first identity, which is similar to an integration by substitution in multiple dimensions, is used to transform weak variational forms.\nNeumann boundary conditions are implemented directly in the weak form.\nDirichlet boundary conditions are implemented as always by identing rows in the coefficient matrix belonging to a Dirichlet boundary. The procedure eliminates boundary terms from the weak form.\nThere are several good open source finite element solvers out there! (e.g., FEniCS, Elmer, FreeFEM)"
+  },
+  {
+    "objectID": "fempdes.html#example-for-single-triangle",
+    "href": "fempdes.html#example-for-single-triangle",
+    "title": "Solving PDEs with the FEM",
+    "section": "Example for single triangle",
+    "text": "Example for single triangle\n\nxi = np.linspace(0, 1, 3)\nxj, yj = np.meshgrid(xi, xi, indexing='ij')\nnodes = np.array([xj.flatten(), yj.flatten()])\nelements = {\n    0: (0, 4, 1),\n    1: (0, 3, 4),\n    2: (3, 7, 4),\n    3: (3, 6, 7),\n    4: (1, 5, 2),\n    5: (1, 4, 5),\n    6: (4, 8, 5),\n    7: (4, 7, 8)\n}\nxj, yj = xj.flatten(), yj.flatten()"
+  },
+  {
+    "objectID": "fempdes.html#assemble",
+    "href": "fempdes.html#assemble",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assemble",
+    "text": "Assemble\n\nA = np.zeros((9, 9)) \nAe = np.zeros((3, 3))\nfor e, nds in elements.items(): \n    xq = np.take(nodes, nds, axis=1).T\n    J = dpsi @ xq\n    detJ = np.linalg.det(J)\n    Ji = np.linalg.inv(J)\n    for r in range(3):\n        for s in range(3):\n            Ae[r, s] = (Ji @ dpsi[:, r]) @ (Ji @ dpsi[:, s]) * detJ * 0.5\n            A[nds[r], nds[s]] += Ae[r, s]\nA\n\narray([[ 1. , -0.5,  0. , -0.5,  0. ,  0. ,  0. ,  0. ,  0. ],\n       [-0.5,  2. , -0.5,  0. , -1. ,  0. ,  0. ,  0. ,  0. ],\n       [ 0. , -0.5,  1. ,  0. ,  0. , -0.5,  0. ,  0. ,  0. ],\n       [-0.5,  0. ,  0. ,  2. , -1. ,  0. , -0.5,  0. ,  0. ],\n       [ 0. , -1. ,  0. , -1. ,  4. , -1. ,  0. , -1. ,  0. ],\n       [ 0. ,  0. , -0.5,  0. , -1. ,  2. ,  0. ,  0. , -0.5],\n       [ 0. ,  0. ,  0. , -0.5,  0. ,  0. ,  1. , -0.5,  0. ],\n       [ 0. ,  0. ,  0. ,  0. , -1. ,  0. , -0.5,  2. , -0.5],\n       [ 0. ,  0. ,  0. ,  0. ,  0. , -0.5,  0. , -0.5,  1. ]])"
+  },
+  {
+    "objectID": "fempdes.html#assemble-stiffness-matrix",
+    "href": "fempdes.html#assemble-stiffness-matrix",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assemble stiffness matrix",
+    "text": "Assemble stiffness matrix\n\nA = np.zeros((9, 9)) \nAe = np.zeros((3, 3))\ndpsi = np.array([[-1, 1, 0], [-1, 0, 1]])\nfor e, q in elements.items(): \n    xq = np.take(nodes, q, axis=1).T\n    J = dpsi @ xq\n    detJ = np.linalg.det(J)\n    Ji = np.linalg.inv(J)\n    for r in range(3):\n        for s in range(3):\n            Ae[r, s] = (Ji @ dpsi[:, r]) @ (Ji @ dpsi[:, s]) * detJ * 0.5\n            A[q[r], q[s]] += Ae[r, s]\nA\n\narray([[ 1. , -0.5,  0. , -0.5,  0. ,  0. ,  0. ,  0. ,  0. ],\n       [-0.5,  2. , -0.5,  0. , -1. ,  0. ,  0. ,  0. ,  0. ],\n       [ 0. , -0.5,  1. ,  0. ,  0. , -0.5,  0. ,  0. ,  0. ],\n       [-0.5,  0. ,  0. ,  2. , -1. ,  0. , -0.5,  0. ,  0. ],\n       [ 0. , -1. ,  0. , -1. ,  4. , -1. ,  0. , -1. ,  0. ],\n       [ 0. ,  0. , -0.5,  0. , -1. ,  2. ,  0. ,  0. , -0.5],\n       [ 0. ,  0. ,  0. , -0.5,  0. ,  0. ,  1. , -0.5,  0. ],\n       [ 0. ,  0. ,  0. ,  0. , -1. ,  0. , -0.5,  2. , -0.5],\n       [ 0. ,  0. ,  0. ,  0. ,  0. , -0.5,  0. , -0.5,  1. ]])\n\n\n\n\n\n\n\n\nNote\n\n\nA better implementation would use vectorization for the inner \\(r, s\\) loops."
+  },
+  {
+    "objectID": "fempdes.html#example-for-simple-yet-unstructured-mesh",
+    "href": "fempdes.html#example-for-simple-yet-unstructured-mesh",
+    "title": "Solving PDEs with the FEM",
+    "section": "Example for simple, yet unstructured mesh",
+    "text": "Example for simple, yet unstructured mesh\n\nxi = np.linspace(0, 1, 3)\nxj, yj = np.meshgrid(xi, xi, indexing='ij')\nnodes = np.array([xj.flatten(), yj.flatten()])\nelements = {\n    0: (0, 4, 1),\n    1: (0, 3, 4),\n    2: (3, 7, 4),\n    3: (3, 6, 7),\n    4: (1, 5, 2),\n    5: (1, 4, 5),\n    6: (4, 8, 5),\n    7: (4, 7, 8)\n}\nxj, yj = xj.flatten(), yj.flatten()"
+  },
+  {
+    "objectID": "fempdes.html#assembly-incorporating-dirichlet",
+    "href": "fempdes.html#assembly-incorporating-dirichlet",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assembly incorporating Dirichlet",
+    "text": "Assembly incorporating Dirichlet\n\\[\n\\sum_{j=0}^N(\\psi'_j, \\psi'_i) \\hat{u}_j = -(f, \\psi_i), \\quad i=1, 2, \\ldots, N-1\n\\]\n\\[\n\\hat{u}_0=a \\text{ and } \\hat{u}_N=b\n\\]\nMatrix form, using \\(s_{ij} = (\\psi'_j, \\psi'_i)\\) and \\(f_i = (f, \\psi_i)\\):\n\\[\n\\begin{bmatrix}\n1 & 0 & 0 & \\cdots & 0 \\\\\ns_{10} & s_{11}& s_{12} & \\cdots & s_{1N} \\\\\n\\vdots & \\vdots & \\vdots & \\ddots & \\cdots \\\\\ns_{N-1, 0} & s_{N-1, 1}& s_{N-1, 2}& \\cdots & s_{N-1,N} \\\\\n0 & \\cdots & 0 & 0 & 1\n\\end{bmatrix}\n\\begin{bmatrix}\n\\hat{u}_0 \\\\\n\\hat{u}_1 \\\\\n\\vdots \\\\\n\\hat{u}_{N-1} \\\\\n\\hat{u}_N\n\\end{bmatrix}\n=\n\\begin{bmatrix}\na \\\\\n-f_1 \\\\\n\\vdots \\\\\n-f_{N-1} \\\\\nb\n\\end{bmatrix}\n\\]\nNote the idented first and last row due to bcs. Also, most of the \\(s_{ij}\\) items will be zero since the basis functions are local."
+  },
+  {
+    "objectID": "fempdes.html#sympy-implementation-of-generic-element-matrix",
+    "href": "fempdes.html#sympy-implementation-of-generic-element-matrix",
+    "title": "Solving PDEs with the FEM",
+    "section": "Sympy implementation of generic element matrix",
+    "text": "Sympy implementation of generic element matrix\nUsing uniform nodes\n\\[\nX_j = -1 + \\frac{2j}{d}, \\quad j=0,1,\\ldots, d\n\\]\n\nXj = lambda d: np.array([sp.Rational(2*i, d) for i in np.arange(d+1)])-1 \nqe = lambda l, r, s, m, n: sp.integrate(l[r].diff(x, m)*l[s].diff(x, n), (x, -1, 1))\ndef Qe(d=1, m=0, n=0):\n    A = np.zeros((d+1, d+1), dtype=object)\n    l = Lagrangebasis(Xj(d))\n    for r in range(d+1):\n        for s in range(d+1):\n            A[r, s] = qe(l, r, s, m, n)\n    return (h/2)**(1-m-n)*sp.Matrix(A)\n\n\n\n\nQe(2, 1, 1) \n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{7}{3 h} & - \\frac{8}{3 h} & \\frac{1}{3 h}\\\\- \\frac{8}{3 h} & \\frac{16}{3 h} & - \\frac{8}{3 h}\\\\\\frac{1}{3 h} & - \\frac{8}{3 h} & \\frac{7}{3 h}\\end{matrix}\\right]\\)\n\n\n\n\nQe(3, 2, 2) \n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{81}{h^{3}} & - \\frac{405}{2 h^{3}} & \\frac{162}{h^{3}} & - \\frac{81}{2 h^{3}}\\\\- \\frac{405}{2 h^{3}} & \\frac{567}{h^{3}} & - \\frac{1053}{2 h^{3}} & \\frac{162}{h^{3}}\\\\\\frac{162}{h^{3}} & - \\frac{1053}{2 h^{3}} & \\frac{567}{h^{3}} & - \\frac{405}{2 h^{3}}\\\\- \\frac{81}{2 h^{3}} & \\frac{162}{h^{3}} & - \\frac{405}{2 h^{3}} & \\frac{81}{h^{3}}\\end{matrix}\\right]\\)"
   }
 ]
