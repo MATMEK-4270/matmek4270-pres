@@ -3924,7 +3924,7 @@
     "href": "fempdes.html#solving-pdes-with-the-finite-element-method",
     "title": "Solving PDEs with the FEM",
     "section": "Solving PDEs with the finite element method",
-    "text": "Solving PDEs with the finite element method\nThe procedure for solving differential equations with the finite element method is much the same as for global basis functions. However\n\nBasis functions \\(\\psi_j(x)\\) are local \\[\nu_N(x) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x)\n\\]\n\n\n\nWe always use reference elements (triangles, tetrahedra)\nMatrices and vectors are assembled elementwise \\[\na_{ij} = (\\psi_j, \\psi_i) = \\sum_{e=0}^{N_e-1} \\int_{\\Omega^{(e)}} \\psi_j \\psi_i d\\Omega = \\sum_{e=0}^{N_e-1} A_e\n\\]\nIt is very common to use Lagrange polynomials for basis functions\nPDEs are normally not solved using tensor products in multiple dimensions"
+    "text": "Solving PDEs with the finite element method\nThe procedure for solving differential equations with the finite element method is much the same as for global basis functions. However\n\nBasis functions \\(\\psi_j(x)\\) are local \\[\nu_N(x) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x)\n\\]\n\n\n\nWe always use reference elements (lines, triangles, tetrahedra)\nMatrices and vectors are assembled elementwise \\[\na_{ij} = (\\psi_j, \\psi_i) = \\sum_{e=0}^{N_e-1} \\int_{\\Omega^{(e)}} \\psi_j \\psi_i d\\Omega = \\sum_{e=0}^{N_e-1} A_e\n\\]\nIt is very common to use Lagrange polynomials for basis functions\nPDEs are normally not solved using tensor products in multiple dimensions"
   },
   {
     "objectID": "fempdes.html#section",
