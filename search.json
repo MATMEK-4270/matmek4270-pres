@@ -1572,7 +1572,7 @@
     "href": "index.html",
     "title": "Presentations for MATMEK-4270",
     "section": "",
-    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions\nLecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions\nLecture 10 - Function approximation by the finite element method\nLecture 11 - Solving PDEs with the method of weighted residuals\nLecture 12 - Solving PDEs with the FEM"
+    "text": "Lecture 1 - Algorithms and implementations for exponential decay models\nLecture 2 - Analysis of exponential decay models\nLecture 3 - A simple vibration problem\nLecture 4 - The finite difference method\nLecture 5 - Finite difference methods for the wave equation\nLecture 7 - Postprocessing and interpolation\nLecture 8 - Function approximation with global functions\nLecture 9 - Function approximation with Chebyshev polynomials and in 2 dimensions\nLecture 10 - Function approximation by the finite element method\nLecture 11 - Solving PDEs with the method of weighted residuals\nLecture 12 - Solving PDEs with the FEM\nLecture 13 - Time-dependent variational methods"
   },
   {
     "objectID": "wave.html#the-finite-difference-stencil-makes-use-of-5-neighboring-points-1",
@@ -4247,5 +4247,390 @@
     "title": "Solving PDEs with the FEM",
     "section": "Sympy implementation of generic element matrix",
     "text": "Sympy implementation of generic element matrix\nUsing uniform nodes\n\\[\nX_j = -1 + \\frac{2j}{d}, \\quad j=0,1,\\ldots, d\n\\]\n\nXj = lambda d: np.array([sp.Rational(2*i, d) for i in np.arange(d+1)])-1 \nqe = lambda l, r, s, m, n: sp.integrate(l[r].diff(x, m)*l[s].diff(x, n), (x, -1, 1))\ndef Qe(d=1, m=0, n=0):\n    A = np.zeros((d+1, d+1), dtype=object)\n    l = Lagrangebasis(Xj(d))\n    for r in range(d+1):\n        for s in range(d+1):\n            A[r, s] = qe(l, r, s, m, n)\n    return (h/2)**(1-m-n)*sp.Matrix(A)\n\n\n\n\nQe(2, 1, 1) \n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{7}{3 h} & - \\frac{8}{3 h} & \\frac{1}{3 h}\\\\- \\frac{8}{3 h} & \\frac{16}{3 h} & - \\frac{8}{3 h}\\\\\\frac{1}{3 h} & - \\frac{8}{3 h} & \\frac{7}{3 h}\\end{matrix}\\right]\\)\n\n\n\n\nQe(3, 2, 2) \n\n\\(\\displaystyle \\left[\\begin{matrix}\\frac{81}{h^{3}} & - \\frac{405}{2 h^{3}} & \\frac{162}{h^{3}} & - \\frac{81}{2 h^{3}}\\\\- \\frac{405}{2 h^{3}} & \\frac{567}{h^{3}} & - \\frac{1053}{2 h^{3}} & \\frac{162}{h^{3}}\\\\\\frac{162}{h^{3}} & - \\frac{1053}{2 h^{3}} & \\frac{567}{h^{3}} & - \\frac{405}{2 h^{3}}\\\\- \\frac{81}{2 h^{3}} & \\frac{162}{h^{3}} & - \\frac{405}{2 h^{3}} & \\frac{81}{h^{3}}\\end{matrix}\\right]\\)"
+  },
+  {
+    "objectID": "timevar.html#time-dependent-variational-forms",
+    "href": "timevar.html#time-dependent-variational-forms",
+    "title": "Time-dependent variational methods",
+    "section": "Time dependent variational forms",
+    "text": "Time dependent variational forms\nIn lectures 11-12 we have considered steady equations like\n\\[\n\\mathcal{L}(u) = f\n\\]\nfor a variety of operators \\(\\mathcal{L}\\) and a numerical solution depending only on space \\(u_N(\\boldsymbol{x})\\).\nIn this lecture we will add consider two types of time-dependency\n\\[\n\\begin{align}\n\\frac{\\partial u}{\\partial t} + \\mathcal{L}(u) &=  f \\\\\n\\frac{\\partial^2 u}{\\partial t^2} + \\mathcal{L}(u) &= f\n\\end{align}\n\\]\nand approximations \\(u_N(\\boldsymbol{x}, t) \\in V_N = \\text{span}\\{\\psi_j\\}_{j=0}^N\\):\n\\[\nu_N(\\boldsymbol{x}, t) = \\sum_{j=0}^N \\hat{u}_j(t) \\psi_j(\\boldsymbol{x})\n\\]\nwhere the expansion coefficients are time dependent."
+  },
+  {
+    "objectID": "timevar.html#finite-difference-in-time-galerkin-in-space",
+    "href": "timevar.html#finite-difference-in-time-galerkin-in-space",
+    "title": "Time-dependent variational methods",
+    "section": "Finite difference in time, Galerkin in space",
+    "text": "Finite difference in time, Galerkin in space\nConsider the equation\n\\[\n\\frac{\\partial u}{\\partial t} + \\mathcal{L}(u) = f\n\\]\nA finite difference approximation in time, with forward Euler:\n\\[\n\\frac{u^{n+1}-u^n}{\\Delta t} + \\mathcal{L}(u^n) = f^n\n\\]\nwhere\n\\[\nu^n(\\boldsymbol{x}) = u(\\boldsymbol{x}, t_n), f^n(\\boldsymbol{x}) = f(\\boldsymbol{x}, t_n)\n\\]\nand time is discretized as always for time domain \\([0, T]\\)\n\\[\nt_n = n \\Delta t, \\quad n=0,1, \\ldots, N_t, \\quad N_t=T/\\Delta t\n\\]\n\n\n\n\n\n\nNote\n\n\nWe normally drop the spatial dependence and write only \\(u^n\\) or \\(f^n\\)."
+  },
+  {
+    "objectID": "timevar.html#the-residual",
+    "href": "timevar.html#the-residual",
+    "title": "Time-dependent variational methods",
+    "section": "The residual",
+    "text": "The residual\nDefine a residual as\n\\[\n\\mathcal{R}(u^{n+1}; u^n) = \\frac{u^{n+1}-u^n}{\\Delta t} - \\mathcal{L}(u^n) - f^n\n\\]\n\n\n\n\n\n\nNote\n\n\nThe notation \\(\\mathcal{R}(u^{n+1}; u^n)\\) is used to indicate that \\(u^{n+1}\\) is the unknown and \\(u^n\\) (right of the semicolon) is known.\n\n\n\nIntroduce the approximation to \\(u^n=u(\\boldsymbol{x}, t_n)\\)\n\\[\nu(\\boldsymbol{x}, t_n) \\approx u^{n}_N = \\sum_{j=0}^N \\hat{u}^{n}_j \\psi_j(\\boldsymbol{x})\n\\]\nInsert into the residual to get\n\\[\n\\mathcal{R}_N = \\mathcal{R}(u^{n+1}_N; u^{n}_N) = \\frac{u_N^{n+1}-u_N^n}{\\Delta t} - \\mathcal{L}(u_N^n) - f^n\n\\]"
+  },
+  {
+    "objectID": "timevar.html#the-residual-is-now-a-function-of-time",
+    "href": "timevar.html#the-residual-is-now-a-function-of-time",
+    "title": "Time-dependent variational methods",
+    "section": "The residual is now a function of time",
+    "text": "The residual is now a function of time\n\\[\n\\mathcal{R}(u^{n+1}; u^n) = \\frac{u^{n+1}-u^n}{\\Delta t} + \\mathcal{L}(u^n) - f^n\n\\]\n\n\n\n\n\n\nNote\n\n\nThe notation \\(\\mathcal{R}(u^{n+1}; u^n)\\) is used to indicate that \\(u^{n+1}\\) is the unknown and \\(u^n\\) (right of the semicolon) is known.\n\n\n\nIntroduce the approximation to \\(u^n(\\boldsymbol{x})=u(\\boldsymbol{x}, t_n)\\)\n\\[\nu(\\boldsymbol{x}, t_n) \\approx u^{n}_N(\\boldsymbol{x}) = \\sum_{j=0}^N \\hat{u}^{n}_j \\psi_j(\\boldsymbol{x})\n\\]\nwhere \\(\\hat{u}^n_j = \\hat{u}_j(t_n)\\) are the time dependent expansion coefficients (the unknowns at time \\(t_n\\)). Insert into the residual to get the numerical residual\n\\[\n\\mathcal{R}_N = \\mathcal{R}(u^{n+1}_N; u^{n}_N) = \\frac{u_N^{n+1}-u_N^n}{\\Delta t} + \\mathcal{L}(u_N^n) - f^n\n\\]"
+  },
+  {
+    "objectID": "timevar.html#the-method-of-weighted-residuals",
+    "href": "timevar.html#the-method-of-weighted-residuals",
+    "title": "Time-dependent variational methods",
+    "section": "The method of weighted residuals",
+    "text": "The method of weighted residuals\nThe method of weighted residuals is to find \\(u^{n+1}_N \\in V_N\\) such that\n\\[\n(\\mathcal{R}_N, v) = 0, \\quad \\forall \\, v \\in W\n\\]\nand for the Galerkin method \\(W = V_N\\).\n\nIn order to solve the time-dependent problem we need to solve this Galerkin problem many times. The procedure is\n\nInitialize \\(u_N^0(\\boldsymbol{x})\\) by projecting the given initial condition \\(u(\\boldsymbol{x}, 0)\\) to \\(V_N\\) (function approximation, see lectures 8, 9). That is, find \\(u^0_N \\in V_N\\) such that \\[\n(u^0_N-u(\\boldsymbol{x}, 0), v)=0, \\quad \\forall \\, v \\in V_N\n\\]\nFor \\(n = 0, 1, \\ldots, N_t-1\\) find \\(u^{n+1}_N \\in V_N\\) such that\n\n\\[\n(\\mathcal{R}_N, v) = 0, \\quad \\forall \\, v \\in V_N\n\\]"
+  },
+  {
+    "objectID": "timevar.html#recap",
+    "href": "timevar.html#recap",
+    "title": "Time-dependent variational methods",
+    "section": "Recap",
+    "text": "Recap\nRemember the early lectures 2, 3 and 5\n\\[\n\\text{Exponential decay}\\quad\\frac{\\partial u(t)}{\\partial t} = -a u(t)\n\\]\n\\[\n\\text{Vibration equation} \\quad \\frac{\\partial^2 u(t)}{\\partial t^2} + \\omega^2 u(t) = 0\n\\]\n\\[\n\\text{Wave equation} \\quad \\frac{\\partial^2 u(x, t)}{\\partial t^2} = c^2\\frac{\\partial^2 u(x, t)}{\\partial x^2}\n\\]\nIn order to study stability we introduced the ansatz\n\\[\nu^{n+1} = g u^{n} \\rightarrow u^{n} = g^n u^0\n\\]\ninto the discretized equations. For stability we required \\(|g| \\le 1\\).\n\n\n\n\n\n\nWe actually called the amplification factor \\(A\\), but since then we have started using matrices that we rather have as \\(A\\). Hence the amplification factor is now called \\(g\\)."
+  },
+  {
+    "objectID": "timevar.html#stability-of-the-diffusion-equation",
+    "href": "timevar.html#stability-of-the-diffusion-equation",
+    "title": "Time-dependent variational methods",
+    "section": "Stability of the diffusion equation",
+    "text": "Stability of the diffusion equation\n\\[\n\\frac{\\partial u(x, t)}{\\partial t} = \\frac{\\partial^2 u(x, t)}{\\partial x^2}\n\\]\nConsider the stability of a forward Euler method using finite differences\n\\[\nu_j^{n+1} - u_j^n = \\frac{\\Delta t}{\\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})\n\\]\nwhere \\(u^n_j = u(j\\Delta x, n\\Delta t)\\) and \\(x_j=j\\Delta x\\) and \\(t_n=n\\Delta t\\). Assume that\n\\[\nu^{n+1}_j = g u^{n}_j \\rightarrow u^{n}_j = g^n u^0_j\n\\]\nand let the initial condition be a periodic Fourier wave with wavenumber \\(k\\)\n\\[\nu^0_j = e^{\\hat{\\imath}k x_j}\n\\]\nwhere \\(\\hat{\\imath}=\\sqrt{-1}\\)."
+  },
+  {
+    "objectID": "timevar.html#write-the-equation-in-matrix-form",
+    "href": "timevar.html#write-the-equation-in-matrix-form",
+    "title": "Time-dependent variational methods",
+    "section": "Write the equation in matrix form",
+    "text": "Write the equation in matrix form\n\\[\nu_j^{n+1} - u_j^n = \\frac{\\Delta t}{\\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})\n\\]\n\\[\n\\boldsymbol{u}^n = (u^n_j)_{j=0}^N\n\\]\n\\[\n\\boldsymbol{u}^{n+1}-\\boldsymbol{u}^n = \\frac{\\Delta t}{\\Delta x^2}\\tilde{D}^{(2)} \\boldsymbol{u}^n\n\\]\n\\[\nD^{(2)} = \\frac{1}{\\Delta x^2} \\tilde{D}^{(2)} = \\frac{1}{\\Delta x^2} \\underbrace{\\begin{bmatrix}\n-2 & 1 & 0 & 0  & 0 & 0 & 0 & 1  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & 0 \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & 0 \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n0 & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n0 & 0 & 0& 0& 0& 1& -2& 1 \\\\\n1 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\\\\n\\end{bmatrix}}_{\\tilde{D}^{(2)}}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#find-the-amplification-factor",
+    "href": "timevar.html#find-the-amplification-factor",
+    "title": "Time-dependent variational methods",
+    "section": "Find the amplification factor",
+    "text": "Find the amplification factor\n\\[\n\\boldsymbol{u}^{n+1}-\\boldsymbol{u}^n = \\frac{\\Delta t}{\\Delta x^2}\\tilde{D}^{(2)} \\boldsymbol{u}^n\n\\]\nInsert for ansatz \\(\\boldsymbol{u}^n = g^n \\boldsymbol{u}^0\\)\n\\[\n(g-1)\\boldsymbol{u}^0 = \\frac{\\Delta t}{\\Delta x^2} \\tilde{D}^{(2)} \\boldsymbol{u}^0\n\\]\nInserting for \\({u}_j^0=e^{ik j \\Delta x}\\) we get\n\\[\n(g-1)e^{ikj \\Delta x} = \\frac{\\Delta t}{\\Delta x^2} (e^{ik(j+1)\\Delta x} - 2e^{ikj\\Delta x} + e^{ik(j-1)\\Delta x})\n\\]\nDivide by \\(e^{ikj\\Delta x}\\) to obtain\n\\[\ng-1 = \\frac{\\Delta t}{\\Delta x^2} (e^{ik\\Delta x} - 2 + e^{-ik\\Delta x})\n\\]"
+  },
+  {
+    "objectID": "timevar.html#section",
+    "href": "timevar.html#section",
+    "title": "Time-dependent variational methods",
+    "section": "",
+    "text": "sol = Wave(40, L0=2, c0=1, u0=sp.exp(-50*(x-L/2+c*t)**2))\ndt = 1/sol.c*np.sqrt(4/max(sol.get_eigenvalues()))\ndata = sol(400, dt=dt, save_step=40)\nplot_with_offset(data, sol.V.mesh(), figsize=(4, 2))\n\n\n\n\n\n\n\n\n\ndt = 1/sol.c*np.sqrt(4.01/max(sol.get_eigenvalues()))\ndata = sol(400, dt=dt, save_step=40)\nplot_with_offset(data, sol.V.mesh(), figsize=(4, 2))"
+  },
+  {
+    "objectID": "timevar.html#more-work-to-find-g",
+    "href": "timevar.html#more-work-to-find-g",
+    "title": "Time-dependent variational methods",
+    "section": "More work to find \\(g\\)",
+    "text": "More work to find \\(g\\)\nUse \\(e^{ix}+e^{-ix} = 2 \\cos x\\), \\(\\cos(2x) = \\cos^2 x - \\sin^2 x\\) and \\(1=\\cos^2x+\\sin^2x\\)\n\\[\ng = 1 - \\frac{4 \\Delta t}{\\Delta x^2}\\sin^2\\left(\\frac{k\\Delta x}{2}\\right)\n\\]\nWe still want \\(|g|\\le 1\\), so we need\n\\[\n|1 - \\frac{4 \\Delta t}{\\Delta x^2}\\sin^2\\left(\\frac{k\\Delta x}{2}\\right)| \\le 1\n\\]\nand since \\(\\sin^2\\left(k \\Delta x/2\\right) \\le 1\\) and positive, we get that \\(1- \\frac{4 \\Delta t}{\\Delta x^2}\\) is always less than 1. However, \\(1- \\frac{4 \\Delta t}{\\Delta x^2}\\) can be smaller than \\(-1\\), and that gives us the limit\n\\[\n1- \\frac{4 \\Delta t}{\\Delta x^2} \\ge -1,\n\\]"
+  },
+  {
+    "objectID": "timevar.html#more-work-to-simplify-small-g-1-fracdelta-tdelta-x2-eikdelta-x---2-e-ikdelta-x",
+    "href": "timevar.html#more-work-to-simplify-small-g-1-fracdelta-tdelta-x2-eikdelta-x---2-e-ikdelta-x",
+    "title": "Time-dependent variational methods",
+    "section": "More work to simplify \\(\\small g-1 = \\frac{\\Delta t}{\\Delta x^2} (e^{ik\\Delta x} - 2 + e^{-ik\\Delta x})\\)",
+    "text": "More work to simplify \\(\\small g-1 = \\frac{\\Delta t}{\\Delta x^2} (e^{ik\\Delta x} - 2 + e^{-ik\\Delta x})\\)\nUse \\(e^{ix}+e^{-ix} = 2 \\cos x\\), \\(\\cos(2x) = \\cos^2 x - \\sin^2 x\\) and \\(1=\\cos^2x+\\sin^2x\\)\n\\[\ng = 1 - \\frac{4 \\Delta t}{\\Delta x^2}\\sin^2\\left(\\frac{k\\Delta x}{2}\\right)\n\\]\nWe still want \\(|g|\\le 1\\), so we need\n\\[\n|1 - \\frac{4 \\Delta t}{\\Delta x^2}\\sin^2\\left(\\frac{k\\Delta x}{2}\\right)| \\le 1\n\\]\nand since \\(\\sin^2\\left(k \\Delta x/2\\right) \\le 1\\) and positive, we get that \\(1- \\frac{4 \\Delta t}{\\Delta x^2}\\) is always less than 1. However, \\(1- \\frac{4 \\Delta t}{\\Delta x^2}\\) can be smaller than \\(-1\\), and that gives us the limit\n\\[\n1- \\frac{4 \\Delta t}{\\Delta x^2} \\ge -1,\n\\]"
+  },
+  {
+    "objectID": "timevar.html#simplify-small-g-1-fracdelta-tdelta-x2-eikdelta-x---2-e-ikdelta-x",
+    "href": "timevar.html#simplify-small-g-1-fracdelta-tdelta-x2-eikdelta-x---2-e-ikdelta-x",
+    "title": "Time-dependent variational methods",
+    "section": "Simplify \\(\\small g-1 = \\frac{\\Delta t}{\\Delta x^2} (e^{ik\\Delta x} - 2 + e^{-ik\\Delta x})\\)",
+    "text": "Simplify \\(\\small g-1 = \\frac{\\Delta t}{\\Delta x^2} (e^{ik\\Delta x} - 2 + e^{-ik\\Delta x})\\)\nUse \\(e^{ix}+e^{-ix} = 2 \\cos x\\), \\(\\cos(2x) = \\cos^2 x - \\sin^2 x\\) and \\(1=\\cos^2x+\\sin^2x\\)\n\\[\ng = 1 - \\frac{4 \\Delta t}{\\Delta x^2}\\sin^2\\left(\\frac{k\\Delta x}{2}\\right)\n\\]\n\nWe want \\(|g|\\le 1\\), so we need\n\\[\n\\Big|1 - \\frac{4 \\Delta t}{\\Delta x^2}\\sin^2\\left(\\frac{k\\Delta x}{2}\\right)\\Big| \\le 1\n\\]\n\n\nSince \\(\\sin^2\\left(k \\Delta x/2\\right) \\le 1\\) and positive, we get that \\(1- \\frac{4 \\Delta t}{\\Delta x^2}\\) is always less than 1. However, \\(1- \\frac{4 \\Delta t}{\\Delta x^2}\\) can be smaller than \\(-1\\), and that gives us the stability limit\n\\[\n1- \\frac{4 \\Delta t}{\\Delta x^2} \\ge -1 \\Rightarrow \\boxed{\\Delta t \\le \\frac{\\Delta x^2}{2}}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#a-lot-of-hard-work-to-find",
+    "href": "timevar.html#a-lot-of-hard-work-to-find",
+    "title": "Time-dependent variational methods",
+    "section": "A lot of hard work to find",
+    "text": "A lot of hard work to find\n\\[\n\\left|1- \\frac{4 \\Delta t}{\\Delta x^2} \\right| \\le 1 \\Rightarrow \\Delta t \\le \\frac{\\Delta x^2}{2}\n\\]\nCan we find an easier approach?\n\nWe have the simple looking formula\n\\[\n(g-1)\\boldsymbol{u}^0 = \\frac{\\Delta t}{\\Delta x^2} \\tilde{D}^{(2)} \\boldsymbol{u}^0\n\\]\nBut we cannot eliminate the two \\(\\boldsymbol{u}^0\\) terms on each side because of the matrix \\(\\tilde{D}^{(2)}\\)!\n\n\nEigenvalues! The eigenvalues \\(\\lambda\\) of a matrix \\(A\\) with associated eigenvectors \\(\\boldsymbol{x}\\) are\n\\[\nA  \\boldsymbol{x} = \\lambda \\boldsymbol{x}\n\\]\nHence the simplification\n\\[\n\\tilde{D}^{(2)} \\boldsymbol{u}^0 = \\lambda \\boldsymbol{u}^0 \\Rightarrow (g-1)\\boldsymbol{u}^0 = \\frac{\\Delta t}{\\Delta x^2} \\lambda \\boldsymbol{u}^0 \\Rightarrow g=1+\\frac{\\lambda \\Delta t}{\\Delta x^2}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#compute-stability-limit-through-eigenvalues",
+    "href": "timevar.html#compute-stability-limit-through-eigenvalues",
+    "title": "Time-dependent variational methods",
+    "section": "Compute stability limit through eigenvalues",
+    "text": "Compute stability limit through eigenvalues\nAssume the ansatz \\(\\boldsymbol{u}^n=g^n\\boldsymbol{u}^0\\): \\[\n(g-1)\\boldsymbol{u}^0 = \\frac{\\Delta t}{\\Delta x^2} \\tilde{D}^{(2)} \\boldsymbol{u}^0\n\\]\nInsert for \\(\\tilde{D}^{(2)}\\boldsymbol{u}^0 = \\lambda \\boldsymbol{u}^0\\) to get\n\\[\ng=1+\\frac{\\lambda \\Delta t}{ \\Delta x^2}\n\\]\nTo satisfy \\(|g| \\le 1\\)\n\\[\n|g|=|1+\\frac{\\lambda \\Delta t}{ \\Delta x^2}| \\le 1\n\\]\nBut we need to compute the eigenvalues.."
+  },
+  {
+    "objectID": "timevar.html#compute-eigenvalues",
+    "href": "timevar.html#compute-eigenvalues",
+    "title": "Time-dependent variational methods",
+    "section": "Compute eigenvalues",
+    "text": "Compute eigenvalues\n\nimport numpy as np\nfrom scipy import sparse\nN = 11\nD2 = sparse.diags((1, 1, -2, 1, 1), (-N, -1, 0, 1, N), shape=(N+1, N+1))\nLambda = np.linalg.eig(D2.toarray())[0]\nLambda\n\narray([-4.00000000e+00, -3.73205081e+00, -3.00000000e+00, -2.00000000e+00,\n       -1.00000000e+00, -4.53075522e-16, -2.67949192e-01, -2.67949192e-01,\n       -1.00000000e+00, -3.73205081e+00, -2.00000000e+00, -3.00000000e+00])\n\n\nThe minimum eigenvalue is -4 (worst case). Hence we obtain again exactly the same limit\n\\[\n|1+\\frac{\\lambda \\Delta t}{ \\Delta x^2}|\\le 1 \\Rightarrow |1-\\frac{4 \\Delta t}{ \\Delta x^2}| \\le 1 \\Rightarrow \\Delta t \\le \\frac{\\Delta x^2}{2}\n\\]\nBut with a lot less work!\n\n\n\n\n\n\nNote\n\n\nThe complex exponentials \\(e^{\\hat{\\imath} k x}\\) are eigenfunctions of the Laplace operator in 1D, so we actually used eigenvalue theory also for the hard approach, we just did not mention it!"
+  },
+  {
+    "objectID": "timevar.html#stability-of-the-forward-euler-method-for-variational-forms",
+    "href": "timevar.html#stability-of-the-forward-euler-method-for-variational-forms",
+    "title": "Time-dependent variational methods",
+    "section": "Stability of the forward Euler method for variational forms",
+    "text": "Stability of the forward Euler method for variational forms\nFor the forward Euler method we now consider the discretized Galerkin equation\n\\[\n\\left(u^{n+1}_N, v\\right) = \\left(u^{n}_N, v\\right) + \\Delta t \\left(\\mathcal{L}(u^n_N), v\\right)\n\\]\nand make the same ansatz as before\n\\[\nu_N^{n+1} = g u_N^n \\quad \\text{and thus} \\quad u^{n}_N = g^n u^0_N\n\\]\n\nInsert into the variational form\n\\[\n\\left(g^{n+1}u^{0}_N, v\\right) = \\left(g^n u^{0}_N, v\\right) + \\Delta t \\left(\\mathcal{L}(g^n u^0_N), v\\right)\n\\]\nDivide by \\(g^n\\) (\\(g\\) is not dependent on \\(x\\)) to obtain\n\\[\ng \\left(u^{0}_N, v\\right) = \\left(u^{0}_N, v\\right) + \\Delta t \\left(\\mathcal{L}(u^0_N), v\\right)\n\\]"
+  },
+  {
+    "objectID": "timevar.html#obtain-the-linear-algebra-form",
+    "href": "timevar.html#obtain-the-linear-algebra-form",
+    "title": "Time-dependent variational methods",
+    "section": "Obtain the linear algebra form",
+    "text": "Obtain the linear algebra form\nInsert for \\(u^0_N = \\sum_{j=0}^N \\hat{u}^0_j \\psi_j\\) and \\(v=\\psi_i\\) to obtain\n\\[\ng \\sum_{j=0}^N \\left(\\psi_j, \\psi_i \\right) \\hat{u}^0_j = \\sum_{j=0}^N \\left(\\psi_j, \\psi_i\\right)\\hat{u}^0_j + \\Delta t \\sum_{j=0}^N\\left(\\mathcal{L}(\\psi_j), \\psi_i\\right) \\hat{u}^0_j\n\\]"
+  },
+  {
+    "objectID": "timevar.html#derive-the-linear-algebra-form",
+    "href": "timevar.html#derive-the-linear-algebra-form",
+    "title": "Time-dependent variational methods",
+    "section": "Derive the linear algebra form",
+    "text": "Derive the linear algebra form\nInsert for \\(u^0_N = \\sum_{j=0}^N \\hat{u}^0_j \\psi_j\\) and \\(v=\\psi_i\\) to obtain\n\\[\ng \\sum_{j=0}^N \\left(\\psi_j, \\psi_i \\right) \\hat{u}^0_j = \\sum_{j=0}^N \\left(\\psi_j, \\psi_i\\right)\\hat{u}^0_j + \\Delta t \\sum_{j=0}^N\\left(\\mathcal{L}(\\psi_j), \\psi_i\\right) \\hat{u}^0_j\n\\]\nIn matrix form this is\n\\[\ng A \\boldsymbol{\\hat{u}}^0 = A \\boldsymbol{\\hat{u}}^0 + \\Delta t M \\boldsymbol{\\hat{u}}^0\n\\]\nwhere \\(a_{ij}=(\\psi_j, \\psi_i)\\) and \\(m_{ij} = \\left( \\mathcal{L}(\\psi_j), \\psi_i\\right)\\). Multiply from the left by \\(A^{-1}\\) to obtain\n\\[\ng \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0 + \\Delta t A^{-1}M \\boldsymbol{\\hat{u}}^0\n\\]\n\nCompute the eigenvalues \\(\\lambda\\) of the matrix \\(H = A^{-1}M\\) such that \\(H \\boldsymbol{\\hat{u}}^0 = \\lambda \\boldsymbol{\\hat{u}}^0\\) and\n\\[\ng \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0 + \\lambda \\Delta t \\boldsymbol{\\hat{u}}^0 \\Rightarrow \\boxed{g = 1 + \\lambda \\Delta t}\n\\]\n\\[\n\\text{Stability limit:}\\quad |g| = |1+\\lambda \\Delta t| \\le 1\n\\]"
+  },
+  {
+    "objectID": "timevar.html#complete-worked-example",
+    "href": "timevar.html#complete-worked-example",
+    "title": "Time-dependent variational methods",
+    "section": "Complete worked example",
+    "text": "Complete worked example\n\\[\n\\frac{\\partial u}{\\partial t} = \\frac{\\partial^2 u}{\\partial x^2}, \\quad x, t \\in (0, L) \\times (0, T]\n\\]\n\\[\n\\begin{align}\nu(x, 0) &= p(x)=\\cos(\\pi x /L) + \\cos(10 \\pi x/L) \\\\\nu(0, t) &= p(0), u(L, t) = p(L)\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#complete-worked-example-the-diffusion-equation",
+    "href": "timevar.html#complete-worked-example-the-diffusion-equation",
+    "title": "Time-dependent variational methods",
+    "section": "Complete worked example, the diffusion equation",
+    "text": "Complete worked example, the diffusion equation\n\\[\n\\frac{\\partial u}{\\partial t} = \\frac{\\partial^2 u}{\\partial x^2}, \\quad x, t \\in (0, L) \\times (0, T]\n\\]\n\\[\n\\begin{align}\nu(x, 0) &= p(x)=\\sin(\\pi x /L) + \\sin(10 \\pi x/L) \\\\\nu(0, t) &= 0, u(L, t) = 0\n\\end{align}\n\\]\nForward Euler in time, Galerkin in space, and Dirichlet Legendre polynomials:\n\\[\n\\begin{matrix}\n\\text{Basis:}\\,\\, & \\psi_j(x) = P_j(X)-P_{j+2}(X) & V_N = \\text{span}\\{\\psi_j\\}_{j=0}^N \\\\\n\\text{Mapping:} & x(X) = \\frac{L}{2}(1+X) & X(x) = \\frac{2x}{L}-1\n\\end{matrix}\n\\]\n\nWe get the variational form used on the previous slide with diffusion for \\(\\mathcal{L}(\\psi_j)\\) and integration by parts (boundary terms canceled since \\(\\psi_j(0)=\\psi_j(L)=0\\)): \\[\n\\sum_{j=0}^N(\\psi_j, \\psi_i) \\hat{u}^{n+1}_j = \\sum_{j=0}^N(\\psi_j, \\psi_i) \\hat{u}^{n}_j - \\Delta t\\left( \\sum_{j=0}^N (\\psi'_j, \\psi'_i) \\hat{u}^{n}_j - \\cancel{[u^n_N \\psi_i]_{x=0}^{x=L}} \\right)\n\\]"
+  },
+  {
+    "objectID": "timevar.html#the-stiffness-matrix",
+    "href": "timevar.html#the-stiffness-matrix",
+    "title": "Time-dependent variational methods",
+    "section": "The stiffness matrix",
+    "text": "The stiffness matrix\n\\[\n\\begin{align*}\n\\int_{0}^L\\psi'_j(x) \\psi'_i(x) dx &= \\int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X))\\frac{dX}{dx} (P'_{i}(X)-P'_{i+2}(X))\\frac{dX}{dx} \\frac{dx}{dX}dX, \\\\\n&= \\frac{2}{L} \\int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X)) (P'_{i}(X)-P'_{i+2}(X))dX, \\\\\n&= \\frac{2}{L}(P'_{j}-P'_{j+2}, P'_{i}-P'_{i+2})_{L^2(-1, 1)}, \\\\\n&= \\frac{2}{L}(4i+6)\\delta_{ij}.\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#the-stiffness-matrix-psi_j-psi_i",
+    "href": "timevar.html#the-stiffness-matrix-psi_j-psi_i",
+    "title": "Time-dependent variational methods",
+    "section": "The stiffness matrix \\((\\psi'_j, \\psi'_i)\\)",
+    "text": "The stiffness matrix \\((\\psi'_j, \\psi'_i)\\)\n\\[\n\\begin{align}\n\\int_{0}^L\\psi'_j(x) \\psi'_i(x) dx &= \\int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X))\\frac{dX}{dx} (P'_{i}(X)-P'_{i+2}(X))\\frac{dX}{dx} \\frac{dx}{dX}dX \\\\\n&= \\frac{2}{L} \\int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X)) (P'_{i}(X)-P'_{i+2}(X))dX \\\\\n&= \\frac{2}{L}(P'_{j}-P'_{j+2}, P'_{i}-P'_{i+2})_{L^2(-1, 1)}\n\\end{align}\n\\]\n\nUsing equality: \\((2j+3)P_{j+1} = P'_{j+2}-P'_{j}\\) and \\((P_{i+1}, P_{j+1})_{L^2(-1,1)}=\\|P_{i+1}\\|^2\\delta_{ij}\\) and \\(\\|P_i\\|^2=\\frac{2}{2j+1}\\)\n\\[\n\\begin{align}\n\\int_{0}^L\\psi'_j(x) \\psi'_i(x) dx &= \\frac{2}{L}(-(2j+3)P_{j+1}, -(2j+3)P_{i+1}) \\\\\n&= \\frac{2}{L}(2j+3)^2\\|P_{i+1}\\|^2 \\delta_{ij}\\\\\n&= \\frac{8j+12}{L} \\delta_{ij}\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#the-mass-matrix-psi_j-psi_i",
+    "href": "timevar.html#the-mass-matrix-psi_j-psi_i",
+    "title": "Time-dependent variational methods",
+    "section": "The mass matrix \\((\\psi_j, \\psi_i)\\)",
+    "text": "The mass matrix \\((\\psi_j, \\psi_i)\\)\n\\[\n\\begin{align}\n\\int_{0}^L\\psi_j(x) \\psi_i(x) dx &= \\int_{-1}^1 (P_{j}(X)-P_{j+2}(X)) (P_{i}(X)-P_{i+2}(X))\\frac{dx}{dX}dX \\\\\n&= \\frac{L}{2}(P_{j}-P_{j+2}, P_i-P_{i+2})_{L^2(-1, 1)} \\\\\n&= \\frac{L}{2}\\left( (P_j, P_i) - (P_{j+2}, P_i) - (P_j, P_{i+2}) + (P_{j+2}, P_{i+2}) \\right)\n\\end{align}\n\\]\n\nUsing now \\((P_j, P_i) = \\|P_i\\|^2 \\delta_{ij} = \\frac{2}{2i+1} \\delta_{ij}\\):\n\\[\n\\begin{matrix}\nj=i & (\\psi_i, \\psi_i) = \\frac{L}{2}((P_i, P_i) + (P_{i+2}, P_{i+2})) = \\frac{L}{2}(\\|P_i\\|^2 + \\|P_{i+2}\\|^2) \\\\\nj=i+2 & (\\psi_{i+2}, \\psi_i) = -(P_{i+2}, P_{i+2}) = - \\frac{L}{2}\\|P_{i+2}\\|^2\n\\end{matrix}\n\\]\nSince the mass matrix \\(a_{ij}=a_{ji}=(\\psi_j, \\psi_i)\\) is symmetric, we get the tri-diagonal\n\\[\na_{ij} = a_{ji} = \\frac{L}{2}\\begin{cases} \\|P_i\\|^2+\\|P_{i+2}\\|^2, \\quad &i = j \\\\\n- \\|P_{i+2}\\|^2, \\quad  &j = i+2 \\\\\n0, \\quad &\\text{otherwise}\n\\end{cases}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#solve",
+    "href": "timevar.html#solve",
+    "title": "Time-dependent variational methods",
+    "section": "Solve",
+    "text": "Solve\n\nimport numpy as np\nimport sympy as sp\nfrom scipy import sparse\nfrom shenfun import TrialFunction, TestFunction, FunctionSpace, \\\n    project, inner\n\nx, t, c, L = sp.symbols('x,t,c,L')\n\nclass FE_Diffusion:\n    def __init__(self, N, L0=1, u0=sp.cos(sp.pi*x/L)+sp.cos(10*sp.pi*x/L)):\n        self.N = N\n        self.L = L0\n        self.u0 = u0.subs({L: L0})\n        self.bc = (self.u0.subs({x: 0, t: 0}).n(), self.u0.subs({x: L0, t: 0}).n())\n        self.uh_np1 = np.zeros(N+1) # expansion coefficients \\hat{u}^{n+1}\n        self.uh_n = np.zeros(N+1)\n        self.V = self.get_function_space()\n        self.A, self.S = self.get_mats()\n        self.lu = sparse.linalg.splu(self.A.tocsc())\n\n    def get_function_space(self):\n        return FunctionSpace(self.N, domain=(0, self.L), bc=self.bc)\n\n    def get_mats(self):\n        N = self.N\n        u = TrialFunction(self.V)\n        v = TestFunction(self.V)\n        a = inner(u, v)\n        s = inner(Dx(u, 0, 2), v)\n        return a, s\n\n    def get_eigenvalues(self):\n        return np.linalg.eig(np.linalg.inv(self.A.toarray()) @ self.S.toarray())[0]\n\n    def __call__(self, Nt, dt=0.1, save_step=100):\n        self.uh_n[:] = project(self.u0, self.V) # unm1 = u(x, 0)\n        xj = self.V.mesh()\n        plotdata = {0: self.V.eval(self.uh_n, xj)}\n        f = np.zeros(self.N+1)\n        for n in range(2, Nt+1):\n            f[:] = self.A @ self.uh_n - dt*(self.S @ self.uh_n)\n            self.uh_np1[:] = self.lu.solve(f)\n            self.uh_n[:] = self.uh_np1\n            if n % save_step == 0: # save every save_step timestep\n                plotdata[n] = self.V.eval(self.uh_np1, xj)\n        return plotdata"
+  },
+  {
+    "objectID": "timevar.html#implementation",
+    "href": "timevar.html#implementation",
+    "title": "Time-dependent variational methods",
+    "section": "Implementation",
+    "text": "Implementation\nIt is rather messy to work with composite basis functions. A very smart trick is thus to use a stencil matrix \\(S\\), such that (summation on repeated \\(j\\) index)\n\\[\n\\psi_i = P_i-P_{i+2} = s_{ij} P_j\n\\]\nThis defines \\(S \\in \\mathbb{R}^{(N+1) \\times (N+3)}\\) for the Dirichlet problem as\n\\[\ns_{ij} = \\begin{cases} 1 \\quad &i=j \\\\\n-1 \\quad &j=i+2\n\\end{cases}\n\\quad S = \\begin{bmatrix}\n1 & 0 & -1 & 0 & 0 & \\cdots\\\\\n0 & 1 & 0 & -1 & 0 & \\cdots\\\\\n0 & 0 & 1 & 0 & -1 & \\cdots\\\\\n\\vdots & \\vdots & \\vdots & \\ddots & \\ddots & \\ddots \\\\\n0 & 0 & 0 & \\cdots & 1 & 0 & -1\n\\end{bmatrix}\n\\]\nWith \\(\\boldsymbol{\\psi} = \\{\\psi_i\\}_{i=0}^N\\) and \\(\\boldsymbol{P}=\\{P_i\\}_{i=0}^N\\) we get all basis functions in matrix form:\n\\[\n\\boldsymbol{\\psi} = S \\boldsymbol{P}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#why-is-the-stencil-matrix-smart",
+    "href": "timevar.html#why-is-the-stencil-matrix-smart",
+    "title": "Time-dependent variational methods",
+    "section": "Why is the stencil matrix smart?",
+    "text": "Why is the stencil matrix smart?\nConsider the mass matrix\n\\[\n\\begin{align}\n(\\psi_j, \\psi_i) &= (P_j-P_{j+2}, P_i-P_{i+2}) \\\\\n&= (P_j, P_i) - (P_j, P_{i+2}) - (P_{j+2}, P_i) + (P_{j+2}, P_{i+2})\n\\end{align}\n\\]\nYou need to sort out the four (diagonal) matrices on the right.\n\nNow use stencil matrix instead (summation on \\(k\\) and \\(l\\)):\n\\[\n\\begin{align}\n(\\psi_j, \\psi_i) &= (s_{jk}P_k, s_{il}P_l) \\\\\n&= s_{il} (P_l, P_k) s_{jk}\n\\end{align}\n\\]\nYou need only the diagonal matrix \\(P = ((P_l, P_k))_{k,l=0}^{N,N}\\), where \\((P_l, P_k)=\\frac{2}{2l+1}\\delta_{kl}\\).\nMatrix form\n\\[\nA = ((\\psi_j, \\psi_i))_{i,j=0}^{N, N} = S P S^T\n\\]"
+  },
+  {
+    "objectID": "timevar.html#stiffness-matrix-with-stencil-matrix",
+    "href": "timevar.html#stiffness-matrix-with-stencil-matrix",
+    "title": "Time-dependent variational methods",
+    "section": "Stiffness matrix with stencil matrix",
+    "text": "Stiffness matrix with stencil matrix\n\\[\n\\begin{align}\n(\\psi''_j, \\psi_i) &= (s_{jk}P''_k, s_{il}P_l) \\\\\n&= s_{il} (P''_l, P_k) s_{jk}\n\\end{align}\n\\]\nAgain you need only the single matrix using orthogonal polynomials \\(q_{kl}=(P''_l, P_k) = -(P'_l, P'_k)\\)\n\\[\nM = ((\\psi''_j, \\psi_i))_{i,j=0}^{N, N} = S Q S^T\n\\]"
+  },
+  {
+    "objectID": "timevar.html#stiffness-matrix-through-stencil-matrix",
+    "href": "timevar.html#stiffness-matrix-through-stencil-matrix",
+    "title": "Time-dependent variational methods",
+    "section": "Stiffness matrix through stencil matrix",
+    "text": "Stiffness matrix through stencil matrix\n\\[\n\\begin{align}\n(\\psi''_j, \\psi_i) &= (s_{jk}P''_k, s_{il}P_l) \\\\\n&= s_{il} (P''_l, P_k) s_{jk}\n\\end{align}\n\\]\nAgain you need only the single matrix using orthogonal polynomials \\(q_{kl}=(P''_l, P_k) = -(P'_l, P'_k)\\)\n\\[\nM = ((\\psi''_j, \\psi_i))_{i,j=0}^{N, N} = S Q S^T\n\\]"
+  },
+  {
+    "objectID": "timevar.html#implementation-using-shenfun",
+    "href": "timevar.html#implementation-using-shenfun",
+    "title": "Time-dependent variational methods",
+    "section": "Implementation using shenfun",
+    "text": "Implementation using shenfun\n\nimport numpy as np\nimport sympy as sp\nfrom scipy import sparse\nfrom shenfun import TrialFunction, TestFunction, FunctionSpace, \\\n    project, inner, Dx, la, Function\n\nx, t, c, L = sp.symbols('x,t,c,L')\n\nclass FE_Diffusion:\n    def __init__(self, N, L0=1, u0=sp.sin(sp.pi*x/L)+sp.sin(10*sp.pi*x/L), family='L'):\n        self.N = N\n        self.L = L0\n        self.u0 = u0.subs({L: L0})\n        self.V = self.get_function_space(family=family)\n        self.uh_np1 = Function(self.V)\n        self.uh_n = Function(self.V)\n        self.A, self.S = self.get_mats()\n        self.sol = la.Solver(self.A)\n        self.A = self.A.diags()\n        self.S = self.S.diags()\n        \n    def get_function_space(self, family='L'):\n        return FunctionSpace(self.N+1, family, bc=(0, 0), domain=(0, self.L))\n\n    def get_mats(self):\n        N = self.N\n        u = TrialFunction(self.V)\n        v = TestFunction(self.V)\n        a = inner(u, v)\n        s = inner(Dx(u, 0, 1), Dx(v, 0, 1))\n        return a, s\n\n    def get_eigenvalues(self):\n        return np.linalg.eig(np.linalg.inv(self.A.toarray()) @ self.S.toarray())[0]\n\n    def __call__(self, Nt, dt=0.1, save_step=100):\n        self.uh_n[:] = project(self.u0, self.V) # unm1 = u(x, 0)\n        xj = self.V.mesh()\n        plotdata = {0: self.uh_n(xj)}\n        f = Function(self.V)\n        for n in range(2, Nt+1):\n            f[:-2] = self.A @ self.uh_n[:-2] - dt*(self.S @ self.uh_n[:-2])\n            self.uh_np1[:] = self.sol(f)\n            self.uh_n[:] = self.uh_np1\n            if n % save_step == 0: # save every save_step timestep\n                plotdata[n] = self.uh_np1(xj)\n        return plotdata"
+  },
+  {
+    "objectID": "timevar.html#run-solver",
+    "href": "timevar.html#run-solver",
+    "title": "Time-dependent variational methods",
+    "section": "Run solver",
+    "text": "Run solver\n\n\nUse longest stable time step \\(dt=2/\\max (\\lambda)\\)\n\nfrom utilities import plot_with_offset\nsol = FE_Diffusion(42, L0=2)\ndt = 2/max(sol.get_eigenvalues())\ndata = sol(1000, dt=dt, save_step=100)\nplot_with_offset(data, sol.V.mesh(), figsize=(8, 3))\n\n\n\n\n\n\n\n\n\nUse slightly too large time step \\(dt=2.04/\\max (\\lambda)\\)\n\n#\n#\n#\ndata = sol(1000, dt=dt*1.02, save_step=100)\nplot_with_offset(data, sol.V.mesh(), figsize=(8, 3))"
+  },
+  {
+    "objectID": "timevar.html#backward-euler-for-diffusion-equation",
+    "href": "timevar.html#backward-euler-for-diffusion-equation",
+    "title": "Time-dependent variational methods",
+    "section": "Backward Euler for diffusion equation",
+    "text": "Backward Euler for diffusion equation\nThe forward Euler method requires a very short time step for the diffusion equation. How about the backward Euler method\n\\[\n\\left(u^{n+1}_N, v\\right) = \\left(u^{n}_N, v\\right) + \\Delta t \\left(\\frac{\\partial^2 u^{n+1}_N}{\\partial x^2}, v\\right)\n\\]\nThe linear algebra problem is now\n\\[\n\\sum_{j=0}^N \\left( (\\psi_j, \\psi_i) + \\Delta t (\\psi'_j, \\psi'_i) \\right)  \\hat{u}^{n+1}_j = \\sum_{j=0}^N(\\psi_j, \\psi_i) \\hat{u}^{n}_j\n\\]\nInsert the ansatz \\(u^{n+1}_N = g u^n_N\\)\n\\[\n\\sum_{j=0}^N g \\left( (\\psi_j, \\psi_i) + \\Delta t (\\psi'_j, \\psi'_i) \\right)  \\hat{u}^{0}_j = \\sum_{j=0}^N(\\psi_j, \\psi_i) \\hat{u}^{0}_j\n\\]"
+  },
+  {
+    "objectID": "timevar.html#on-matrix-form",
+    "href": "timevar.html#on-matrix-form",
+    "title": "Time-dependent variational methods",
+    "section": "On matrix form",
+    "text": "On matrix form\n\\[\ng (A + \\Delta t S) \\boldsymbol{\\hat{u}}^0 = A \\boldsymbol{\\hat{u}}^0\n\\]\nIf we multiply from left to right by \\(A^{-1}\\) we get\n\\[\ng (I + \\Delta t A^{-1}S) \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0.\n\\]\nHere we can once again use \\(H=A^{-1}S\\) and \\(H \\boldsymbol{\\hat{u}}^0 = \\lambda \\boldsymbol{\\hat{u}}^0\\) and thus we find\n\\[\ng = \\frac{1}{1+\\Delta t \\lambda}.\n\\]\nSince all time steps and eigenvalues are real numbers larger than 0, we find that \\(g\\) is always less than 1 and positive and the backward Euler method is as such unconditionally stable."
+  },
+  {
+    "objectID": "timevar.html#backward-euler-on-matrix-form",
+    "href": "timevar.html#backward-euler-on-matrix-form",
+    "title": "Time-dependent variational methods",
+    "section": "Backward Euler on matrix form",
+    "text": "Backward Euler on matrix form\n\\[\n\\sum_{j=0}^N g \\left( (\\psi_j, \\psi_i) + \\Delta t (\\psi'_j, \\psi'_i) \\right)  \\hat{u}^{0}_j = \\sum_{j=0}^N(\\psi_j, \\psi_i) \\hat{u}^{0}_j\n\\]\nbecomes\n\\[\ng (A + \\Delta t S) \\boldsymbol{\\hat{u}}^0 = A \\boldsymbol{\\hat{u}}^0\n\\]\nIf we multiply from left to right by \\(A^{-1}\\) we get\n\\[\ng (I + \\Delta t A^{-1}S) \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0\n\\]\nHere we can once again use \\(H=A^{-1}S\\) and \\(H \\boldsymbol{\\hat{u}}^0 = \\lambda \\boldsymbol{\\hat{u}}^0\\) and thus we find\n\\[\ng = \\frac{1}{1+\\Delta t \\lambda}\n\\]\nSince all time steps and eigenvalues are real numbers larger than 0, \\(g\\) is always less than 1 and positive and the backward Euler method is as such unconditionally stable."
+  },
+  {
+    "objectID": "timevar.html#recap-vibration-equation",
+    "href": "timevar.html#recap-vibration-equation",
+    "title": "Time-dependent variational methods",
+    "section": "Recap vibration equation",
+    "text": "Recap vibration equation\n\\[\n\\frac{\\partial^2 u(t)}{\\partial t^2} + \\omega^2 u(t) = 0\n\\]\nDiscretize with central finite difference\n\\[\n\\frac{u^{n+1}-2u^n+u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\nInsert for ansatz \\(u^n = g^n u^0\\)\n\\[\ng^n(g-2+g^{-1})u^{0} + (\\omega \\Delta t)^2 g^n u^0 = 0\n\\]\nDivide by \\(g^n u^0\\) \\[\ng+g^{-1} = 2-(\\omega \\Delta t)^2\n\\]\nand solve quadratic equation (\\(g\\) may be complex) to find stability \\(|g|=1\\) for \\[\n\\omega \\Delta t \\le 2\n\\]"
+  },
+  {
+    "objectID": "timevar.html#the-wave-equation-as-a-variational-problem",
+    "href": "timevar.html#the-wave-equation-as-a-variational-problem",
+    "title": "Time-dependent variational methods",
+    "section": "The wave equation as a variational problem",
+    "text": "The wave equation as a variational problem\n\\[\n\\frac{\\partial^2 u}{\\partial t^2} = c^2 \\frac{\\partial^2 u}{\\partial x^2}, \\quad (x, t) \\in (0, L) \\times (0, T]\n\\]\n\\[\nu(x, 0) = f(x) \\quad \\frac{\\partial u}{\\partial t}(x, 0) = 0\n\\]\nWe will consider both Dirichlet and Neumann boundary conditions in space and use finite differences in time such that\n\\[\n\\frac{u^{n+1}-2u^n+u^{n-1}}{\\Delta t^2} = c^2 \\frac{\\partial^2 u^n}{\\partial x^2}\n\\]\n\nA numerical residual \\(\\mathcal{R}_N = \\mathcal{R}(u^{n+1}_N; u^n_N, u^{n-1}_N)\\) can now be defined as\n\\[\n\\mathcal{R}_N={u_N^{n+1}-2u_N^n+u_N^{n-1}} - \\alpha^2 (u_N^n)''\n\\]\nwith \\(\\alpha = c \\Delta t\\) and \\(u'=\\frac{\\partial u}{\\partial x}\\)."
+  },
+  {
+    "objectID": "timevar.html#the-galerkin-methods-for-the-wave-equation",
+    "href": "timevar.html#the-galerkin-methods-for-the-wave-equation",
+    "title": "Time-dependent variational methods",
+    "section": "The Galerkin methods for the wave equation",
+    "text": "The Galerkin methods for the wave equation\nInitialize \\(u_N^0\\) and \\(u_N^1\\). The Galerkin method is to find \\(u^{n+1}_N \\in V_N\\) such that\n\\[\n\\left({u_N^{n+1}-2u_N^n+u_N^{n-1}} - \\alpha^2 (u_N^n)'', v \\right) = 0, \\quad \\forall \\, v \\in V_N\n\\]\nfor \\(n = 1, \\ldots, N_t-1\\). We can also integrate the last term by parts\n\\[\n({u_N^{n+1}-2u_N^n+u_N^{n-1}}, v) + \\alpha^2 \\left( \\left((u_N^n)', v' \\right) - \\left[(u^n_N)' v\\right]_{x=0}^{x=L} \\right)  = 0, \\quad \\forall \\, v \\in V_N\n\\]\n\nInsert for \\(u^{n-1}_N, u^{n}_N, u^{n+1}_N \\in V_N\\) and use \\(v = \\psi_i\\) to get the linear algebra problem\n\\[\n\\sum_{j=0}^N \\left(\\psi_j, \\psi_i \\right)  \\left(\\hat{u}^{n+1}_j - 2\\hat{u}^{n}_j + \\hat{u}^{n-1}_j\\right)\n+ \\alpha^2 \\left(\\sum_{j=0}^N \\left(\\psi'_j, \\psi'_i \\right) \\hat{u}^n_j - \\left[(u^n_N)' \\psi_i\\right]_{x=0}^{x=L}  \\right) = 0\n\\]\n\n\n\n\n\n\nNote\n\n\nAll time dependency is in the expansion coefficients \\(\\hat{u}^n_{j}, \\hat{u}^{n}_{j}, \\hat{u}^{n-1}_{j}\\)."
+  },
+  {
+    "objectID": "timevar.html#boundary-conditions",
+    "href": "timevar.html#boundary-conditions",
+    "title": "Time-dependent variational methods",
+    "section": "Boundary conditions",
+    "text": "Boundary conditions"
+  },
+  {
+    "objectID": "timevar.html#matrix-form",
+    "href": "timevar.html#matrix-form",
+    "title": "Time-dependent variational methods",
+    "section": "Matrix form",
+    "text": "Matrix form\nRearrange such that the unknown \\(\\hat{u}_j^{n+1}\\) is on the left hand side and the rest of the known terms are on the right hand side\n\\[\n\\sum_{j=0}^N \\left(\\psi_j, \\psi_i \\right) \\hat{u}^{n+1}_j =  \\sum_{j=0}^N \\left(\\psi_j, \\psi_i \\right) (2\\hat{u}^{n}_j - \\hat{u}^{n-1}_j) - \\alpha^2 \\left( \\sum_{j=0}^N \\left(\\psi'_j, \\psi'_i \\right) \\hat{u}^n_j - \\left[(u^n_N)' \\psi_i\\right]_{x=0}^{x=L} \\right)\n\\]\nWith matrix notation, \\(a_{ij} = (\\psi_j, \\psi_i)\\) and \\(s_{ij} = (\\psi'_j, \\psi'_i)\\), we get\n\\[\nA \\boldsymbol{\\hat{u}}^{n+1} = A (2 \\boldsymbol{\\hat{u}}^n - \\boldsymbol{\\hat{u}}^{n-1}) - \\alpha^2 \\left( S \\boldsymbol{\\hat{u}}^n  - \\boldsymbol{b}^n \\right)\n\\]\nwhere \\(\\boldsymbol{b}^n = ((u^n_N)'(L) \\psi_i(L) - (u^n_N)'(0) \\psi_i(0))_{i=0}^N\\).\n\nWe can write this as\n\\[\nA \\boldsymbol{\\hat{u}}^{n+1} = \\boldsymbol{f}^n\n\\]\nwhere the vector \\(\\boldsymbol{f}^n = A (2 \\boldsymbol{\\hat{u}}^n - \\boldsymbol{\\hat{u}}^{n-1}) - \\alpha^2 \\left( S \\boldsymbol{\\hat{u}}^n  - \\boldsymbol{b}^n\\right)\\)."
+  },
+  {
+    "objectID": "timevar.html#dirichlet-boundary-conditions-u0-t-a-and-ul-t-b",
+    "href": "timevar.html#dirichlet-boundary-conditions-u0-t-a-and-ul-t-b",
+    "title": "Time-dependent variational methods",
+    "section": "Dirichlet boundary conditions \\(u(0, t) = a\\) and \\(u(L, t) = b\\)",
+    "text": "Dirichlet boundary conditions \\(u(0, t) = a\\) and \\(u(L, t) = b\\)\n\\[\n{b}_i^n = (u^n_N)'(L) \\psi_i(L) - (u^n_N)'(0) \\psi_i(0), \\quad i=0,1, \\ldots, N\n\\]\nGlobal variational methods\n\\[\n\\psi_i(0) = \\psi_i(L) = 0, \\quad i=0, 1, \\ldots, N\n\\]\n\\[\n\\Rightarrow \\boldsymbol{b}^n = 0, \\quad \\forall \\, n=1, 2, \\ldots, N_t-1\n\\]\n\nUse a boundary function (with reference coordinate \\(X\\in [-1, 1]\\)) \\[\nB(x)=\\tilde{B}(X) = \\frac{b}{2}(1+X) + \\frac{a}{2}(1-X)\n\\]\nand solve for \\(\\tilde{u}^n_N \\in V_N = \\text{span}\\{\\psi_j\\}_{j=0}^N\\). Final solution is then\n\\[\nu^n_N = \\tilde{u}^n_N + B(x)\n\\]"
+  },
+  {
+    "objectID": "timevar.html#dirichlet-the-finite-element-method",
+    "href": "timevar.html#dirichlet-the-finite-element-method",
+    "title": "Time-dependent variational methods",
+    "section": "Dirichlet the finite element method",
+    "text": "Dirichlet the finite element method\nmakes use of Lagrange polynomials and \\(\\psi_i(0)= 1\\) for \\(i=0\\) and zero otherwise. Similarly, \\(\\psi_i(L)=1\\) for \\(i=N\\) and zero otherwise. Hence it is only \\(b^n_0\\) and \\(b^n_N\\) that potentially are different from zero. However, since \\(u(0, t)=a = \\hat{u}^{n+1}_0\\) and \\(u(L, t) = b = \\hat{u}^{n+1}_N\\) we ident \\(A\\) and set \\(f^n_0=a\\) and \\(f^n_N=b\\) (see {ref}lecture 12 &lt;sec-12-note1&gt;). As such the boundary terms in \\(\\boldsymbol{b}^n\\) will never enter the equation system."
+  },
+  {
+    "objectID": "timevar.html#dirichlet-with-the-finite-element-method",
+    "href": "timevar.html#dirichlet-with-the-finite-element-method",
+    "title": "Time-dependent variational methods",
+    "section": "Dirichlet with the finite element method",
+    "text": "Dirichlet with the finite element method\nMakes use of Lagrange polynomials and \\(\\psi_i(0)= 1\\) for \\(i=0\\) and zero otherwise. Similarly, \\(\\psi_i(L)=1\\) for \\(i=N\\) and zero otherwise. Hence it is only \\(b^n_0\\) and \\(b^n_N\\) that potentially are different from zero. However,\n\\[\nu(0, t)=a = \\hat{u}^{n+1}_0 \\quad \\text{and} \\quad u(L, t) = b = \\hat{u}^{n+1}_N\n\\]\n\n\n\n\n\n\nNote\n\n\nSince \\(\\hat{u}_0\\) and \\(\\hat{u}_N\\) are known we do not solve the linear PDE for \\(i=0\\) or \\(i=N\\). Simply ident the coefficient matrix \\(A\\) and set \\(f^n_0=a\\) and \\(f^n_N=b\\).\n\n\n\n\\[\n\\begin{bmatrix}\n1 & 0 & 0 & \\cdots & 0 \\\\\na_{10} & a_{11}& a_{12} & \\cdots & a_{1N} \\\\\n\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\\na_{N-1, 0} & a_{N-1, 1}& a_{N-1, 2}& \\cdots & a_{N-1,N} \\\\\n0 & \\cdots & 0 & 0 & 1\n\\end{bmatrix}\n\\begin{bmatrix}\n\\hat{u}^{n+1}_0 \\\\\n\\hat{u}^{n+1}_1 \\\\\n\\vdots \\\\\n\\hat{u}^{n+1}_{N-1} \\\\\n\\hat{u}^{n+1}_N\n\\end{bmatrix}\n=\n\\begin{bmatrix}\na \\\\\nf^{n}_1 \\\\\n\\vdots \\\\\nf^{n}_{N-1} \\\\\nb\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#neumann-boundary-conditions-u0-t-g_0-quad-textand-quad-ul-t-g_l",
+    "href": "timevar.html#neumann-boundary-conditions-u0-t-g_0-quad-textand-quad-ul-t-g_l",
+    "title": "Time-dependent variational methods",
+    "section": "Neumann boundary conditions \\(u'(0, t) = g_0 \\quad \\text{and} \\quad u'(L, t) = g_L\\)",
+    "text": "Neumann boundary conditions \\(u'(0, t) = g_0 \\quad \\text{and} \\quad u'(L, t) = g_L\\)\n\\[\n{b}_i^n = (u^n_N)'(L) \\psi_i(L) - (u^n_N)'(0) \\psi_i(0), \\quad i=0,1, \\ldots, N\n\\]\nApply Neumann strongly through basis\nUse basis functions satisfying \\[\n\\psi'_j(0) = \\psi'_j(L) = 0, \\quad j=0, 1, \\ldots, N\n\\]\n\nAdd a boundary function \\(B(x)\\) that satisfied \\(B'(0)=g_0\\) and \\(B'(L)=g_L\\)\n\\[\nB(x) = \\tilde{B}(X) = \\frac{L}{8}\\left({g_L}(1+X)^2 - {g_0}(1-X)^2\\right)\n\\]\nThe \\(L\\) is there since \\(X=-1+\\frac{2x}{L}\\) and \\(\\frac{\\partial X}{\\partial x}=\\frac{2}{L}\\) and thus\n\\[\n\\frac{\\partial B}{\\partial x} = \\frac{\\partial \\tilde{B}}{\\partial X}\\frac{\\partial X}{\\partial x} = \\frac{2}{L}\\frac{\\partial \\tilde{B}}{\\partial X}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#neumann-boundary-conditions-2",
+    "href": "timevar.html#neumann-boundary-conditions-2",
+    "title": "Time-dependent variational methods",
+    "section": "Neumann boundary conditions 2",
+    "text": "Neumann boundary conditions 2\nApply boundary condition weakly through variational form\n\\[\n{b}_i^n = (u^n_N)'(L) \\psi_i(L) - (u^n_N)'(0) \\psi_i(0)\n\\]\nInsert for \\((u^n_N)'(0) = g_0\\) and \\((u^n_N)'(L)=g_L\\)\n\\[\n{b}_i^n = g_L \\psi_i(L) - g_0 \\psi_i(0)\n\\]\nUse any basis function, except those where all \\(\\psi_i(0)=0\\) and \\(\\psi_i(L)=0\\) for all \\(i=0,1,\\ldots, N\\).\n\n\nThis works for the finite element method, where \\(\\psi_0(0)=1\\) and \\(\\psi_N(L)=1\\). Nothing else is required\nAlso works for the global Galerkin method with Legendre polynomials \\(\\psi_i(x)=P_i(X)\\)."
+  },
+  {
+    "objectID": "timevar.html#neumann-boundary-conditions-weakly",
+    "href": "timevar.html#neumann-boundary-conditions-weakly",
+    "title": "Time-dependent variational methods",
+    "section": "Neumann boundary conditions weakly",
+    "text": "Neumann boundary conditions weakly\nApply boundary condition weakly through variational form\n\\[\n{b}_i^n = (u^n_N)'(L) \\psi_i(L) - (u^n_N)'(0) \\psi_i(0), \\quad i=0,1,\\ldots, N\n\\]\nInsert for \\((u^n_N)'(0) = g_0\\) and \\((u^n_N)'(L)=g_L\\)\n\\[\n{b}_i^n = g_L \\psi_i(L) - g_0 \\psi_i(0)\n\\]\nUse any basis function, except those where all \\(\\psi_i(0)=0\\) and \\(\\psi_i(L)=0\\), for all \\(i=0,1,\\ldots, N\\).\n\n\nThis works for the finite element method, where \\(\\psi_0(0)=1\\) and \\(\\psi_N(L)=1\\). Nothing else is required\nAlso works for the global Galerkin method, e.g., Legendre polynomials \\(\\psi_i(x)=P_i(X)\\).\nDoes not work for Chebyshev because the method relies on integration by parts, which does not work with the Chebyshev weights \\(\\omega(x)=1/\\sqrt{1-X^2}\\)."
+  },
+  {
+    "objectID": "timevar.html#stability-of-the-wave-equation-in-variational-form",
+    "href": "timevar.html#stability-of-the-wave-equation-in-variational-form",
+    "title": "Time-dependent variational methods",
+    "section": "Stability of the wave equation in variational form",
+    "text": "Stability of the wave equation in variational form\nWe have derived the linear algebra problem\n\\[\nA (\\boldsymbol{\\hat{u}}^{n+1} -2 \\boldsymbol{\\hat{u}}^n + \\boldsymbol{\\hat{u}}^{n-1}) = - \\alpha^2 \\left( S \\boldsymbol{\\hat{u}}^n  - \\boldsymbol{b}^n \\right)\n\\]\nThe ansatz \\(u_N^{n+1}=gu^{n}_N=g^{n+1}u_N^0\\) also implies that\n\\[\n\\boldsymbol{\\hat{u}}^{n+1} = g \\boldsymbol{\\hat{u}}^n  = g^{n+1} \\boldsymbol{\\hat{u}}^0 \\tag{1}\n\\]\nsince\n\\[\nu^{n+1}_N = g u^{n}_N \\Rightarrow \\sum_{j=0}^N \\hat{u}^{n+1}_j \\psi_j = g \\sum_{j=0}^N \\hat{u}^{n}_j \\psi_j = \\sum_{j=0}^N (g\\hat{u}^{n}_j) \\psi_j\n\\]\nHence \\(\\hat{u}^{n+1}_j = g\\hat{u}^n_j\\). Recursively, we get (1)."
+  },
+  {
+    "objectID": "timevar.html#find-amplification-factor",
+    "href": "timevar.html#find-amplification-factor",
+    "title": "Time-dependent variational methods",
+    "section": "Find amplification factor",
+    "text": "Find amplification factor\n\\[\nA (\\boldsymbol{\\hat{u}}^{n+1} -2 \\boldsymbol{\\hat{u}}^n + \\boldsymbol{\\hat{u}}^{n-1}) = - \\alpha^2 \\left( S \\boldsymbol{\\hat{u}}^n  - \\boldsymbol{b}^n \\right)\n\\]\nInsert for \\(\\boldsymbol{\\hat{u}}^{n} = g^{n} \\boldsymbol{\\hat{u}}^0\\) and assume that \\(\\boldsymbol{b}^n=\\boldsymbol{0}\\)\n\\[\n(g^{n+1}-2g^n+g^{n-1}) A \\boldsymbol{\\hat{u}}^0 = -\\alpha^2 g^n S \\boldsymbol{\\hat{u}}^0\n\\]\nDivide by \\(g^n\\) and multiply by \\(A^{-1}\\) from the left\n\\[\n(g - 2 + g^{-1}) I \\boldsymbol{\\hat{u}}^0 = -\\alpha^2 A^{-1}S \\boldsymbol{\\hat{u}} ^{0}\n\\]\n\n\n\n\n\n\nNote\n\n\nThe identity matrix \\(I\\) on the left is optional and can be removed."
+  },
+  {
+    "objectID": "timevar.html#find-amplification-factor-2",
+    "href": "timevar.html#find-amplification-factor-2",
+    "title": "Time-dependent variational methods",
+    "section": "Find amplification factor 2",
+    "text": "Find amplification factor 2\n\\[\n(g - 2 + g^{-1}) I \\boldsymbol{\\hat{u}}^0 = -\\alpha^2 A^{-1}S \\boldsymbol{\\hat{u}} ^{0}\n\\]\nUse \\(H = A^{-1} S\\) and the eigenvalues \\(H \\boldsymbol{\\hat{u}}^0 = \\lambda I \\boldsymbol{\\hat{u}}^0\\) to get\n\\[\n(g - 2 + g^{-1}) I \\boldsymbol{\\hat{u}}^0 = -\\alpha^2 \\lambda I \\boldsymbol{\\hat{u}} ^{0}\n\\]\nand after eliminating the equal terms on both sides \\[\ng + g^{-1} = \\beta \\tag{1}\n\\]\nwhere \\(\\beta = -\\alpha^2 \\lambda +2\\).\nFor stability we need \\(|g| \\le 1\\).\n\n\n\n\n\n\nNote\n\n\nIf \\(g&lt;1\\) is a root of (1), then \\(g^{-1}&gt;1\\) is also a root, which is unstable. All roots must be \\(\\le 1\\). Hence \\(|g|=1\\) is the only possible solution."
+  },
+  {
+    "objectID": "timevar.html#find-amplification-factor-3",
+    "href": "timevar.html#find-amplification-factor-3",
+    "title": "Time-dependent variational methods",
+    "section": "Find amplification factor 3",
+    "text": "Find amplification factor 3\n\\[\ng + g^{-1} = \\beta\n\\]\nSolve quadratic equation for \\(g\\)\n\\[\ng = \\frac{\\beta \\pm \\sqrt{\\beta^2-4}}{2}\n\\]\nAssume that \\(-2 \\le \\beta \\le 2\\) such that \\(\\beta^2-4 \\le 0\\) and \\(\\sqrt{\\beta^2-4} = a \\hat{\\imath}\\), with real number \\(a=\\sqrt{4-\\beta^2}\\)\n\\[\n2|g| = \\left| \\beta \\pm \\sqrt{\\beta^2-4}\\right| = \\left|\\beta \\pm a\\hat{\\imath} \\right| = \\sqrt{\\beta^2+a^2} = \\sqrt{\\beta^2+4-\\beta^2}=2\n\\]\nFor \\(-2 \\le \\beta \\le 2\\) we get that \\(|g|=1\\) and the numerical solution is stable!\nUsing \\(\\beta=-\\alpha^2 \\lambda +2 = -(c \\Delta t)^2 \\lambda +2\\) the maximum time step that we can use is thus\n\\[\n\\Delta t \\le \\frac{1}{c}\\sqrt{\\frac{4}{\\max(\\lambda)}}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#find-the-longest-stable-time-step",
+    "href": "timevar.html#find-the-longest-stable-time-step",
+    "title": "Time-dependent variational methods",
+    "section": "Find the longest stable time step",
+    "text": "Find the longest stable time step\n\\[\ng + g^{-1} = \\beta\n\\]\nSolve quadratic equation for \\(g\\)\n\\[\ng = \\frac{\\beta \\pm \\sqrt{\\beta^2-4}}{2}\n\\]\n\nAssume \\(-2 \\le \\beta \\le 2\\) such that \\(\\beta^2-4 \\le 0\\) and \\(\\sqrt{\\beta^2-4} = a \\hat{\\imath}\\), with \\(a=\\sqrt{4-\\beta^2}\\) real\n\\[\n2|g| = \\left| \\beta \\pm \\sqrt{\\beta^2-4}\\right| = \\left|\\beta \\pm a\\hat{\\imath} \\right| = \\sqrt{\\beta^2+a^2} = \\sqrt{\\beta^2+4-\\beta^2}=2\n\\]\nFor \\(-2 \\le \\beta \\le 2\\) we get that \\(|g|=1\\) and the numerical solution is stable!\n\n\nUsing \\(\\beta=-\\alpha^2 \\lambda +2 = -(c \\Delta t)^2 \\lambda +2 = -2\\) the longest possible time step is\n\\[\n\\Delta t \\le \\frac{1}{c}\\sqrt{\\frac{4}{\\max(\\lambda)}}\n\\]"
+  },
+  {
+    "objectID": "timevar.html#implementation-1",
+    "href": "timevar.html#implementation-1",
+    "title": "Time-dependent variational methods",
+    "section": "Implementation",
+    "text": "Implementation\nOverload diffusion solver because it contains the same function spaces and matrices. Reimplement time stepper in __call__.\n\n\n\nclass Wave(FE_Diffusion):\n    def __init__(self, N, L0=1, c0=1, u0=sp.sin(sp.pi*x/L)):\n        u0 = u0.subs({c: c0})\n        FE_Diffusion.__init__(self, N, L0=L0, u0=u0)\n        self.c = c0\n        self.uh_nm1 = np.zeros_like(self.uh_n)\n\n    def __call__(self, Nt, dt=0.1, save_step=100):\n        # Initialize\n        self.uh_nm1[:] = project(self.u0.subs(t, 0), self.V)\n        xj = self.V.mesh()\n        plotdata = {0: self.uh_nm1(xj)}\n        self.uh_n[:] = project(self.u0.subs(t, dt), self.V)\n        if save_step == 1:\n            plotdata[1] = self.uh_n(xj)\n\n        # Solve\n        f = np.zeros(self.N+1)\n        alfa = self.c*dt\n        for n in range(2, Nt+1):\n            f[:-2] = self.A @ (2*self.uh_n[:-2]-self.uh_nm1[:-2]) \\\n              - alfa**2*(self.S @ self.uh_n[:-2])\n            self.uh_np1[:] = self.sol(f)\n            self.uh_nm1[:] = self.uh_n\n            self.uh_n[:] = self.uh_np1\n            if n % save_step == 0: # save every save_step timestep\n                plotdata[n] = self.uh_np1(xj)\n        return plotdata \n\n\n\nsol = Wave(40, L0=2, c0=1, u0=sp.exp(-50*(x-L/2+c*t)**2))\ndt = 1/sol.c*np.sqrt(4/max(sol.get_eigenvalues()))\ndata = sol(400, dt=dt, save_step=40)\nplot_with_offset(data, sol.V.mesh(), figsize=(4, 2))\n\n\n\n\n\n\n\n\n\ndt = 1/sol.c*np.sqrt(4.01/max(sol.get_eigenvalues()))\ndata = sol(400, dt=dt, save_step=40)\nplot_with_offset(data, sol.V.mesh(), figsize=(4, 2))"
+  },
+  {
+    "objectID": "timevar.html#implementation---overload-diffusion-solver",
+    "href": "timevar.html#implementation---overload-diffusion-solver",
+    "title": "Time-dependent variational methods",
+    "section": "Implementation - Overload diffusion solver",
+    "text": "Implementation - Overload diffusion solver\nWe are using the same function space and thus the same matrices \\(A\\) and \\(S\\) as the diffusion equation. We only need to reimplement the time stepper in __call__.\n\nclass Wave(FE_Diffusion):\n    def __init__(self, N, L0=1, c0=1, u0=sp.sin(sp.pi*x/L)):\n        u0 = u0.subs({c: c0})\n        FE_Diffusion.__init__(self, N, L0=L0, u0=u0)\n        self.c = c0\n        self.uh_nm1 = np.zeros_like(self.uh_n)\n\n    def __call__(self, Nt, dt=0.1, save_step=100):\n        self.uh_nm1[:] = project(self.u0.subs(t, 0), self.V)\n        xj = self.V.mesh()\n        plotdata = {0: self.uh_nm1(xj)}\n        self.uh_n[:] = project(self.u0.subs(t, dt), self.V)\n        if save_step == 1: plotdata[1] = self.uh_n(xj)\n\n        f = np.zeros(self.N+1)\n        alfa = self.c*dt\n        for n in range(2, Nt+1):\n            f[:-2] = self.A @ (2*self.uh_n[:-2]-self.uh_nm1[:-2]) \\\n              - alfa**2*(self.S @ self.uh_n[:-2])\n            self.uh_np1[:] = self.sol(f)\n            self.uh_nm1[:] = self.uh_n\n            self.uh_n[:] = self.uh_np1\n            if n % save_step == 0: # save every save_step timestep\n                plotdata[n] = self.uh_np1(xj)\n        return plotdata"
+  },
+  {
+    "objectID": "timevar.html#check-stability",
+    "href": "timevar.html#check-stability",
+    "title": "Time-dependent variational methods",
+    "section": "Check stability",
+    "text": "Check stability\n\nsol = Wave(40, L0=2, c0=1, u0=sp.exp(-40*(x-L/2+c*t)**2))\ndt = 1/sol.c*np.sqrt(4/max(sol.get_eigenvalues()))\ndata = sol(400, dt=dt, save_step=40)\nplot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))\n\n\n\n\n\n\n\n\n\ndata = sol(400, dt=dt*1.01, save_step=40)\nplot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))"
+  },
+  {
+    "objectID": "timevar.html#recap---stability-of-the-diffusion-equation",
+    "href": "timevar.html#recap---stability-of-the-diffusion-equation",
+    "title": "Time-dependent variational methods",
+    "section": "Recap - stability of the diffusion equation",
+    "text": "Recap - stability of the diffusion equation\n\\[\n\\frac{\\partial u(x, t)}{\\partial t} = \\frac{\\partial^2 u(x, t)}{\\partial x^2}\n\\]\nUse forward Euler int time and central difference in space\n\\[\nu_j^{n+1} - u_j^n = \\frac{\\Delta t}{\\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})\n\\]\nwhere \\(u^n_j = u(j\\Delta x, n\\Delta t)\\) and \\(x_j=j\\Delta x\\) and \\(t_n=n\\Delta t\\). Make the ansatz as always\n\\[\nu^{n+1}_j = g u^{n}_j \\rightarrow u^{n}_j = g^n u^0_j\n\\]\nand let the initial condition be a periodic Fourier wave with wavenumber \\(k\\)\n\\[\nu^0_j = e^{\\hat{\\imath}k x_j}\n\\]\nwhere \\(\\hat{\\imath}=\\sqrt{-1}\\)."
+  },
+  {
+    "objectID": "timevar.html#stability-limit-through-eigenvalues",
+    "href": "timevar.html#stability-limit-through-eigenvalues",
+    "title": "Time-dependent variational methods",
+    "section": "Stability limit through eigenvalues",
+    "text": "Stability limit through eigenvalues\nAssume the ansatz \\(\\boldsymbol{u}^n=g^n\\boldsymbol{u}^0\\): \\[\n(g-1)\\boldsymbol{u}^0 = \\frac{\\Delta t}{\\Delta x^2} \\tilde{D}^{(2)} \\boldsymbol{u}^0\n\\]\nInsert for \\(\\tilde{D}^{(2)}\\boldsymbol{u}^0 = \\lambda \\boldsymbol{u}^0\\) to get\n\\[\ng=1+\\frac{\\lambda \\Delta t}{ \\Delta x^2}\n\\]\nTo satisfy \\(|g| \\le 1\\)\n\\[\n|g|=|1+\\frac{\\lambda \\Delta t}{ \\Delta x^2}| \\le 1\n\\]\nBut we need to compute the eigenvalues.."
   }
 ]
