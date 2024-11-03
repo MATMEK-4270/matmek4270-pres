@@ -14,3 +14,4 @@ author: "Prof. Mikael Mortensen, University of Oslo"
 * [Lecture 10 - Function approximation by the finite element method](fem.qmd)
 * [Lecture 11 - Solving PDEs with the method of weighted residuals](pdes.qmd)
 * [Lecture 12 - Solving PDEs with the FEM](fempdes.qmd)
+* [Lecture 13 - Time-dependent variational methods](timevar.qmd)

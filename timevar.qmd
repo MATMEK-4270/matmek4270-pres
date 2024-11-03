@@ -1,0 +1,1109 @@
+---
+title: "Time-dependent variational methods"
+subtitle: "MATMEK-4270"
+author: "Prof. Mikael Mortensen, University of Oslo"
+
+execute:
+  cache: true
+jupyter: shenfun
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    slide-number: true
+    preview-links: auto
+    css: styles.css
+    embed-resources: false
+
+pandoc:
+  to: revealjs
+  standalone: false
+  wrap: none
+  default-image-extension: png
+  html-math-method:
+    method: mathjax
+    url: >-
+      https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  slide-level: 2
+---
+
+## Time dependent variational forms {.smaller}
+
+In lectures 11-12 we have considered steady equations like
+
+$$
+\mathcal{L}(u) = f
+$$
+
+for a variety of operators $\mathcal{L}$ and a numerical solution depending only on space $u_N(\boldsymbol{x})$. 
+
+In this lecture we will add  consider two types of time-dependency
+
+$$
+\begin{align}
+\frac{\partial u}{\partial t} + \mathcal{L}(u) &=  f \\
+\frac{\partial^2 u}{\partial t^2} + \mathcal{L}(u) &= f
+\end{align}
+$$
+
+and approximations $u_N(\boldsymbol{x}, t) \in V_N = \text{span}\{\psi_j\}_{j=0}^N$:
+
+$$
+u_N(\boldsymbol{x}, t) = \sum_{j=0}^N \hat{u}_j(t) \psi_j(\boldsymbol{x})
+$$
+
+where the expansion coefficients are time dependent.
+
+## Finite difference in time, Galerkin in space {.smaller}
+
+Consider the equation
+
+$$
+\frac{\partial u}{\partial t} + \mathcal{L}(u) = f
+$$
+
+A finite difference approximation in time, with forward Euler:
+
+$$
+\frac{u^{n+1}-u^n}{\Delta t} + \mathcal{L}(u^n) = f^n
+$$
+
+where 
+
+$$
+u^n(\boldsymbol{x}) = u(\boldsymbol{x}, t_n), f^n(\boldsymbol{x}) = f(\boldsymbol{x}, t_n)
+$$
+
+and time is discretized as always for time domain $[0, T]$
+
+$$
+t_n = n \Delta t, \quad n=0,1, \ldots, N_t, \quad N_t=T/\Delta t
+$$
+
+::: {.callout-note}
+We normally drop the spatial dependence and write only $u^n$ or $f^n$.
+:::
+
+## The residual is now a function of time {.smaller}
+
+
+$$
+\mathcal{R}(u^{n+1}; u^n) = \frac{u^{n+1}-u^n}{\Delta t} + \mathcal{L}(u^n) - f^n
+$$
+
+
+::: {.callout-note}
+The notation $\mathcal{R}(u^{n+1}; u^n)$ is used to indicate that $u^{n+1}$ is the unknown and $u^n$ (right of the semicolon) is known.
+:::
+
+Introduce the approximation to $u^n(\boldsymbol{x})=u(\boldsymbol{x}, t_n)$
+
+$$
+u(\boldsymbol{x}, t_n) \approx u^{n}_N(\boldsymbol{x}) = \sum_{j=0}^N \hat{u}^{n}_j \psi_j(\boldsymbol{x})
+$$
+
+where $\hat{u}^n_j = \hat{u}_j(t_n)$ are the time dependent expansion coefficients (the unknowns at time $t_n$). Insert into the residual to get the **numerical residual**
+
+$$
+\mathcal{R}_N = \mathcal{R}(u^{n+1}_N; u^{n}_N) = \frac{u_N^{n+1}-u_N^n}{\Delta t} + \mathcal{L}(u_N^n) - f^n
+$$
+
+## The method of weighted residuals {.smaller}
+
+The method of weighted residuals is to find $u^{n+1}_N \in V_N$ such that
+
+$$
+(\mathcal{R}_N, v) = 0, \quad \forall \, v \in W
+$$
+
+and for the Galerkin method $W = V_N$.
+
+::: {.fragment}
+
+In order to solve the time-dependent problem we need to solve this Galerkin problem many times. The procedure is 
+
+1. Initialize $u_N^0(\boldsymbol{x})$ by projecting the given initial condition $u(\boldsymbol{x}, 0)$ to $V_N$ (function approximation, see lectures 8, 9). That is, find $u^0_N \in V_N$ such that
+$$
+(u^0_N-u(\boldsymbol{x}, 0), v)=0, \quad \forall \, v \in V_N
+$$
+2. For $n = 0, 1, \ldots, N_t-1$ find $u^{n+1}_N \in V_N$ such that
+
+$$
+(\mathcal{R}_N, v) = 0, \quad \forall \, v \in V_N
+$$
+
+:::
+
+# Stability of time-dependent variational methods
+
+## Recap {.smaller}
+
+Remember the early lectures 2, 3 and 5
+
+$$
+\text{Exponential decay}\quad\frac{\partial u(t)}{\partial t} = -a u(t)
+$$
+
+$$
+\text{Vibration equation} \quad \frac{\partial^2 u(t)}{\partial t^2} + \omega^2 u(t) = 0
+$$
+
+$$
+\text{Wave equation} \quad \frac{\partial^2 u(x, t)}{\partial t^2} = c^2\frac{\partial^2 u(x, t)}{\partial x^2}
+$$
+
+In order to study stability we introduced the ansatz
+
+$$
+u^{n+1} = g u^{n} \rightarrow u^{n} = g^n u^0
+$$
+
+into the discretized equations. For stability we required $|g| \le 1$.
+
+::: {.callout-note appearance="simple"}
+We actually called the amplification factor $A$, but since then we have started using matrices that we rather have as $A$. Hence the amplification factor is now called $g$.
+:::
+
+## Recap vibration equation {.smaller}
+
+$$
+\frac{\partial^2 u(t)}{\partial t^2} + \omega^2 u(t) = 0
+$$
+
+Discretize with central finite difference
+
+$$
+\frac{u^{n+1}-2u^n+u^{n-1}}{\Delta t^2} + \omega^2 u^n = 0
+$$
+
+Insert for ansatz $u^n = g^n u^0$
+
+$$
+g^n(g-2+g^{-1})u^{0} + (\omega \Delta t)^2 g^n u^0 = 0
+$$
+
+Divide by $g^n u^0$
+$$
+g+g^{-1} = 2-(\omega \Delta t)^2
+$$
+
+and solve quadratic equation ($g$ may be complex) to find stability $|g|=1$ for
+$$
+\omega \Delta t \le 2
+$$
+
+## Recap - stability of the diffusion equation {.smaller}
+
+$$
+\frac{\partial u(x, t)}{\partial t} = \frac{\partial^2 u(x, t)}{\partial x^2}
+$$
+
+Use forward Euler int time and central difference in space
+
+$$
+u_j^{n+1} - u_j^n = \frac{\Delta t}{\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})
+$$
+
+where $u^n_j = u(j\Delta x, n\Delta t)$ and $x_j=j\Delta x$ and $t_n=n\Delta t$. Make the ansatz as always
+
+$$
+u^{n+1}_j = g u^{n}_j \rightarrow u^{n}_j = g^n u^0_j
+$$
+
+and let the initial condition be a periodic Fourier wave with wavenumber $k$
+
+$$
+u^0_j = e^{\hat{\imath}k x_j}
+$$
+
+where $\hat{\imath}=\sqrt{-1}$.
+
+## Write the equation in matrix form {.smaller}
+
+$$
+u_j^{n+1} - u_j^n = \frac{\Delta t}{\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})
+$$
+
+$$
+\boldsymbol{u}^n = (u^n_j)_{j=0}^N
+$$
+
+$$
+\boldsymbol{u}^{n+1}-\boldsymbol{u}^n = \frac{\Delta t}{\Delta x^2}\tilde{D}^{(2)} \boldsymbol{u}^n
+$$
+
+$$
+D^{(2)} = \frac{1}{\Delta x^2} \tilde{D}^{(2)} = \frac{1}{\Delta x^2} \underbrace{\begin{bmatrix}
+-2 & 1 & 0 & 0  & 0 & 0 & 0 & 1  \\
+1 & -2 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & -2 & 1 & 0 & 0 & 0 & 0 \\
+\vdots & & & \ddots &  & & &\cdots \\
+0 & 0 & 0 & 0 &  1& -2& 1& 0 \\
+0 & 0 & 0& 0& 0& 1& -2& 1 \\
+1 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\
+\end{bmatrix}}_{\tilde{D}^{(2)}}
+$$
+
+
+## Find the amplification factor {.smaller}
+
+$$
+\boldsymbol{u}^{n+1}-\boldsymbol{u}^n = \frac{\Delta t}{\Delta x^2}\tilde{D}^{(2)} \boldsymbol{u}^n
+$$
+
+Insert for ansatz $\boldsymbol{u}^n = g^n \boldsymbol{u}^0$
+
+$$
+(g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \tilde{D}^{(2)} \boldsymbol{u}^0
+$$
+
+Inserting for ${u}_j^0=e^{ik j \Delta x}$ we get
+
+$$
+(g-1)e^{ikj \Delta x} = \frac{\Delta t}{\Delta x^2} (e^{ik(j+1)\Delta x} - 2e^{ikj\Delta x} + e^{ik(j-1)\Delta x})
+$$
+
+Divide by $e^{ikj\Delta x}$ to obtain
+
+$$
+g-1 = \frac{\Delta t}{\Delta x^2} (e^{ik\Delta x} - 2 + e^{-ik\Delta x})
+$$
+
+## Simplify $\small g-1 = \frac{\Delta t}{\Delta x^2} (e^{ik\Delta x} - 2 + e^{-ik\Delta x})$ {.smaller}
+
+Use $e^{ix}+e^{-ix} = 2 \cos x$, $\cos(2x) = \cos^2 x - \sin^2 x$ and $1=\cos^2x+\sin^2x$
+
+$$
+g = 1 - \frac{4 \Delta t}{\Delta x^2}\sin^2\left(\frac{k\Delta x}{2}\right)
+$$
+
+::: {.fragment}
+
+We want $|g|\le 1$, so we need
+
+$$
+\Big|1 - \frac{4 \Delta t}{\Delta x^2}\sin^2\left(\frac{k\Delta x}{2}\right)\Big| \le 1
+$$
+
+:::
+
+::: {.fragment}
+
+Since $\sin^2\left(k \Delta x/2\right) \le 1$ and positive, we get that $1- \frac{4 \Delta t}{\Delta x^2}$ is always less than 1. However, $1- \frac{4 \Delta t}{\Delta x^2}$ can be smaller than $-1$, and that gives us the stability limit
+
+$$
+1- \frac{4 \Delta t}{\Delta x^2} \ge -1 \Rightarrow \boxed{\Delta t \le \frac{\Delta x^2}{2}}
+$$
+
+:::
+
+## A lot of hard work to find {.smaller}
+
+$$
+\left|1- \frac{4 \Delta t}{\Delta x^2} \right| \le 1 \Rightarrow \Delta t \le \frac{\Delta x^2}{2}
+$$
+
+Can we find an easier approach?
+
+::: {.fragment}
+
+We have the simple looking formula
+
+$$
+(g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \tilde{D}^{(2)} \boldsymbol{u}^0
+$$
+
+But we cannot eliminate the two $\boldsymbol{u}^0$ terms on each side because of the matrix $\tilde{D}^{(2)}$!
+
+:::
+
+::: {.fragment}
+
+Eigenvalues! The eigenvalues $\lambda$ of a matrix $A$ with associated eigenvectors $\boldsymbol{x}$ are
+
+$$
+A  \boldsymbol{x} = \lambda \boldsymbol{x}
+$$
+
+Hence the simplification
+
+$$
+\tilde{D}^{(2)} \boldsymbol{u}^0 = \lambda \boldsymbol{u}^0 \Rightarrow (g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \lambda \boldsymbol{u}^0 \Rightarrow g=1+\frac{\lambda \Delta t}{\Delta x^2}
+$$
+
+:::
+
+## Stability limit through eigenvalues {.smaller}
+
+Assume the ansatz $\boldsymbol{u}^n=g^n\boldsymbol{u}^0$:
+$$
+(g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \tilde{D}^{(2)} \boldsymbol{u}^0
+$$
+
+Insert for $\tilde{D}^{(2)}\boldsymbol{u}^0 = \lambda \boldsymbol{u}^0$ to get
+
+$$
+g=1+\frac{\lambda \Delta t}{ \Delta x^2}
+$$
+
+To satisfy $|g| \le 1$
+
+$$
+|g|=|1+\frac{\lambda \Delta t}{ \Delta x^2}| \le 1
+$$
+
+But we need to compute the eigenvalues..
+
+## Compute eigenvalues {.smaller}
+
+```{python}
+#| echo : true 
+import numpy as np
+from scipy import sparse
+N = 11
+D2 = sparse.diags((1, 1, -2, 1, 1), (-N, -1, 0, 1, N), shape=(N+1, N+1))
+Lambda = np.linalg.eig(D2.toarray())[0]
+Lambda
+```
+
+The minimum eigenvalue is -4 (worst case). Hence we obtain again exactly the same limit
+
+$$
+|1+\frac{\lambda \Delta t}{ \Delta x^2}|\le 1 \Rightarrow |1-\frac{4 \Delta t}{ \Delta x^2}| \le 1 \Rightarrow \Delta t \le \frac{\Delta x^2}{2}
+$$
+
+But with a lot less work!
+
+::: {.callout-note}
+The complex exponentials $e^{\hat{\imath} k x}$ are eigenfunctions of the Laplace operator in 1D, so we actually used eigenvalue theory also for the hard approach, we just did not mention it!
+:::
+
+## Stability of the forward Euler method for variational forms {.smaller}
+
+For the forward Euler method we now consider the discretized Galerkin equation
+
+$$
+\left(u^{n+1}_N, v\right) = \left(u^{n}_N, v\right) + \Delta t \left(\mathcal{L}(u^n_N), v\right)
+$$
+
+and make the same ansatz as before
+
+$$
+u_N^{n+1} = g u_N^n \quad \text{and thus} \quad u^{n}_N = g^n u^0_N 
+$$
+
+::: {.fragment}
+
+Insert into the variational form
+
+$$
+\left(g^{n+1}u^{0}_N, v\right) = \left(g^n u^{0}_N, v\right) + \Delta t \left(\mathcal{L}(g^n u^0_N), v\right)
+$$
+
+Divide by $g^n$ ($g$ is not dependent on $x$) to obtain
+
+$$
+g \left(u^{0}_N, v\right) = \left(u^{0}_N, v\right) + \Delta t \left(\mathcal{L}(u^0_N), v\right)
+$$
+
+
+:::
+
+## Derive the linear algebra form {.smaller}
+
+Insert for $u^0_N = \sum_{j=0}^N \hat{u}^0_j \psi_j$ and $v=\psi_i$ to obtain
+
+$$
+g \sum_{j=0}^N \left(\psi_j, \psi_i \right) \hat{u}^0_j = \sum_{j=0}^N \left(\psi_j, \psi_i\right)\hat{u}^0_j + \Delta t \sum_{j=0}^N\left(\mathcal{L}(\psi_j), \psi_i\right) \hat{u}^0_j
+$$
+
+In matrix form this is
+
+$$
+g A \boldsymbol{\hat{u}}^0 = A \boldsymbol{\hat{u}}^0 + \Delta t M \boldsymbol{\hat{u}}^0 
+$$
+
+where $a_{ij}=(\psi_j, \psi_i)$ and $m_{ij} = \left( \mathcal{L}(\psi_j), \psi_i\right)$. Multiply from the left by $A^{-1}$ to obtain
+
+$$
+g \boldsymbol{\hat{u}}^0 = \boldsymbol{\hat{u}}^0 + \Delta t A^{-1}M \boldsymbol{\hat{u}}^0
+$$
+
+::: {.fragment}
+
+Compute the eigenvalues $\lambda$ of the matrix $H = A^{-1}M$ such that $H \boldsymbol{\hat{u}}^0 = \lambda \boldsymbol{\hat{u}}^0$ and
+
+$$
+g \boldsymbol{\hat{u}}^0 = \boldsymbol{\hat{u}}^0 + \lambda \Delta t \boldsymbol{\hat{u}}^0 \Rightarrow \boxed{g = 1 + \lambda \Delta t}
+$$
+
+$$
+\text{Stability limit:}\quad |g| = |1+\lambda \Delta t| \le 1 
+$$
+
+:::
+
+## Complete worked example, the diffusion equation {.smaller}
+
+$$
+\frac{\partial u}{\partial t} = \frac{\partial^2 u}{\partial x^2}, \quad x, t \in (0, L) \times (0, T]
+$$
+
+$$
+\begin{align}
+u(x, 0) &= p(x)=\sin(\pi x /L) + \sin(10 \pi x/L) \\ 
+u(0, t) &= 0, u(L, t) = 0
+\end{align}
+$$
+
+Forward Euler in time, Galerkin in space, and Dirichlet Legendre polynomials:
+
+$$
+\begin{matrix}
+\text{Basis:}\,\, & \psi_j(x) = P_j(X)-P_{j+2}(X) & V_N = \text{span}\{\psi_j\}_{j=0}^N \\
+\text{Mapping:} & x(X) = \frac{L}{2}(1+X) & X(x) = \frac{2x}{L}-1
+\end{matrix}
+$$
+
+::: {.fragment}
+
+We get the variational form used on the previous slide with diffusion for $\mathcal{L}(\psi_j)$ and integration by parts (boundary terms canceled since $\psi_j(0)=\psi_j(L)=0$):
+$$
+\sum_{j=0}^N(\psi_j, \psi_i) \hat{u}^{n+1}_j = \sum_{j=0}^N(\psi_j, \psi_i) \hat{u}^{n}_j - \Delta t\left( \sum_{j=0}^N (\psi'_j, \psi'_i) \hat{u}^{n}_j - \cancel{[u^n_N \psi_i]_{x=0}^{x=L}} \right)
+$$
+
+:::
+
+## The stiffness matrix $(\psi'_j, \psi'_i)$ {.smaller}
+
+$$
+\begin{align}
+\int_{0}^L\psi'_j(x) \psi'_i(x) dx &= \int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X))\frac{dX}{dx} (P'_{i}(X)-P'_{i+2}(X))\frac{dX}{dx} \frac{dx}{dX}dX \\ 
+&= \frac{2}{L} \int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X)) (P'_{i}(X)-P'_{i+2}(X))dX \\
+&= \frac{2}{L}(P'_{j}-P'_{j+2}, P'_{i}-P'_{i+2})_{L^2(-1, 1)}
+\end{align}
+$$
+
+::: {.fragment}
+
+
+Using equality: $(2j+3)P_{j+1} = P'_{j+2}-P'_{j}$ and $(P_{i+1}, P_{j+1})_{L^2(-1,1)}=\|P_{i+1}\|^2\delta_{ij}$ and $\|P_i\|^2=\frac{2}{2j+1}$
+
+$$
+\begin{align}
+\int_{0}^L\psi'_j(x) \psi'_i(x) dx &= \frac{2}{L}(-(2j+3)P_{j+1}, -(2j+3)P_{i+1}) \\ 
+&= \frac{2}{L}(2j+3)^2\|P_{i+1}\|^2 \delta_{ij}\\
+&= \frac{8j+12}{L} \delta_{ij}
+\end{align}
+$$
+
+:::
+
+## The mass matrix $(\psi_j, \psi_i)$ {.smaller}
+
+$$
+\begin{align}
+\int_{0}^L\psi_j(x) \psi_i(x) dx &= \int_{-1}^1 (P_{j}(X)-P_{j+2}(X)) (P_{i}(X)-P_{i+2}(X))\frac{dx}{dX}dX \\
+&= \frac{L}{2}(P_{j}-P_{j+2}, P_i-P_{i+2})_{L^2(-1, 1)} \\
+&= \frac{L}{2}\left( (P_j, P_i) - (P_{j+2}, P_i) - (P_j, P_{i+2}) + (P_{j+2}, P_{i+2}) \right)
+\end{align}
+$$
+
+::: {.fragment}
+
+Using now $(P_j, P_i) = \|P_i\|^2 \delta_{ij} = \frac{2}{2i+1} \delta_{ij}$:
+
+$$
+\begin{matrix}
+j=i & (\psi_i, \psi_i) = \frac{L}{2}((P_i, P_i) + (P_{i+2}, P_{i+2})) = \frac{L}{2}(\|P_i\|^2 + \|P_{i+2}\|^2) \\
+j=i+2 & (\psi_{i+2}, \psi_i) = -(P_{i+2}, P_{i+2}) = - \frac{L}{2}\|P_{i+2}\|^2
+\end{matrix}
+$$
+
+Since the mass matrix $a_{ij}=a_{ji}=(\psi_j, \psi_i)$ is symmetric, we get the tri-diagonal
+
+$$
+a_{ij} = a_{ji} = \frac{L}{2}\begin{cases} \|P_i\|^2+\|P_{i+2}\|^2, \quad &i = j \\
+- \|P_{i+2}\|^2, \quad  &j = i+2 \\
+0, \quad &\text{otherwise}
+\end{cases}
+$$
+
+:::
+
+## Implementation {.smaller}
+
+It is rather messy to work with composite basis functions. A very smart trick is thus to use a **stencil matrix** $S$, such that (summation on repeated $j$ index)
+
+$$
+\psi_i = P_i-P_{i+2} = s_{ij} P_j
+$$
+
+This defines $S \in \mathbb{R}^{(N+1) \times (N+3)}$ for the Dirichlet problem as
+
+$$
+s_{ij} = \begin{cases} 1 \quad &i=j \\
+-1 \quad &j=i+2
+\end{cases}
+\quad S = \begin{bmatrix}
+1 & 0 & -1 & 0 & 0 & \cdots\\
+0 & 1 & 0 & -1 & 0 & \cdots\\
+0 & 0 & 1 & 0 & -1 & \cdots\\
+\vdots & \vdots & \vdots & \ddots & \ddots & \ddots \\ 
+0 & 0 & 0 & \cdots & 1 & 0 & -1
+\end{bmatrix}
+$$
+
+With $\boldsymbol{\psi} = \{\psi_i\}_{i=0}^N$ and $\boldsymbol{P}=\{P_i\}_{i=0}^N$ we get all basis functions in matrix form:
+
+$$
+\boldsymbol{\psi} = S \boldsymbol{P}
+$$
+
+## Why is the stencil matrix smart? {.smaller}
+
+Consider the mass matrix 
+
+$$
+\begin{align}
+(\psi_j, \psi_i) &= (P_j-P_{j+2}, P_i-P_{i+2}) \\ 
+&= (P_j, P_i) - (P_j, P_{i+2}) - (P_{j+2}, P_i) + (P_{j+2}, P_{i+2})
+\end{align}
+$$
+
+You need to sort out the four (diagonal) matrices on the right.
+
+::: {.fragment}
+
+Now use stencil matrix instead (summation on $k$ and $l$):
+
+$$
+\begin{align}
+(\psi_j, \psi_i) &= (s_{jk}P_k, s_{il}P_l) \\ 
+&= s_{il} (P_l, P_k) s_{jk}
+\end{align}
+$$
+
+You need only the diagonal matrix $P = ((P_l, P_k))_{k,l=0}^{N,N}$, where $(P_l, P_k)=\frac{2}{2l+1}\delta_{kl}$.
+
+Matrix form
+
+$$
+A = ((\psi_j, \psi_i))_{i,j=0}^{N, N} = S P S^T
+$$
+
+:::
+
+## Stiffness matrix through stencil matrix {.smaller}
+
+$$
+\begin{align}
+(\psi''_j, \psi_i) &= (s_{jk}P''_k, s_{il}P_l) \\ 
+&= s_{il} (P''_l, P_k) s_{jk}
+\end{align}
+$$
+
+Again you need only the single matrix using orthogonal polynomials $q_{kl}=(P''_l, P_k) = -(P'_l, P'_k)$
+
+$$
+M = ((\psi''_j, \psi_i))_{i,j=0}^{N, N} = S Q S^T
+$$
+
+
+## Implementation using shenfun {.smaller}
+
+```{python}
+#| echo : true 
+import numpy as np
+import sympy as sp
+from scipy import sparse
+from shenfun import TrialFunction, TestFunction, FunctionSpace, \
+    project, inner, Dx, la, Function
+
+x, t, c, L = sp.symbols('x,t,c,L')
+
+class FE_Diffusion:
+    def __init__(self, N, L0=1, u0=sp.sin(sp.pi*x/L)+sp.sin(10*sp.pi*x/L), family='L'):
+        self.N = N
+        self.L = L0
+        self.u0 = u0.subs({L: L0})
+        self.V = self.get_function_space(family=family)
+        self.uh_np1 = Function(self.V)
+        self.uh_n = Function(self.V)
+        self.A, self.S = self.get_mats()
+        self.sol = la.Solver(self.A)
+        self.A = self.A.diags()
+        self.S = self.S.diags()
+        
+    def get_function_space(self, family='L'):
+        return FunctionSpace(self.N+1, family, bc=(0, 0), domain=(0, self.L))
+
+    def get_mats(self):
+        N = self.N
+        u = TrialFunction(self.V)
+        v = TestFunction(self.V)
+        a = inner(u, v)
+        s = inner(Dx(u, 0, 1), Dx(v, 0, 1))
+        return a, s
+
+    def get_eigenvalues(self):
+        return np.linalg.eig(np.linalg.inv(self.A.toarray()) @ self.S.toarray())[0]
+
+    def __call__(self, Nt, dt=0.1, save_step=100):
+        self.uh_n[:] = project(self.u0, self.V) # unm1 = u(x, 0)
+        xj = self.V.mesh()
+        plotdata = {0: self.uh_n(xj)}
+        f = Function(self.V)
+        for n in range(2, Nt+1):
+            f[:-2] = self.A @ self.uh_n[:-2] - dt*(self.S @ self.uh_n[:-2])
+            self.uh_np1[:] = self.sol(f)
+            self.uh_n[:] = self.uh_np1
+            if n % save_step == 0: # save every save_step timestep
+                plotdata[n] = self.uh_np1(xj)
+        return plotdata
+```
+
+## Run solver {.smaller}
+
+::: {.columns}
+::: {.column}
+Use longest stable time step $dt=2/\max (\lambda)$
+```{python}
+#| echo : true
+from utilities import plot_with_offset
+sol = FE_Diffusion(42, L0=2)
+dt = 2/max(sol.get_eigenvalues())
+data = sol(1000, dt=dt, save_step=100)
+plot_with_offset(data, sol.V.mesh(), figsize=(8, 3))
+```
+:::
+::: {.column}
+Use slightly too large time step $dt=2.04/\max (\lambda)$
+```{python}
+#| echo : true
+#
+#
+#
+data = sol(1000, dt=dt*1.02, save_step=100)
+plot_with_offset(data, sol.V.mesh(), figsize=(8, 3))
+```
+:::
+:::
+
+## Backward Euler for diffusion equation  {.smaller}
+
+The forward Euler method requires a very short time step for the diffusion equation. How about the backward Euler method
+
+$$
+\left(u^{n+1}_N, v\right) = \left(u^{n}_N, v\right) + \Delta t \left(\frac{\partial^2 u^{n+1}_N}{\partial x^2}, v\right)
+$$
+
+The linear algebra problem is now
+
+$$
+\sum_{j=0}^N \left( (\psi_j, \psi_i) + \Delta t (\psi'_j, \psi'_i) \right)  \hat{u}^{n+1}_j = \sum_{j=0}^N(\psi_j, \psi_i) \hat{u}^{n}_j
+$$
+
+Insert the ansatz $u^{n+1}_N = g u^n_N$
+
+$$
+\sum_{j=0}^N g \left( (\psi_j, \psi_i) + \Delta t (\psi'_j, \psi'_i) \right)  \hat{u}^{0}_j = \sum_{j=0}^N(\psi_j, \psi_i) \hat{u}^{0}_j
+$$
+
+## Backward Euler on matrix form {.smaller}
+
+$$
+\sum_{j=0}^N g \left( (\psi_j, \psi_i) + \Delta t (\psi'_j, \psi'_i) \right)  \hat{u}^{0}_j = \sum_{j=0}^N(\psi_j, \psi_i) \hat{u}^{0}_j
+$$
+
+becomes
+
+$$
+g (A + \Delta t S) \boldsymbol{\hat{u}}^0 = A \boldsymbol{\hat{u}}^0
+$$
+
+If we multiply from left to right by $A^{-1}$ we get
+
+$$
+g (I + \Delta t A^{-1}S) \boldsymbol{\hat{u}}^0 = \boldsymbol{\hat{u}}^0
+$$
+
+Here we can once again use $H=A^{-1}S$ and $H \boldsymbol{\hat{u}}^0 = \lambda \boldsymbol{\hat{u}}^0$ and thus we find 
+
+$$
+g = \frac{1}{1+\Delta t \lambda}
+$$
+
+Since all time steps and eigenvalues are real numbers larger than 0, $g$ is always less than 1 and positive and the backward Euler method is as such *unconditionally* stable. 
+
+## The wave equation as a variational problem {.smaller}
+
+$$
+\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2}, \quad (x, t) \in (0, L) \times (0, T]
+$$
+
+$$
+u(x, 0) = f(x) \quad \frac{\partial u}{\partial t}(x, 0) = 0
+$$
+
+We will consider both Dirichlet and Neumann boundary conditions in space and use finite differences in time such that
+
+$$
+\frac{u^{n+1}-2u^n+u^{n-1}}{\Delta t^2} = c^2 \frac{\partial^2 u^n}{\partial x^2}
+$$
+
+::: {.fragment}
+
+A numerical residual $\mathcal{R}_N = \mathcal{R}(u^{n+1}_N; u^n_N, u^{n-1}_N)$ can now be defined as
+
+$$
+\mathcal{R}_N={u_N^{n+1}-2u_N^n+u_N^{n-1}} - \alpha^2 (u_N^n)''
+$$
+
+with $\alpha = c \Delta t$ and $u'=\frac{\partial u}{\partial x}$. 
+
+
+:::
+
+## The Galerkin methods for the wave equation {.smaller}
+
+Initialize $u_N^0$ and $u_N^1$. The Galerkin method is to find $u^{n+1}_N \in V_N$ such that
+
+$$
+\left({u_N^{n+1}-2u_N^n+u_N^{n-1}} - \alpha^2 (u_N^n)'', v \right) = 0, \quad \forall \, v \in V_N
+$$
+
+for $n = 1, \ldots, N_t-1$. We can also integrate the last term by parts
+
+$$
+({u_N^{n+1}-2u_N^n+u_N^{n-1}}, v) + \alpha^2 \left( \left((u_N^n)', v' \right) - \left[(u^n_N)' v\right]_{x=0}^{x=L} \right)  = 0, \quad \forall \, v \in V_N
+$$
+
+::: {.fragment}
+
+Insert for $u^{n-1}_N, u^{n}_N, u^{n+1}_N \in V_N$ and use $v = \psi_i$ to get the linear algebra problem
+
+$$
+\sum_{j=0}^N \left(\psi_j, \psi_i \right)  \left(\hat{u}^{n+1}_j - 2\hat{u}^{n}_j + \hat{u}^{n-1}_j\right)
++ \alpha^2 \left(\sum_{j=0}^N \left(\psi'_j, \psi'_i \right) \hat{u}^n_j - \left[(u^n_N)' \psi_i\right]_{x=0}^{x=L}  \right) = 0
+$$
+
+
+::: {.callout-note appearance="default"}
+
+All time dependency is in the expansion coefficients $\hat{u}^n_{j}, \hat{u}^{n}_{j}, \hat{u}^{n-1}_{j}$.
+
+:::
+
+:::
+
+## Matrix form {.smaller}
+
+Rearrange such that the unknown $\hat{u}_j^{n+1}$ is on the left hand side and the rest of the known terms are on the right hand side
+
+$$
+\sum_{j=0}^N \left(\psi_j, \psi_i \right) \hat{u}^{n+1}_j =  \sum_{j=0}^N \left(\psi_j, \psi_i \right) (2\hat{u}^{n}_j - \hat{u}^{n-1}_j) - \alpha^2 \left( \sum_{j=0}^N \left(\psi'_j, \psi'_i \right) \hat{u}^n_j - \left[(u^n_N)' \psi_i\right]_{x=0}^{x=L} \right)
+$$
+
+With matrix notation, $a_{ij} = (\psi_j, \psi_i)$ and $s_{ij} = (\psi'_j, \psi'_i)$, we get
+
+$$
+A \boldsymbol{\hat{u}}^{n+1} = A (2 \boldsymbol{\hat{u}}^n - \boldsymbol{\hat{u}}^{n-1}) - \alpha^2 \left( S \boldsymbol{\hat{u}}^n  - \boldsymbol{b}^n \right)
+$$
+
+where $\boldsymbol{b}^n = ((u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0))_{i=0}^N$. 
+
+::: {.fragment}
+
+We can write this as
+
+$$
+A \boldsymbol{\hat{u}}^{n+1} = \boldsymbol{f}^n
+$$
+
+where the vector $\boldsymbol{f}^n = A (2 \boldsymbol{\hat{u}}^n - \boldsymbol{\hat{u}}^{n-1}) - \alpha^2 \left( S \boldsymbol{\hat{u}}^n  - \boldsymbol{b}^n\right)$.
+
+
+:::
+
+## Dirichlet boundary conditions $u(0, t) = a$ and $u(L, t) = b$ {.smaller}
+
+$$
+{b}_i^n = (u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0), \quad i=0,1, \ldots, N
+$$
+
+### Global variational methods 
+
+$$
+\psi_i(0) = \psi_i(L) = 0, \quad i=0, 1, \ldots, N
+$$
+
+$$
+\Rightarrow \boldsymbol{b}^n = 0, \quad \forall \, n=1, 2, \ldots, N_t-1
+$$
+
+::: {.fragment}
+
+Use a boundary function (with reference coordinate $X\in [-1, 1]$)
+$$
+B(x)=\tilde{B}(X) = \frac{b}{2}(1+X) + \frac{a}{2}(1-X)
+$$
+
+and solve for $\tilde{u}^n_N \in V_N = \text{span}\{\psi_j\}_{j=0}^N$. Final solution is then
+
+$$
+u^n_N = \tilde{u}^n_N + B(x)
+$$
+
+:::
+
+## Dirichlet with the finite element method {.smaller}
+
+Makes use of Lagrange polynomials and $\psi_i(0)= 1$ for $i=0$ and zero otherwise. Similarly, $\psi_i(L)=1$ for $i=N$ and zero otherwise. Hence it is only $b^n_0$ and $b^n_N$ that potentially are different from zero. However,
+
+$$
+u(0, t)=a = \hat{u}^{n+1}_0 \quad \text{and} \quad u(L, t) = b = \hat{u}^{n+1}_N
+$$ 
+
+::: {.callout-note}
+
+Since $\hat{u}_0$ and $\hat{u}_N$ are known we do not solve the linear PDE for $i=0$ or $i=N$. Simply ident the coefficient matrix $A$ and set $f^n_0=a$ and $f^n_N=b$.
+
+:::
+
+$$
+\begin{bmatrix}
+1 & 0 & 0 & \cdots & 0 \\
+a_{10} & a_{11}& a_{12} & \cdots & a_{1N} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+a_{N-1, 0} & a_{N-1, 1}& a_{N-1, 2}& \cdots & a_{N-1,N} \\
+0 & \cdots & 0 & 0 & 1 
+\end{bmatrix}
+\begin{bmatrix}
+\hat{u}^{n+1}_0 \\
+\hat{u}^{n+1}_1 \\
+\vdots \\
+\hat{u}^{n+1}_{N-1} \\
+\hat{u}^{n+1}_N
+\end{bmatrix}
+=
+\begin{bmatrix}
+a \\
+f^{n}_1 \\
+\vdots \\
+f^{n}_{N-1} \\
+b
+\end{bmatrix}
+$$
+
+## Neumann boundary conditions $u'(0, t) = g_0 \quad \text{and} \quad u'(L, t) = g_L$ {.smaller}
+
+$$
+{b}_i^n = (u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0), \quad i=0,1, \ldots, N
+$$
+
+
+### Apply Neumann strongly through basis
+
+Use basis functions satisfying
+$$
+\psi'_j(0) = \psi'_j(L) = 0, \quad j=0, 1, \ldots, N
+$$
+
+::: {.fragment}
+
+Add a boundary function $B(x)$ that satisfied $B'(0)=g_0$ and $B'(L)=g_L$
+
+$$
+B(x) = \tilde{B}(X) = \frac{L}{8}\left({g_L}(1+X)^2 - {g_0}(1-X)^2\right)
+$$
+
+The $L$ is there since $X=-1+\frac{2x}{L}$ and $\frac{\partial X}{\partial x}=\frac{2}{L}$ and thus
+
+$$
+\frac{\partial B}{\partial x} = \frac{\partial \tilde{B}}{\partial X}\frac{\partial X}{\partial x} = \frac{2}{L}\frac{\partial \tilde{B}}{\partial X}
+$$
+
+:::
+
+## Neumann boundary conditions weakly {.smaller}
+
+### Apply boundary condition weakly through variational form 
+
+$$
+{b}_i^n = (u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0), \quad i=0,1,\ldots, N
+$$
+
+Insert for $(u^n_N)'(0) = g_0$ and $(u^n_N)'(L)=g_L$
+
+$$
+{b}_i^n = g_L \psi_i(L) - g_0 \psi_i(0)
+$$
+
+Use any basis function, except those where all $\psi_i(0)=0$ and $\psi_i(L)=0$, for all $i=0,1,\ldots, N$. 
+
+::: {.fragment}
+
+* This works for the finite element method, where $\psi_0(0)=1$ and $\psi_N(L)=1$. Nothing else is required 
+
+* Also works for the global Galerkin method, e.g., Legendre polynomials $\psi_i(x)=P_i(X)$.
+
+* Does not work for Chebyshev because the method relies on integration by parts, which does not work with the Chebyshev weights $\omega(x)=1/\sqrt{1-X^2}$.
+
+:::
+
+## Stability of the wave equation in variational form {.smaller}
+
+We have derived the linear algebra problem
+
+$$
+A (\boldsymbol{\hat{u}}^{n+1} -2 \boldsymbol{\hat{u}}^n + \boldsymbol{\hat{u}}^{n-1}) = - \alpha^2 \left( S \boldsymbol{\hat{u}}^n  - \boldsymbol{b}^n \right)
+$$
+
+The ansatz $u_N^{n+1}=gu^{n}_N=g^{n+1}u_N^0$ also implies that 
+
+$$
+\boldsymbol{\hat{u}}^{n+1} = g \boldsymbol{\hat{u}}^n  = g^{n+1} \boldsymbol{\hat{u}}^0 \tag{1}
+$$
+
+since 
+
+$$
+u^{n+1}_N = g u^{n}_N \Rightarrow \sum_{j=0}^N \hat{u}^{n+1}_j \psi_j = g \sum_{j=0}^N \hat{u}^{n}_j \psi_j = \sum_{j=0}^N (g\hat{u}^{n}_j) \psi_j 
+$$
+
+Hence $\hat{u}^{n+1}_j = g\hat{u}^n_j$. Recursively, we get (1).
+
+
+## Find amplification factor {.smaller}
+
+$$
+A (\boldsymbol{\hat{u}}^{n+1} -2 \boldsymbol{\hat{u}}^n + \boldsymbol{\hat{u}}^{n-1}) = - \alpha^2 \left( S \boldsymbol{\hat{u}}^n  - \boldsymbol{b}^n \right)
+$$
+
+Insert for $\boldsymbol{\hat{u}}^{n} = g^{n} \boldsymbol{\hat{u}}^0$ and assume that $\boldsymbol{b}^n=\boldsymbol{0}$
+
+$$
+(g^{n+1}-2g^n+g^{n-1}) A \boldsymbol{\hat{u}}^0 = -\alpha^2 g^n S \boldsymbol{\hat{u}}^0
+$$
+
+Divide by $g^n$ and multiply by $A^{-1}$ from the left
+
+$$
+(g - 2 + g^{-1}) I \boldsymbol{\hat{u}}^0 = -\alpha^2 A^{-1}S \boldsymbol{\hat{u}} ^{0}
+$$
+
+::: {.callout-note}
+The identity matrix $I$ on the left is optional and can be removed.
+:::
+
+## Find amplification factor 2 {.smaller}
+
+$$
+(g - 2 + g^{-1}) I \boldsymbol{\hat{u}}^0 = -\alpha^2 A^{-1}S \boldsymbol{\hat{u}} ^{0}
+$$
+
+Use $H = A^{-1} S$ and the eigenvalues $H \boldsymbol{\hat{u}}^0 = \lambda I \boldsymbol{\hat{u}}^0$ to get
+
+$$
+(g - 2 + g^{-1}) I \boldsymbol{\hat{u}}^0 = -\alpha^2 \lambda I \boldsymbol{\hat{u}} ^{0}
+$$
+
+and after eliminating the equal terms on both sides
+$$
+g + g^{-1} = \beta \tag{1}
+$$
+
+where $\beta = -\alpha^2 \lambda +2$. 
+
+### For stability we need $|g| \le 1$.
+
+::: {.callout-note}
+
+If $g<1$ is a root of (1), then $g^{-1}>1$ is also a root, which is unstable. All roots must be $\le 1$. Hence $|g|=1$ is the only possible solution.
+
+:::
+
+
+## Find the longest stable time step {.smaller}
+
+$$
+g + g^{-1} = \beta
+$$
+
+
+Solve quadratic equation for $g$
+
+$$
+g = \frac{\beta \pm \sqrt{\beta^2-4}}{2}
+$$
+
+::: {.fragment}
+
+Assume $-2 \le \beta \le 2$ such that $\beta^2-4 \le 0$ and $\sqrt{\beta^2-4} = a \hat{\imath}$, with $a=\sqrt{4-\beta^2}$ real
+
+$$
+2|g| = \left| \beta \pm \sqrt{\beta^2-4}\right| = \left|\beta \pm a\hat{\imath} \right| = \sqrt{\beta^2+a^2} = \sqrt{\beta^2+4-\beta^2}=2
+$$
+
+For $-2 \le \beta \le 2$ we get that $|g|=1$ and the numerical solution is stable!
+
+:::
+::: {.fragment}
+
+Using $\beta=-\alpha^2 \lambda +2 = -(c \Delta t)^2 \lambda +2 = -2$ the longest possible time step is
+
+$$
+\Delta t \le \frac{1}{c}\sqrt{\frac{4}{\max(\lambda)}}
+$$
+
+:::
+
+## Implementation - Overload diffusion solver {.smaller}
+
+We are using the same function space and thus the same matrices $A$ and $S$ as the diffusion equation. We only need to reimplement the time stepper in `__call__`.
+
+```{python}
+#| echo : true 
+class Wave(FE_Diffusion):
+    def __init__(self, N, L0=1, c0=1, u0=sp.sin(sp.pi*x/L)):
+        u0 = u0.subs({c: c0})
+        FE_Diffusion.__init__(self, N, L0=L0, u0=u0)
+        self.c = c0
+        self.uh_nm1 = np.zeros_like(self.uh_n)
+
+    def __call__(self, Nt, dt=0.1, save_step=100):
+        self.uh_nm1[:] = project(self.u0.subs(t, 0), self.V)
+        xj = self.V.mesh()
+        plotdata = {0: self.uh_nm1(xj)}
+        self.uh_n[:] = project(self.u0.subs(t, dt), self.V)
+        if save_step == 1: plotdata[1] = self.uh_n(xj)
+
+        f = np.zeros(self.N+1)
+        alfa = self.c*dt
+        for n in range(2, Nt+1):
+            f[:-2] = self.A @ (2*self.uh_n[:-2]-self.uh_nm1[:-2]) \
+              - alfa**2*(self.S @ self.uh_n[:-2])
+            self.uh_np1[:] = self.sol(f)
+            self.uh_nm1[:] = self.uh_n
+            self.uh_n[:] = self.uh_np1
+            if n % save_step == 0: # save every save_step timestep
+                plotdata[n] = self.uh_np1(xj)
+        return plotdata 
+```
+
+## Check stability {.smaller}
+
+```{python}
+#| echo : true
+#| fig-align: center 
+sol = Wave(40, L0=2, c0=1, u0=sp.exp(-40*(x-L/2+c*t)**2))
+dt = 1/sol.c*np.sqrt(4/max(sol.get_eigenvalues()))
+data = sol(400, dt=dt, save_step=40)
+plot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))
+```
+```{python}
+#| echo : true
+#| fig-align: center 
+data = sol(400, dt=dt*1.01, save_step=40)
+plot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))
+```
