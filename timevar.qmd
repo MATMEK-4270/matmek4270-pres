@@ -36,7 +36,7 @@ $$
 
 for a variety of operators $\mathcal{L}$ and a numerical solution depending only on space $u_N(\boldsymbol{x})$. 
 
-In this lecture we will add  consider two types of time-dependency
+In this lecture we will add two types of time-dependency
 
 $$
 \begin{align}
@@ -195,7 +195,7 @@ $$
 \frac{\partial u(x, t)}{\partial t} = \frac{\partial^2 u(x, t)}{\partial x^2}
 $$
 
-Use forward Euler int time and central difference in space
+Use forward Euler in time and central difference in space
 
 $$
 u_j^{n+1} - u_j^n = \frac{\Delta t}{\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})
@@ -254,21 +254,21 @@ $$
 (g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \tilde{D}^{(2)} \boldsymbol{u}^0
 $$
 
-Inserting for ${u}_j^0=e^{ik j \Delta x}$ we get
+Inserting for ${u}_j^0=e^{\hat{\imath} k j \Delta x}$ we get
 
 $$
-(g-1)e^{ikj \Delta x} = \frac{\Delta t}{\Delta x^2} (e^{ik(j+1)\Delta x} - 2e^{ikj\Delta x} + e^{ik(j-1)\Delta x})
+(g-1)e^{\hat{\imath}kj \Delta x} = \frac{\Delta t}{\Delta x^2} (e^{\hat{\imath}k(j+1)\Delta x} - 2e^{\hat{\imath}kj\Delta x} + e^{\hat{\imath}k(j-1)\Delta x})
 $$
 
-Divide by $e^{ikj\Delta x}$ to obtain
+Divide by $e^{\hat{\imath}kj\Delta x}$ to obtain
 
 $$
-g-1 = \frac{\Delta t}{\Delta x^2} (e^{ik\Delta x} - 2 + e^{-ik\Delta x})
+g-1 = \frac{\Delta t}{\Delta x^2} (e^{\hat{\imath}k\Delta x} - 2 + e^{-\hat{\imath}k\Delta x})
 $$
 
-## Simplify $\small g-1 = \frac{\Delta t}{\Delta x^2} (e^{ik\Delta x} - 2 + e^{-ik\Delta x})$ {.smaller}
+## Simplify $\small g-1 = \frac{\Delta t}{\Delta x^2} (e^{\hat{\imath}k\Delta x} - 2 + e^{-\hat{\imath}k\Delta x})$ {.smaller}
 
-Use $e^{ix}+e^{-ix} = 2 \cos x$, $\cos(2x) = \cos^2 x - \sin^2 x$ and $1=\cos^2x+\sin^2x$
+Use $e^{\hat{\imath}x}+e^{-\hat{\imath}x} = 2 \cos x$, $\cos(2x) = \cos^2 x - \sin^2 x$ and $1=\cos^2x+\sin^2x$
 
 $$
 g = 1 - \frac{4 \Delta t}{\Delta x^2}\sin^2\left(\frac{k\Delta x}{2}\right)
@@ -322,10 +322,10 @@ $$
 A  \boldsymbol{x} = \lambda \boldsymbol{x}
 $$
 
-Hence the simplification
+Hence the simplification $\tilde{D}^{(2)} \boldsymbol{u}^0=\lambda \boldsymbol{u}^0$ and
 
 $$
-\tilde{D}^{(2)} \boldsymbol{u}^0 = \lambda \boldsymbol{u}^0 \Rightarrow (g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \lambda \boldsymbol{u}^0 \Rightarrow g=1+\frac{\lambda \Delta t}{\Delta x^2}
+(g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \lambda \boldsymbol{u}^0 \Rightarrow g=1+\frac{\lambda \Delta t}{\Delta x^2}
 $$
 
 :::
@@ -372,15 +372,15 @@ $$
 But with a lot less work!
 
 ::: {.callout-note}
-The complex exponentials $e^{\hat{\imath} k x}$ are eigenfunctions of the Laplace operator in 1D, so we actually used eigenvalue theory also for the hard approach, we just did not mention it!
+The complex exponentials $e^{\hat{\imath} k x}$ are **eigenfunctions** of the Laplace operator in 1D, so we actually used eigenvalue theory also for the hard approach, we just did not mention it!
 :::
 
-## Stability of the forward Euler method for variational forms {.smaller}
+## Stability of the forward Euler method for the Galerkin method {.smaller}
 
-For the forward Euler method we now consider the discretized Galerkin equation
+For the forward Euler method we now consider instead the Galerkin method for the discretization of space (instead of finite differences)
 
 $$
-\left(u^{n+1}_N, v\right) = \left(u^{n}_N, v\right) + \Delta t \left(\mathcal{L}(u^n_N), v\right)
+(\mathcal{R}_N, v)=0 \Rightarrow \left(u^{n+1}_N, v\right) = \left(u^{n}_N, v\right) + \Delta t \left(\mathcal{L}(u^n_N), v\right)
 $$
 
 and make the same ansatz as before
@@ -448,7 +448,7 @@ $$
 
 $$
 \begin{align}
-u(x, 0) &= p(x)=\sin(\pi x /L) + \sin(10 \pi x/L) \\ 
+u(x, 0) &= \sin(\pi x /L) + \sin(10 \pi x/L) \\ 
 u(0, t) &= 0, u(L, t) = 0
 \end{align}
 $$
@@ -902,14 +902,14 @@ $$
 
 ### Apply Neumann strongly through basis
 
-Use basis functions satisfying
+Use basis functions that eliminates $b_i^n$ and ensures $(\tilde{u}^n_N)'(0)=(\tilde{u}^n_N)'(L)=0$
 $$
 \psi'_j(0) = \psi'_j(L) = 0, \quad j=0, 1, \ldots, N
 $$
 
 ::: {.fragment}
 
-Add a boundary function $B(x)$ that satisfied $B'(0)=g_0$ and $B'(L)=g_L$
+Add a boundary function $u^n_N=\tilde{u}^n_N+B(x)$ that satisfied $B'(0)=g_0$ and $B'(L)=g_L$
 
 $$
 B(x) = \tilde{B}(X) = \frac{L}{8}\left({g_L}(1+X)^2 - {g_0}(1-X)^2\right)
