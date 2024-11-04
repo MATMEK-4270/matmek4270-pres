@@ -4260,7 +4260,7 @@
     "href": "timevar.html#finite-difference-in-time-galerkin-in-space",
     "title": "Time-dependent variational methods",
     "section": "Finite difference in time, Galerkin in space",
-    "text": "Finite difference in time, Galerkin in space\nConsider the equation\n\\[\n\\frac{\\partial u}{\\partial t} + \\mathcal{L}(u) = f\n\\]\nA finite difference approximation in time, with forward Euler:\n\\[\n\\frac{u^{n+1}-u^n}{\\Delta t} + \\mathcal{L}(u^n) = f^n\n\\]\nwhere\n\\[\nu^n(\\boldsymbol{x}) = u(\\boldsymbol{x}, t_n), f^n(\\boldsymbol{x}) = f(\\boldsymbol{x}, t_n)\n\\]\nand time is discretized as always for time domain \\([0, T]\\)\n\\[\nt_n = n \\Delta t, \\quad n=0,1, \\ldots, N_t, \\quad N_t=T/\\Delta t\n\\]\n\n\n\n\n\n\nNote\n\n\nWe normally drop the spatial dependence and write only \\(u^n\\) or \\(f^n\\)."
+    "text": "Finite difference in time, Galerkin in space\nConsider the equation\n\\[\n\\frac{\\partial u}{\\partial t} + \\mathcal{L}(u) = f\n\\]\nA finite difference approximation in time, with forward Euler:\n\\[\n\\frac{u^{n+1}-u^n}{\\Delta t} + \\mathcal{L}(u^n) = f^n\n\\]\nwhere\n\\[\nu^n(\\boldsymbol{x}) = u(\\boldsymbol{x}, t_n), f^n(\\boldsymbol{x}) = f(\\boldsymbol{x}, t_n)\n\\]\nand time is discretized as always for time domain \\([0, T]\\)\n\\[\nt_n = n \\Delta t, \\quad n=0,1, \\ldots, N_t, \\quad N_t=T/\\Delta t\n\\]\n\n\n\n\n\n\nWe normally drop the spatial dependence and write only \\(u^n\\) or \\(f^n\\)."
   },
   {
     "objectID": "timevar.html#the-residual",
