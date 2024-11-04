@@ -4632,5 +4632,12 @@
     "title": "Time-dependent variational methods",
     "section": "Stability limit through eigenvalues",
     "text": "Stability limit through eigenvalues\nAssume the ansatz \\(\\boldsymbol{u}^n=g^n\\boldsymbol{u}^0\\): \\[\n(g-1)\\boldsymbol{u}^0 = \\frac{\\Delta t}{\\Delta x^2} \\tilde{D}^{(2)} \\boldsymbol{u}^0\n\\]\nInsert for \\(\\tilde{D}^{(2)}\\boldsymbol{u}^0 = \\lambda \\boldsymbol{u}^0\\) to get\n\\[\ng=1+\\frac{\\lambda \\Delta t}{ \\Delta x^2}\n\\]\nTo satisfy \\(|g| \\le 1\\)\n\\[\n|g|=|1+\\frac{\\lambda \\Delta t}{ \\Delta x^2}| \\le 1\n\\]\nBut we need to compute the eigenvalues.."
+  },
+  {
+    "objectID": "timevar.html#recap---remember-the-early-lectures-2-3-and-5",
+    "href": "timevar.html#recap---remember-the-early-lectures-2-3-and-5",
+    "title": "Time-dependent variational methods",
+    "section": "Recap - remember the early lectures 2, 3 and 5",
+    "text": "Recap - remember the early lectures 2, 3 and 5\n\\[\n\\text{Exponential decay}\\quad\\frac{\\partial u(t)}{\\partial t} = -a u(t)\n\\]\n\\[\n\\text{Vibration equation} \\quad \\frac{\\partial^2 u(t)}{\\partial t^2} + \\omega^2 u(t) = 0\n\\]\n\\[\n\\text{Wave equation} \\quad \\frac{\\partial^2 u(x, t)}{\\partial t^2} = c^2\\frac{\\partial^2 u(x, t)}{\\partial x^2}\n\\]\nIn order to study stability we introduced the ansatz\n\\[\nu^{n+1} = g u^{n} \\rightarrow u^{n} = g^n u^0\n\\]\ninto the discretized equations. For stability we required \\(|g| \\le 1\\).\n\n\n\n\n\n\nWe actually called the amplification factor \\(A\\), but since then we have started using matrices that we rather have as \\(A\\). Hence the amplification factor is now called \\(g\\)."
   }
 ]
