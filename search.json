@@ -4639,5 +4639,19 @@
     "title": "Time-dependent variational methods",
     "section": "Recap - remember the early lectures 2, 3 and 5",
     "text": "Recap - remember the early lectures 2, 3 and 5\n\\[\n\\text{Exponential decay}\\quad\\frac{\\partial u(t)}{\\partial t} = -a u(t)\n\\]\n\\[\n\\text{Vibration equation} \\quad \\frac{\\partial^2 u(t)}{\\partial t^2} + \\omega^2 u(t) = 0\n\\]\n\\[\n\\text{Wave equation} \\quad \\frac{\\partial^2 u(x, t)}{\\partial t^2} = c^2\\frac{\\partial^2 u(x, t)}{\\partial x^2}\n\\]\nIn order to study stability we introduced the ansatz\n\\[\nu^{n+1} = g u^{n} \\rightarrow u^{n} = g^n u^0\n\\]\ninto the discretized equations. For stability we required \\(|g| \\le 1\\).\n\n\n\n\n\n\nWe actually called the amplification factor \\(A\\), but since then we have started using matrices that we rather have as \\(A\\). Hence the amplification factor is now called \\(g\\)."
+  },
+  {
+    "objectID": "timevar.html#summary",
+    "href": "timevar.html#summary",
+    "title": "Time-dependent variational methods",
+    "section": "Summary",
+    "text": "Summary\n\nWe have solved time-dependent PDEs using finite differences in time and the Galerkin method in space.\nIn order to compute stability limits we have made use of the common marching ansatz \\[\nu_N^{n+1}=gu_N^n\n\\] and used eigenvalues \\(\\lambda\\) and eigenfunctions \\(\\boldsymbol{\\hat{u}}^0\\) to find the amplification factor \\(g\\) \\[\n\\begin{align}\ng \\boldsymbol{\\hat{u}}^0 &= \\boldsymbol{\\hat{u}}^0 + \\Delta t A^{-1}M \\boldsymbol{\\hat{u}}^0\\\\\ng \\boldsymbol{\\hat{u}}^0 &= \\boldsymbol{\\hat{u}}^0 + \\lambda \\Delta t \\boldsymbol{\\hat{u}}^0 \\\\\n\\Rightarrow g &= 1 + \\lambda \\Delta t\n\\end{align}\n\\]\nWe have described how to apply Neumann boundary conditions both strongly (through basis functions) or weakly (through integration by parts of the variational form)\nWe have described how to utilize a stencil matrix for the implementation of composite basis functions."
+  },
+  {
+    "objectID": "timevar.html#summary-of-lecture",
+    "href": "timevar.html#summary-of-lecture",
+    "title": "Time-dependent variational methods",
+    "section": "Summary of lecture",
+    "text": "Summary of lecture\n\nWe have solved time-dependent PDEs using finite differences in time and the Galerkin method in space.\nIn order to compute stability limits we have made use of the common marching ansatz \\[\nu_N^{n+1}=gu_N^n\n\\] and used eigenvalues \\(\\lambda\\) and eigenfunctions \\(\\boldsymbol{\\hat{u}}^0\\) to find the amplification factor \\(g\\) \\[\n\\begin{align}\ng \\boldsymbol{\\hat{u}}^0 &= \\boldsymbol{\\hat{u}}^0 + \\Delta t A^{-1}M \\boldsymbol{\\hat{u}}^0\\\\\ng \\boldsymbol{\\hat{u}}^0 &= \\boldsymbol{\\hat{u}}^0 + \\lambda \\Delta t \\boldsymbol{\\hat{u}}^0 \\\\\n\\Rightarrow g &= 1 + \\lambda \\Delta t\n\\end{align}\n\\]\nWe have described how to apply Neumann boundary conditions both strongly (through basis functions) or weakly (through integration by parts of the variational form)\nWe have described how to utilize a stencil matrix for the implementation of composite basis functions."
   }
 ]

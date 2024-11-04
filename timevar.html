@@ -1331,6 +1331,23 @@ g = \frac{\beta \pm \sqrt{\beta^2-4}}{2}
 </div>
 </div>
 </div>
+</section>
+<section id="summary-of-lecture" class="slide level2 smaller">
+<h2>Summary of lecture</h2>
+<ul>
+<li>We have solved time-dependent PDEs using finite differences in time and the Galerkin method in space.</li>
+<li>In order to compute stability limits we have made use of the common marching ansatz <span class="math display">\[
+u_N^{n+1}=gu_N^n
+\]</span> and used eigenvalues <span class="math inline">\(\lambda\)</span> and eigenfunctions <span class="math inline">\(\boldsymbol{\hat{u}}^0\)</span> to find the amplification factor <span class="math inline">\(g\)</span> <span class="math display">\[
+\begin{align}
+g \boldsymbol{\hat{u}}^0 &amp;= \boldsymbol{\hat{u}}^0 + \Delta t A^{-1}M \boldsymbol{\hat{u}}^0\\
+g \boldsymbol{\hat{u}}^0 &amp;= \boldsymbol{\hat{u}}^0 + \lambda \Delta t \boldsymbol{\hat{u}}^0 \\
+\Rightarrow g &amp;= 1 + \lambda \Delta t
+\end{align}
+\]</span></li>
+<li>We have described how to apply Neumann boundary conditions both strongly (through basis functions) or weakly (through integration by parts of the variational form)</li>
+<li>We have described how to utilize a stencil matrix for the implementation of composite basis functions.</li>
+</ul>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
