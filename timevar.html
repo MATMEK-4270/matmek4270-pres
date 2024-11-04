@@ -411,7 +411,7 @@ Prof.&nbsp;Mikael Mortensen, University of Oslo
 \mathcal{L}(u) = f
 \]</span></p>
 <p>for a variety of operators <span class="math inline">\(\mathcal{L}\)</span> and a numerical solution depending only on space <span class="math inline">\(u_N(\boldsymbol{x})\)</span>.</p>
-<p>In this lecture we will add consider two types of time-dependency</p>
+<p>In this lecture we will add two types of time-dependency</p>
 <p><span class="math display">\[
 \begin{align}
 \frac{\partial u}{\partial t} + \mathcal{L}(u) &amp;=  f \\
@@ -557,7 +557,7 @@ g+g^{-1} = 2-(\omega \Delta t)^2
 <p><span class="math display">\[
 \frac{\partial u(x, t)}{\partial t} = \frac{\partial^2 u(x, t)}{\partial x^2}
 \]</span></p>
-<p>Use forward Euler int time and central difference in space</p>
+<p>Use forward Euler in time and central difference in space</p>
 <p><span class="math display">\[
 u_j^{n+1} - u_j^n = \frac{\Delta t}{\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})
 \]</span></p>
@@ -603,18 +603,18 @@ D^{(2)} = \frac{1}{\Delta x^2} \tilde{D}^{(2)} = \frac{1}{\Delta x^2} \underbrac
 <p><span class="math display">\[
 (g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \tilde{D}^{(2)} \boldsymbol{u}^0
 \]</span></p>
-<p>Inserting for <span class="math inline">\({u}_j^0=e^{ik j \Delta x}\)</span> we get</p>
+<p>Inserting for <span class="math inline">\({u}_j^0=e^{\hat{\imath} k j \Delta x}\)</span> we get</p>
 <p><span class="math display">\[
-(g-1)e^{ikj \Delta x} = \frac{\Delta t}{\Delta x^2} (e^{ik(j+1)\Delta x} - 2e^{ikj\Delta x} + e^{ik(j-1)\Delta x})
+(g-1)e^{\hat{\imath}kj \Delta x} = \frac{\Delta t}{\Delta x^2} (e^{\hat{\imath}k(j+1)\Delta x} - 2e^{\hat{\imath}kj\Delta x} + e^{\hat{\imath}k(j-1)\Delta x})
 \]</span></p>
-<p>Divide by <span class="math inline">\(e^{ikj\Delta x}\)</span> to obtain</p>
+<p>Divide by <span class="math inline">\(e^{\hat{\imath}kj\Delta x}\)</span> to obtain</p>
 <p><span class="math display">\[
-g-1 = \frac{\Delta t}{\Delta x^2} (e^{ik\Delta x} - 2 + e^{-ik\Delta x})
+g-1 = \frac{\Delta t}{\Delta x^2} (e^{\hat{\imath}k\Delta x} - 2 + e^{-\hat{\imath}k\Delta x})
 \]</span></p>
 </section>
-<section id="simplify-small-g-1-fracdelta-tdelta-x2-eikdelta-x---2-e-ikdelta-x" class="slide level2 smaller">
-<h2>Simplify <span class="math inline">\(\small g-1 = \frac{\Delta t}{\Delta x^2} (e^{ik\Delta x} - 2 + e^{-ik\Delta x})\)</span></h2>
-<p>Use <span class="math inline">\(e^{ix}+e^{-ix} = 2 \cos x\)</span>, <span class="math inline">\(\cos(2x) = \cos^2 x - \sin^2 x\)</span> and <span class="math inline">\(1=\cos^2x+\sin^2x\)</span></p>
+<section id="simplify-small-g-1-fracdelta-tdelta-x2-ehatimathkdelta-x---2-e-hatimathkdelta-x" class="slide level2 smaller">
+<h2>Simplify <span class="math inline">\(\small g-1 = \frac{\Delta t}{\Delta x^2} (e^{\hat{\imath}k\Delta x} - 2 + e^{-\hat{\imath}k\Delta x})\)</span></h2>
+<p>Use <span class="math inline">\(e^{\hat{\imath}x}+e^{-\hat{\imath}x} = 2 \cos x\)</span>, <span class="math inline">\(\cos(2x) = \cos^2 x - \sin^2 x\)</span> and <span class="math inline">\(1=\cos^2x+\sin^2x\)</span></p>
 <p><span class="math display">\[
 g = 1 - \frac{4 \Delta t}{\Delta x^2}\sin^2\left(\frac{k\Delta x}{2}\right)
 \]</span></p>
@@ -649,9 +649,9 @@ g = 1 - \frac{4 \Delta t}{\Delta x^2}\sin^2\left(\frac{k\Delta x}{2}\right)
 <p><span class="math display">\[
 A  \boldsymbol{x} = \lambda \boldsymbol{x}
 \]</span></p>
-<p>Hence the simplification</p>
+<p>Hence the simplification <span class="math inline">\(\tilde{D}^{(2)} \boldsymbol{u}^0=\lambda \boldsymbol{u}^0\)</span> and</p>
 <p><span class="math display">\[
-\tilde{D}^{(2)} \boldsymbol{u}^0 = \lambda \boldsymbol{u}^0 \Rightarrow (g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \lambda \boldsymbol{u}^0 \Rightarrow g=1+\frac{\lambda \Delta t}{\Delta x^2}
+(g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \lambda \boldsymbol{u}^0 \Rightarrow g=1+\frac{\lambda \Delta t}{\Delta x^2}
 \]</span></p>
 </div>
 </section>
@@ -699,16 +699,16 @@ g=1+\frac{\lambda \Delta t}{ \Delta x^2}
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>The complex exponentials <span class="math inline">\(e^{\hat{\imath} k x}\)</span> are eigenfunctions of the Laplace operator in 1D, so we actually used eigenvalue theory also for the hard approach, we just did not mention it!</p>
+<p>The complex exponentials <span class="math inline">\(e^{\hat{\imath} k x}\)</span> are <strong>eigenfunctions</strong> of the Laplace operator in 1D, so we actually used eigenvalue theory also for the hard approach, we just did not mention it!</p>
 </div>
 </div>
 </div>
 </section>
-<section id="stability-of-the-forward-euler-method-for-variational-forms" class="slide level2 smaller">
-<h2>Stability of the forward Euler method for variational forms</h2>
-<p>For the forward Euler method we now consider the discretized Galerkin equation</p>
+<section id="stability-of-the-forward-euler-method-for-the-galerkin-method" class="slide level2 smaller">
+<h2>Stability of the forward Euler method for the Galerkin method</h2>
+<p>For the forward Euler method we now consider instead the Galerkin method for the discretization of space (instead of finite differences)</p>
 <p><span class="math display">\[
-\left(u^{n+1}_N, v\right) = \left(u^{n}_N, v\right) + \Delta t \left(\mathcal{L}(u^n_N), v\right)
+(\mathcal{R}_N, v)=0 \Rightarrow \left(u^{n+1}_N, v\right) = \left(u^{n}_N, v\right) + \Delta t \left(\mathcal{L}(u^n_N), v\right)
 \]</span></p>
 <p>and make the same ansatz as before</p>
 <p><span class="math display">\[
@@ -756,7 +756,7 @@ g \boldsymbol{\hat{u}}^0 = \boldsymbol{\hat{u}}^0 + \lambda \Delta t \boldsymbol
 \]</span></p>
 <p><span class="math display">\[
 \begin{align}
-u(x, 0) &amp;= p(x)=\sin(\pi x /L) + \sin(10 \pi x/L) \\
+u(x, 0) &amp;= \sin(\pi x /L) + \sin(10 \pi x/L) \\
 u(0, t) &amp;= 0, u(L, t) = 0
 \end{align}
 \]</span></p>
@@ -1147,11 +1147,11 @@ b
 {b}_i^n = (u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0), \quad i=0,1, \ldots, N
 \]</span></p>
 <h3 id="apply-neumann-strongly-through-basis">Apply Neumann strongly through basis</h3>
-<p>Use basis functions satisfying <span class="math display">\[
+<p>Use basis functions that eliminates <span class="math inline">\(b_i^n\)</span> and ensures <span class="math inline">\((\tilde{u}^n_N)'(0)=(\tilde{u}^n_N)'(L)=0\)</span> <span class="math display">\[
 \psi'_j(0) = \psi'_j(L) = 0, \quad j=0, 1, \ldots, N
 \]</span></p>
 <div class="fragment">
-<p>Add a boundary function <span class="math inline">\(B(x)\)</span> that satisfied <span class="math inline">\(B'(0)=g_0\)</span> and <span class="math inline">\(B'(L)=g_L\)</span></p>
+<p>Add a boundary function <span class="math inline">\(u^n_N=\tilde{u}^n_N+B(x)\)</span> that satisfied <span class="math inline">\(B'(0)=g_0\)</span> and <span class="math inline">\(B'(L)=g_L\)</span></p>
 <p><span class="math display">\[
 B(x) = \tilde{B}(X) = \frac{L}{8}\left({g_L}(1+X)^2 - {g_0}(1-X)^2\right)
 \]</span></p>
