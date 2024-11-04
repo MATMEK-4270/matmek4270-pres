@@ -842,7 +842,7 @@ s_{ij} = \begin{cases} 1 \quad &amp;i=j \\
 0 &amp; 0 &amp; 0 &amp; \cdots &amp; 1 &amp; 0 &amp; -1
 \end{bmatrix}
 \]</span></p>
-<p>With <span class="math inline">\(\boldsymbol{\psi} = \{\psi_i\}_{i=0}^N\)</span> and <span class="math inline">\(\boldsymbol{P}=\{P_i\}_{i=0}^N\)</span> we get all basis functions in matrix form:</p>
+<p>With <span class="math inline">\(\boldsymbol{\psi} = \{\psi_i\}_{i=0}^N\)</span> and <span class="math inline">\(\boldsymbol{P}=\{P_i\}_{i=0}^{N+2}\)</span> we get all basis functions in matrix form:</p>
 <p><span class="math display">\[
 \boldsymbol{\psi} = S \boldsymbol{P}
 \]</span></p>
@@ -865,10 +865,10 @@ s_{ij} = \begin{cases} 1 \quad &amp;i=j \\
 &amp;= s_{il} (P_l, P_k) s_{jk}
 \end{align}
 \]</span></p>
-<p>You need only the diagonal matrix <span class="math inline">\(P = ((P_l, P_k))_{k,l=0}^{N,N}\)</span>, where <span class="math inline">\((P_l, P_k)=\frac{2}{2l+1}\delta_{kl}\)</span>.</p>
+<p>You need only the diagonal matrix <span class="math inline">\(P = ((P_l, P_k))_{k,l=0}^{N+2}\)</span>, where <span class="math inline">\((P_l, P_k)=\frac{2}{2l+1}\delta_{kl}\)</span>.</p>
 <p>Matrix form</p>
 <p><span class="math display">\[
-A = ((\psi_j, \psi_i))_{i,j=0}^{N, N} = S P S^T
+A = ((\psi_j, \psi_i))_{i,j=0}^{N} = S P S^T
 \]</span></p>
 </div>
 </section>
@@ -882,7 +882,7 @@ A = ((\psi_j, \psi_i))_{i,j=0}^{N, N} = S P S^T
 \]</span></p>
 <p>Again you need only the single matrix using orthogonal polynomials <span class="math inline">\(q_{kl}=(P''_l, P_k) = -(P'_l, P'_k)\)</span></p>
 <p><span class="math display">\[
-M = ((\psi''_j, \psi_i))_{i,j=0}^{N, N} = S Q S^T
+M = ((\psi''_j, \psi_i))_{i,j=0}^{N} = S Q S^T
 \]</span></p>
 </section>
 <section id="implementation-using-shenfun" class="slide level2 smaller">

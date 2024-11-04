@@ -4428,14 +4428,14 @@
     "href": "timevar.html#implementation",
     "title": "Time-dependent variational methods",
     "section": "Implementation",
-    "text": "Implementation\nIt is rather messy to work with composite basis functions. A very smart trick is thus to use a stencil matrix \\(S\\), such that (summation on repeated \\(j\\) index)\n\\[\n\\psi_i = P_i-P_{i+2} = s_{ij} P_j\n\\]\nThis defines \\(S \\in \\mathbb{R}^{(N+1) \\times (N+3)}\\) for the Dirichlet problem as\n\\[\ns_{ij} = \\begin{cases} 1 \\quad &i=j \\\\\n-1 \\quad &j=i+2\n\\end{cases}\n\\quad S = \\begin{bmatrix}\n1 & 0 & -1 & 0 & 0 & \\cdots\\\\\n0 & 1 & 0 & -1 & 0 & \\cdots\\\\\n0 & 0 & 1 & 0 & -1 & \\cdots\\\\\n\\vdots & \\vdots & \\vdots & \\ddots & \\ddots & \\ddots \\\\\n0 & 0 & 0 & \\cdots & 1 & 0 & -1\n\\end{bmatrix}\n\\]\nWith \\(\\boldsymbol{\\psi} = \\{\\psi_i\\}_{i=0}^N\\) and \\(\\boldsymbol{P}=\\{P_i\\}_{i=0}^N\\) we get all basis functions in matrix form:\n\\[\n\\boldsymbol{\\psi} = S \\boldsymbol{P}\n\\]"
+    "text": "Implementation\nIt is rather messy to work with composite basis functions. A very smart trick is thus to use a stencil matrix \\(S\\), such that (summation on repeated \\(j\\) index)\n\\[\n\\psi_i = P_i-P_{i+2} = s_{ij} P_j\n\\]\nThis defines \\(S \\in \\mathbb{R}^{(N+1) \\times (N+3)}\\) for the Dirichlet problem as\n\\[\ns_{ij} = \\begin{cases} 1 \\quad &i=j \\\\\n-1 \\quad &j=i+2\n\\end{cases}\n\\quad S = \\begin{bmatrix}\n1 & 0 & -1 & 0 & 0 & \\cdots\\\\\n0 & 1 & 0 & -1 & 0 & \\cdots\\\\\n0 & 0 & 1 & 0 & -1 & \\cdots\\\\\n\\vdots & \\vdots & \\vdots & \\ddots & \\ddots & \\ddots \\\\\n0 & 0 & 0 & \\cdots & 1 & 0 & -1\n\\end{bmatrix}\n\\]\nWith \\(\\boldsymbol{\\psi} = \\{\\psi_i\\}_{i=0}^N\\) and \\(\\boldsymbol{P}=\\{P_i\\}_{i=0}^{N+2}\\) we get all basis functions in matrix form:\n\\[\n\\boldsymbol{\\psi} = S \\boldsymbol{P}\n\\]"
   },
   {
     "objectID": "timevar.html#why-is-the-stencil-matrix-smart",
     "href": "timevar.html#why-is-the-stencil-matrix-smart",
     "title": "Time-dependent variational methods",
     "section": "Why is the stencil matrix smart?",
-    "text": "Why is the stencil matrix smart?\nConsider the mass matrix\n\\[\n\\begin{align}\n(\\psi_j, \\psi_i) &= (P_j-P_{j+2}, P_i-P_{i+2}) \\\\\n&= (P_j, P_i) - (P_j, P_{i+2}) - (P_{j+2}, P_i) + (P_{j+2}, P_{i+2})\n\\end{align}\n\\]\nYou need to sort out the four (diagonal) matrices on the right.\n\nNow use stencil matrix instead (summation on \\(k\\) and \\(l\\)):\n\\[\n\\begin{align}\n(\\psi_j, \\psi_i) &= (s_{jk}P_k, s_{il}P_l) \\\\\n&= s_{il} (P_l, P_k) s_{jk}\n\\end{align}\n\\]\nYou need only the diagonal matrix \\(P = ((P_l, P_k))_{k,l=0}^{N,N}\\), where \\((P_l, P_k)=\\frac{2}{2l+1}\\delta_{kl}\\).\nMatrix form\n\\[\nA = ((\\psi_j, \\psi_i))_{i,j=0}^{N, N} = S P S^T\n\\]"
+    "text": "Why is the stencil matrix smart?\nConsider the mass matrix\n\\[\n\\begin{align}\n(\\psi_j, \\psi_i) &= (P_j-P_{j+2}, P_i-P_{i+2}) \\\\\n&= (P_j, P_i) - (P_j, P_{i+2}) - (P_{j+2}, P_i) + (P_{j+2}, P_{i+2})\n\\end{align}\n\\]\nYou need to sort out the four (diagonal) matrices on the right.\n\nNow use stencil matrix instead (summation on \\(k\\) and \\(l\\)):\n\\[\n\\begin{align}\n(\\psi_j, \\psi_i) &= (s_{jk}P_k, s_{il}P_l) \\\\\n&= s_{il} (P_l, P_k) s_{jk}\n\\end{align}\n\\]\nYou need only the diagonal matrix \\(P = ((P_l, P_k))_{k,l=0}^{N+2}\\), where \\((P_l, P_k)=\\frac{2}{2l+1}\\delta_{kl}\\).\nMatrix form\n\\[\nA = ((\\psi_j, \\psi_i))_{i,j=0}^{N} = S P S^T\n\\]"
   },
   {
     "objectID": "timevar.html#stiffness-matrix-with-stencil-matrix",
@@ -4449,7 +4449,7 @@
     "href": "timevar.html#stiffness-matrix-through-stencil-matrix",
     "title": "Time-dependent variational methods",
     "section": "Stiffness matrix through stencil matrix",
-    "text": "Stiffness matrix through stencil matrix\n\\[\n\\begin{align}\n(\\psi''_j, \\psi_i) &= (s_{jk}P''_k, s_{il}P_l) \\\\\n&= s_{il} (P''_l, P_k) s_{jk}\n\\end{align}\n\\]\nAgain you need only the single matrix using orthogonal polynomials \\(q_{kl}=(P''_l, P_k) = -(P'_l, P'_k)\\)\n\\[\nM = ((\\psi''_j, \\psi_i))_{i,j=0}^{N, N} = S Q S^T\n\\]"
+    "text": "Stiffness matrix through stencil matrix\n\\[\n\\begin{align}\n(\\psi''_j, \\psi_i) &= (s_{jk}P''_k, s_{il}P_l) \\\\\n&= s_{il} (P''_l, P_k) s_{jk}\n\\end{align}\n\\]\nAgain you need only the single matrix using orthogonal polynomials \\(q_{kl}=(P''_l, P_k) = -(P'_l, P'_k)\\)\n\\[\nM = ((\\psi''_j, \\psi_i))_{i,j=0}^{N} = S Q S^T\n\\]"
   },
   {
     "objectID": "timevar.html#implementation-using-shenfun",
