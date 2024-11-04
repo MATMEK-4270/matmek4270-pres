@@ -79,7 +79,7 @@ $$
 t_n = n \Delta t, \quad n=0,1, \ldots, N_t, \quad N_t=T/\Delta t
 $$
 
-::: {.callout-note}
+::: {.callout-note appearance="simple"}
 We normally drop the spatial dependence and write only $u^n$ or $f^n$.
 :::
 
@@ -135,9 +135,7 @@ $$
 
 # Stability of time-dependent variational methods
 
-## Recap {.smaller}
-
-Remember the early lectures 2, 3 and 5
+## Recap - remember the early lectures 2, 3 and 5 {.smaller}
 
 $$
 \text{Exponential decay}\quad\frac{\partial u(t)}{\partial t} = -a u(t)
@@ -1107,3 +1105,23 @@ plot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))
 data = sol(400, dt=dt*1.01, save_step=40)
 plot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))
 ```
+
+## Summary of lecture {.smaller}
+
+* We have solved time-dependent PDEs using finite differences in time and the Galerkin method in space.
+* In order to compute stability limits we have made use of the common marching ansatz
+$$
+u_N^{n+1}=gu_N^n
+$$
+and used eigenvalues $\lambda$ and eigenfunctions $\boldsymbol{\hat{u}}^0$ to find the amplification factor $g$
+$$
+\begin{align}
+g \boldsymbol{\hat{u}}^0 &= \boldsymbol{\hat{u}}^0 + \Delta t A^{-1}M \boldsymbol{\hat{u}}^0\\
+g \boldsymbol{\hat{u}}^0 &= \boldsymbol{\hat{u}}^0 + \lambda \Delta t \boldsymbol{\hat{u}}^0 \\
+\Rightarrow g &= 1 + \lambda \Delta t
+\end{align}
+$$
+* We have described how to apply Neumann boundary conditions both strongly (through basis functions) or weakly (through integration by parts of the variational form)
+* We have described how to utilize a stencil matrix for the implementation of composite basis functions.
+
+
