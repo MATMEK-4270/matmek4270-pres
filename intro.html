@@ -246,7 +246,7 @@ Prof.&nbsp;Mikael Mortensen, University of Oslo
 <section id="principal-developer-of-shenfun" class="slide level2 smaller">
 <h2>Principal developer of Shenfun</h2>
 <p>High performance computing platform for solving PDEs by the spectral Galerkin method. Written in Python (Cython). <a href="https://github.com/spectralDNS/shenfun">https://github.com/spectralDNS/shenfun</a></p>
-<div class="quarto-layout-panel" height="300" data-layout-ncol="3">
+<div class="quarto-layout-panel" data-layout-ncol="3" height="300">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
 <p><img data-src="https://raw.githack.com/spectralDNS/spectralutilities/master/figures/strong_scaling_pencil_col.png"></p>
@@ -420,7 +420,7 @@ u'=-au,\quad u(0)=I,\ t\in (0,T]
 <li>Fast to learn, derive, and implement</li>
 <li>A very useful tool to know, even if you aim at using the finite element or the finite volume method</li>
 </ul>
-<div id="e9d27b3f" class="cell" data-execution_count="1">
+<div id="c1f46deb" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -459,7 +459,7 @@ u'=-au,\quad u(0)=I,\ t\in (0,T]
 <section id="step-1-discretizing-the-domain-1" class="slide level2 smaller">
 <h2>Step 1: Discretizing the domain</h2>
 <p><span class="math inline">\(u^n\)</span> is a <strong>mesh function</strong>, defined at the mesh points <span class="math inline">\(t_n\)</span>, <span class="math inline">\(n=0,\ldots,N_t\)</span> only.</p>
-<div id="30ab777a" class="cell" data-execution_count="2">
+<div id="e06ef93d" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -477,7 +477,7 @@ u'=-au,\quad u(0)=I,\ t\in (0,T]
 u(t) \approx u^n + \frac{u^{n+1}-u^n}{t_{n+1}-t_n}(t - t_n)
 \end{equation}
 \]</span></p>
-<div id="65ae303c" class="cell" data-execution_count="3">
+<div id="71aac970" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -721,7 +721,7 @@ u^{n+1} = \frac{1 - (1-\theta) a\Delta t}{1 + \theta a\Delta t}u^n
 </section>
 <section id="in-python-1" class="slide level2 smaller">
 <h2>In Python</h2>
-<div id="beb6b725" class="cell" data-execution_count="4">
+<div id="3b8d5857" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a></a><span class="kw">def</span> solver(I, a, T, dt, theta):</span>
 <span id="cb2-3"><a></a>    <span class="co">"""Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt."""</span></span>
@@ -756,7 +756,7 @@ t= 8.000 u=7.0838e-05</code></pre>
 <section id="plot-the-solution" class="slide level2 smaller">
 <h2>Plot the solution</h2>
 <p>We will also learn about plotting. It is very important to present data in a clear and consise manner. It is very easy to generate a <em>naked</em> plot</p>
-<div id="62e49e8e" class="cell" data-execution_count="5">
+<div id="bdd3068b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb4-2"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">8</span>, <span class="fl">0.8</span>, <span class="dv">1</span></span>
 <span id="cb4-3"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta)</span>
@@ -775,7 +775,7 @@ t= 8.000 u=7.0838e-05</code></pre>
 <section id="plot-the-solution-1" class="slide level2 smaller">
 <h2>Plot the solution</h2>
 <p>But you should always add legends, titles, exact solution, etc. Make the plot nice:-)</p>
-<div id="06e66f1e" class="cell" data-execution_count="6">
+<div id="6e665d96" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
 <span id="cb5-2"><a></a>u, t <span class="op">=</span> solver(I<span class="op">=</span>I, a<span class="op">=</span>a, T<span class="op">=</span>T, dt<span class="op">=</span><span class="fl">0.8</span>, theta<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb5-3"><a></a>te <span class="op">=</span> np.linspace(<span class="dv">0</span>, T, <span class="dv">1000</span>)</span>
@@ -796,7 +796,7 @@ t= 8.000 u=7.0838e-05</code></pre>
 </section>
 <section id="plotly-is-a-very-good-alternative" class="slide level2">
 <h2><a href="https://plotly.com/">Plotly</a> is a very good alternative</h2>
-<div id="032191b8" class="cell" data-execution_count="7">
+<div id="9d10e29d" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
 <span id="cb6-2"><a></a>pfig <span class="op">=</span> px.line(x<span class="op">=</span>t, y<span class="op">=</span>u, labels<span class="op">=</span>{<span class="st">'x'</span>: <span class="st">'Time'</span>, <span class="st">'y'</span>: <span class="st">'u(t)'</span>}, </span>
 <span id="cb6-3"><a></a>               width<span class="op">=</span><span class="dv">600</span>, height<span class="op">=</span><span class="dv">400</span>, title<span class="op">=</span><span class="st">'Decay'</span>,</span>
@@ -812,9 +812,9 @@ t= 8.000 u=7.0838e-05</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.1.0.min.js" integrity="sha256-Ei4740bWZhaUTQuD6q9yQlgVCMPBz6CZWhevDYPv93A=" crossorigin="anonymous"></script>                <div id="5871cfaf-f508-46b1-ac54-ff24278ef958" class="plotly-graph-div" style="height:400px; width:600px;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("5871cfaf-f508-46b1-ac54-ff24278ef958")) {                    Plotly.newPlot(                        "5871cfaf-f508-46b1-ac54-ff24278ef958",                        [{"hovertemplate":"Time=%{x}\u003cbr\u003eu(t)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","line":{"color":"#1F77B4","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"","orientation":"v","showlegend":false,"x":{"dtype":"f8","bdata":"AAAAAAAAAACamZmZmZnpP5qZmZmZmfk\u002fNDMzMzMzA0CamZmZmZkJQAAAAAAAABBANDMzMzMzE0BnZmZmZmYWQJqZmZmZmRlAzczMzMzMHEAAAAAAAAAgQA=="},"xaxis":"x","y":{"dtype":"f8","bdata":"AAAAAAAA8D\u002fYiZ3YiZ3YPxyl21dW78I\u002feWC0JHEhrT+\u002f5wBrfmiWP+GKigOwPIE\u002fRq5yBcCEaj9dcgmOHWZUPyxhmBUGYj8\u002fIXImrgQkKD8ZRDE33JESPw=="},"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"rgb(36,36,36)"},"error_y":{"color":"rgb(36,36,36)"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"baxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2d"}],"histogram":[{"marker":{"line":{"color":"white","width":0.6}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"rgb(237,237,237)"},"line":{"color":"white"}},"header":{"fill":{"color":"rgb(217,217,217)"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"colorscale":{"diverging":[[0.0,"rgb(103,0,31)"],[0.1,"rgb(178,24,43)"],[0.2,"rgb(214,96,77)"],[0.3,"rgb(244,165,130)"],[0.4,"rgb(253,219,199)"],[0.5,"rgb(247,247,247)"],[0.6,"rgb(209,229,240)"],[0.7,"rgb(146,197,222)"],[0.8,"rgb(67,147,195)"],[0.9,"rgb(33,102,172)"],[1.0,"rgb(5,48,97)"]],"sequential":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"sequentialminus":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"colorway":["#1F77B4","#FF7F0E","#2CA02C","#D62728","#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF"],"font":{"color":"rgb(36,36,36)"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","radialaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"zaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"}},"shapedefaults":{"fillcolor":"black","line":{"width":0},"opacity":0.3},"ternary":{"aaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"baxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","caxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Time"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"u(t)"}},"legend":{"tracegroupgap":0},"title":{"text":"Decay"},"height":400,"width":600},                        {"responsive": true}                    ).then(function(){
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.1.0.min.js" integrity="sha256-Ei4740bWZhaUTQuD6q9yQlgVCMPBz6CZWhevDYPv93A=" crossorigin="anonymous"></script>                <div id="9d186a59-6d23-41e0-854f-30ff888b3581" class="plotly-graph-div" style="height:400px; width:600px;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("9d186a59-6d23-41e0-854f-30ff888b3581")) {                    Plotly.newPlot(                        "9d186a59-6d23-41e0-854f-30ff888b3581",                        [{"hovertemplate":"Time=%{x}\u003cbr\u003eu(t)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","line":{"color":"#1F77B4","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"","orientation":"v","showlegend":false,"x":{"dtype":"f8","bdata":"AAAAAAAAAACamZmZmZnpP5qZmZmZmfk\u002fNDMzMzMzA0CamZmZmZkJQAAAAAAAABBANDMzMzMzE0BnZmZmZmYWQJqZmZmZmRlAzczMzMzMHEAAAAAAAAAgQA=="},"xaxis":"x","y":{"dtype":"f8","bdata":"AAAAAAAA8D\u002fYiZ3YiZ3YPxyl21dW78I\u002feWC0JHEhrT+\u002f5wBrfmiWP+GKigOwPIE\u002fRq5yBcCEaj9dcgmOHWZUPyxhmBUGYj8\u002fIXImrgQkKD8ZRDE33JESPw=="},"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"rgb(36,36,36)"},"error_y":{"color":"rgb(36,36,36)"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"baxis":{"endlinecolor":"rgb(36,36,36)","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"rgb(36,36,36)"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"histogram2d"}],"histogram":[{"marker":{"line":{"color":"white","width":0.6}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"rgb(237,237,237)"},"line":{"color":"white"}},"header":{"fill":{"color":"rgb(217,217,217)"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":1,"tickcolor":"rgb(36,36,36)","ticks":"outside"}},"colorscale":{"diverging":[[0.0,"rgb(103,0,31)"],[0.1,"rgb(178,24,43)"],[0.2,"rgb(214,96,77)"],[0.3,"rgb(244,165,130)"],[0.4,"rgb(253,219,199)"],[0.5,"rgb(247,247,247)"],[0.6,"rgb(209,229,240)"],[0.7,"rgb(146,197,222)"],[0.8,"rgb(67,147,195)"],[0.9,"rgb(33,102,172)"],[1.0,"rgb(5,48,97)"]],"sequential":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]],"sequentialminus":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"colorway":["#1F77B4","#FF7F0E","#2CA02C","#D62728","#9467BD","#8C564B","#E377C2","#7F7F7F","#BCBD22","#17BECF"],"font":{"color":"rgb(36,36,36)"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"white"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","radialaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"zaxis":{"backgroundcolor":"white","gridcolor":"rgb(232,232,232)","gridwidth":2,"linecolor":"rgb(36,36,36)","showbackground":true,"showgrid":false,"showline":true,"ticks":"outside","zeroline":false,"zerolinecolor":"rgb(36,36,36)"}},"shapedefaults":{"fillcolor":"black","line":{"width":0},"opacity":0.3},"ternary":{"aaxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"baxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"},"bgcolor":"white","caxis":{"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside"}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"},"yaxis":{"automargin":true,"gridcolor":"rgb(232,232,232)","linecolor":"rgb(36,36,36)","showgrid":false,"showline":true,"ticks":"outside","title":{"standoff":15},"zeroline":false,"zerolinecolor":"rgb(36,36,36)"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Time"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"u(t)"}},"legend":{"tracegroupgap":0},"title":{"text":"Decay"},"height":400,"width":600},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('5871cfaf-f508-46b1-ac54-ff24278ef958');
+var gd = document.getElementById('9d186a59-6d23-41e0-854f-30ff888b3581');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -921,7 +921,7 @@ u^3 &amp;=Au^2= 0.00265290804728
 </section>
 <section id="the-test-based-on-exact-numerical-solution" class="slide level2 smaller">
 <h2>The test based on exact numerical solution</h2>
-<div id="ed28ccfe" class="cell" data-execution_count="8">
+<div id="a8d60753" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="kw">def</span> test_solver_three_steps(solver):</span>
 <span id="cb7-2"><a></a>    <span class="co">"""Compare three steps with known manual computations."""</span></span>
 <span id="cb7-3"><a></a>    theta <span class="op">=</span> <span class="fl">0.8</span></span>
@@ -1002,7 +1002,7 @@ u^3 &amp;=Au^2= 0.00265290804728
 E = ||e^n||_{\ell^2}  = \sqrt{\Delta t\sum_{n=0}^{N_t} (e^n)^2}
 \]</span></p>
 <p>Python code for the norm:</p>
-<div id="7c3c1bd7" class="cell" data-execution_count="9">
+<div id="e3c89d5b" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>u_exact <span class="op">=</span> <span class="kw">lambda</span> t, I, a: I<span class="op">*</span>np.exp(<span class="op">-</span>a<span class="op">*</span>t)</span>
 <span id="cb8-2"><a></a>I, a, T, dt, theta <span class="op">=</span> <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">8.</span>, <span class="fl">0.2</span>, <span class="dv">1</span></span>
 <span id="cb8-3"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta)</span>
@@ -1058,7 +1058,7 @@ w_i = u_i \cdot v_i, \quad \forall \, i=0, 1, \ldots, N
 </div>
 </div>
 <p>Regular (scalar) implementation:</p>
-<div id="22979b92" class="cell" data-execution_count="10">
+<div id="08820b07" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>N <span class="op">=</span> <span class="dv">1000</span></span>
 <span id="cb10-2"><a></a>u <span class="op">=</span> np.random.random(N)</span>
 <span id="cb10-3"><a></a>v <span class="op">=</span> np.random.random(N)</span>
@@ -1068,7 +1068,7 @@ w_i = u_i \cdot v_i, \quad \forall \, i=0, 1, \ldots, N
 <span id="cb10-7"><a></a>    w[i] <span class="op">=</span> u[i] <span class="op">*</span> v[i]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vectorized:</p>
-<div id="767f6c8e" class="cell" data-execution_count="11">
+<div id="026d64eb" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>w[:] <span class="op">=</span> u <span class="op">*</span> v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Numpy is heavily vectorized! So much so that mult, add, div, etc are vectorized by default!</p>
@@ -1146,9 +1146,9 @@ u^2 &amp; = A u^1 = A^2 u^0,\\
 u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 \end{cases}
 \]</span></p>
-<div id="ab3670f1" class="cell" data-execution_count="12">
+<div id="aa2b047a" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>np.cumprod([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="74">
+<div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>array([1, 2, 4, 8])</code></pre>
 </div>
 </div>
@@ -1160,7 +1160,7 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <li>Python for-loops are slow!</li>
 <li>Python for-loops usually requires more lines of code.</li>
 </ul>
-<div id="fe8f33eb" class="cell" data-execution_count="13">
+<div id="a1a1eda7" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="kw">def</span> f0(u, I, theta, a, dt):</span>
 <span id="cb17-2"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                  </span>
 <span id="cb17-3"><a></a>    u[<span class="dv">1</span>:] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)</span>
@@ -1185,7 +1185,7 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 </section>
 <section id="why-vectorization-timings" class="slide level2 smaller">
 <h2>Why vectorization? Timings</h2>
-<div id="b8f5d544" class="cell" data-execution_count="14">
+<div id="52058af1" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a><span class="kw">def</span> f0(u, I, theta, a, dt):</span>
 <span id="cb18-2"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                  </span>
 <span id="cb18-3"><a></a>    u[<span class="dv">1</span>:] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)</span>
@@ -1197,21 +1197,21 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <span id="cb18-9"><a></a>        u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)<span class="op">*</span>u[n]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lets try some timings:</p>
-<div id="e4127dd5" class="cell" data-execution_count="15">
+<div id="cfa0e47c" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">1000</span> f0(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="77">
-<pre><code>&lt;TimeitResult : 1.53 μs ± 399 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>&lt;TimeitResult : 1.46 μs ± 114 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
 </div>
 </div>
-<div id="80eea59d" class="cell" data-execution_count="16">
+<div id="18ca95db" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">1000</span> f1(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="78">
-<pre><code>&lt;TimeitResult : 2.11 μs ± 157 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>&lt;TimeitResult : 2.05 μs ± 141 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;</code></pre>
 </div>
 </div>
 <div class="fragment">
 <p>Hmm. Not really what’s expected. Why? Because the array <code>u</code> is really short! Lets try a longer array</p>
-<div id="86615998" class="cell" data-execution_count="17">
+<div id="7ff67e4b" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a><span class="bu">print</span>(<span class="ss">f"Length of u = </span><span class="sc">{</span>u<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Length of u = 11</code></pre>
@@ -1221,7 +1221,7 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 </section>
 <section id="longer-array-timings" class="slide level2 smaller">
 <h2>Longer array timings</h2>
-<div id="4ddbbcf0" class="cell" data-execution_count="18">
+<div id="6c152a7c" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a>dt <span class="op">=</span> dt<span class="op">/</span><span class="dv">10</span></span>
 <span id="cb25-2"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta) </span>
 <span id="cb25-3"><a></a><span class="bu">print</span>(<span class="ss">f"Length of u = </span><span class="sc">{</span>u<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1229,21 +1229,21 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <pre><code>Length of u = 101</code></pre>
 </div>
 </div>
-<div id="bc8d2ea8" class="cell" data-execution_count="19">
+<div id="ab6cbfde" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f0(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="81">
-<pre><code>&lt;TimeitResult : 1.73 μs ± 412 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>&lt;TimeitResult : 1.52 μs ± 70.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
-<div id="906bbb66" class="cell" data-execution_count="20">
+<div id="fba7f68d" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f1(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="82">
-<pre><code>&lt;TimeitResult : 20.2 μs ± 1.7 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>&lt;TimeitResult : 19.2 μs ± 1.29 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <div class="fragment">
 <p>Even longer array:</p>
-<div id="45ca0924" class="cell" data-execution_count="21">
+<div id="614bc502" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a>dt <span class="op">=</span> dt<span class="op">/</span><span class="dv">10</span></span>
 <span id="cb31-2"><a></a>u, t <span class="op">=</span> solver(I, a, T, dt, theta) </span>
 <span id="cb31-3"><a></a><span class="bu">print</span>(<span class="ss">f"Length of u = </span><span class="sc">{</span>u<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1251,16 +1251,16 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <pre><code>Length of u = 1001</code></pre>
 </div>
 </div>
-<div id="52cdd402" class="cell" data-execution_count="22">
+<div id="d977f202" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f0(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="84">
-<pre><code>&lt;TimeitResult : 4.77 μs ± 1.78 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>&lt;TimeitResult : 4.42 μs ± 2.1 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
-<div id="5766c771" class="cell" data-execution_count="23">
+<div id="0d4abed0" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f1(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="85">
-<pre><code>&lt;TimeitResult : 203 μs ± 4.53 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>&lt;TimeitResult : 204 μs ± 4.68 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <p>Vectorized code takes the same time! Only overhead costs, not the actual computation.</p>
@@ -1268,7 +1268,7 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 </section>
 <section id="what-else-is-there-numba" class="slide level2 smaller">
 <h2>What else is there? <a href="https://numba.pydata.org/">Numba</a></h2>
-<div id="649b69ef" class="cell" data-execution_count="24">
+<div id="f6608b60" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a></a><span class="im">import</span> numba <span class="im">as</span> nb</span>
 <span id="cb37-2"><a></a><span class="at">@nb.jit</span></span>
 <span id="cb37-3"><a></a><span class="kw">def</span> f2(u,  I, theta, a, dt):</span>
@@ -1277,18 +1277,18 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 <span id="cb37-6"><a></a>        u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)<span class="op">*</span>u[n]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Time it once</p>
-<div id="63a2045e" class="cell" data-execution_count="25">
+<div id="16abf9ad" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f2(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="87">
-<pre><code>&lt;TimeitResult : 46.2 μs ± 110 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>&lt;TimeitResult : 213 μs ± 520 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <div class="fragment">
 <p>Slow because the code needs to be compiled. Try again</p>
-<div id="75f96752" class="cell" data-execution_count="26">
+<div id="fabe1c7b" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f2(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="88">
-<pre><code>&lt;TimeitResult : 1.19 μs ± 63.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>&lt;TimeitResult : 1.16 μs ± 7.27 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <p>That is even faster than the vectorized code!</p>
@@ -1296,24 +1296,20 @@ u^{N_t} &amp;= A u^{N_t-1} = A^{N_t} u^0
 </section>
 <section id="what-else-cython" class="slide level2 smaller">
 <h2>What else? <a href="https://cython.org/">Cython</a></h2>
-<div id="aba53310" class="cell" data-execution_count="27">
+<div id="d2bc5d3e" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a></a><span class="op">%</span>load_ext cython</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>The cython extension is already loaded. To reload it, use:
-  %reload_ext cython</code></pre>
 </div>
-</div>
-<div id="47dbcc26" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a></a><span class="op">%%</span>cython <span class="op">-</span>a</span>
-<span id="cb44-2"><a></a><span class="co">#cython: boundscheck=False, wraparound=False, cdivision=True</span></span>
-<span id="cb44-3"><a></a>cpdef void f3(double[::<span class="dv">1</span>] u, <span class="bu">int</span>  I, double theta, double a, double dt):</span>
-<span id="cb44-4"><a></a>    cdef <span class="bu">int</span> n</span>
-<span id="cb44-5"><a></a>    cdef <span class="bu">int</span> N <span class="op">=</span> u.shape[<span class="dv">0</span>]</span>
-<span id="cb44-6"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                 </span>
-<span id="cb44-7"><a></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, N<span class="op">-</span><span class="dv">1</span>):  </span>
-<span id="cb44-8"><a></a>        u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)<span class="op">*</span>u[n]</span>
-<span id="cb44-9"><a></a>    <span class="cf">return</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="90">
+<div id="6338d46b" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a></a><span class="op">%%</span>cython <span class="op">-</span>a</span>
+<span id="cb43-2"><a></a><span class="co">#cython: boundscheck=False, wraparound=False, cdivision=True</span></span>
+<span id="cb43-3"><a></a>cpdef void f3(double[::<span class="dv">1</span>] u, <span class="bu">int</span>  I, double theta, double a, double dt):</span>
+<span id="cb43-4"><a></a>    cdef <span class="bu">int</span> n</span>
+<span id="cb43-5"><a></a>    cdef <span class="bu">int</span> N <span class="op">=</span> u.shape[<span class="dv">0</span>]</span>
+<span id="cb43-6"><a></a>    u[<span class="dv">0</span>] <span class="op">=</span> I                 </span>
+<span id="cb43-7"><a></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, N<span class="op">-</span><span class="dv">1</span>):  </span>
+<span id="cb43-8"><a></a>        u[n<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>theta)<span class="op">*</span>a<span class="op">*</span>dt)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span> theta<span class="op">*</span>dt<span class="op">*</span>a)<span class="op">*</span>u[n]</span>
+<span id="cb43-9"><a></a>    <span class="cf">return</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
 <style type="text/css">
     
 body.cython { font-family: courier; font-size: 12; }
@@ -1857,10 +1853,10 @@ static PyObject *__pyx_pf_78_cython_magic_b2c8cddb1e2a26f118717a8bbd9beea75bf7ba
 </section>
 <section id="cython-timing" class="slide level2 smaller">
 <h2>Cython timing</h2>
-<div id="6b8b6cc3" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f3(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="91">
-<pre><code>&lt;TimeitResult : 1.17 μs ± 35.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div id="e8c6f8da" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f3(u, I, theta, a, dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>&lt;TimeitResult : 1.19 μs ± 82.8 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -1893,28 +1889,28 @@ static PyObject *__pyx_pf_78_cython_magic_b2c8cddb1e2a26f118717a8bbd9beea75bf7ba
 <section id="jax" class="slide level2 smaller">
 <h2>JAX</h2>
 <p>JAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.</p>
-<div id="5179b193" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a></a><span class="im">import</span> jax</span>
-<span id="cb47-2"><a></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
-<span id="cb47-3"><a></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
-<span id="cb47-4"><a></a>jax.config.update(<span class="st">"jax_enable_x64"</span>, <span class="va">True</span>)</span>
-<span id="cb47-5"><a></a><span class="at">@partial</span>(jax.jit, static_argnums<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb47-6"><a></a><span class="kw">def</span> f4(N: <span class="bu">int</span>, I: <span class="bu">float</span>, A: <span class="bu">float</span>):</span>
-<span id="cb47-7"><a></a></span>
-<span id="cb47-8"><a></a>    <span class="kw">def</span> step(un: <span class="bu">float</span>, i: <span class="bu">int</span>):</span>
-<span id="cb47-9"><a></a>        unp1 <span class="op">=</span> jax.lax.cond(i <span class="op">==</span> <span class="dv">0</span>, <span class="kw">lambda</span>: un, <span class="kw">lambda</span>: un <span class="op">*</span> A)</span>
-<span id="cb47-10"><a></a>        <span class="cf">return</span> unp1, unp1</span>
-<span id="cb47-11"><a></a></span>
-<span id="cb47-12"><a></a>    <span class="cf">return</span> jax.lax.scan(step, I, jnp.arange(N))[<span class="dv">1</span>]</span>
-<span id="cb47-13"><a></a></span>
-<span id="cb47-14"><a></a>A: <span class="bu">float</span> <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span> <span class="op">-</span> theta) <span class="op">*</span> a <span class="op">*</span> dt) <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> theta <span class="op">*</span> dt <span class="op">*</span> a)</span>
-<span id="cb47-15"><a></a>N: <span class="bu">int</span> <span class="op">=</span> u.shape[<span class="dv">0</span>]</span>
-<span id="cb47-16"><a></a><span class="cf">assert</span> jnp.linalg.norm(f4(N, <span class="bu">float</span>(I), A) <span class="op">-</span> u) <span class="op">&lt;</span> <span class="fl">1e-8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6e7c3517" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a></a><span class="im">import</span> jax</span>
+<span id="cb46-2"><a></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb46-3"><a></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb46-4"><a></a>jax.config.update(<span class="st">"jax_enable_x64"</span>, <span class="va">True</span>)</span>
+<span id="cb46-5"><a></a><span class="at">@partial</span>(jax.jit, static_argnums<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb46-6"><a></a><span class="kw">def</span> f4(N: <span class="bu">int</span>, I: <span class="bu">float</span>, A: <span class="bu">float</span>):</span>
+<span id="cb46-7"><a></a></span>
+<span id="cb46-8"><a></a>    <span class="kw">def</span> step(un: <span class="bu">float</span>, i: <span class="bu">int</span>):</span>
+<span id="cb46-9"><a></a>        unp1 <span class="op">=</span> jax.lax.cond(i <span class="op">==</span> <span class="dv">0</span>, <span class="kw">lambda</span>: un, <span class="kw">lambda</span>: un <span class="op">*</span> A)</span>
+<span id="cb46-10"><a></a>        <span class="cf">return</span> unp1, unp1</span>
+<span id="cb46-11"><a></a></span>
+<span id="cb46-12"><a></a>    <span class="cf">return</span> jax.lax.scan(step, I, jnp.arange(N))[<span class="dv">1</span>]</span>
+<span id="cb46-13"><a></a></span>
+<span id="cb46-14"><a></a>A: <span class="bu">float</span> <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> (<span class="dv">1</span> <span class="op">-</span> theta) <span class="op">*</span> a <span class="op">*</span> dt) <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> theta <span class="op">*</span> dt <span class="op">*</span> a)</span>
+<span id="cb46-15"><a></a>N: <span class="bu">int</span> <span class="op">=</span> u.shape[<span class="dv">0</span>]</span>
+<span id="cb46-16"><a></a><span class="cf">assert</span> jnp.linalg.norm(f4(N, <span class="bu">float</span>(I), A) <span class="op">-</span> u) <span class="op">&lt;</span> <span class="fl">1e-8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e875dbc2" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f4(N, <span class="bu">float</span>(I), A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="93">
-<pre><code>&lt;TimeitResult : 12 μs ± 1.29 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
+<div id="769dc2a2" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">100</span> f4(N, <span class="bu">float</span>(I), A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>&lt;TimeitResult : 12.1 μs ± 2.02 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;</code></pre>
 </div>
 </div>
 <p>JAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython.</p>

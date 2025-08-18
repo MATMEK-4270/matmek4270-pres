@@ -6,9 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.5.40">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.33">
 
   <meta name="author" content="Prof.&nbsp;Mikael Mortensen, University of Oslo">
   <title>MATMEK-4270 presentations – A simple vibration problem</title>
@@ -30,8 +29,9 @@
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -42,7 +42,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -95,210 +95,12 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
   <link rel="stylesheet" href="styles.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
-  <style type="text/css">
-
-  .callout {
-    margin-top: 1em;
-    margin-bottom: 1em;  
-    border-radius: .25rem;
-  }
-
-  .callout.callout-style-simple { 
-    padding: 0em 0.5em;
-    border-left: solid #acacac .3rem;
-    border-right: solid 1px silver;
-    border-top: solid 1px silver;
-    border-bottom: solid 1px silver;
-    display: flex;
-  }
-
-  .callout.callout-style-default {
-    border-left: solid #acacac .3rem;
-    border-right: solid 1px silver;
-    border-top: solid 1px silver;
-    border-bottom: solid 1px silver;
-  }
-
-  .callout .callout-body-container {
-    flex-grow: 1;
-  }
-
-  .callout.callout-style-simple .callout-body {
-    font-size: 1rem;
-    font-weight: 400;
-  }
-
-  .callout.callout-style-default .callout-body {
-    font-size: 0.9rem;
-    font-weight: 400;
-  }
-
-  .callout.callout-titled.callout-style-simple .callout-body {
-    margin-top: 0.2em;
-  }
-
-  .callout:not(.callout-titled) .callout-body {
-      display: flex;
-  }
-
-  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
-    padding-left: 1.6em;
-  }
-
-  .callout.callout-titled .callout-header {
-    padding-top: 0.2em;
-    margin-bottom: -0.2em;
-  }
-
-  .callout.callout-titled .callout-title  p {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
-    
-  .callout.callout-titled.callout-style-simple .callout-content  p {
-    margin-top: 0;
-  }
-
-  .callout.callout-titled.callout-style-default .callout-content  p {
-    margin-top: 0.7em;
-  }
-
-  .callout.callout-style-simple div.callout-title {
-    border-bottom: none;
-    font-size: .9rem;
-    font-weight: 600;
-    opacity: 75%;
-  }
-
-  .callout.callout-style-default  div.callout-title {
-    border-bottom: none;
-    font-weight: 600;
-    opacity: 85%;
-    font-size: 0.9rem;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-  }
-
-  .callout.callout-style-default div.callout-content {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-  }
-
-  .callout.callout-style-simple .callout-icon::before {
-    height: 1rem;
-    width: 1rem;
-    display: inline-block;
-    content: "";
-    background-repeat: no-repeat;
-    background-size: 1rem 1rem;
-  }
-
-  .callout.callout-style-default .callout-icon::before {
-    height: 0.9rem;
-    width: 0.9rem;
-    display: inline-block;
-    content: "";
-    background-repeat: no-repeat;
-    background-size: 0.9rem 0.9rem;
-  }
-
-  .callout-title {
-    display: flex
-  }
-    
-  .callout-icon::before {
-    margin-top: 1rem;
-    padding-right: .5rem;
-  }
-
-  .callout.no-icon::before {
-    display: none !important;
-  }
-
-  .callout.callout-titled .callout-body > .callout-content > :last-child {
-    padding-bottom: 0.5rem;
-    margin-bottom: 0;
-  }
-
-  .callout.callout-titled .callout-icon::before {
-    margin-top: .5rem;
-    padding-right: .5rem;
-  }
-
-  .callout:not(.callout-titled) .callout-icon::before {
-    margin-top: 1rem;
-    padding-right: .5rem;
-  }
-
-  /* Callout Types */
-
-  div.callout-note {
-    border-left-color: #4582ec !important;
-  }
-
-  div.callout-note .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
-  }
-
-  div.callout-note.callout-style-default .callout-title {
-    background-color: #dae6fb
-  }
-
-  div.callout-important {
-    border-left-color: #d9534f !important;
-  }
-
-  div.callout-important .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
-  }
-
-  div.callout-important.callout-style-default .callout-title {
-    background-color: #f7dddc
-  }
-
-  div.callout-warning {
-    border-left-color: #f0ad4e !important;
-  }
-
-  div.callout-warning .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
-  }
-
-  div.callout-warning.callout-style-default .callout-title {
-    background-color: #fcefdc
-  }
-
-  div.callout-tip {
-    border-left-color: #02b875 !important;
-  }
-
-  div.callout-tip .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
-  }
-
-  div.callout-tip.callout-style-default .callout-title {
-    background-color: #ccf1e3
-  }
-
-  div.callout-caution {
-    border-left-color: #fd7e14 !important;
-  }
-
-  div.callout-caution .callout-icon::before {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
-  }
-
-  div.callout-caution.callout-style-default .callout-title {
-    background-color: #ffe5d0
-  }
-
-  </style>
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -537,7 +339,7 @@ u^1 = u^0 - \frac{1}{2} \Delta t^2 \omega^2 u^0
 </ul>
 <div class="fragment">
 <p>More precisely expressed in Python:</p>
-<div id="4a06d965" class="cell" data-execution_count="2">
+<div id="34a605a4" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>T <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb1-2"><a></a>Nt <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb1-3"><a></a>I <span class="op">=</span> <span class="dv">1</span></span>
@@ -577,7 +379,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </div>
 <div class="fragment">
 <p>With vectorization:</p>
-<div id="0cde53fc" class="cell" data-execution_count="3">
+<div id="41cb763c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>du <span class="op">=</span> np.zeros(Nt<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb2-2"><a></a>du[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> (u[<span class="dv">2</span>:] <span class="op">-</span> u[:<span class="op">-</span><span class="dv">2</span>]) <span class="op">/</span> (<span class="dv">2</span><span class="op">*</span>dt)  <span class="co"># second order accurate</span></span>
 <span id="cb2-3"><a></a>du[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span>                             <span class="co"># exact from initial condition</span></span>
@@ -587,7 +389,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </section>
 <section id="implementation" class="slide level2 smaller">
 <h2>Implementation</h2>
-<div id="b418cbcb" class="cell" data-execution_count="4">
+<div id="4f7bbb95" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="kw">def</span> solver(I, w, dt, T):</span>
 <span id="cb3-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb3-3"><a></a><span class="co">    Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,</span></span>
@@ -609,7 +411,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </section>
 <section id="visualization" class="slide level2 smaller">
 <h2>Visualization</h2>
-<div id="7b25b994" class="cell" data-execution_count="5">
+<div id="51ed7f1f" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="kw">def</span> visualize(u, t, I, w):</span>
 <span id="cb4-2"><a></a>    plt.plot(t, u, <span class="st">'b-o'</span>)</span>
 <span id="cb4-3"><a></a>    t_fine <span class="op">=</span> np.linspace(<span class="dv">0</span>, t[<span class="op">-</span><span class="dv">1</span>], <span class="dv">1001</span>)  <span class="co"># very fine mesh for u_e</span></span>
@@ -626,7 +428,7 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 </section>
 <section id="main-program" class="slide level2 smaller">
 <h2>Main program</h2>
-<div id="16607073" class="cell" data-execution_count="6">
+<div id="20f1e5c7" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>I <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb5-2"><a></a>w <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.pi</span>
 <span id="cb5-3"><a></a>num_periods <span class="op">=</span> <span class="dv">6</span></span>
@@ -635,13 +437,27 @@ u^{\prime}(t_n) \approx \frac{u^{n+1}-u^{n-1}}{2\Delta t}
 <span id="cb5-6"><a></a>dt <span class="op">=</span> <span class="dv">1</span><span class="op">/</span>w</span>
 <span id="cb5-7"><a></a>u, t <span class="op">=</span> solver(I, w, dt, T)</span>
 <span id="cb5-8"><a></a>visualize(u, t, I, w)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="vibration_files/figure-revealjs/cell-7-output-1.png" width="823" height="449"></p>
+</figure>
 </div>
-<img data-src="vibration_files/figure-revealjs/cell-7-output-1.png" class="r-stretch"></section>
+</div>
+</div>
+</section>
 <section id="various-timestep" class="slide level2 smaller">
 <h2>Various timestep</h2>
-
-<img data-src="vibration_files/figure-revealjs/cell-8-output-1.png" class="r-stretch"><p>We see that <span class="math inline">\(\Delta t = 2/\omega\)</span> is a limit. Using longer <span class="math inline">\(\Delta t\)</span> leads to growth. Why?</p>
+<div id="c50fc497" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="vibration_files/figure-revealjs/cell-8-output-1.png" width="805" height="449"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see that <span class="math inline">\(\Delta t = 2/\omega\)</span> is a limit. Using longer <span class="math inline">\(\Delta t\)</span> leads to growth. Why?</p>
 </section>
 <section id="mathematical-analysis" class="slide level2 smaller">
 <h2>Mathematical analysis</h2>
@@ -657,7 +473,7 @@ u^{n+1} = A u^n  \quad \text{or} \quad u^n = A^n I
 <p>where <span class="math inline">\(I\)</span> is an initial condition.</p>
 <div class="fragment">
 <p>So the <strong>recurrence relation</strong> (the difference equation) have solutions <span class="math inline">\(u^n\)</span> that may be computed <strong>recursively</strong></p>
-<div id="21700ffe" class="cell" data-execution_count="8">
+<div id="394010bb" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">def</span> u(n, I<span class="op">=</span><span class="fl">2.</span>, A<span class="op">=</span><span class="fl">0.5</span>):</span>
 <span id="cb6-2"><a></a>  <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">0</span>:</span>
 <span id="cb6-3"><a></a>    <span class="cf">return</span> A <span class="op">*</span> u(n<span class="op">-</span><span class="dv">1</span>, I, A)</span>
@@ -726,21 +542,19 @@ u(t_n) = I \cos (\tilde{\omega} t_n)
 <p><span class="math display">\[
 \tilde{\omega} = \pm \frac{2}{\Delta t} \sin^{-1} \left( \frac{\omega  \Delta t }{2} \right)
 \]</span></p>
-<div>
 <ul>
 <li class="fragment">There is always a frequency error because <span class="math inline">\(\tilde{\omega} \neq \omega\)</span>.</li>
 <li class="fragment">The dimensionless number <span class="math inline">\(p=\omega\Delta t\)</span> is the key parameter (i.e., no of time intervals per period is important, not <span class="math inline">\(\Delta t\)</span> itself. Remember <span class="math inline">\(P=2\pi/w\)</span> and thus <span class="math inline">\(p=2\pi / P\)</span>)</li>
 <li class="fragment">How good is the approximation <span class="math inline">\(\tilde{\omega}\)</span> to <span class="math inline">\(\omega\)</span>?</li>
 <li class="fragment">Does it possibly lead to growth? <span class="math inline">\(|A|&gt;1\)</span>.</li>
 </ul>
-</div>
 </section>
 <section id="polynomial-approximation-of-the-frequency-error" class="slide level2 smaller">
 <h2>Polynomial approximation of the frequency error</h2>
 <p>How good is the approximation <span class="math inline">\(\tilde{\omega} = \pm \frac{2}{\Delta t} \sin^{-1} \left( \frac{\omega  \Delta t }{2} \right)\)</span> ?</p>
 <div class="fragment">
 <p>We can easily use a Taylor series expansion for small <span class="math inline">\(h=\Delta t\)</span></p>
-<div id="aea22b6b" class="cell" data-execution_count="9">
+<div id="57cf03c5" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp </span>
 <span id="cb8-2"><a></a>h, w <span class="op">=</span> sp.symbols(<span class="st">'h,w'</span>)</span>
 <span id="cb8-3"><a></a>w_tilde <span class="op">=</span> sp.asin(w<span class="op">*</span>h<span class="op">/</span><span class="dv">2</span>).series(h, <span class="dv">0</span>, <span class="dv">4</span>)<span class="op">*</span><span class="dv">2</span><span class="op">/</span>h</span>
@@ -829,7 +643,7 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 \]</span></p>
 <div class="fragment">
 <p>The limit can be computed using L’Hopital’s rule or simply by asking <code>sympy</code> or <a href="http://www.wolframalpha.com/input/?i=%282%2Fx%29*asin%28w*x%2F2%29+as+x-%3E0">WolframAlpha</a>. Sympy is easier:</p>
-<div id="72408012" class="cell" data-execution_count="10">
+<div id="e76415d9" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>sp.limit((<span class="dv">2</span><span class="op">/</span>h)<span class="op">*</span>sp.asin(w<span class="op">*</span>h<span class="op">/</span><span class="dv">2</span>), h, <span class="dv">0</span>, <span class="bu">dir</span><span class="op">=</span><span class="st">'+'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="10">
 <p><span class="math inline">\(\displaystyle w\)</span></p>
@@ -839,7 +653,6 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 </section>
 <section id="how-about-stability" class="slide level2 smaller">
 <h2>How about stability?</h2>
-<div>
 <ul>
 <li class="fragment"><p>Solutions are oscillatory, so not a problem that <span class="math inline">\(A&lt;0\)</span>, like for the exponential decay</p></li>
 <li class="fragment"><p>Solutions should have constant amplitudes (constant <span class="math inline">\(I\)</span>), but we will have growth if <span class="math display">\[
@@ -849,7 +662,6 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 |A| = |e^{i \tilde{\omega} \Delta t}| = 1
 \]</span> Is this always satisfied?</p></li>
 </ul>
-</div>
 </section>
 <section id="stability-in-growth" class="slide level2 smaller">
 <h2>Stability in growth?</h2>
@@ -862,22 +674,21 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 <div class="column">
 <p>No! For <span class="math inline">\(\Im(y) &lt; 0\)</span> we have that <span class="math inline">\(|e^{iy}| &gt; 1\)</span>.</p>
 </div><div class="column">
-<div id="bfbcc1e1" class="cell" data-execution_count="11">
+<div id="347a3633" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>y <span class="op">=</span> <span class="op">-</span><span class="ot">0.001j</span></span>
 <span id="cb10-2"><a></a><span class="bu">abs</span>(sp.exp(<span class="ot">1j</span><span class="op">*</span>y)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="11">
 <p><span class="math inline">\(\displaystyle 1.00100050016671\)</span></p>
 </div>
 </div>
-</div>
-</div>
+</div></div>
 </div>
 <div class="fragment">
 <p>How can we get negative <span class="math inline">\(\Im(y)\)</span>? Can <span class="math inline">\(\Im(\sin^{-1}(x)) &lt; 0\)</span> for some <span class="math inline">\(x\)</span>?</p>
 </div>
 <div class="fragment">
 <p>Yes! We can easily check that if <span class="math inline">\(|x|&gt;1\)</span> then <span class="math inline">\(\sin^{-1}(x)\)</span> has a negative imaginary part:</p>
-<div id="971109bb" class="cell" data-execution_count="12">
+<div id="b99624c2" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>sp.asin(<span class="fl">1.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="12">
 <p><span class="math inline">\(\displaystyle 1.5707963267949 - 0.141303769485649 i\)</span></p>
@@ -905,13 +716,29 @@ e^n = -2I\sin\left(n \Delta t\frac{1}{2}\left( \omega - \tilde\omega\right)\righ
 </section>
 <section id="remember-the-initial-plots" class="slide level2 smaller">
 <h2>Remember the initial plots</h2>
-
-<img data-src="vibration_files/figure-revealjs/cell-14-output-1.png" class="r-stretch"><p>We have growth for <span class="math inline">\(\Delta t &gt; 2/\omega\)</span>.</p>
+<div id="d15d3caf" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="vibration_files/figure-revealjs/cell-14-output-1.png" width="805" height="449"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We have growth for <span class="math inline">\(\Delta t &gt; 2/\omega\)</span>.</p>
 </section>
 <section id="about-the-stability-limit" class="slide level2 smaller">
 <h2>About the stability limit</h2>
-
-<img data-src="vibration_files/figure-revealjs/cell-15-output-1.png" class="r-stretch"><p>For <span class="math inline">\(\Delta t = 2/\omega\)</span> there is exactly one timestep between a minimum and a maximum point for the numerical simulation (zigzag pattern). This is absolutely the smallest number of points that can possibly resolve (poorly) a wave of this frequency! So it really does not make sense physically to use larger time steps!</p>
+<div id="1cc1f50c" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="vibration_files/figure-revealjs/cell-15-output-1.png" width="813" height="449"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For <span class="math inline">\(\Delta t = 2/\omega\)</span> there is exactly one timestep between a minimum and a maximum point for the numerical simulation (zigzag pattern). This is absolutely the smallest number of points that can possibly resolve (poorly) a wave of this frequency! So it really does not make sense physically to use larger time steps!</p>
 </section>
 <section id="alternative-derivation-of-stability-limit" class="slide level2 smaller">
 <h2>Alternative derivation of stability limit</h2>
@@ -948,7 +775,7 @@ A = 1 - \frac{p^2}{2} \pm \frac{p}{2}\sqrt{p^2-4}
 A &lt; -1
 \]</span></p>
 <p>Check:</p>
-<div id="9fb435f1" class="cell" data-execution_count="15">
+<div id="a14f37a3" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>p <span class="op">=</span> sp.Symbol(<span class="st">'p'</span>) </span>
 <span id="cb12-2"><a></a>f <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">2</span> <span class="op">-</span> p<span class="op">/</span><span class="dv">2</span><span class="op">*</span>sp.sqrt(p<span class="op">**</span><span class="dv">2</span><span class="op">-</span><span class="dv">4</span>)</span>
 <span id="cb12-3"><a></a>f.subs(p, <span class="fl">2.01</span>).n() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1004,7 +831,6 @@ A &lt; -1
 <section id="key-observations" class="slide level2 smaller">
 <h2>Key observations</h2>
 <p>We can draw three important conclusions:</p>
-<div>
 <ul>
 <li class="fragment">The key parameter in the formulas is <span class="math inline">\(p=\omega\Delta t\)</span> or <span class="math inline">\(\tilde{p} = \tilde{\omega} \Delta t\)</span> (dimensionless)
 <ul>
@@ -1015,12 +841,11 @@ A &lt; -1
 <li class="fragment">For <span class="math inline">\(p\leq 2\)</span> the amplitude of <span class="math inline">\(u^n\)</span> is constant (stable solution)</li>
 <li class="fragment"><span class="math inline">\(u^n\)</span> has a relative frequency error <span class="math inline">\(\tilde\omega/\omega \approx 1 + \frac{1}{24}p^2\)</span>, making numerical peaks occur too early. This is also called a <strong>phase error</strong>, or a <strong>dispersive error</strong>.</li>
 </ul>
-</div>
 </section>
 <section id="convergence-rates" class="slide level2 smaller">
 <h2>Convergence rates</h2>
 <p>Lets compute the convergence rate for our solver. However, let it also be possible to choose the numerical frequency <span class="math inline">\(\omega(1-\omega^2\Delta t^2/24)\)</span></p>
-<div id="c3bf5e40" class="cell" data-execution_count="16">
+<div id="7e5bef06" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="kw">def</span> solver_adjust(I, w, dt, T, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb13-2"><a></a>    Nt <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(T<span class="op">/</span>dt))</span>
 <span id="cb13-3"><a></a>    u <span class="op">=</span> np.zeros(Nt<span class="op">+</span><span class="dv">1</span>)</span>
@@ -1047,7 +872,7 @@ A &lt; -1
 <p><span class="math display">\[
 r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 \]</span></p>
-<div id="03cd60c2" class="cell" data-execution_count="17">
+<div id="a675ffc4" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a><span class="kw">def</span> convergence_rates(m, num_periods<span class="op">=</span><span class="dv">8</span>, w<span class="op">=</span><span class="fl">0.35</span>, I<span class="op">=</span><span class="fl">0.3</span>, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb14-2"><a></a>    P <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.pi<span class="op">/</span>w</span>
 <span id="cb14-3"><a></a>    dt <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> w    <span class="co"># Half stability limit</span></span>
@@ -1068,7 +893,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <section id="try-it" class="slide level2 smaller">
 <h2>Try it!</h2>
 <p>Print the computed convergence rates</p>
-<div id="d4293113" class="cell" data-execution_count="18">
+<div id="dfc210b6" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>convergence_rates(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>[np.float64(1.9487030166752326),
@@ -1078,7 +903,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 </div>
 <p>Adjusted solver:</p>
-<div id="1b82327d" class="cell" data-execution_count="19">
+<div id="e406a6e5" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a>convergence_rates(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>[np.float64(4.133074797577663),
@@ -1090,7 +915,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </section>
 <section id="plot-convergence-regular-solver" class="slide level2 smaller">
 <h2>plot convergence regular solver</h2>
-<div id="0c5503ae" class="cell" data-execution_count="20">
+<div id="fb0b1077" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a><span class="im">from</span> plotslopes <span class="im">import</span> slope_marker</span>
 <span id="cb19-2"><a></a>r, E, dt <span class="op">=</span> convergence_rates(<span class="dv">5</span>)</span>
 <span id="cb19-3"><a></a>plt.loglog(dt, E, dt, <span class="dv">10</span><span class="op">*</span>np.array(dt), dt, np.array(dt)<span class="op">**</span><span class="dv">2</span>)</span>
@@ -1099,12 +924,18 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <span id="cb19-6"><a></a>slope_marker((dt[<span class="dv">1</span>], E[<span class="dv">1</span>]), (<span class="dv">2</span>,<span class="dv">1</span>))</span>
 <span id="cb19-7"><a></a>slope_marker((dt[<span class="dv">1</span>], <span class="dv">10</span><span class="op">*</span>dt[<span class="dv">1</span>]), (<span class="dv">1</span>,<span class="dv">1</span>))</span>
 <span id="cb19-8"><a></a>slope_marker((dt[<span class="dv">1</span>], dt[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span>), (<span class="dv">2</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="vibration_files/figure-revealjs/cell-21-output-1.png" width="804" height="432"></p>
+</figure>
 </div>
-<img data-src="vibration_files/figure-revealjs/cell-21-output-1.png" class="r-stretch"></section>
+</div>
+</div>
+</section>
 <section id="plot-convergence-adjusted-solver" class="slide level2 smaller">
 <h2>plot convergence adjusted solver</h2>
-<div id="af7c902c" class="cell" data-execution_count="21">
+<div id="83431c46" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a><span class="im">from</span> plotslopes <span class="im">import</span> slope_marker</span>
 <span id="cb20-2"><a></a>r, E, dt <span class="op">=</span> convergence_rates(<span class="dv">5</span>, adjust_w<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb20-3"><a></a>plt.loglog(dt, E, dt, np.array(dt)<span class="op">**</span><span class="dv">4</span>)</span>
@@ -1112,13 +943,19 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <span id="cb20-5"><a></a>plt.legend([<span class="st">'Error'</span>, <span class="st">'$</span><span class="ch">\\</span><span class="st">mathcal</span><span class="sc">{O}</span><span class="st">(</span><span class="ch">\\</span><span class="st">Delta t^4)$'</span>])</span>
 <span id="cb20-6"><a></a>slope_marker((dt[<span class="dv">1</span>], E[<span class="dv">1</span>]), (<span class="dv">4</span>,<span class="dv">1</span>))</span>
 <span id="cb20-7"><a></a>slope_marker((dt[<span class="dv">1</span>], dt[<span class="dv">1</span>]<span class="op">**</span><span class="dv">4</span>), (<span class="dv">4</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="vibration_files/figure-revealjs/cell-22-output-1.png" width="804" height="432"></p>
+</figure>
 </div>
-<img data-src="vibration_files/figure-revealjs/cell-22-output-1.png" class="r-stretch"></section>
+</div>
+</div>
+</section>
 <section id="add-tests" class="slide level2 smaller">
 <h2>Add tests</h2>
 <p>The exact solution will not equal the numerical, but the order of the error is something we can test for.</p>
-<div id="781f6997" class="cell" data-execution_count="22">
+<div id="a6b804a2" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a></a><span class="kw">def</span> test_order(m, w<span class="op">=</span><span class="dv">1</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb21-2"><a></a>    r, E, dt <span class="op">=</span> convergence_rates(m, w<span class="op">=</span>w, I<span class="op">=</span>I, adjust_w<span class="op">=</span>adjust_w)</span>
 <span id="cb21-3"><a></a>    true_order <span class="op">=</span> <span class="dv">4</span> <span class="cf">if</span> adjust_w <span class="cf">else</span> <span class="dv">2</span></span>
@@ -1131,7 +968,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 <div class="fragment">
 <p>Run test for <span class="math inline">\(m=4\)</span> levels, <span class="math inline">\(w=0.5, I=1\)</span> and <code>adjust_w=False</code></p>
-<div id="e7b929b8" class="cell" data-execution_count="23">
+<div id="bfacea52" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a>test_order(<span class="dv">4</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Test failed!! orders = [np.float64(1.9487030166752326), np.float64(2.022988970233581), np.float64(2.0050238810553545)]</code></pre>
@@ -1140,13 +977,13 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 <div class="fragment">
 <p>Test fails. Try one more level</p>
-<div id="5cc7f060" class="cell" data-execution_count="24">
+<div id="df102c0e" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>test_order(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Test passed!!</code></pre>
 </div>
 </div>
-<div id="ea502baf" class="cell" data-execution_count="25">
+<div id="3455c59b" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a>test_order(<span class="dv">5</span>, w<span class="op">=</span><span class="fl">0.5</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Test passed!!</code></pre>
@@ -1157,7 +994,7 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 <section id="final-test" class="slide level2 smaller">
 <h2>Final test</h2>
 <p>Use simply an assert clause and do not catch the error.</p>
-<div id="87362cdf" class="cell" data-execution_count="26">
+<div id="69f7410c" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a></a><span class="kw">def</span> test_order(m, w<span class="op">=</span><span class="dv">1</span>, I<span class="op">=</span><span class="dv">1</span>, adjust_w<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb28-2"><a></a>    r, E, dt <span class="op">=</span> convergence_rates(m, w<span class="op">=</span>w, I<span class="op">=</span>I, adjust_w<span class="op">=</span>adjust_w)</span>
 <span id="cb28-3"><a></a>    true_order <span class="op">=</span> <span class="dv">4</span> <span class="cf">if</span> adjust_w <span class="cf">else</span> <span class="dv">2</span></span>
@@ -1168,14 +1005,14 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 </div>
 <p>This test will work with <code>pytest</code>.</p>
 
-<div class="quarto-auto-generated-content">
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
 
 </div>
-</div>
-</section>
-    </div>
-  </div>
+</div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
   <script src="site_libs/revealjs/dist/reveal.js"></script>
@@ -1204,7 +1041,8 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -1385,192 +1223,172 @@ r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
       });
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-      const toggleBodyColorMode = (bsSheetEl) => {
-        const mode = bsSheetEl.getAttribute("data-mode");
-        const bodyEl = window.document.querySelector("body");
-        if (mode === "dark") {
-          bodyEl.classList.add("quarto-dark");
-          bodyEl.classList.remove("quarto-light");
-        } else {
-          bodyEl.classList.add("quarto-light");
-          bodyEl.classList.remove("quarto-dark");
-        }
-      }
-      const toggleBodyColorPrimary = () => {
-        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-        if (bsSheetEl) {
-          toggleBodyColorMode(bsSheetEl);
-        }
-      }
-      toggleBodyColorPrimary();  
-      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
-      tabsets.forEach(function(tabset) {
-        const tabby = new Tabby('#' + tabset.id);
-      });
-      const isCodeAnnotation = (el) => {
-        for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
-            return true;
-          }
-        }
-        return false;
-      }
-      const onCopySuccess = function(e) {
-        // button target
-        const button = e.trigger;
-        // don't keep focus
-        button.blur();
-        // flash "checked"
-        button.classList.add('code-copy-button-checked');
-        var currentTitle = button.getAttribute("title");
-        button.setAttribute("title", "Copied!");
-        let tooltip;
-        if (window.bootstrap) {
-          button.setAttribute("data-bs-toggle", "tooltip");
-          button.setAttribute("data-bs-placement", "left");
-          button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button, 
-            { trigger: "manual", 
-              customClass: "code-copy-button-tooltip",
-              offset: [0, -8]});
-          tooltip.show();    
-        }
-        setTimeout(function() {
-          if (tooltip) {
-            tooltip.hide();
-            button.removeAttribute("data-bs-title");
-            button.removeAttribute("data-bs-toggle");
-            button.removeAttribute("data-bs-placement");
-          }
-          button.setAttribute("title", currentTitle);
-          button.classList.remove('code-copy-button-checked');
-        }, 1000);
-        // clear code selection
-        e.clearSelection();
-      }
-      const getTextToCopy = function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
-          for (const childEl of codeEl.children) {
-            if (isCodeAnnotation(childEl)) {
-              childEl.remove();
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
             }
           }
-          return codeEl.innerText;
-      }
-      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-        text: getTextToCopy
-      });
-      clipboard.on('success', onCopySuccess);
-      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        // For code content inside modals, clipBoardJS needs to be initialized with a container option
-        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-          text: getTextToCopy,
-          container: window.document.getElementById('quarto-embedded-source-code-modal')
-        });
-        clipboardModal.on('success', onCopySuccess);
-      }
-        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-        var mailtoRegex = new RegExp(/^mailto:/);
-          var filterRegex = new RegExp('/' + window.location.host + '/');
-        var isInternal = (href) => {
-            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          return false;
         }
-        // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-        for (var i=0; i<links.length; i++) {
-          const link = links[i];
-          if (!isInternal(link.href)) {
-            // undo the damage that might have been done by quarto-nav.js in the case of
-            // links that we want to consider external
-            if (link.dataset.originalHref !== undefined) {
-              link.href = link.dataset.originalHref;
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
             }
-          }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
         }
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-        const config = {
-          allowHTML: true,
-          maxWidth: 500,
-          delay: 100,
-          arrow: false,
-          appendTo: function(el) {
-              return el.closest('section.slide') || el.parentElement;
-          },
-          interactive: true,
-          interactiveBorder: 10,
-          theme: 'light-border',
-          placement: 'bottom-start',
-        };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
-          config['offset'] = [0,0];
-          config['maxWidth'] = 700;
-        window.tippy(el, config); 
-      }
-      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-      for (var i=0; i<noterefs.length; i++) {
-        const ref = noterefs[i];
-        tippyHover(ref, function() {
-          // use id or data attribute instead here
-          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-          try { href = new URL(href).hash; } catch {}
-          const id = href.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note) {
-            return note.innerHTML;
-          } else {
-            return "";
-          }
-        });
-      }
-      const findCites = (el) => {
-        const parentEl = el.parentElement;
-        if (parentEl) {
-          const cites = parentEl.dataset.cites;
-          if (cites) {
-            return {
-              el,
-              cites: cites.split(' ')
-            };
-          } else {
-            return findCites(el.parentElement)
-          }
-        } else {
-          return undefined;
-        }
-      };
-      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-      for (var i=0; i<bibliorefs.length; i++) {
-        const ref = bibliorefs[i];
-        const citeInfo = findCites(ref);
-        if (citeInfo) {
-          tippyHover(citeInfo.el, function() {
-            var popup = window.document.createElement('div');
-            citeInfo.cites.forEach(function(cite) {
-              var citeDiv = window.document.createElement('div');
-              citeDiv.classList.add('hanging-indent');
-              citeDiv.classList.add('csl-entry');
-              var biblioDiv = window.document.getElementById('ref-' + cite);
-              if (biblioDiv) {
-                citeDiv.innerHTML = biblioDiv.innerHTML;
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
               }
-              popup.appendChild(citeDiv);
-            });
-            return popup.innerHTML;
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
           });
         }
-      }
-    });
-    </script>
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
     
 
 </body></html>
