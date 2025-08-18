@@ -5,7 +5,7 @@ author: "Prof. Mikael Mortensen, University of Oslo"
 
 execute:
   cache: true
-jupyter: shenfun
+
 format:
   revealjs: 
     theme: [default, custom.scss]

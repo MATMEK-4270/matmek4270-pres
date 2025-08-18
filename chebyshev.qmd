@@ -3,7 +3,7 @@ title: "Function approximation with Chebyshev polynomials and in 2 dimensions"
 subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
 
-jupyter: shenfun
+#jupyter: shenfun
 format:
   revealjs: 
     theme: [default, custom.scss]

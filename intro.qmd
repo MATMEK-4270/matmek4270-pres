@@ -3,13 +3,21 @@ title: "Algorithms and implementations for exponential decay models"
 subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
 
+jupyter: matmek4270-25
 format:
   revealjs: 
     slide-number: true
     preview-links: auto
     css: styles.css
     embed-resources: false
-
+    html-math-method:
+      method: mathjax
+      url: >-
+        https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS_HTML-full
+    include-before-body:
+      text: |
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+      
 pandoc:
   to: revealjs
   standalone: false
@@ -17,8 +25,7 @@ pandoc:
   default-image-extension: png
   html-math-method:
     method: mathjax
-    url: >-
-      https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+          
   slide-level: 2
 
 ---
@@ -27,9 +34,11 @@ pandoc:
 ## Hans Petter Langtangen 1962-2016 {.smaller}
 
 ::: {.hidden}
-\newcommand{\half}{\scriptstyle\frac{1}{2}}
+\require{boldsymbol}
+\require{cancel}
 \newcommand{\halfi}{{1/2}}
 \newcommand{\uex}{u_{e}}
+\newcommand{\half}{{}^1{\mskip -3mu/\mskip -3mu}_2}
 :::
 
 ::: columns 
@@ -64,6 +73,7 @@ pandoc:
   * Computational Fluid Dynamics
   * High Performance Computing
   * Spectral methods
+  * Scientific Machine Learning
 
 ## Principal developer of Shenfun {.smaller}
 
@@ -104,7 +114,7 @@ High performance computing platform for solving PDEs by the spectral Galerkin me
 :::
 
 ::: {.callout-warning appearance="simple"}
-## Also important stuff, but less so as I will try to put all really important stuff in the lecture notes 
+## Also important stuff, but less so as most really important stuff is put in the lecture notes 
 
   * [Langtangen, Finite Difference Computing with exponential decay](https://link.springer.com/book/10.1007/978-3-319-29439-1) - Chapters 1 and 2.
   * [Langtangen and Linge, Finite Difference Computing with PDEs](https://link.springer.com/book/10.1007/978-3-319-55456-3)  - Parts of chapters 1 and 2.
@@ -275,8 +285,8 @@ $$
 ![](./figures/line.png){fig-align="center"}
 
  * We seek the solution $u$ at the mesh points: $u(t_n)$, $n=1,2,\ldots,N_t$.
- * Note: $u^0$ is known as $I$.
  * Notational short-form for the numerical approximation to $u(t_n)$: $u^n$
+ * $u^0$ is known as $I$.
  * In the differential equation: $u(t)$ is the exact solution
  * In the numerical method and implementation: $u^n$ is the numerical approximation
 
@@ -295,7 +305,7 @@ ax.plot(t, f(t)+rnd, 'ko')
 for i, ti in enumerate(t):
     ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')
 
-ax.set_xticklabels([f'$t_{i}$' for i in range(7)]);
+ax.set_xticks(t, [f'$t_{i}$' for i in range(7)]);
 ax.set_yticks([]);
 ```
 
@@ -320,7 +330,7 @@ ax.plot(t, f(t)+rnd, 'ko-')
 for i, ti in enumerate(t):
     ax.text(ti+0.01, f(ti)+0.05, f'$u^{i}$')
 ax.legend(['Exact', 'FD-linear interpolation']);
-ax.set_xticklabels([f'$t_{i}$' for i in range(7)]);
+ax.set_xticks(t, [f'$t_{i}$' for i in range(7)]);
 ax.set_yticks([]);
 ```
 
@@ -632,7 +642,8 @@ plt.xlabel('Time'), plt.ylabel('u(t)');
 ## [Plotly](https://plotly.com/) is a very good alternative
 
 ```{python}
-#| echo : true
+#| echo: True 
+#| eval: True
 import plotly.express as px
 pfig = px.line(x=t, y=u, labels={'x': 'Time', 'y': 'u(t)'}, 
                width=600, height=400, title='Decay',
@@ -1120,3 +1131,34 @@ Cython and Numba are both as fast as pure C. Either one can be used to speed up 
 ::: {.callout-note}
 Cython is very easy to use in notebooks, but requires [some additional steps](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html) to be compiled used as extension modules with regular python programs.
 :::
+
+## JAX {.smaller}
+
+JAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.
+
+```{python}
+# | echo : true
+import jax
+import jax.numpy as jnp
+from functools import partial
+jax.config.update("jax_enable_x64", True)
+@partial(jax.jit, static_argnums=0)
+def f4(N: int, I: float, A: float):
+
+    def step(un: float, i: int):
+        unp1 = jax.lax.cond(i == 0, lambda: un, lambda: un * A)
+        return unp1, unp1
+
+    return jax.lax.scan(step, I, jnp.arange(N))[1]
+
+A: float = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a)
+N: int = u.shape[0]
+assert jnp.linalg.norm(f4(N, float(I), A) - u) < 1e-8
+```
+
+```{python}
+#| echo : true
+%timeit -q -o -n 100 f4(N, float(I), A)
+```
+
+JAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython. 

@@ -3,7 +3,6 @@ title: "Function approximation with global functions"
 subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
 
-jupyter: shenfun
 format:
   revealjs: 
     theme: [default, custom.scss]
