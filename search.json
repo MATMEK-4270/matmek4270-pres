@@ -284,21 +284,21 @@
     "href": "vibration.html#computing-the-first-step---option-1",
     "title": "A simple vibration problem",
     "section": "Computing the first step - option 1",
-    "text": "Computing the first step - option 1\n\nThe two initial conditions require that we fix both \\(u^0\\) and \\(u^1\\). How to fix \\(u^1\\)?\n\n\n\nWe cannot use the difference equation \\(u^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\\) because \\(u^{-1}\\) is unknown and outside the mesh!\nAnd: we have not used the initial condition \\(u^{\\prime}(0)=0\\)!\n\n\n\nOption 1: Use a forward difference\n\\[\n  \\begin{align*}\n  u^{\\prime}(0) &=  \\frac{u^1-u^0}{\\Delta t}=0  &\\longrightarrow u^1=u^0=I \\\\\n  u^{\\prime}(0) &= \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0 \\quad &\\longrightarrow u^1=\\frac{u^2+3u^0}{4}\n  \\end{align*}\n\\]\n\n\n\n\n\n\nNote\n\n\nFirst is merely first order accurate, second is second order, but implicit (depends on the unknown \\(u^2\\).)"
+    "text": "Computing the first step - option 1\n\nThe two initial conditions require that we fix both \\(u^0\\) and \\(u^1\\). \\(u^0=I\\), but how to fix \\(u^1\\)?\n\n\n\nWe cannot use the difference equation \\(u^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\\) because \\(u^{-1}\\) is unknown and outside the mesh!\nAnd: we have to use the initial condition \\(u^{\\prime}(0)=0\\)!\n\n\n\nOption 1: Use a forward difference\n\\[\n  \\begin{align*}\n  u^{\\prime}(0) &=  \\frac{u^1-u^0}{\\Delta t}=0  &\\longrightarrow u^1=u^0=I \\\\\n  u^{\\prime}(0) &= \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0 \\quad &\\longrightarrow u^1=\\frac{u^2+3u^0}{4}\n  \\end{align*}\n\\]\n\n\n\n\n\n\nNote\n\n\nFirst is merely first order accurate, second is second order, but implicit (depends on the unknown \\(u^2\\).)"
   },
   {
     "objectID": "vibration.html#computing-the-first-step---option-2",
     "href": "vibration.html#computing-the-first-step---option-2",
     "title": "A simple vibration problem",
     "section": "Computing the first step - option 2",
-    "text": "Computing the first step - option 2\nUse the discrete ODE at \\(t=0\\) together with a central difference at \\(t=0\\) and a ghost cell \\(u^{-1}\\). The central difference is\n\\[\n\\frac{u^1-u^{-1}}{2\\Delta t} = 0\\quad\\Rightarrow\\quad u^{-1} = u^1\n\\]\nThe vibration scheme for \\(n=0\\) is\n\\[\nu^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\n\\]\nUse \\(u^{-1}=u^1\\) to get\n\\[\nu^1 = u^0 - \\frac{1}{2} \\Delta t^2 \\omega^2 u^0\n\\]\n\n\n\n\n\n\nNote\n\n\nSecond order accurate and explicit (does not depend on unknown \\(u^2\\))."
+    "text": "Computing the first step - option 2\nUse the discrete ODE at \\(t=0\\) together with a central difference at \\(t=0\\) and a ghost cell \\(u^{-1}\\). The central difference is\n\\[\nu'(0) \\approx \\frac{u^1-u^{-1}}{2\\Delta t} = 0\\quad\\Rightarrow\\quad u^{-1} = u^1\n\\]\nThe vibration scheme for \\(n=0\\) is\n\\[\nu^{1} = 2u^0 - u^{-1} - \\Delta t^2\\omega^2 u^0\n\\]\nUse \\(u^{-1}=u^1\\) to get\n\\[\nu^1 = u^0 - \\frac{1}{2} \\Delta t^2 \\omega^2 u^0\n\\]\n\n\n\n\n\n\nNote\n\n\nSecond order accurate and explicit (does not depend on unknown \\(u^2\\))."
   },
   {
     "objectID": "vibration.html#the-computational-algorithm",
     "href": "vibration.html#the-computational-algorithm",
     "title": "A simple vibration problem",
     "section": "The computational algorithm",
-    "text": "The computational algorithm\n\n\\(u^0=I\\)\ncompute \\(u^1 = u^0 - \\frac{1}{2} \\Delta t^2 \\omega^2 u^0\\)\nfor \\(n=1, 2, \\ldots, N_t-1\\):\n\ncompute \\(u^{n+1}\\)\n\n\n\nMore precisely expressed in Python:\n\nT = 1\nNt = 10\nI = 1\nw = 4\nt = np.linspace(0, T, Nt+1)  # mesh points in time\ndt = t[1] - t[0]          # constant time step.\nu = np.zeros(Nt+1)           # solution\n\nu[0] = I\nu[1] = u[0] - 0.5*dt**2*w**2*u[0]\nfor n in range(1, Nt):\n    u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n\nThe code is difficult to vectorize, so we should use Numba or Cython for speed."
+    "text": "The computational algorithm\n\n\\(u^0=I\\)\ncompute \\(u^1 = u^0 - \\frac{1}{2} \\Delta t^2 \\omega^2 u^0\\)\nfor \\(n=1, 2, \\ldots, N_t-1\\):\n\ncompute \\(u^{n+1}\\)\n\n\n\nMore precisely expressed in Python:\n\nT = 2\nNt = 20\nI = 1\nw = 4\nt = np.linspace(0, T, Nt+1)  # mesh points in time\ndt = t[1] - t[0]          # constant time step.\nu = np.zeros(Nt+1)           # solution\n\nu[0] = I\nu[1] = u[0] - 0.5*dt**2*w**2*u[0]\nfor n in range(1, Nt):\n    u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n\nThe code is difficult to vectorize, so we should use Numba or Cython for speed."
   },
   {
     "objectID": "vibration.html#computing-uprime",
@@ -319,7 +319,7 @@
     "href": "vibration.html#visualization",
     "title": "A simple vibration problem",
     "section": "Visualization",
-    "text": "Visualization\n\ndef visualize(u, t, I, w):\n    plt.plot(t, u, 'b-o')\n    t_fine = np.linspace(0, t[-1], 1001)  # very fine mesh for u_e\n    u_e = u_exact(t_fine, I, w)\n    plt.plot(t_fine, u_e, 'r--')\n    plt.legend(['numerical', 'exact'], loc='upper left')\n    plt.xlabel('t')\n    plt.ylabel('u(t)')\n    dt = t[1] - t[0]\n    plt.title('dt=%g' % dt)\n    umin = 1.2*u.min();  umax = -umin\n    plt.axis([t[0], t[-1], umin, umax])"
+    "text": "Visualization\n\ndef visualize(u, t, I, w):\n    plt.plot(t, u, 'b-o')\n    t_fine = np.linspace(0, t[-1], 1001)  # very fine mesh for u_e\n    u_e = u_exact(t_fine, I, w)\n    plt.plot(t_fine, u_e, 'r--')\n    plt.legend(['numerical', 'exact'], loc='upper left')\n    plt.xlabel('t')\n    plt.ylabel('u(t)')\n    dt = t[1] - t[0]\n    plt.title('dt=%g' % dt)\n    umin = 1.4*u.min();  umax = -umin\n    plt.axis([t[0], t[-1], umin, umax])"
   },
   {
     "objectID": "vibration.html#main-program",
@@ -2125,7 +2125,7 @@
     "href": "intro.html#the-steps-in-the-finite-difference-method",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "The steps in the finite difference method",
-    "text": "The steps in the finite difference method\nSolving a differential equation by a finite difference method consists of four steps:\n\ndiscretizing the domain,\nfulfilling the equation at discrete time points,\nreplacing derivatives by finite differences,\nsolve the discretized problem. (Often with a recursive algorithm in 1D)"
+    "text": "The steps in the finite difference method\nSolving a differential equation by a finite difference method consists of four steps:\n\ndiscretizing the domain,\nfulfilling the equation at discrete space/time points,\nreplacing derivatives by finite differences,\nsolve the discretized problem. (Often with a recursive algorithm in 1D)"
   },
   {
     "objectID": "intro.html#step-1-discretizing-the-domain",
@@ -2251,7 +2251,7 @@
     "href": "intro.html#algorithm",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Algorithm",
-    "text": "Algorithm\n\nStore \\(u^n\\), \\(n=0,1,\\ldots,N_t\\) in an array \\(\\boldsymbol{u}\\).\nAlgorithm:\n\ninitialize \\(u^0\\)\nfor \\(n=1, 2, \\ldots, N_t\\): compute \\(u^n\\) using the \\(\\theta\\)-rule formula"
+    "text": "Algorithm\n\nStore \\(u^n\\), \\(n=0,1,\\ldots,N_t\\) in an array \\(\\boldsymbol{u} = \\{u^n\\}_{n=0}^{N_t}\\).\nAlgorithm:\n\ninitialize \\(u^0\\)\nfor \\(n=1, 2, \\ldots, N_t\\): compute \\(u^n\\) using the \\(\\theta\\)-rule formula"
   },
   {
     "objectID": "intro.html#in-python",
@@ -2398,21 +2398,21 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.34 μs ± 69.9 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.05 μs ± 70.9 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I                  \n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.39 μs ± 176 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.07 μs ± 160 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\") \n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.65 μs ± 92.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 20.1 μs ± 1.46 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.84 μs ± 1.22 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 198 μs ± 2.9 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.71 μs ± 129 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.7 μs ± 1.58 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta) \nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 4.11 μs ± 1.23 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 199 μs ± 3.22 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 517 μs ± 1.26 ms per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.17 μs ± 15.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I                 \n    for n in range(0, len(u)-1):  \n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 402 μs ± 983 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.24 μs ± 66.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
@@ -2426,14 +2426,14 @@
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.35 μs ± 393 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.2 μs ± 115 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
     "objectID": "intro.html#jax",
     "href": "intro.html#jax",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "JAX",
-    "text": "JAX\nJAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.\n\nimport jax\nimport jax.numpy as jnp\nfrom functools import partial\njax.config.update(\"jax_enable_x64\", True)\n@partial(jax.jit, static_argnums=0)\ndef f4(N: int, I: float, A: float):\n\n    def step(un: float, i: int):\n        unp1 = jax.lax.cond(i == 0, lambda: un, lambda: un * A)\n        return unp1, unp1\n\n    return jax.lax.scan(step, I, jnp.arange(N))[1]\n\nA: float = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a)\nN: int = u.shape[0]\nassert jnp.linalg.norm(f4(N, float(I), A) - u) &lt; 1e-8\n\n\n%timeit -q -o -n 100 f4(N, float(I), A)\n\n&lt;TimeitResult : 12.7 μs ± 3.05 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nJAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython."
+    "text": "JAX\nJAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.\n\nimport jax\nimport jax.numpy as jnp\nfrom functools import partial\njax.config.update(\"jax_enable_x64\", True)\n@partial(jax.jit, static_argnums=0)\ndef f4(N: int, I: float, A: float):\n\n    def step(un: float, i: int):\n        unp1 = jax.lax.cond(i == 0, lambda: un, lambda: un * A)\n        return unp1, unp1\n\n    return jax.lax.scan(step, I, jnp.arange(N))[1]\n\nA: float = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a)\nN: int = u.shape[0]\nassert jnp.linalg.norm(f4(N, float(I), A) - u) &lt; 1e-8\n\n\n%timeit -q -o -n 100 f4(N, float(I), A)\n\n&lt;TimeitResult : 12.4 μs ± 2.09 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nJAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython."
   },
   {
     "objectID": "functions.html#important-topics-of-todays-lecture",
@@ -3561,5 +3561,19 @@
     "title": "Function approximation by the finite element method",
     "section": "Summary",
     "text": "Summary\n\nThe finite element method (FEM) is a variational method using local basis functions.\nThe FEM uses the same Galerkin method as the methods using global basis functions.\nThe FEM is assembled by running over all elements and assembling local matrices and vectors that are subsequently added to global matrices and vectors.\nSince all assembly work is performed elementwise, the FEM is very well suited for unstructured meshes."
+  },
+  {
+    "objectID": "vibration.html#plot-of-solution",
+    "href": "vibration.html#plot-of-solution",
+    "title": "A simple vibration problem",
+    "section": "Plot of solution",
+    "text": "Plot of solution\n\nimport matplotlib.pyplot as plt\n\nplt.plot(t, u, '*-')\nplt.xlabel('Time')\nplt.ylabel('u(t)');"
+  },
+  {
+    "objectID": "vibration.html#computing-a-numerical-uprime",
+    "href": "vibration.html#computing-a-numerical-uprime",
+    "title": "A simple vibration problem",
+    "section": "Computing a numerical \\(u^{\\prime}\\)",
+    "text": "Computing a numerical \\(u^{\\prime}\\)\n\\(u\\) is often displacement/position, \\(u^{\\prime}\\) is velocity and can be computed by\n\\[\nu^{\\prime}(t_n) \\approx \\frac{u^{n+1}-u^{n-1}}{2\\Delta t}\n\\]\n\n\n\n\n\n\nNote\n\n\nFor \\(u^{\\prime}(t_0)\\) and \\(u^{\\prime}(t_{N_t})\\) it is possible to use forward or backwards differences, respectively. However, we already know from initial conditions that \\(u^{\\prime}(t_0) = 0\\) so no need to use finite difference there.\n\n\n\n\nWith vectorization:\n\ndu = np.zeros(Nt+1)\ndu[1:-1] = (u[2:] - u[:-2]) / (2*dt)  # second order accurate\ndu[0] = 0                             # exact from initial condition\ndu[-1] = (u[-1]-u[-2]) / dt           # first order accurate"
   }
 ]
