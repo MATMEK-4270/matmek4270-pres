@@ -259,7 +259,7 @@ $$
 \Delta t < \frac{1}{(1-\theta)a}, \quad \text{for} \, \theta < 1
 $$
 
- * Always fulfilled for Backward Euler ($\theta=1 \rightarrow 1 < 1+a \Delta t$ always true)
+ * Always fulfilled for Backward Euler ($\theta=1 \rightarrow A = 1/(1+a \Delta t) > 0$)
  * $\Delta t \leq 1/a$ for Forward Euler ($\theta=0$)
  * $\Delta t \leq 2/a$ for Crank-Nicolson ($\theta = 0.5$)
 
@@ -442,6 +442,7 @@ display(FE)
 display(BE)
 display(CN)
 ```
+
 * Forward/backward Euler have leading error $p^2$, or more commonly $\Delta t^2$
 * Crank-Nicolson has leading error $p^3$, or $\Delta t^3$
 

@@ -102,12 +102,12 @@ The scheme is a **recurrence relation**. That is, $u^{n+1}$ is an **explicit** f
 
 ## Computing the first step - option 1 {.smaller}
 
-  * The two initial conditions require that we fix both $u^0$ and $u^1$. How to fix $u^1$?
+  * The two initial conditions require that we fix both $u^0$ and $u^1$. $u^0=I$, but how to fix $u^1$?
 
 ::: {.fragment}  
 
   * We cannot use the difference equation $u^{1} = 2u^0 - u^{-1} - \Delta t^2\omega^2 u^0$ because $u^{-1}$ is unknown and outside the mesh!
-  * And: we have not used the initial condition $u^{\prime}(0)=0$!
+  * And: we have to use the initial condition $u^{\prime}(0)=0$!
 
 :::
 
@@ -133,7 +133,7 @@ Use the discrete ODE at $t=0$ together with a central difference at $t=0$
 and a ghost cell $u^{-1}$. The central difference is
 
 $$
-\frac{u^1-u^{-1}}{2\Delta t} = 0\quad\Rightarrow\quad u^{-1} = u^1
+u'(0) \approx \frac{u^1-u^{-1}}{2\Delta t} = 0\quad\Rightarrow\quad u^{-1} = u^1
 $$
 
 The vibration scheme for $n=0$ is
@@ -165,8 +165,8 @@ More precisely expressed in Python:
 
 ```{python}
 #| echo : true
-T = 1
-Nt = 10
+T = 2
+Nt = 20
 I = 1
 w = 4
 t = np.linspace(0, T, Nt+1)  # mesh points in time
@@ -183,36 +183,18 @@ The code is difficult to vectorize, so we should use Numba or Cython for speed.
 
 :::
 
-## Operator notation; ODE {.smaller visibility="hidden"}
+## Plot of solution
 
-With $[D_tD_t u]^n$ as the finite difference approximation to
-$u^{\prime\prime}(t_n)$ we can write
+```{python}
+#| echo: True
+import matplotlib.pyplot as plt
 
-$$
-[D_tD_t u  + \omega^2 u = 0]^n
-$$
+plt.plot(t, u, '*-')
+plt.xlabel('Time')
+plt.ylabel('u(t)');
+```
 
-$[D_tD_t u]^n$ means applying a central difference with step $\Delta t/2$ twice:
-
-$$ [D_t(D_t u)]^n = \frac{[D_t u]^{n+\half} - [D_t u]^{n-\half}}{\Delta t}$$
-which is written out as
-$$
-\frac{1}{\Delta t}\left(\frac{u^{n+1}-u^n}{\Delta t} - \frac{u^{n}-u^{n-1}}{\Delta t}\right) = \frac{u^{n+1}-2u^n + u^{n-1}}{\Delta t^2}
-\tp
-$$
-
-## Operator notation; initial condition {.smaller visibility="hidden"}
-
-$$
-[u = I]^0,\quad [D_{2t} u = 0]^0
-$$
-where $[D_{2t} u]^n$ is defined as
-$$
-[D_{2t} u]^n = \frac{u^{n+1} - u^{n-1}}{2\Delta t}
-\tp
-$$
-
-## Computing $u^{\prime}$ {.smaller}
+## Computing a numerical $u^{\prime}$ {.smaller}
 
 $u$ is often displacement/position, $u^{\prime}$ is velocity and can be computed by
 
@@ -275,7 +257,7 @@ def visualize(u, t, I, w):
     plt.ylabel('u(t)')
     dt = t[1] - t[0]
     plt.title('dt=%g' % dt)
-    umin = 1.2*u.min();  umax = -umin
+    umin = 1.4*u.min();  umax = -umin
     plt.axis([t[0], t[-1], umin, umax])
 ```
 
@@ -304,7 +286,7 @@ for i in range(2):
     u0, t0 = solver(I, w, eval(dt[i*2+j]), T)
     tf = np.linspace(0, T, 1001)
     axs[i, j].plot(t0, u0, 'b', tf, u_exact(tf, I, w), 'r--')
-    axs[i, j].legend(['numerical', 'exact'])
+    #axs[i, j].legend(['numerical', 'exact'], loc='upper left')
     axs[i, j].set_title(f'$\Delta t = {dt[i*2+j]}$')
     axs[i, j].label_outer()
     if i == 1:
@@ -628,7 +610,7 @@ for i in range(2):
     u0, t0 = solver(I, w, eval(dt[i*2+j]), T)
     tf = np.linspace(0, T, 1001)
     axs[i, j].plot(t0, u0, 'b', tf, u_exact(tf, I, w), 'r--')
-    axs[i, j].legend(['numerical', 'exact'])
+    #axs[i, j].legend(['numerical', 'exact'])
     axs[i, j].set_title(f'$\Delta t = {dt[i*2+j]}$')
     axs[i, j].label_outer()
     if i == 1:
