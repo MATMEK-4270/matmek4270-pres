@@ -2860,7 +2860,7 @@
     "href": "analysis.html#computation-of-stability-in-this-problem",
     "title": "Analysis of exponential decay models",
     "section": "Computation of stability in this problem",
-    "text": "Computation of stability in this problem\n\\(A &lt; 0\\) if\n\\[\n\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} &lt; 0\n\\]\nTo avoid oscillatory solutions we must have \\(A&gt; 0\\), which happens for\n\n\\[\n\\Delta t &lt; \\frac{1}{(1-\\theta)a}, \\quad \\text{for} \\, \\theta &lt; 1\n\\]\n\nAlways fulfilled for Backward Euler (\\(\\theta=1 \\rightarrow 1 &lt; 1+a \\Delta t\\) always true)\n\\(\\Delta t \\leq 1/a\\) for Forward Euler (\\(\\theta=0\\))\n\\(\\Delta t \\leq 2/a\\) for Crank-Nicolson (\\(\\theta = 0.5\\))\n\nWe get oscillatory solutions for FE when \\(\\Delta t \\le 1/a\\) and for CN when \\(\\Delta t \\le 2/a\\)"
+    "text": "Computation of stability in this problem\n\\(A &lt; 0\\) if\n\\[\n\\frac{1 - (1-\\theta) a\\Delta t}{1 + \\theta a\\Delta t} &lt; 0\n\\]\nTo avoid oscillatory solutions we must have \\(A&gt; 0\\), which happens for\n\n\\[\n\\Delta t &lt; \\frac{1}{(1-\\theta)a}, \\quad \\text{for} \\, \\theta &lt; 1\n\\]\n\nAlways fulfilled for Backward Euler (\\(\\theta=1 \\rightarrow A = 1/(1+a \\Delta t) &gt; 0\\))\n\\(\\Delta t \\leq 1/a\\) for Forward Euler (\\(\\theta=0\\))\n\\(\\Delta t \\leq 2/a\\) for Crank-Nicolson (\\(\\theta = 0.5\\))\n\nWe get oscillatory solutions for FE when \\(\\Delta t \\le 1/a\\) and for CN when \\(\\Delta t \\le 2/a\\)"
   },
   {
     "objectID": "analysis.html#computation-of-stability-in-this-problem-1",
