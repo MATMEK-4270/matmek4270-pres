@@ -312,7 +312,7 @@
     "href": "vibration.html#implementation",
     "title": "A simple vibration problem",
     "section": "Implementation",
-    "text": "Implementation\n\ndef solver(I, w, dt, T):\n    \"\"\"\n    Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,\n    by a central finite difference method with time step dt.\n    \"\"\"\n    Nt = int(round(T/dt))\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)"
+    "text": "Implementation\n\ndef solver(I, w, dt, T):\n    \"\"\"\n    Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,\n    by a central finite difference method with time step dt.\n    \"\"\"\n    Nt = int(T/dt)\n    u = np.zeros(Nt+1)\n    t = np.linspace(0, Nt*dt, Nt+1)\n\n    u[0] = I\n    u[1] = u[0] - 0.5*dt**2*w**2*u[0]\n    for n in range(1, Nt):\n        u[n+1] = 2*u[n] - u[n-1] - dt**2*w**2*u[n]\n    return u, t\n \ndef u_exact(t, I, w):\n    return I*np.cos(w*t)"
   },
   {
     "objectID": "vibration.html#visualization",
@@ -347,14 +347,14 @@
     "href": "vibration.html#exact-discrete-solution",
     "title": "A simple vibration problem",
     "section": "Exact discrete solution",
-    "text": "Exact discrete solution\nWe now have (at least) two possibilities\n\nAssume that \\(A=e^{i \\tilde{\\omega} \\Delta t}\\) and solve for the numerical frequency \\(\\tilde{\\omega}\\)\nAssume nothing and compute with a function A(\\(\\Delta t, \\omega\\)) (like for the exponential decay)\n\n\nWe follow Langtangen’s approach (1) first. Note that since\n\\[\ne^{i \\tilde{\\omega} \\Delta t} = \\cos (\\tilde{\\omega} \\Delta t ) + i \\sin(\\tilde{\\omega} \\Delta t)\n\\]\nwe can work with a complex A and let the real part represent the physical solution.\nThe exact discrete solution is then\n\\[\nu(t_n) = I \\cos (\\tilde{\\omega} t_n)\n\\]\nand we can study the error in \\(\\tilde{\\omega}\\) compared to the true \\(\\omega\\)."
+    "text": "Exact discrete solution\nWe now have (at least) two possibilities for \\(u^{n+1}=A u^n\\)\n\nAssume that \\(A=e^{i \\tilde{\\omega} \\Delta t}\\) and solve for the numerical frequency \\(\\tilde{\\omega}\\)\nAssume nothing and compute with a function A(\\(\\Delta t, \\omega\\)) (like for the exponential decay)\n\n\nWe follow Langtangen’s approach (1) first. Note that since\n\\[\ne^{i \\tilde{\\omega} \\Delta t} = \\cos (\\tilde{\\omega} \\Delta t ) + i \\sin(\\tilde{\\omega} \\Delta t)\n\\]\nwe can work with a complex A and let the real part represent the physical solution.\nThe exact discrete solution is then\n\\[\nu(t_n) = I \\cos (\\tilde{\\omega} t_n)\n\\]\nand we can study the error in \\(\\tilde{\\omega}\\) compared to the true \\(\\omega\\)."
   },
   {
     "objectID": "vibration.html#find-the-error-in-tildeomega",
     "href": "vibration.html#find-the-error-in-tildeomega",
     "title": "A simple vibration problem",
     "section": "Find the error in \\(\\tilde\\omega\\)",
-    "text": "Find the error in \\(\\tilde\\omega\\)\nInsert the numerical solution \\(u^n = I \\cos (\\tilde{\\omega} t_n)\\) into the discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\n\nQuite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you\n\\[\n\\begin{align}\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} &= \\frac{I}{\\Delta t^2} (\\cos (\\tilde{\\omega} t_{n+1}) - 2 \\cos (\\tilde{\\omega} t_n) + \\cos (\\tilde{\\omega} t_{n-1})) \\\\\n&= \\frac{2 I}{\\Delta t^2} (\\cos (\\tilde{\\omega} \\Delta t) - 1) \\cos (\\tilde{\\omega} n \\Delta t) \\\\\n&= -\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) \\cos (\\tilde{\\omega} n \\Delta t)\n\\end{align}\n\\]"
+    "text": "Find the error in \\(\\tilde\\omega\\)\nInsert the numerical solution \\(u^n = I \\cos (\\tilde{\\omega} t_n)\\) into the discrete equation\n\\[\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} + \\omega^2 u^n = 0\n\\]\n\nQuite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you for the first FD term\n\\[\n\\begin{align}\n\\frac{u^{n+1} - 2u^n + u^{n-1}}{\\Delta t^2} &= \\frac{I}{\\Delta t^2} (\\cos (\\tilde{\\omega} t_{n+1}) - 2 \\cos (\\tilde{\\omega} t_n) + \\cos (\\tilde{\\omega} t_{n-1})) \\\\\n&= \\frac{2 I}{\\Delta t^2} (\\cos (\\tilde{\\omega} \\Delta t) - 1) \\cos (\\tilde{\\omega} n \\Delta t) \\\\\n&= -\\frac{4}{\\Delta t^2} \\sin^2 (\\tilde{\\omega} \\Delta t) \\cos (\\tilde{\\omega} n \\Delta t)\n\\end{align}\n\\]"
   },
   {
     "objectID": "vibration.html#insert-into-discrete-equation",
