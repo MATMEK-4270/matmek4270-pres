@@ -375,7 +375,7 @@
     "href": "vibration.html#polynomial-approximation-of-the-frequency-error",
     "title": "A simple vibration problem",
     "section": "Polynomial approximation of the frequency error",
-    "text": "Polynomial approximation of the frequency error\nHow good is the approximation \\(\\tilde{\\omega} = \\pm \\frac{2}{\\Delta t} \\sin^{-1} \\left( \\frac{\\omega  \\Delta t }{2} \\right)\\) ?\n\nWe can easily use a Taylor series expansion for small \\(h=\\Delta t\\)\n\nimport sympy as sp \nh, w = sp.symbols('h,w')\nw_tilde = sp.asin(w*h/2).series(h, 0, 4)*2/h\nsp.simplify(w_tilde)\n\n\\(\\displaystyle w + \\frac{h^{2} w^{3}}{24} + O\\left(h^{3}\\right)\\)\n\n\n\n\nSo the numerical frequency i always too large (to fast oscillations): \\[\n\\tilde\\omega = \\omega\\left( 1 + \\frac{1}{24}\\omega^2\\Delta t^2\\right) + {\\cal O}(\\Delta t^3)\n\\]"
+    "text": "Polynomial approximation of the frequency error\nHow good is the approximation \\(\\tilde{\\omega} = \\pm \\frac{2}{\\Delta t} \\sin^{-1} \\left( \\frac{\\omega  \\Delta t }{2} \\right)\\) ?\n\nWe can easily use a Taylor series expansion for small \\(h=\\Delta t\\)\n\nimport sympy as sp \nh, w = sp.symbols('h,w')\nw_tilde = sp.asin(w*h/2).series(h, 0, 4)*2/h\nsp.simplify(w_tilde)\n\n\\(\\displaystyle w + \\frac{h^{2} w^{3}}{24} + O\\left(h^{3}\\right)\\)\n\n\n\n\nSo the numerical frequency is always too large (too fast oscillations): \\[\n\\tilde\\omega = \\omega\\left( 1 + \\frac{1}{24}\\omega^2\\Delta t^2\\right) + {\\cal O}(\\Delta t^3)\n\\]"
   },
   {
     "objectID": "vibration.html#simple-improvement-of-previous-solver",
