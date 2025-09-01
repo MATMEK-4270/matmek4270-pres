@@ -229,7 +229,7 @@ def solver(I, w, dt, T):
     Solve u'' + w**2*u = 0 for t in (0,T], u(0)=I and u'(0)=0,
     by a central finite difference method with time step dt.
     """
-    Nt = int(round(T/dt))
+    Nt = int(T/dt)
     u = np.zeros(Nt+1)
     t = np.linspace(0, Nt*dt, Nt+1)
 
@@ -331,7 +331,7 @@ print(u(0), u(1), u(2), u(3))
 
 ## Exact discrete solution {.smaller}
 
-We now have (at least) two possibilities
+We now have (at least) two possibilities for $u^{n+1}=A u^n$
 
 1. Assume that $A=e^{i \tilde{\omega} \Delta t}$ and solve for the numerical frequency $\tilde{\omega}$
 2. Assume nothing and compute with a function A($\Delta t, \omega$) (like for the exponential decay)
@@ -366,7 +366,7 @@ $$
 
 ::: {.fragment}
 
-Quite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you
+Quite messy, but Wolfram Alpha (or another long derivation in the FD for PDEs book) will give you for the first FD term
 
 $$
 \begin{align}
@@ -433,7 +433,7 @@ sp.simplify(w_tilde)
 
 ::: {.fragment}
 
-So the numerical frequency i always too large (to fast oscillations):
+So the numerical frequency is always too large (too fast oscillations):
 $$
 \tilde\omega = \omega\left( 1 + \frac{1}{24}\omega^2\Delta t^2\right) + {\cal O}(\Delta t^3)
 $$
@@ -539,7 +539,7 @@ $$
 ## Stability in growth? {.smaller} 
 Consider
 $$ 
-|A| = |e^{i y}| \quad \text{where} \quad y= \pm 2 \sin^{-1}\left(\frac{\omega \Delta t}{2}\right) 
+|A| = |e^{i y}| \quad \text{where} \quad y= \tilde{\omega} \Delta t = \pm 2 \sin^{-1}\left(\frac{\omega \Delta t}{2}\right) 
 $$
 
 Is $|e^{iy}|=1$ for all $y$? 
@@ -682,15 +682,31 @@ A < -1
 $$
 
 Check:
+:::
 
+::: {.fragment}
+::: {.columns}
+::: {.column}
 ```{python}
 #| echo : true
 p = sp.Symbol('p') 
-f = 1 - p**2/2 - p/2*sp.sqrt(p**2-4)
-f.subs(p, 2.01).n() 
-```
-
+A = 1 - p**2/2 - p/2*sp.sqrt(p**2-4)
+display(A.subs(p, 2.01).n())
+display(f"|A|={abs(A.subs(p, 2.01).n())}") 
+``` 
 :::
+::: {.column}
+```{python}
+#| echo : true
+p = sp.Symbol('p') 
+A = 1 - p**2/2 - p/2*sp.sqrt(p**2-4)
+display(A.subs(p, 1.99).n())
+display(f"|A|={abs(A.subs(p, 1.99).n())}")
+```
+:::
+:::
+:::
+
 
 ## Alternative derivation ct'd {.smaller}
 

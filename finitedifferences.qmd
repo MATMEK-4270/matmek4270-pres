@@ -4,7 +4,7 @@ subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
 
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     slide-number: true
     preview-links: auto
@@ -50,7 +50,7 @@ is classified as either an IVP or a BVP based on boundary/initial conditions.
 ### BVP {style="text-align: center;"}
 
 * Typically specifies $u(0)$ and $u(T)$ or $u'(0)$ and $u'(T)$
-* **Implicit** linear algebra methods 
+* **Implicit** linear algebra methods
 * Can use the finite difference or similar methods for discretization
 
 :::
@@ -71,20 +71,20 @@ Similar characteristics for higher-order differential equations. IVP specifies a
 :::
 
 ```{python}
-import numpy as np 
+import numpy as np
 import matplotlib.pyplot as plt
 ```
 
 For example, the exponential decay problem with initial condition
 
-$$ 
-u' + au = 0, t \in (0, T], \, u(0)=I. 
+$$
+u' + au = 0, t \in (0, T], \, u(0)=I.
 $$
 
 is discretized as
 
-$$ 
-u^{n+1} = \frac{1 - (1-\theta) a \Delta t}{1 + \theta a \Delta t} u^n = g u^n. 
+$$
+u^{n+1} = \frac{1 - (1-\theta) a \Delta t}{1 + \theta a \Delta t} u^n = g u^n.
 $$
 
 The solution vector $\boldsymbol{u} = (u^0, u^1, \ldots, u^{N})$ is obtained from a recurrence algorithm
@@ -107,39 +107,12 @@ For the exponential decay problem the matrix problem looks like
 
 $$
  \underbrace{
- \begin{bmatrix} 
+ \begin{bmatrix}
   1  & 0 & 0 & 0 & 0  \\
  -g  & 1 & 0 & 0 & 0  \\
  0  & -g & 1 & 0 & 0  \\
  0  & 0 & -g & 1 & 0  \\
- 0  & 0 & 0 & -g & 1  
-\end{bmatrix}}_{A}
-\underbrace{\begin{bmatrix}
-u^0 \\
-u^1 \\
-u^2 \\
-u^3 \\
-u^4 
-\end{bmatrix}}_{\boldsymbol{u}} = 
-\underbrace{\begin{bmatrix}
-I \\
-0 \\
-0 \\
-0 \\
-0 
-\end{bmatrix}}_{\boldsymbol{b}}
-$$
-
-## Understand that the matrix problem is the same as the recurrence {.smaller}
-
-$$
- \underbrace{
- \begin{bmatrix} 
- 1   & 0 & 0 & 0 & 0   \\
- -g  & 1 & 0 & 0 & 0   \\
- 0  & -g & 1 & 0 & 0   \\
- 0  & 0 & -g & 1 & 0   \\
- 0  & 0 & 0 & -g & 1   
+ 0  & 0 & 0 & -g & 1
 \end{bmatrix}}_{A}
 \underbrace{\begin{bmatrix}
 u^0 \\
@@ -147,13 +120,40 @@ u^1 \\
 u^2 \\
 u^3 \\
 u^4
-\end{bmatrix}}_{\boldsymbol{u}} = 
+\end{bmatrix}}_{\boldsymbol{u}} =
 \underbrace{\begin{bmatrix}
 I \\
 0 \\
 0 \\
 0 \\
-0 
+0
+\end{bmatrix}}_{\boldsymbol{b}}
+$$
+
+## Understand that the matrix problem is the same as the recurrence {.smaller}
+
+$$
+ \underbrace{
+ \begin{bmatrix}
+ 1   & 0 & 0 & 0 & 0   \\
+ -g  & 1 & 0 & 0 & 0   \\
+ 0  & -g & 1 & 0 & 0   \\
+ 0  & 0 & -g & 1 & 0   \\
+ 0  & 0 & 0 & -g & 1
+\end{bmatrix}}_{A}
+\underbrace{\begin{bmatrix}
+u^0 \\
+u^1 \\
+u^2 \\
+u^3 \\
+u^4
+\end{bmatrix}}_{\boldsymbol{u}} =
+\underbrace{\begin{bmatrix}
+I \\
+0 \\
+0 \\
+0 \\
+0
 \end{bmatrix}}_{\boldsymbol{b}}
 $$
 
@@ -164,9 +164,9 @@ simply means
 ::: {.column}
 $$
 \begin{align}
-u^0 &= I \\ 
--g u^0 + u^1 &= 0 \\ 
--g u^1 + u^2 &= 0 \\ 
+u^0 &= I \\
+-g u^0 + u^1 &= 0 \\
+-g u^1 + u^2 &= 0 \\
 \vdots
 \end{align}
 $$
@@ -183,7 +183,7 @@ $$
 A \boldsymbol{u} = \boldsymbol{b}
 $$
 
-is solved as 
+is solved as
 
 $$
 \boldsymbol{u} = A^{-1} \boldsymbol{b}
@@ -206,9 +206,9 @@ u = np.zeros(N+1)
 g = (1 - (1-theta) * a * dt)/(1 + theta * a * dt)
 ```
 
-Assemble 
+Assemble
 ```{python}
-#| echo : true 
+#| echo : true
 from scipy import sparse
 A = sparse.diags([-g, 1], np.array([-1, 0]), (N+1, N+1), 'csr')
 b = np.zeros(N+1); b[0] = I
@@ -219,19 +219,19 @@ b = np.zeros(N+1); b[0] = I
 Recurrence:
 
 ```{python}
-#| echo : true 
+#| echo : true
 u[0] = I
 for n in range(N):
-  u[n+1] = g * u[n] 
+  u[n+1] = g * u[n]
 ```
 
-Matrix 
+Matrix
 
 ```{python}
 #| echo : true
 um = sparse.linalg.spsolve(A, b)
 print(u-um)
-``` 
+```
 
 Ok, no difference. There's really no advantage of assembling the explicit exponential decay problem.
 
@@ -240,18 +240,18 @@ But which is faster?
 ::: {.fragment}
 
 ```{python}
-#| echo : true 
+#| echo : true
 def reccsolve(u, N, I):
   u[0] = I
   for n in range(N):
-    u[n+1] = g * u[n] 
+    u[n+1] = g * u[n]
 u = np.zeros(N+1)
-%timeit -n100 reccsolve(u, N, I) 
+%timeit -n100 reccsolve(u, N, I)
 ```
 
 ```{python}
-#| echo : true 
-%timeit -n100 um = sparse.linalg.spsolve(A, b) 
+#| echo : true
+%timeit -n100 um = sparse.linalg.spsolve(A, b)
 ```
 
 :::
@@ -262,12 +262,22 @@ A unit lower triangular matrix has a unit lower triangular inverse
 
 ```{python}
 #| echo : true
-np.set_printoptions(precision=3, suppress=True) 
+np.set_printoptions(precision=3, suppress=True)
 Ai = np.linalg.inv(A.toarray())
 print(Ai)
 ```
 
-::: {.fragment}
+## Try to speed up by computing the inverse {.smaller}
+
+A unit lower triangular matrix has a unit lower triangular inverse
+
+```{python}
+#| echo : true
+#| eval : false
+np.set_printoptions(precision=3, suppress=True)
+Ai = np.linalg.inv(A.toarray())
+```
+
 
 Now solve directly using $A^{-1}$
 
@@ -279,12 +289,11 @@ ui = Ai @ b
 Compare with previous - still the same
 
 ```{python}
-#| echo : true 
+#| echo : true
 um = sparse.linalg.spsolve(A, b)
-print(um-ui) 
+print(um-ui)
 ```
 
-::: 
 
 ::: {.fragment}
 
@@ -292,7 +301,7 @@ but it seems to be very fast
 
 ```{python}
 #| echo : true
-%timeit -n 100 ui = Ai @ b 
+%timeit -n 100 ui = Ai @ b
 ```
 
 :::
@@ -301,7 +310,7 @@ but it seems to be very fast
 
 ```{python}
 #| echo : true
-import numba as nb 
+import numba as nb
 
 @nb.jit
 def nbreccsolve(u, N, I, g):
@@ -324,7 +333,7 @@ $$
 u'' + \omega^2 u = 0,\, t \in (0, T) \quad u(0) = I, u(T) = I,
 $$
 
-cannot be solved with recurrence, since it is not an initial value problem. 
+cannot be solved with recurrence, since it is not an initial value problem.
 
 ::: {.fragment}
 
@@ -343,14 +352,14 @@ This leads to an **implicit** linear algebra problem, because the equation for $
 The matrix problem is now, using $g = 2-\omega^2 \Delta t^2$,
 
 $$
-\begin{bmatrix} 
+\begin{bmatrix}
   1  & 0 & 0 & 0 & 0 & 0 & 0  \\
  1  & -g & 1 & 0 & 0 & 0 & 0  \\
  0  & 1 & -g & 1 & 0 & 0 & 0  \\
  0  & 0 & 1 & -g & 1 & 0 & 0  \\
  0  & 0 & 0 & 1 & -g & 1 & 0  \\
  0  & 0 & 0 & 0 & 1 & -g & 1  \\
- 0  & 0 & 0 & 0 & 0 & 0 & 1  
+ 0  & 0 & 0 & 0 & 0 & 0 & 1
 \end{bmatrix}
 \begin{bmatrix}
 u^0 \\
@@ -359,7 +368,7 @@ u^2 \\
 u^3 \\
 u^4 \\
 u^5 \\
-u^6 
+u^6
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -381,9 +390,10 @@ $$
 ## Assemble and solve the implicit BVP {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
+#| fig-align: center
 T, N, I, w = 3., 35, 1., 2*np.pi
-dt = T/N 
+dt = T/N
 g = 2 - w**2*dt**2
 A = sparse.diags([1, -g, 1], np.array([-1, 0, 1]), (N+1, N+1), 'lil')
 b = np.zeros(N+1)
@@ -392,6 +402,7 @@ A[-1, -3:] = 0, 0, 1  # Fix last row
 b[0], b[-1] = I, I
 u2 = sparse.linalg.spsolve(A.tocsr(), b)
 t = np.linspace(0, T, N+1)
+plt.figure(figsize=(10, 4))
 plt.plot(t, u2, 'bo', t, I*np.cos(w*t), 'r--')
 plt.legend(['Numerical', 'Exact']);
 ```
@@ -439,7 +450,7 @@ where $D^{(2)} \in \mathbb{R}^{N+1 \times N+1}$ is the second **derivative matri
 
 $$ \small
  \underbrace{
- \begin{bmatrix} 
+ \begin{bmatrix}
  u^{(2)}_0 \\
 u^{(2)}_1 \\
 u^{(2)}_2 \\
@@ -458,7 +469,7 @@ u^{(2)}_{N} \\
 \vdots & 0 & 0& 0& 0& 1& -2& 1 \\
 ? & ? & ? & ?  & ? & ? & ? & ? \\
 \end{bmatrix}
-}_{D^{(2)}} 
+}_{D^{(2)}}
 \underbrace{\begin{bmatrix}
 u^0 \\
 u^1 \\
@@ -466,7 +477,7 @@ u^2 \\
 \vdots \\
 u^{N-1} \\
 u^{N-1} \\
-u^{N} 
+u^{N}
 \end{bmatrix}}_{\boldsymbol{u}}
 $$
 
@@ -476,7 +487,7 @@ $$
 
 $$ \small
  \underbrace{
- \begin{bmatrix} 
+ \begin{bmatrix}
  u^{(2)}_0 \\
 u^{(2)}_1 \\
 u^{(2)}_2 \\
@@ -495,7 +506,7 @@ u^{(2)}_{N} \\
 \vdots & 0 & 0& 0& 0& 1& -2& 1 \\
 ? & ? & ? & ?  & ? & ? & ? & ? \\
 \end{bmatrix}
-}_{D^{(2)}} 
+}_{D^{(2)}}
 \underbrace{\begin{bmatrix}
 u^0 \\
 u^1 \\
@@ -503,7 +514,7 @@ u^2 \\
 \vdots \\
 u^{N-1} \\
 u^{N-1} \\
-u^{N} 
+u^{N}
 \end{bmatrix}}_{\boldsymbol{u}}
 $$
 
@@ -513,7 +524,7 @@ We still want to compute $u_0^{(2)}=u''(t_0)$ and $u_N^{(2)}=u''(t_N)$. How?
 
 ::: {.fragment}
 
-Forward and backward stencils will do 
+Forward and backward stencils will do
 
 :::
 
@@ -599,7 +610,7 @@ $$
 Now to eliminate both $u'$ and $u'''$ terms add the three equations as $-(3) + 4\cdot(2) - 5\cdot(1)$ (don't worry about how I know this yet)
 
 $$
--(3)+4\cdot(2)-5\cdot(1): \, -u^{n+3}+4u^{n+2}-5u^{n+1} = -2 u^n + h^2 u'' - \frac{11 h^4}{12}u'''' +  
+-(3)+4\cdot(2)-5\cdot(1): \, -u^{n+3}+4u^{n+2}-5u^{n+1} = -2 u^n + h^2 u'' - \frac{11 h^4}{12}u'''' +
 $$
 
 Isolate $u''(0)$
@@ -625,7 +636,7 @@ $$
 ## Assemble in Python {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 N = 8
 dt = 0.5
 T = N*dt
@@ -650,11 +661,11 @@ Exact for all $n$!
 ## Try with merely first order boundary {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 D21 = sparse.diags([1, -2, 1], np.array([-1, 0, 1]), (N+1, N+1), 'lil')
 D21[0, :4] = 1, -2, 1, 0
 D21[-1, -4:] = 0, 1, -2, 1
-D21 *= (1/dt**2) 
+D21 *= (1/dt**2)
 D21 @ f
 ```
 
@@ -665,14 +676,14 @@ Still exact! Why?
 Consider the forward first order stencil
 
 $$
-u''(0) = \frac{u^{2}-2u^{1}+u^0}{h^2} - \color{red} h u'''(0) \color{black} - \frac{7 h^2}{12}u''''(0) + 
+u''(0) = \frac{u^{2}-2u^{1}+u^0}{h^2} - \color{red} h u'''(0) \color{black} - \frac{7 h^2}{12}u''''(0) +
 $$
 
 :::
 
 :::{.fragment}
 
-The leading error is $h u'''(0)$ and $u'''(0)$ is zero for $u(t)=t^2$. The second order stencil captures the second order polynomial $t^2$ exactly! 
+The leading error is $h u'''(0)$ and $u'''(0)$ is zero for $u(t)=t^2$. The second order stencil captures the second order polynomial $t^2$ exactly!
 
 :::
 
@@ -681,13 +692,14 @@ The leading error is $h u'''(0)$ and $u'''(0)$ is zero for $u(t)=t^2$. The secon
 Let $f(t) = \sin(\pi t / T)$ such that $f''(t) = -(\pi/T)^2 f(t)$. Here none of the error terms will disappear and we see the effect of the poor first order boundary.
 
 ```{python}
-#| echo: true 
+#| echo: true
+#| fig-align: center
 f = np.sin(np.pi*t / T)
 d2fe = -(np.pi/T)**2*f
 d2f = D2 @ f
 d2f1 = D21 @ f
 plt.plot(t, d2fe, 'k', t, d2f, 'b', t, d2f1, 'r')
-plt.legend(['Exact', '2nd order', '1st order']); 
+plt.legend(['Exact', '2nd order', '1st order']);
 ```
 
 ## First derivative matrix {.smaller}
@@ -711,22 +723,22 @@ which is second order accurate.
 
 The central scheme cannot be used for $n=0$ or $n=N$.
 
-## We use a forward scheme for $n=0$ {.smaller} 
+## We use a forward scheme for $n=0$ {.smaller}
 
 $$ \small
 \begin{align}
 (1)\quad u^{n+1} &= u^n + h u' + \frac{h^2}{2}u'' + \frac{h^3}{6}u''' + \frac{h^4}{24}u'''' + \cdots \\
-(2)\quad u^{n+2} &= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots 
+(2)\quad u^{n+2} &= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots
 \end{align}
 $$
 
 From Eq. (1):
 
 $$
-u'(t_n) = \frac{u^{n+1}-u^n}{h} - \frac{\color{red}h\color{black}}{2}u'' - 
+u'(t_n) = \frac{u^{n+1}-u^n}{h} - \frac{\color{red}h\color{black}}{2}u'' -
 $$
 
-Adding one more equation (2) we get second order: $(2)-4\cdot (1)$ (Note that the terms with $u''$ then cancel)
+Adding one more equation (2) we get second order: $4\cdot (1) - (2)$ (Note that the terms with $u''$ then cancel)
 
 $$
 u'(t_n) = \frac{-u^{n+2}+4u^{n+1}-3u^n}{2h} + \frac{\color{red}h^2\color{black}}{3}u''' +
@@ -747,26 +759,26 @@ D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
 $$
 
 ```{python}
-#| echo : true 
+#| echo : true
 D1 = sparse.diags([-1, 1], np.array([-1, 1]), (N+1, N+1), 'lil')
 D1[0, :3] = -3, 4, -1
-D1[-1, -3:] = 1, -4, 3 
+D1[-1, -3:] = 1, -4, 3
 D1 *= (1/(2*dt))
-f = t 
-D1 @ f 
+f = t
+D1 @ f
 ```
 
 ## Is $D^{(2)}$ the same as $D^{(1)}D^{(1)}$? {.smaller}
 
-Is it the same to compute $D^{(2)} \boldsymbol{u}$ as $D^{(1)}(D^{(1)}\boldsymbol{u})$? 
+Is it the same to compute $D^{(2)} \boldsymbol{u}$ as $D^{(1)}(D^{(1)}\boldsymbol{u})$?
 
 ::: {.fragment}
 
 Analytically, we know that $u'' = \frac{d^2u}{dt^2} = \frac{d}{dt}\left(\frac{du}{dt}\right)$, but this is not necessarily so numerically.
 
 ```{python}
-#| echo : true 
-D22 = D1 @ D1 # @ represents matrix-matrix product 
+#| echo : true
+D22 = D1 @ D1 # @ represents matrix-matrix product
 D22.toarray()*4*dt**2
 ```
 
@@ -785,7 +797,7 @@ How accurate is $D^{(1)}D^{(1)}$?
 $$ \small
 \begin{align*}
 (-2)\quad u^{n-2} &= u^n - 2h u' + \frac{2 h^2}{1}u'' - \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' - \cdots \\
-(2)\quad u^{n+2} &= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots 
+(2)\quad u^{n+2} &= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots
 \end{align*}
 $$
 
@@ -795,7 +807,7 @@ $$
 u^{n+2} + u^{n-2} = 2u^n + 4h^2 u'' + \frac{4h^4}{3}u'''' +
 $$
 
-and 
+and
 
 $$
 u''(t_n) = \frac{u^{n+2}-2u^{n}+u^{n-2}}{4h^2} - \frac{h^2}{3}u'''' + \cdots
@@ -811,11 +823,11 @@ $$ \small
 \begin{align*}
 (-1)\quad u^{n-1} &= u^n - h u' + \frac{h^2}{2}u'' - \frac{h^3}{6}u''' + \frac{h^4}{24}u'''' - \cdots \\
 (1)\quad u^{n+1} &= u^n + h u' + \frac{h^2}{2}u'' + \frac{h^3}{6}u''' + \frac{h^4}{24}u'''' + \cdots \\
-(2)\quad u^{n+2} &= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots 
+(2)\quad u^{n+2} &= u^n + 2h u' + \frac{2 h^2}{1}u'' + \frac{4 h^3}{3}u''' + \frac{2 h^4}{3}u'''' + \cdots
 \end{align*}
 $$
 
-Take Eq. $(2) + (1) + 3 \cdot (-1)$ 
+Take Eq. $(2) + (1) + 3 \cdot (-1)$
 
 $$
 u''(t_1) = \frac{u^{n+2}+u^{n+1}-5u^{n}+3u^{n-1}}{4h^2} + \frac{\color{red}h\color{black}}{4}u''' + \cdots
@@ -835,10 +847,10 @@ $$ \small
 \end{align*}
 $$
 
-Take Eq. $-(3)+7\cdot (2) -11 \cdot (1)$ to obtain 
+Take Eq. $-(3)+7\cdot (2) -11 \cdot (1)$ to obtain
 
 $$
-u''(t_0) = \frac{-u^{n+3}+7u^{n+2}-11u^{n+1}+5u^{n}}{4h^2} -\frac{3 \color{red}h\color{black}}{4}u''' \cdots 
+u''(t_0) = \frac{-u^{n+3}+7u^{n+2}-11u^{n+1}+5u^{n}}{4h^2} -\frac{3 \color{red}h\color{black}}{4}u''' \cdots
 $$
 
 First order. So we conclude that $D^{(1)}D^{(1)}$ is still an approximation of the second derivative, but it is only first order accurate near the boundaries.
@@ -847,13 +859,14 @@ First order. So we conclude that $D^{(1)}D^{(1)}$ is still an approximation of t
 
 ```{python}
 #| echo : true
+#| fig-align: center
 f = np.sin(np.pi*t / T)
 d2fe = -(np.pi/T)**2*f
 d2f = D2 @ f
 d2f1 = D21 @ f
 d2f2 = D1 @ D1 @ f
 plt.plot(t, d2fe, 'k', t, d2f, 'b', t, d2f1, 'r', t, d2f2, 'm')
-plt.legend(['Exact', '2nd order', '1st order', 'D1 @ D1']); 
+plt.legend(['Exact', '2nd order', '1st order', 'D1 @ D1']);
 ```
 
 ## The main advantage of using difference matrices is that they make it easy to solve equations {.smaller}
@@ -902,9 +915,9 @@ $$ \small
 \vdots & & & \ddots &  & & &\cdots \\
 \vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
 \vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
-0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah 
+0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah
 \end{bmatrix}
-}_{D^{(1)}+a\mathbb{I}} 
+}_{D^{(1)}+a\mathbb{I}}
 \underbrace{\begin{bmatrix}
 u^0 \\
 u^1 \\
@@ -912,11 +925,11 @@ u^2 \\
 \vdots \\
 u^{N-2} \\
 u^{N-1} \\
-u^{N} 
+u^{N}
 \end{bmatrix}}_{\boldsymbol{u}}
 =
 \underbrace{
- \begin{bmatrix} 
+ \begin{bmatrix}
  b^0 \\
 b^1 \\
 b^2 \\
@@ -940,9 +953,9 @@ $$ \small
 \vdots & & & \ddots &  & & &\cdots \\
 \vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
 \vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
-0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah 
+0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah
 \end{bmatrix}
-}_{A} 
+}_{A}
 \underbrace{\begin{bmatrix}
 u^0 \\
 u^1 \\
@@ -950,11 +963,11 @@ u^2 \\
 \vdots \\
 u^{N-2} \\
 u^{N-1} \\
-u^{N} 
+u^{N}
 \end{bmatrix}}_{\boldsymbol{u}}
 =
 \underbrace{
- \begin{bmatrix} 
+ \begin{bmatrix}
  I \\
 0 \\
 0 \\
@@ -974,14 +987,14 @@ $$
 ## Implement decay problem {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 N = 10
 dt = 0.5
 a = 5
 T = N*dt
-t = np.linspace(0, N*dt, N+1) 
+t = np.linspace(0, N*dt, N+1)
 D1 = sparse.diags([-1, 1], np.array([-1, 1]), (N+1, N+1), 'lil')
-D1[0, :3] = -3, 4, -1 
+D1[0, :3] = -3, 4, -1
 D1[-1, -3:] = 1, -4, 3
 D1 *= (1/(2*dt))
 Id = sparse.eye(N+1)
@@ -996,15 +1009,16 @@ A.toarray()
 
 ```{python}
 #| echo : false
+#| fig-align: center
 ut = np.zeros(N+1)
 theta = 0.5 # Crank-Nicolson
 g = (1 - (1-theta) * a * dt)/(1 + theta * a * dt)
 ut[0] = I
 for n in range(N):
-    ut[n+1] = g * ut[n] 
+    ut[n+1] = g * ut[n]
 u1 = sparse.linalg.spsolve(A, b)
 
-plt.plot(t, u1, 'b', t, ut, 'k', t, np.exp(-a*t), 'r--') 
+plt.plot(t, u1, 'b', t, ut, 'k', t, np.exp(-a*t), 'r--')
 plt.legend(['FD', 'Crank-Nicolson', 'exact'])
 ```
 
@@ -1024,9 +1038,9 @@ $$
 
 ```{python}
 #| echo : true
-w = 2*np.pi 
+w = 2*np.pi
 T, N, I = 3., 35, 1.
-dt = T/N 
+dt = T/N
 D2 = sparse.diags([1, -2, 1], np.array([-1, 0, 1]), (N+1, N+1), 'lil')
 D2 *= (1/(dt**2)) # never mind the edges n=0 or n=N because these rows will be overwritten
 Id = sparse.eye(N+1)
@@ -1039,13 +1053,13 @@ A.toarray()*dt**2
 
 $$
 \begin{align}
-u^0 &= I \\ 
+u^0 &= I \\
 u^N &= I
 \end{align}
 $$
 
 ```{python}
-#| echo : true 
+#| echo : true
 A[0, :3] = 1, 0, 0
 A[-1, -3:] = 0, 0, 1
 b[0] = I
@@ -1057,6 +1071,7 @@ A.toarray()
 
 ```{python}
 #| echo : true
+#| fig-align: center
 u2 = sparse.linalg.spsolve(A, b)
 t = np.linspace(0, T, N+1)
 plt.plot(t, u2, 'bo', t, I*np.cos(w*t), 'r--')
@@ -1105,7 +1120,7 @@ $$
 \boldsymbol{u} = C \boldsymbol{du},
 $$
 
-where $\boldsymbol{u} = (u^{n+p})_{p=p_0}^{M+p_0}$, $C = (c_{p_0+p,i})_{p,i=0}^{M,M}$ and $\boldsymbol{du}=(du_i)_{i=0}^M$. Here $p_0$ is an integer representing the lowest value of $p$ in the stencil. 
+where $\boldsymbol{u} = (u^{n+p})_{p=p_0}^{M+p_0}$, $C = (c_{p_0+p,i})_{p,i=0}^{M,M}$ and $\boldsymbol{du}=(du_i)_{i=0}^M$. Here $p_0$ is an integer representing the lowest value of $p$ in the stencil.
 
 For $p_0=-2$ and $M=4$:
 
@@ -1172,7 +1187,7 @@ $$
 \boldsymbol{du} = C^{-1} \boldsymbol{u}
 $$
 
-Since $du_i$ is an approximation to the i'th derivative we can now compute any derivative stencil! 
+Since $du_i$ is an approximation to the i'th derivative we can now compute any derivative stencil!
 
 :::
 
@@ -1197,7 +1212,7 @@ $$
 ## In Sympy {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 import sympy as sp
 x, h = sp.symbols('x,h')
 C = sp.Matrix([[1, -h, h**2/2], [1, 0, 0], [1, h, h**2/2]])
@@ -1209,7 +1224,7 @@ C = sp.Matrix([[1, -h, h**2/2], [1, 0, 0], [1, h, h**2/2]])
 Print $C$ matrix
 
 ```{python}
-#| echo : true 
+#| echo : true
 C
 ```
 
@@ -1219,8 +1234,8 @@ C
 Print $C^{-1}$ matrix
 
 ```{python}
-#| echo : true 
-C.inv() 
+#| echo : true
+C.inv()
 ```
 :::
 
@@ -1233,7 +1248,7 @@ Create a vector for $\boldsymbol{u}$ and print $u'$ and $u''$
 ```{python}
 #| echo : true
 u = sp.Function('u')
-coef = sp.Matrix([u(x-h), u(x), u(x+h)]) 
+coef = sp.Matrix([u(x-h), u(x), u(x+h)])
 ```
 
 ::: {.columns}
@@ -1261,13 +1276,13 @@ def Cmat(p0, M):
   C = np.zeros((M+1, M+1), dtype=object)
   for j, p in enumerate(range(p0, p0+M+1)):
     for i in range(M+1):
-      C[j, i] = (p*h)**i / sp.factorial(i) 
+      C[j, i] = (p*h)**i / sp.factorial(i)
   return sp.Matrix(C)
 ```
 
 $p_0=-1, M=2$
 ```{python}
-#| echo : true 
+#| echo : true
 Cmat(-1, 2)
 ```
 
@@ -1292,7 +1307,7 @@ Non-central schemes requires one more point for the same accuracy as central
 
 $p_0=0, M=3$
 ```{python}
-#| echo : true 
+#| echo : true
 C = Cmat(0, 3)
 C.inv()
 ```
@@ -1311,7 +1326,7 @@ C.inv()
 :::
 :::
 
-Recognize the third row in the forward scheme: 
+Recognize the third row in the forward scheme:
 
 $$
 u'' = \frac{-u^{n+3} + 4u^{n+2} - 5u^{n+1} +2 u^{n}}{h^2}
@@ -1320,7 +1335,7 @@ $$
 ## Fourth order central $\small p_0=-2, M=4$ {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 C = Cmat(-2, 4)
 C.inv()
 ```
