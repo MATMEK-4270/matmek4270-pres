@@ -1139,7 +1139,7 @@ $$
 \begin{align*}
 u^{n-2} &= \sum_{i=0}^{M} \frac{(-2h)^i}{i!} du_i  \\
 u^{n-1} &= \sum_{i=0}^{M} \frac{(-h)^i}{i!} du_i  \\
-u^{n} &= u^{n} \\
+u^{n} &= du_0 \\
 u^{n+1} &= \sum_{i=0}^{M} \frac{(h)^i}{i!} du_i  \\
 u^{n+2} &= \sum_{i=0}^{M} \frac{(2h)^i}{i!} du_i  \\
 \end{align*}
@@ -1199,7 +1199,7 @@ $$
 du_2 = u^{(2)}(x_0) = \frac{u^{n+1}-2u^n+u^{n-1}}{h^2}.
 $$
 
-Let's derive this with the approach above. The scheme is central and second order so we use $p_0=-1$ and $M=2$ (hence $m=(-1, 0, 1)$). Insert into the recipe for $C$
+Let's derive this with the approach above. The scheme is central and second order so we use $p_0=-1$ and $M=2$ (hence $p=(-1, 0, 1)$). Insert into the recipe for $C$
 
 $$
 C = \begin{bmatrix}
