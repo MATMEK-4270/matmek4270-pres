@@ -1754,7 +1754,7 @@
     "href": "finitedifferences.html#solve-and-compare-with-recurrence",
     "title": "The finite difference method",
     "section": "Solve and compare with recurrence",
-    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n]\n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I)\n\n856 ns ± 15.9 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b)\n\n22.1 μs ± 4.68 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n]\n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I)\n\n878 ns ± 30.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b)\n\n18.1 μs ± 2.5 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
@@ -1768,7 +1768,7 @@
     "href": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "title": "The finite difference method",
     "section": "Until we try Numba on the explicit solver",
-    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb\n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n137 ns ± 16.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
+    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb\n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n130 ns ± 7.58 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
   },
   {
     "objectID": "finitedifferences.html#the-bv-vibration-problem",
@@ -1999,7 +1999,7 @@
     "href": "finitedifferences.html#the-stencil-matrix",
     "title": "The finite difference method",
     "section": "The stencil matrix",
-    "text": "The stencil matrix\nFor \\(p_0=-2\\) and \\(M=4\\) we get 5 Taylor expansions\n\\[\n\\begin{align*}\nu^{n-2} &= \\sum_{i=0}^{M} \\frac{(-2h)^i}{i!} du_i  \\\\\nu^{n-1} &= \\sum_{i=0}^{M} \\frac{(-h)^i}{i!} du_i  \\\\\nu^{n} &= u^{n} \\\\\nu^{n+1} &= \\sum_{i=0}^{M} \\frac{(h)^i}{i!} du_i  \\\\\nu^{n+2} &= \\sum_{i=0}^{M} \\frac{(2h)^i}{i!} du_i  \\\\\n\\end{align*}\n\\]"
+    "text": "The stencil matrix\nFor \\(p_0=-2\\) and \\(M=4\\) we get 5 Taylor expansions\n\\[\n\\begin{align*}\nu^{n-2} &= \\sum_{i=0}^{M} \\frac{(-2h)^i}{i!} du_i  \\\\\nu^{n-1} &= \\sum_{i=0}^{M} \\frac{(-h)^i}{i!} du_i  \\\\\nu^{n} &= du_0 \\\\\nu^{n+1} &= \\sum_{i=0}^{M} \\frac{(h)^i}{i!} du_i  \\\\\nu^{n+2} &= \\sum_{i=0}^{M} \\frac{(2h)^i}{i!} du_i  \\\\\n\\end{align*}\n\\]"
   },
   {
     "objectID": "finitedifferences.html#the-stencil-matrix-ctd",
@@ -2013,7 +2013,7 @@
     "href": "finitedifferences.html#second-order-2nd-derivative-stencil",
     "title": "The finite difference method",
     "section": "Second order 2nd derivative stencil",
-    "text": "Second order 2nd derivative stencil\nWe have been using the following stencil\n\\[\ndu_2 = u^{(2)}(x_0) = \\frac{u^{n+1}-2u^n+u^{n-1}}{h^2}.\n\\]\nLet’s derive this with the approach above. The scheme is central and second order so we use \\(p_0=-1\\) and \\(M=2\\) (hence \\(m=(-1, 0, 1)\\)). Insert into the recipe for \\(C\\)\n\\[\nC = \\begin{bmatrix}\n1 & -h & \\frac{h^2}{2} \\\\\n1 & 0 & 0 \\\\\n1 & h & \\frac{h^2}{2}\n\\end{bmatrix}\n\\]"
+    "text": "Second order 2nd derivative stencil\nWe have been using the following stencil\n\\[\ndu_2 = u^{(2)}(x_0) = \\frac{u^{n+1}-2u^n+u^{n-1}}{h^2}.\n\\]\nLet’s derive this with the approach above. The scheme is central and second order so we use \\(p_0=-1\\) and \\(M=2\\) (hence \\(p=(-1, 0, 1)\\)). Insert into the recipe for \\(C\\)\n\\[\nC = \\begin{bmatrix}\n1 & -h & \\frac{h^2}{2} \\\\\n1 & 0 & 0 \\\\\n1 & h & \\frac{h^2}{2}\n\\end{bmatrix}\n\\]"
   },
   {
     "objectID": "finitedifferences.html#in-sympy",
@@ -3581,6 +3581,6 @@
     "href": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse-1",
     "title": "The finite difference method",
     "section": "Try to speed up by computing the inverse",
-    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True)\nAi = np.linalg.inv(A.toarray())\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b\n\n598 ns ± 59.2 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True)\nAi = np.linalg.inv(A.toarray())\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b\n\n545 ns ± 60 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   }
 ]
