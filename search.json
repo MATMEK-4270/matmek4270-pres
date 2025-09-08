@@ -522,7 +522,7 @@
     "href": "wave.html#the-wave-equation-is-a-partial-differential-equation-pde",
     "title": "Finite difference methods for the wave equation",
     "section": "The wave equation is a partial differential equation (PDE)",
-    "text": "The wave equation is a partial differential equation (PDE)\n\\[\n\\frac{\\partial^2 u}{\\partial t^2} = c^2 \\frac{\\partial^2 u}{\\partial x^2}.\n\\]\nWe will consider the time and space domains: \\(t\\in[0, T]\\), \\(x \\in [0, L]\\).\n\nThe wave equation is an initial-boundary value problem!\nTwo initial conditions required since two derivatives in time\nTwo boundary conditions required since two derivatives in space\nThe solutions are waves that can be written as \\(u(x+ct)\\) and \\(u(x-ct)\\)"
+    "text": "The wave equation is a partial differential equation (PDE)\n\\[\n\\frac{\\partial^2 u}{\\partial t^2} = c^2 \\frac{\\partial^2 u}{\\partial x^2}.\n\\]\nwhere \\(u(x, t)\\) is the solution and \\(c\\) is the constant wavespeed. We will consider the time and space domains: \\(t\\in[0, T]\\), \\(x \\in [0, L]\\).\n\nThe wave equation is an initial-boundary value problem!\nTwo initial conditions required since two derivatives in time\nTwo boundary conditions required since two derivatives in space\nThe solutions are waves that can be written as \\(u(x+ct)\\) and \\(u(x-ct)\\)"
   },
   {
     "objectID": "wave.html#wave-solution-with-different-boundary-conditions",
@@ -613,28 +613,28 @@
     "href": "wave.html#in-python",
     "title": "Finite difference methods for the wave equation",
     "section": "In Python",
-    "text": "In Python\nSet up solver\n\nimport numpy as np \nfrom scipy import sparse\nimport sympy as sp \nx, t = sp.symbols('x,t')\nN = 100\nNt = 500 \nL = 2\nc = 1 # wavespeed\ndx = L / N\nCFL = 1.0\ndt = CFL*dx/c\nxj = np.linspace(0, L, N+1)\nunm1, un, unp1 = np.zeros((3, N+1))\nD2 = sparse.diags([1, -2, 1], [-1, 0, 1], (N+1, N+1))\nu0 = sp.exp(-200*(x-L/2+t)**2)\n\nSolve by marching method\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj) \nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un \n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un \n  un[:] = unp1"
+    "text": "In Python\nSet up solver\n\nimport numpy as np\nfrom scipy import sparse\nimport sympy as sp\nx, t = sp.symbols('x,t')\nN = 100\nNt = 500\nL = 2\nc = 1 # wavespeed\ndx = L / N\nCFL = 1.0\ndt = CFL*dx/c\nxj = np.linspace(0, L, N+1)\nunm1, un, unp1 = np.zeros((3, N+1))\nD2 = sparse.diags([1, -2, 1], [-1, 0, 1], (N+1, N+1))\nu0 = sp.exp(-200*(x-L/2+t)**2)\n\nSolve by marching method\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un\n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un\n  un[:] = unp1"
   },
   {
     "objectID": "wave.html#store-results-at-intermediate-intervals-for-plotting",
     "href": "wave.html#store-results-at-intermediate-intervals-for-plotting",
     "title": "Finite difference methods for the wave equation",
     "section": "Store results at intermediate intervals for plotting",
-    "text": "Store results at intermediate intervals for plotting\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj) \nplotdata = {0: unm1.copy()}\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un \n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un \n  un[:] = unp1\n  if n % 10 == 0:\n    plotdata[n] = unp1.copy()\n\nFor example every tenth time step. Normally you do not need every time step to get a good animation."
+    "text": "Store results at intermediate intervals for plotting\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)\nplotdata = {0: unm1.copy()}\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un\n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un\n  un[:] = unp1\n  if n % 10 == 0:\n    plotdata[n] = unp1.copy()\n\nFor example every tenth time step. Normally you do not need every time step to get a good animation."
   },
   {
     "objectID": "wave.html#create-animation-after-the-simulation-is-finished",
     "href": "wave.html#create-animation-after-the-simulation-is-finished",
     "title": "Finite difference methods for the wave equation",
     "section": "Create animation after the simulation is finished",
-    "text": "Create animation after the simulation is finished\n\n\ndef animation(data):\n  from matplotlib import animation \n  fig, ax = plt.subplots()\n  v = np.array(list(data.values()))\n  t = np.array(list(data.keys()))\n  save_step = t[1]-t[0]\n  line, = ax.plot(xj, data[0])\n  ax.set_ylim(v.min(), v.max())\n  def update(frame):\n    line.set_ydata(data[frame*save_step])\n    return (line,)\n  ani = animation.FuncAnimation(fig=fig, func=update, frames=len(data), blit=True)\n  ani.save('wavemovie.apng', writer='pillow', fps=5) # This animated png opens in a browser"
+    "text": "Create animation after the simulation is finished\n\n\ndef animation(data):\n  from matplotlib import animation\n  fig, ax = plt.subplots()\n  v = np.array(list(data.values()))\n  t = np.array(list(data.keys()))\n  save_step = t[1]-t[0]\n  line, = ax.plot(xj, data[0])\n  ax.set_ylim(v.min(), v.max())\n  def update(frame):\n    line.set_ydata(data[frame*save_step])\n    return (line,)\n  ani = animation.FuncAnimation(fig=fig, func=update, frames=len(data), blit=True)\n  ani.save('wavemovie.apng', writer='pillow', fps=5) # This animated png opens in a browser"
   },
   {
     "objectID": "wave.html#how-to-implement-the-initial-conditions",
     "href": "wave.html#how-to-implement-the-initial-conditions",
     "title": "Finite difference methods for the wave equation",
     "section": "How to implement the initial conditions?",
-    "text": "How to implement the initial conditions?\nTo initialize a mesh function \\(u^0\\), we write \\[\nu^0 = I(x)\n\\]\nwhich represents\n\\[\nu^0_j = I(x_j), \\quad \\forall \\, j=0, 1, \\ldots, N\n\\]\n\n\nu0 = sp.exp(-200*(x-L/2+t)**2) \nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj) \n\n\n\nHow about the second condition \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\)?\n\n\nJust like for the vibration equation there are several options. If you have an analytical solution \\(I(x, t)\\) that is time-dependent you can specify one wave as:\n\\[\nu^1 = I(x, \\Delta t)\n\\]\n\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)"
+    "text": "How to implement the initial conditions?\nTo initialize a mesh function \\(u^0\\), we write \\[\nu^0 = I(x)\n\\]\nwhich represents\n\\[\nu^0_j = I(x_j), \\quad \\forall \\, j=0, 1, \\ldots, N\n\\]\n\n\nu0 = sp.exp(-200*(x-L/2+t)**2)\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\n\n\n\nHow about the second condition \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\)?\n\n\nJust like for the vibration equation there are several options. If you have an analytical solution \\(I(x, t)\\) that is time-dependent you can specify one wave as:\n\\[\nu^1 = I(x, \\Delta t)\n\\]\n\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)"
   },
   {
     "objectID": "wave.html#if-you-do-not-have-ix-t-then-what",
@@ -802,7 +802,7 @@
     "href": "wave.html#assume-that-the-numerical-solution-is-a-complex-wave",
     "title": "Finite difference methods for the wave equation",
     "section": "Assume that the numerical solution is a complex wave",
-    "text": "Assume that the numerical solution is a complex wave\n\\[\nu(x_j, t_n) = u^{n}_j = e^{ik(x_j+\\tilde{\\omega} t_n)}\n\\]\n\nHow accurate is \\(\\tilde{\\omega}\\) compared to the exact \\(\\omega=kc\\)?\nWhat can be concluded about stability?\n\n\nNote that the solution is a recurrence relation\n\\[\nu^n_j = e^{ikx_j} e^{i\\tilde{\\omega} n \\Delta t} = (e^{i\\tilde{\\omega} \\Delta t})^n e^{ikx_j}   \n\\]\nwith an amplification factor \\(A = e^{i\\tilde{\\omega} \\Delta t}\\) such that\n\\[\nu^n_j = A^n e^{ikx_j}\n\\]"
+    "text": "Assume that the numerical solution is a complex wave\n\\[\nu(x_j, t_n) = u^{n}_j = e^{ik(x_j+\\tilde{\\omega} t_n)}\n\\]\n\nHow accurate is \\(\\tilde{\\omega}\\) compared to the exact \\(\\omega=kc\\)?\nWhat can be concluded about stability?\n\n\nNote that the solution is a recurrence relation\n\\[\nu^n_j = e^{ikx_j} e^{i\\tilde{\\omega} n \\Delta t} = (e^{i\\tilde{\\omega} \\Delta t})^n e^{ikx_j}\n\\]\nwith an amplification factor \\(A = e^{i\\tilde{\\omega} \\Delta t}\\) such that\n\\[\nu^n_j = A^n e^{ikx_j}\n\\]"
   },
   {
     "objectID": "wave.html#numerical-dispersion-relation",
@@ -837,7 +837,7 @@
     "href": "wave.html#test-dirichlet-solver-using-cfl1.01-vs-cfl1.0",
     "title": "Finite difference methods for the wave equation",
     "section": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0",
-    "text": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0\n\n\n\n\n\n\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj) \nplotdata = {0: unm1.copy()}\nCFL = 1.01\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un \n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:] = un \n  un[:] = unp1\n  if n % 10 == 0:\n    plotdata[n] = unp1.copy()"
+    "text": "Test Dirichlet solver using CFL=1.01 vs CFL=1.0\n\n\n\n\n\n\n\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)\nplotdata = {0: unm1.copy()}\nCFL = 1.01\nfor n in range(Nt):\n  unp1[:] = 2*un - unm1 + CFL**2 * D2 @ un\n  unp1[0] = 0\n  unp1[-1] = 0\n  unm1[:], un[:] = un, unp1\n  if n % 10 == 0:\n    plotdata[n] = unp1.copy()"
   },
   {
     "objectID": "timevar.html#time-dependent-variational-forms",
