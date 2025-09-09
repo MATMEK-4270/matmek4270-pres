@@ -557,7 +557,7 @@
     "href": "wave.html#a-mesh-function-in-space-and-time-is-defined-as",
     "title": "Finite difference methods for the wave equation",
     "section": "A mesh function in space and time is defined as",
-    "text": "A mesh function in space and time is defined as\n\\[\nu^n_j = u(x_j, t_n)\n\\]\nThe mesh function has one value at each node in the mesh. For simplicity in later algorithms we will use the vectors\n\\[\nu^n = (u^n_0, u^n_1, \\ldots, u^n_N)^T,\n\\]\nwhich is the solution vector at time \\(t_n\\).\nA second order accurate discretization of the wave equation is\n\\[\n\\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\\Delta t^2} = c^2 \\frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\\Delta x^2}\n\\]"
+    "text": "A mesh function in space and time is defined as\n\\[\nu^n_j = u(x_j, t_n)\n\\]\nThe mesh function has one value at each node in the mesh. For simplicity in later algorithms we will use the vectors\n\\[\nu^n = (u^n_0, u^n_1, \\ldots, u^n_N)^T,\n\\]\nwhich is the solution vector at time \\(t_n\\).\n\nA second order accurate discretization of the wave equation is\n\\[\n\\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\\Delta t^2} = c^2 \\frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\\Delta x^2}\n\\]"
   },
   {
     "objectID": "wave.html#the-finite-difference-stencil-makes-use-of-5-neighboring-points",
@@ -585,7 +585,7 @@
     "href": "wave.html#use-differentiation-matrix-to-simplify-the-notation",
     "title": "Finite difference methods for the wave equation",
     "section": "Use differentiation matrix to simplify the notation",
-    "text": "Use differentiation matrix to simplify the notation\nWe define the second differentiation matrix without the scaling \\(1/(\\Delta x)^2\\) such that\n\\[\\small\nD^{(2)} = \\begin{bmatrix}\n-2 & 1 & 0 & 0  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\\\\n\\end{bmatrix}\n\\]\nand thus row \\(0 &lt; j &lt; N\\) of \\(D^{(2)}u^n\\) becomes\n\\[\n(D^{(2)}u^n)_j = u^n_{j+1}-2u^n_j+u^n_{j-1}\n\\]"
+    "text": "Use differentiation matrix to simplify the notation\nWe define the second differentiation matrix without the scaling \\(1/(\\Delta x)^2\\) such that\n\\[\\small\nD^{(2)} = \\begin{bmatrix}\n-2 & 1 & 0 & 0  & 0  & \\cdots & 0  \\\\\n1 & -2 & 1 & 0 & 0  & \\cdots & 0 \\\\\n0 & 1 & -2 & 1 & 0  & \\cdots & 0 \\\\\n\\vdots & & \\ddots & \\ddots & \\ddots  &  &\\vdots \\\\\n0 & \\cdots &  0 &  1& -2& 1& 0 \\\\\n0 & \\cdots & 0& 0& 1& -2& 1 \\\\\n0 & \\cdots &  0  & 0 & 0 & 1 & -2 \\\\\n\\end{bmatrix}\n\\]\nand thus row \\(0 &lt; j &lt; N\\) of \\(D^{(2)}u^n\\) becomes\n\\[\n(D^{(2)}u^n)_j = u^n_{j+1}-2u^n_j+u^n_{j-1}\n\\]"
   },
   {
     "objectID": "wave.html#the-vectorized-marching-method-becomes",
@@ -634,21 +634,21 @@
     "href": "wave.html#how-to-implement-the-initial-conditions",
     "title": "Finite difference methods for the wave equation",
     "section": "How to implement the initial conditions?",
-    "text": "How to implement the initial conditions?\nTo initialize a mesh function \\(u^0\\), we write \\[\nu^0 = I(x)\n\\]\nwhich represents\n\\[\nu^0_j = I(x_j), \\quad \\forall \\, j=0, 1, \\ldots, N\n\\]\n\n\nu0 = sp.exp(-200*(x-L/2+t)**2)\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\n\n\n\nHow about the second condition \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\)?\n\n\nJust like for the vibration equation there are several options. If you have an analytical solution \\(I(x, t)\\) that is time-dependent you can specify one wave as:\n\\[\nu^1 = I(x, \\Delta t)\n\\]\n\nun[:] = sp.lambdify(x, u0.subs(t, dt))(xj)"
+    "text": "How to implement the initial conditions?\nTo initialize a mesh function \\(u^0\\), we write \\[\nu^0 = I(x)\n\\]\nwhich represents\n\\[\nu^0_j = I(x_j), \\quad \\forall \\, j=0, 1, \\ldots, N\n\\]\n\n\nu0 = sp.exp(-200*(x-L/2+t)**2)\nunm1[:] = sp.lambdify(x, u0.subs(t, 0))(xj)\n\n\n\nHow about the second condition \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\)?\n\n\nJust like for the vibration equation there are several options. If you have an analytical solution \\(I(x)\\) you can specify:\n\n\none wave\n\\[\nu^1 = I(x + c \\Delta t)\n\\]\n\nTwo waves\n\\[\nu^1 = 0.5(I(x+c\\Delta t) + I(x-c\\Delta t))\n\\]"
   },
   {
     "objectID": "wave.html#if-you-do-not-have-ix-t-then-what",
     "href": "wave.html#if-you-do-not-have-ix-t-then-what",
     "title": "Finite difference methods for the wave equation",
     "section": "If you do not have \\(I(x, t)\\), then what?",
-    "text": "If you do not have \\(I(x, t)\\), then what?\n\nHow to fix \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 1\nUse a forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{u^1-u^0}{\\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^0\n\\]\nOnly first order accurate, but still a possibility.\n\n\nUse a second order forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = \\frac{3u^0+u^2}{4}\n\\]\nSecond order accurate, but implicit. And you get two waves!"
+    "text": "If you do not have \\(I(x, t)\\), then what?\n\nHow to fix \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 1\nUse a forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{u^1-u^0}{\\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^0\n\\]\nOnly first order accurate, but still a possibility.\n\n\nUse a second order forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = \\frac{3u^0+u^2}{4}\n\\]\nSecond order accurate, but implicit."
   },
   {
     "objectID": "wave.html#how-to-implement-fracpartial-upartial-tx-0-0-option-2",
     "href": "wave.html#how-to-implement-fracpartial-upartial-tx-0-0-option-2",
     "title": "Finite difference methods for the wave equation",
     "section": "How to implement \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 2",
-    "text": "How to implement \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 2\nUse a second order central differece\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) = \\frac{u^1-u^{-1}}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^{-1}\n\\]\nand the PDE at \\(n=0\\)\n\\[\nu^1 = 2u^0 - u^{-1} + \\underline{c}^2 D^{(2)}u^{0}\n\\]\n\nInsert for \\(u^{-1}=u^1\\) to obtain\n\\[\nu^1 = u^0 + \\frac{\\underline{c}^2}{2} D^{(2)}u^{0}\n\\]\nSecond order accurate and explicit"
+    "text": "How to implement \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 2\nUse a second order central differece\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) = \\frac{u^1-u^{-1}}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^{-1}\n\\]\nand the PDE at \\(n=0\\)\n\\[\nu^1 = 2u^0 - \\color{red} u^{-1} \\color{black} + \\underline{c}^2 D^{(2)}u^{0}\n\\]\n\nInsert for \\(u^{-1}=u^1\\) to obtain\n\\[\nu^1 = u^0 + \\frac{\\underline{c}^2}{2} D^{(2)}u^{0}\n\\]\nSecond order accurate and explicit"
   },
   {
     "objectID": "wave.html#how-to-fix-boundary-conditions",
@@ -809,7 +809,7 @@
     "href": "wave.html#numerical-dispersion-relation",
     "title": "Finite difference methods for the wave equation",
     "section": "Numerical dispersion relation",
-    "text": "Numerical dispersion relation\nWe can find \\(\\tilde{\\omega}\\) by inserting for \\(e^{ik(x_j+\\tilde{\\omega}t_n)}\\) in the discretized wave equation\n\\[\n\\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\\Delta t^2} = c^2 \\frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\\Delta x^2}\n\\]\n\nThis is a lot of work, just like it was for the vibration equation. In the end we should get\n\\[\n\\tilde{\\omega} = \\frac{2}{\\Delta t} \\sin^{-1}\\left(C \\sin \\left(\\frac{k \\Delta x}{2}\\right)\\right)\n\\]\nwhere the CFL number is \\(C = \\frac{c \\Delta t}{\\Delta x}\\)\n\n\\(\\tilde{\\omega}(k, c, \\Delta x, \\Delta t)\\) is the numerical dispersion relation\n\\(\\omega = kc\\) is the exact dispersion relation\nWe can compare the two to investigate numerical accuracy and stability"
+    "text": "Numerical dispersion relation\nWe can find \\(\\tilde{\\omega}\\) by inserting for \\(u^n_j = e^{ik(x_j+\\tilde{\\omega}t_n)}\\) in the discretized wave equation\n\\[\n\\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\\Delta t^2} = c^2 \\frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\\Delta x^2}\n\\]\n\nThis is a lot of work, just like it was for the vibration equation. In the end we should get\n\\[\n\\tilde{\\omega} = \\frac{2}{\\Delta t} \\sin^{-1}\\left(C \\sin \\left(\\frac{k \\Delta x}{2}\\right)\\right)\n\\]\nwhere the CFL number is \\(C = \\frac{c \\Delta t}{\\Delta x}\\)\n\n\\(\\tilde{\\omega}(k, c, \\Delta x, \\Delta t)\\) is the numerical dispersion relation\n\\(\\omega = kc\\) is the exact dispersion relation\nWe can compare the two to investigate numerical accuracy and stability"
   },
   {
     "objectID": "wave.html#stability",
@@ -3582,5 +3582,12 @@
     "title": "The finite difference method",
     "section": "Try to speed up by computing the inverse",
     "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True)\nAi = np.linalg.inv(A.toarray())\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b\n\n545 ns ± 60 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+  },
+  {
+    "objectID": "wave.html#if-you-do-not-have-analytic-ix-then-what",
+    "href": "wave.html#if-you-do-not-have-analytic-ix-then-what",
+    "title": "Finite difference methods for the wave equation",
+    "section": "If you do not have analytic \\(I(x)\\), then what?",
+    "text": "If you do not have analytic \\(I(x)\\), then what?\n\nHow to fix \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 1\nUse a forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{u^1-u^0}{\\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^0\n\\]\nOnly first order accurate, but still a possibility.\n\n\nUse a second order forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = \\frac{3u^0+u^2}{4}\n\\]\nSecond order accurate, but implicit."
   }
 ]
