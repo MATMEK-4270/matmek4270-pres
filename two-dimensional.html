@@ -233,7 +233,7 @@ Prof.&nbsp;Mikael Mortensen, University of Oslo
 <h2>The uniform rectangle</h2>
 <div class="columns">
 <div class="column">
-<div id="85047ee2" class="cell" data-execution_count="1">
+<div id="70d8e527" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -297,13 +297,13 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 <p><span class="math display">\[\boldsymbol{u}=(1, 2, 3) \quad \boldsymbol{v}=(4, 5)\]</span></p>
 <div class="fragment">
 <p>Compute the <strong>Cartesian product</strong> of these two tuples using the Python package <a href="https://docs.python.org/3/library/itertools.html">itertools</a></p>
-<div id="d2cf66fd" class="cell" data-execution_count="2">
+<div id="1f399fe9" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> itertools</span>
 <span id="cb1-2"><a></a>u <span class="op">=</span> (<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb1-3"><a></a>v <span class="op">=</span> (<span class="dv">4</span>, <span class="dv">5</span>)</span>
 <span id="cb1-4"><a></a>uxv <span class="op">=</span> itertools.product(u, v)</span>
 <span id="cb1-5"><a></a><span class="bu">tuple</span>(uxv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="576">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>((1, 4), (1, 5), (2, 4), (2, 5), (3, 4), (3, 5))</code></pre>
 </div>
 </div>
@@ -384,7 +384,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 \]</span> <span class="math display">\[
 \boldsymbol{y} = (y_0, y_1, \ldots, y_{N_y}) = (0, \Delta y, 2 \Delta y, \ldots, L_y)
 \]</span></p>
-<div id="77418071" class="cell" data-execution_count="3">
+<div id="0ceb082f" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -400,7 +400,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 <p><span class="math display">\[
 \boldsymbol{x} \times \boldsymbol{y} = \{(x, y) \, | \, x \in \boldsymbol{x} \text{ and } y \in \boldsymbol{y} \}
 \]</span></p>
-<div id="5e8929cf" class="cell" data-execution_count="4">
+<div id="6737ad37" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -412,7 +412,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </section>
 <section id="the-cartesian-product-is-a-1d-array-of-pairs" class="slide level2 smaller">
 <h2>The Cartesian product is a 1D array of pairs</h2>
-<div id="af19d376" class="cell" data-execution_count="5">
+<div id="c53d5da3" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>xy <span class="op">=</span> <span class="bu">list</span>(itertools.product([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>]))</span>
 <span id="cb3-2"><a></a><span class="bu">print</span>(xy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -420,7 +420,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </div>
 </div>
 <p>It is the same as a double for-loop</p>
-<div id="b2a2472c" class="cell" data-execution_count="6">
+<div id="dd4dda97" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="bu">print</span>([(a, b) <span class="cf">for</span> a <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>) <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0), (3, 1), (3, 2)]</code></pre>
@@ -428,7 +428,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </div>
 <div class="fragment">
 <p>However, the numbers are naturally seen as points in a 2D mesh:</p>
-<div id="71787df5" class="cell" data-execution_count="7">
+<div id="f4814cc0" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -441,7 +441,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </section>
 <section id="a-complicating-factor-for-the-mesh" class="slide level2 smaller">
 <h2>A complicating factor for the mesh</h2>
-<div id="012a12e0" class="cell" data-execution_count="8">
+<div id="c82e5d6e" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -476,7 +476,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 \boldsymbol{y} = (0, 1, 2),
 \]</span></p>
 <p>where we have chosen <span class="math inline">\(\Delta x = \Delta y = 1\)</span> just for simplicity. An implementation goes like</p>
-<div id="08f07d66" class="cell" data-execution_count="9">
+<div id="0d117e7a" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>Nx <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb7-2"><a></a>Ny <span class="op">=</span> <span class="dv">2</span></span>
 <span id="cb7-3"><a></a>Lx <span class="op">=</span> Nx</span>
@@ -485,7 +485,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 <span id="cb7-6"><a></a>y <span class="op">=</span> np.linspace(<span class="dv">0</span>, Ly, Ny<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb7-7"><a></a>mesh <span class="op">=</span> np.meshgrid(x, y, indexing<span class="op">=</span><span class="st">'ij'</span>)</span>
 <span id="cb7-8"><a></a>mesh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="583">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>(array([[0., 0., 0.],
         [1., 1., 1.],
         [2., 2., 2.],
@@ -500,10 +500,10 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 <section id="mesh-ordering" class="slide level2 smaller">
 <h2>Mesh ordering</h2>
 <p>Numpy.meshgrid returns two arrays of shape <span class="math inline">\(4 \times 3\)</span></p>
-<div id="c57617e7" class="cell" data-execution_count="10">
+<div id="1fc4f96f" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>mesh <span class="op">=</span> np.meshgrid(x, y, indexing<span class="op">=</span><span class="st">'ij'</span>)</span>
 <span id="cb9-2"><a></a>mesh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="584">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>(array([[0., 0., 0.],
         [1., 1., 1.],
         [2., 2., 2.],
@@ -530,7 +530,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </div>
 </div>
 </div>
-<div id="438ebcb5" class="cell" data-execution_count="11">
+<div id="aa2434c7" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -543,7 +543,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 <section id="the-mesh-is-opposite-to-a-cartesian-mesh" class="slide level2 smaller">
 <h2>The mesh is opposite to a Cartesian mesh!</h2>
 <p>We excpect a coordinate system to be like</p>
-<div id="ee0c41b8" class="cell" data-execution_count="12">
+<div id="f08ece79" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -556,7 +556,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </section>
 <section id="it-all-comes-out-nicely-in-plots-though" class="slide level2 smaller">
 <h2>It all comes out nicely in plots though</h2>
-<div id="c3f6b86a" class="cell" data-execution_count="13">
+<div id="8e2899cf" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb11" data-code-line-numbers="1,4-5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>x, y <span class="op">=</span> mesh</span>
 <span id="cb11-2"><a></a>fig, (ax0, ax1) <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">1</span>, ncols<span class="op">=</span><span class="dv">2</span>, sharex<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb11-3"><a></a>                                    figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>))</span>
@@ -581,12 +581,12 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 <section id="to-avoid-or-increase-confusion" class="slide level2 smaller">
 <h2>To avoid (or increase?) confusion</h2>
 <p>You can also choose Cartesian indexing for the meshgrid</p>
-<div id="020553da" class="cell" data-execution_count="14">
+<div id="fb052a3b" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, Lx, Nx<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb12-2"><a></a>y <span class="op">=</span> np.linspace(<span class="dv">0</span>, Ly, Ny<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb12-3"><a></a>mesh <span class="op">=</span> np.meshgrid(x, y, indexing<span class="op">=</span><span class="st">'xy'</span>)</span>
 <span id="cb12-4"><a></a>mesh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="588">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>(array([[0., 1., 2., 3.],
         [0., 1., 2., 3.],
         [0., 1., 2., 3.]]),
@@ -596,7 +596,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </div>
 </div>
 <p>But it is still not completely as expected, because <span class="math inline">\(y\)</span> is increasing downwards!</p>
-<div id="27d780ad" class="cell" data-execution_count="15">
+<div id="3e9971c9" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -609,10 +609,10 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 <section id="sparse-meshgrid" class="slide level2 smaller">
 <h2>Sparse meshgrid</h2>
 <p>It is not necessary to store the complete arrays, because <span class="math inline">\(x\)</span> is not changing along the <span class="math inline">\(y\)</span>-axis and <span class="math inline">\(y\)</span> is not changing along the <span class="math inline">\(x\)</span>-axis.</p>
-<div id="b2bd9503" class="cell" data-execution_count="16">
+<div id="045f8c34" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>mesh <span class="op">=</span> np.meshgrid(x, y, indexing<span class="op">=</span><span class="st">'ij'</span>)</span>
 <span id="cb14-2"><a></a>mesh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="590">
+<div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>(array([[0., 0., 0.],
         [1., 1., 1.],
         [2., 2., 2.],
@@ -624,10 +624,10 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </div>
 </div>
 <p>Use sparse option:</p>
-<div id="ed44816b" class="cell" data-execution_count="17">
+<div id="62b17aef" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>mesh <span class="op">=</span> np.meshgrid(x, y, indexing<span class="op">=</span><span class="st">'ij'</span>, sparse<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb16-2"><a></a>mesh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="591">
+<div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>(array([[0.],
         [1.],
         [2.],
@@ -636,7 +636,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </div>
 </div>
 <p>The <span class="math inline">\(x\)</span>-array is constant along the <span class="math inline">\(y\)</span>-axis and the <span class="math inline">\(y\)</span>-array is constant along the <span class="math inline">\(x\)</span>-axis</p>
-<div id="ebca4e94" class="cell" data-execution_count="18">
+<div id="eb33f89e" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a><span class="bu">print</span>(mesh[<span class="dv">0</span>].shape, mesh[<span class="dv">1</span>].shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(4, 1) (1, 3)</code></pre>
@@ -645,7 +645,7 @@ y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
 </section>
 <section id="broadcasting" class="slide level2 smaller">
 <h2>Broadcasting</h2>
-<div id="3bd13df8" class="cell" data-execution_count="19">
+<div id="82a22e7e" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a>display(mesh)</span>
 <span id="cb20-2"><a></a>display(mesh[<span class="dv">0</span>].shape, mesh[<span class="dv">1</span>].shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -674,7 +674,7 @@ f(x, y) = x + y
 f(x, y) = x + y
 \]</span></p>
 <p>when <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are stored using sparse matrices of shape <span class="math inline">\((4, 1)\)</span> and <span class="math inline">\((1, 3)\)</span></p>
-<div id="04f25550" class="cell" data-execution_count="20">
+<div id="aca09f25" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>x, y <span class="op">=</span> mesh</span>
 <span id="cb24-2"><a></a><span class="bu">print</span>(x.shape, y.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -683,7 +683,7 @@ f(x, y) = x + y
 </div>
 <div class="fragment">
 <p>Now compute <span class="math inline">\(f(x, y)\)</span></p>
-<div id="27e9befd" class="cell" data-execution_count="21">
+<div id="60f70d0f" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a>f <span class="op">=</span> x <span class="op">+</span> y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-important callout-style-simple">
@@ -698,9 +698,9 @@ f(x, y) = x + y
 </div>
 </div>
 <div class="fragment">
-<div id="b48b2d70" class="cell" data-execution_count="22">
+<div id="be908be4" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a>f</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="596">
+<div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>array([[0., 1., 2.],
        [1., 2., 3.],
        [2., 3., 4.],
@@ -759,7 +759,7 @@ u_{N_x, 0} &amp; u_{N_x, 1} &amp; \cdots &amp; u_{N_x, N_y} \\
 <section id="more-on-row-major-storage" class="slide level2 smaller">
 <h2>More on row-major storage</h2>
 <p>We can get the single row <span class="math inline">\(i\)</span> of the <span class="math inline">\(U\)</span> matrix as <span class="math inline">\(u_i = (u_{i,0}, u_{i,1}, \ldots, u_{i, N_y})\)</span>. For example,</p>
-<div id="a66e5ce8" class="cell" data-execution_count="23">
+<div id="ecfce651" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a>U <span class="op">=</span> np.arange(<span class="dv">9</span>).reshape((<span class="dv">3</span>, <span class="dv">3</span>))</span>
 <span id="cb29-2"><a></a>display(U)</span>
 <span id="cb29-3"><a></a>display(U[<span class="dv">0</span>])</span>
@@ -781,16 +781,16 @@ u_{N_x, 0} &amp; u_{N_x, 1} &amp; \cdots &amp; u_{N_x, N_y} \\
 </div>
 </div>
 <p>The matrix is laid out in memory as</p>
-<div id="c0872112" class="cell" data-execution_count="24">
+<div id="54d15043" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a>U.ravel()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="598">
+<div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>array([0, 1, 2, 3, 4, 5, 6, 7, 8])</code></pre>
 </div>
 </div>
 <p>To get columns</p>
-<div id="ed87b1b6" class="cell" data-execution_count="25">
+<div id="1f8fd610" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a></a>U[:, <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="599">
+<div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>array([0, 3, 6])</code></pre>
 </div>
 </div>
@@ -838,7 +838,7 @@ D_x^{(2)} = \frac{1}{\Delta x^2}\begin{bmatrix}
 </section>
 <section id="compute-unscaled-matrix-using-scipy.sparse" class="slide level2 smaller">
 <h2>Compute unscaled matrix using <code>scipy.sparse</code></h2>
-<div id="08e64b5a" class="cell" data-execution_count="26">
+<div id="a0d2b55e" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a></a><span class="im">import</span> scipy.sparse <span class="im">as</span> sparse</span>
 <span id="cb38-2"><a></a></span>
 <span id="cb38-3"><a></a><span class="kw">def</span> D2(N):</span>
@@ -870,7 +870,7 @@ u(x, y) = x^2,
 \frac{\partial^2 u}{\partial x^2} = 2.
 \]</span></p>
 <p>Use domain <span class="math inline">\([0, 4]\times [0, 4]\)</span> and choose <span class="math inline">\(\Delta x = \Delta y = 1\)</span>. Create the Cartesian mesh:</p>
-<div id="4ea1d2fa" class="cell" data-execution_count="27">
+<div id="05902590" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a></a>Nx, Ny <span class="op">=</span> <span class="dv">4</span>, <span class="dv">4</span></span>
 <span id="cb40-2"><a></a>Lx, Ly <span class="op">=</span> Nx, Ny</span>
 <span id="cb40-3"><a></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, Lx, Nx<span class="op">+</span><span class="dv">1</span>)</span>
@@ -878,10 +878,10 @@ u(x, y) = x^2,
 <span id="cb40-5"><a></a>xij, yij <span class="op">=</span> np.meshgrid(x, y, indexing<span class="op">=</span><span class="st">'ij'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>From this mesh we can create the mesh function <span class="math inline">\(u(x, y) = x^2\)</span></p>
-<div id="310a4020" class="cell" data-execution_count="28">
+<div id="6c50d943" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a></a>U <span class="op">=</span> xij<span class="op">**</span><span class="dv">2</span></span>
 <span id="cb41-2"><a></a>U</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="602">
+<div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>array([[ 0.,  0.,  0.,  0.,  0.],
        [ 1.,  1.,  1.,  1.,  1.],
        [ 4.,  4.,  4.,  4.,  4.],
@@ -900,7 +900,7 @@ D^{(2)} U = \sum_{k=0}^{N_x} d^{(2)}_{ik} u_{k,j}
 <p>So <span class="math inline">\(D^{(2)} U\)</span> is a matrix-matrix product between the two matrices <span class="math inline">\(D^{(2)}\in \mathbb{R}^{(N_x+1)\times (N_x+1)}\)</span> and <span class="math inline">\(U \in \mathbb{R}^{(N_x+1) \times (N_y+1)}\)</span>, such that <span class="math inline">\(D^{(2)}U \in \mathbb{R}^{(N_x+1) \times (N_y+1)}\)</span></p>
 </div>
 <div class="fragment">
-<div id="bb19bd61" class="cell" data-execution_count="29">
+<div id="6a097044" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a></a>D <span class="op">=</span> D2(Nx)</span>
 <span id="cb43-2"><a></a><span class="bu">print</span>(D <span class="op">@</span> U)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -934,7 +934,7 @@ D^{(2)} U = \sum_{k=0}^{N_x} d^{(2)}_{ik} u_{k,j}
 u(x, y) = y^2,
 \]</span></p>
 <p>such that again the second derivative <span class="math inline">\(\partial^2 u / \partial y^2\)</span> should be 2. Create first <span class="math inline">\(u\)</span></p>
-<div id="8bd42044" class="cell" data-execution_count="30">
+<div id="6309dc6b" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a></a>U <span class="op">=</span> yij<span class="op">**</span><span class="dv">2</span></span>
 <span id="cb45-2"><a></a><span class="bu">print</span>(U)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -948,7 +948,7 @@ u(x, y) = y^2,
 </div>
 <div class="fragment">
 <p>Now since the derivative is along the second axis (the <span class="math inline">\(y\)</span>-axis), we cannot simply do <span class="math inline">\(D^{(2)} U\)</span> anymore. If we do we get zero</p>
-<div id="b260ed2b" class="cell" data-execution_count="31">
+<div id="f46d7dc7" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a></a><span class="bu">print</span>(D <span class="op">@</span> U)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[0. 0. 0. 0. 0.]
@@ -971,7 +971,7 @@ u(x, y) = y^2,
 U (D^{(2)})^T
 \]</span></p>
 <p>which we can verify as follows</p>
-<div id="aa4c94bb" class="cell" data-execution_count="32">
+<div id="fca6b1b9" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a></a><span class="bu">print</span>(U <span class="op">@</span> D.T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[2. 2. 2. 2. 2.]
@@ -1336,10 +1336,10 @@ a_{10} &amp; 0 &amp; a_{11} &amp; 0 \\
 D^{(2)}_x U
 \]</span></p>
 </div><div class="column">
-<div id="1db0d9a3" class="cell" data-execution_count="33">
+<div id="c794b4d9" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a></a>U <span class="op">=</span> xij<span class="op">**</span><span class="dv">2</span></span>
 <span id="cb51-2"><a></a>D <span class="op">@</span> U</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="607">
+<div class="cell-output cell-output-display" data-execution_count="33">
 <pre><code>array([[2., 2., 2., 2., 2.],
        [2., 2., 2., 2., 2.],
        [2., 2., 2., 2., 2.],
@@ -1367,7 +1367,7 @@ D^{(2)}_x U
 \text{vec}(D^{(2)}_x U) = \text{vec}({D^{(2)}_x U I}) = \underbrace{(D^{(2)}_x \otimes I)}_{M} \text{vec}(U)
 \]</span></p>
 <p>Implementation using <code>scipy.sparse</code></p>
-<div id="d0c34b23" class="cell" data-execution_count="34">
+<div id="c0d2fd24" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a></a>M <span class="op">=</span> sparse.kron(D, sparse.eye(Ny<span class="op">+</span><span class="dv">1</span>))</span>
 <span id="cb53-2"><a></a>d2u <span class="op">=</span> M <span class="op">@</span> U.ravel()</span>
 <span id="cb53-3"><a></a><span class="bu">print</span>(d2u.reshape(U.shape))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1421,7 +1421,7 @@ D^{(2)}_x U
 </section>
 <section id="implementation-laplace" class="slide level2 smaller">
 <h2>Implementation Laplace</h2>
-<div id="90d6cf10" class="cell" data-execution_count="35">
+<div id="4ee0051c" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a></a><span class="kw">def</span> laplace(dx, dy, Nx, Ny):</span>
 <span id="cb55-2"><a></a>    D2x <span class="op">=</span> (<span class="fl">1.</span><span class="op">/</span>dx<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>D2(Nx)</span>
 <span id="cb55-3"><a></a>    D2y <span class="op">=</span> (<span class="fl">1.</span><span class="op">/</span>dy<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>D2(Ny)</span>
@@ -1462,7 +1462,7 @@ u_{i, N_y} = 0 \quad i \in \{0, 1, \ldots, N_x\}.
 </section>
 <section id="find-the-boundary-points" class="slide level2 smaller">
 <h2>Find the boundary points</h2>
-<div id="f5afb41f" class="cell" data-execution_count="36">
+<div id="a03c895e" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a></a>Nx, Ny <span class="op">=</span> <span class="dv">30</span>, <span class="dv">30</span></span>
 <span id="cb56-2"><a></a>B <span class="op">=</span> np.ones((Nx<span class="op">+</span><span class="dv">1</span>, Ny<span class="op">+</span><span class="dv">1</span>), dtype<span class="op">=</span><span class="bu">bool</span>)</span>
 <span id="cb56-3"><a></a>B[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> <span class="dv">0</span></span>
@@ -1478,7 +1478,7 @@ u_{i, N_y} = 0 \quad i \in \{0, 1, \ldots, N_x\}.
 </div>
 </div>
 <p>Find all the points in the vectorized array <span class="math inline">\(\text{vec}(B)\)</span> that equals 1:</p>
-<div id="729ecdec" class="cell" data-execution_count="37">
+<div id="c0858bf1" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a></a>bnds <span class="op">=</span> np.where(B.ravel() <span class="op">==</span> <span class="dv">1</span>)[<span class="dv">0</span>]</span>
 <span id="cb57-2"><a></a><span class="bu">print</span>(bnds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1494,7 +1494,7 @@ u_{i, N_y} = 0 \quad i \in \{0, 1, \ldots, N_x\}.
 </section>
 <section id="ident-vectorized-laplace-matrix-for-all-boundary-points" class="slide level2 smaller">
 <h2>Ident vectorized Laplace matrix for all boundary points</h2>
-<div id="f446773c" class="cell" data-execution_count="38">
+<div id="c06e768a" class="cell" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a></a>Lx, Ly <span class="op">=</span> <span class="dv">1</span>, <span class="dv">1</span></span>
 <span id="cb59-2"><a></a>A <span class="op">=</span> laplace(Lx<span class="op">/</span>Nx, Ly<span class="op">/</span>Ny, Nx, Ny)</span>
 <span id="cb59-3"><a></a>A <span class="op">=</span> A.tolil()</span>
@@ -1511,14 +1511,14 @@ u_{i, N_y} = 0 \quad i \in \{0, 1, \ldots, N_x\}.
 u(x, y) = x(1-x)y(1-y)\exp(\cos(4 \pi x)\sin(2 \pi y)),
 \]</span></p>
 <p>The right hand side function <span class="math inline">\(f(x, y)\)</span> is then</p>
-<div id="6d1ca258" class="cell" data-execution_count="39">
+<div id="e1af36c4" class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
 <span id="cb60-2"><a></a>x, y <span class="op">=</span> sp.symbols(<span class="st">'x,y'</span>)</span>
 <span id="cb60-3"><a></a>ue <span class="op">=</span> x<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>x)<span class="op">*</span>y<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>y)<span class="op">*</span>sp.exp(sp.cos(<span class="dv">4</span><span class="op">*</span>sp.pi<span class="op">*</span>x)<span class="op">*</span>sp.sin(<span class="dv">2</span><span class="op">*</span>sp.pi<span class="op">*</span>y))</span>
 <span id="cb60-4"><a></a>f <span class="op">=</span> ue.diff(x, <span class="dv">2</span>) <span class="op">+</span> ue.diff(y, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The 2D mesh and mesh function <code>F</code> can be computed as</p>
-<div id="1cdc19cf" class="cell" data-execution_count="40">
+<div id="516e641c" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a></a><span class="kw">def</span> mesh2D(Nx, Ny, Lx, Ly):</span>
 <span id="cb61-2"><a></a>    x <span class="op">=</span> np.linspace(<span class="dv">0</span>, Lx, Nx<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb61-3"><a></a>    y <span class="op">=</span> np.linspace(<span class="dv">0</span>, Ly, Ny<span class="op">+</span><span class="dv">1</span>)</span>
@@ -1531,7 +1531,7 @@ u(x, y) = x(1-x)y(1-y)\exp(\cos(4 \pi x)\sin(2 \pi y)),
 </section>
 <section id="solve" class="slide level2 smaller">
 <h2>Solve!</h2>
-<div id="6d48e053" class="cell" data-execution_count="41">
+<div id="eaa4f0b1" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a></a>U <span class="op">=</span> sparse.linalg.spsolve(A, b)</span>
 <span id="cb62-2"><a></a>U <span class="op">=</span> np.reshape(U, (Nx<span class="op">+</span><span class="dv">1</span>, Ny<span class="op">+</span><span class="dv">1</span>))</span>
 <span id="cb62-3"><a></a>plt.contourf(xij, yij, U, <span class="dv">100</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

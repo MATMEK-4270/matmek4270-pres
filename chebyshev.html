@@ -245,7 +245,7 @@ P_2(x) &amp;= \frac{1}{2}(3x^2-1), \\
 \end{align*}
 \]</span></p>
 </div><div class="column">
-<div id="4a87f4d8" class="cell" data-execution_count="2">
+<div id="1fdfd733" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -288,7 +288,7 @@ T_{j+1}(x) &amp;= 2xT_{j}(x) - T_{j-1}(x).
 \end{align*}
 \]</span></p>
 </div><div class="column">
-<div id="7d57e87b" class="cell" data-execution_count="3">
+<div id="31c42cd9" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -422,7 +422,7 @@ x_j &amp;= \cos\left( \frac{(2j+1)\pi}{2N}\right),  &amp;j=0, 1, \ldots, N-1
 </section>
 <section id="implementation-of-the-weighted-inner-product" class="slide level2 smaller">
 <h2>Implementation of the weighted inner product</h2>
-<div id="47c5ba9a" class="cell" data-execution_count="4">
+<div id="6592db93" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>x <span class="op">=</span> sp.Symbol(<span class="st">'x'</span>, real<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb1-2"><a></a>k <span class="op">=</span> sp.Symbol(<span class="st">'k'</span>, integer<span class="op">=</span><span class="va">True</span>, positive<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb1-3"><a></a></span>
@@ -456,7 +456,7 @@ x_j &amp;= \cos\left( \frac{(2j+1)\pi}{2N}\right),  &amp;j=0, 1, \ldots, N-1
 </section>
 <section id="try-with-small-ux10x-12-1-xin-12" class="slide level2 smaller">
 <h2>Try with <span class="math inline">\(\small u(x)=10(x-1)^2-1, x\in [1,2]\)</span></h2>
-<div id="dd27b031" class="cell" data-execution_count="5">
+<div id="21632860" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> numpy.polynomial <span class="im">import</span> Chebyshev</span>
 <span id="cb2-2"><a></a>u <span class="op">=</span> <span class="dv">10</span><span class="op">*</span>(x<span class="op">-</span><span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span><span class="op">-</span><span class="dv">1</span></span>
 <span id="cb2-3"><a></a>uhat <span class="op">=</span> <span class="kw">lambda</span> u, j: <span class="dv">2</span> <span class="op">/</span> (cj(j) <span class="op">*</span> sp.pi) <span class="op">*</span> innerw(u, Tk(j, x), (<span class="dv">1</span>, <span class="dv">2</span>))</span>
@@ -483,7 +483,7 @@ x_j &amp;= \cos\left( \frac{(2j+1)\pi}{2N}\right),  &amp;j=0, 1, \ldots, N-1
 <p><span class="math display">\[
 \omega(x) = \frac{1}{\sqrt{1-x^2}}
 \]</span></p>
-<div id="3f7272be" class="cell" data-execution_count="6">
+<div id="83022f54" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -500,7 +500,7 @@ x_j &amp;= \cos\left( \frac{(2j+1)\pi}{2N}\right),  &amp;j=0, 1, \ldots, N-1
 u(x) = e^{\cos x}, \quad x \in [-1,1]
 \]</span></p>
 <p>Use numerical integration and change of variables</p>
-<div id="714b0e1b" class="cell" data-execution_count="7">
+<div id="be058322" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> scipy.integrate <span class="im">import</span> quad</span>
 <span id="cb3-2"><a></a><span class="kw">def</span> innerwn(u, v, domain, ref_domain<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)):</span>
 <span id="cb3-3"><a></a>    A, B <span class="op">=</span> ref_domain</span>
@@ -520,7 +520,7 @@ u(x) = e^{\cos x}, \quad x \in [-1,1]
 </section>
 <section id="compare-with-legendre" class="slide level2 smaller">
 <h2>Compare with Legendre</h2>
-<div id="682e0423" class="cell columns column-output-location" data-execution_count="8">
+<div id="2ef94d5c" class="cell columns column-output-location" data-execution_count="8">
 <div class="column">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="co"># Compute Chebyshev coefficients:</span></span>
 <span id="cb4-2"><a></a>N <span class="op">=</span> <span class="dv">25</span></span>
@@ -552,7 +552,7 @@ u(x) = e^{\cos x}, \quad x \in [-1,1]
 </section>
 <section id="l2-error---esqrtint_-11-e2-dx-not-weighted" class="slide level2 smaller">
 <h2><span class="math inline">\(L^2\)</span> error - <span class="math inline">\(\|e\|=\sqrt{\int_{-1}^1 e^2 dx}\)</span> (not weighted)</h2>
-<div id="3e780a7a" class="cell" data-execution_count="9">
+<div id="b761b076" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="kw">def</span> L2_error(uh, ue, space<span class="op">=</span>Legendre):</span>
 <span id="cb5-2"><a></a>    xj <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
 <span id="cb5-3"><a></a>    uej <span class="op">=</span> sp.lambdify(x, ue)(xj)</span>
@@ -755,7 +755,7 @@ xy
 </div></div>
 <div class="fragment">
 <p>Numpy naturally arranges the outer product into matrix form:</p>
-<div id="5d5bed60" class="cell columns column-output-location" data-execution_count="10">
+<div id="daad4ea5" class="cell columns column-output-location" data-execution_count="10">
 <div class="column">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>y <span class="op">=</span> sp.Symbol(<span class="st">'y'</span>)</span>
 <span id="cb6-2"><a></a>Vx <span class="op">=</span> np.array([<span class="dv">1</span>, x])</span>
@@ -885,7 +885,7 @@ u(x, y)=\exp(-(x^2+2(y-0.5)^2)), (x, y) \in [-1, 1] \times [-1, 1]
 <li>Find the matrix <span class="math inline">\(A=\{a_{ij}\}_{i,j=0}^{N_x,N_y}\)</span>, <span class="math inline">\(a_{ij}=\|P_i\|^2 \delta_{ij}\)</span></li>
 <li>Compute <span class="math inline">\(\hat{U} = A^{-1} U A^{-1}\)</span></li>
 </ol>
-<div id="fd8639b4" class="cell" data-execution_count="11">
+<div id="179c721e" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">import</span> scipy.sparse <span class="im">as</span> sparse</span>
 <span id="cb8-2"><a></a><span class="im">from</span> scipy.integrate <span class="im">import</span> dblquad</span>
 <span id="cb8-3"><a></a>ue <span class="op">=</span> sp.exp(<span class="op">-</span>(x<span class="op">**</span><span class="dv">2</span><span class="op">+</span><span class="dv">2</span><span class="op">*</span>(y<span class="op">-</span>sp.S.Half)<span class="op">**</span><span class="dv">2</span>))</span>
@@ -953,7 +953,7 @@ P_{N_y}(y_{0})&amp;  \ldots &amp; P_{N_y}(y_{N_y})
 </section>
 <section id="implement-evaluate-in-2d" class="slide level2 smaller">
 <h2>Implement evaluate in 2D</h2>
-<div id="b4b71038" class="cell" data-execution_count="12">
+<div id="37b30fb5" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="kw">def</span> eval2D(xi, yi, uhat):</span>
 <span id="cb9-2"><a></a>    Vx <span class="op">=</span> np.polynomial.legendre.legvander(xi, uhat.shape[<span class="dv">0</span>]<span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb9-3"><a></a>    Vy <span class="op">=</span> np.polynomial.legendre.legvander(yi, uhat.shape[<span class="dv">1</span>]<span class="op">-</span><span class="dv">1</span>) </span>
@@ -1020,7 +1020,7 @@ P_{N_y}(y_{0})&amp;  \ldots &amp; P_{N_y}(y_{N_y})
 <p><span class="math display">\[
 u(x)=\frac{1}{1+25x^2} \quad x \in [-1, 1] \rightarrow \hat{u}_j = \frac{2j+1}{2}(u, P_j)
 \]</span></p>
-<div id="71179c3a" class="cell columns column-output-location" data-execution_count="13">
+<div id="8027a131" class="cell columns column-output-location" data-execution_count="13">
 <div class="column">
 <div class="sourceCode cell-code" id="cb11" data-code-line-numbers="1-6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">import</span> shenfun <span class="im">as</span> sf  </span>
 <span id="cb11-2"><a></a>N <span class="op">=</span> <span class="dv">50</span></span>
@@ -1044,7 +1044,7 @@ u(x)=\frac{1}{1+25x^2} \quad x \in [-1, 1] \rightarrow \hat{u}_j = \frac{2j+1}{2
 </section>
 <section id="plot-the-pointwise-error" class="slide level2 smaller">
 <h2>Plot the pointwise error</h2>
-<div id="f66d6950" class="cell columns column-output-location" data-execution_count="14">
+<div id="0002591a" class="cell columns column-output-location" data-execution_count="14">
 <div class="column">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>xj <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
 <span id="cb12-2"><a></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">3</span>))</span>
@@ -1064,7 +1064,7 @@ u(x)=\frac{1}{1+25x^2} \quad x \in [-1, 1] \rightarrow \hat{u}_j = \frac{2j+1}{2
 <p>Note the oscillation in the error that is typical of a spactral method.</p>
 <p>Who thinks that Chebyshev can do better?</p>
 <div class="fragment">
-<div id="ae314414" class="cell columns column-output-location" data-execution_count="15">
+<div id="db1efb40" class="cell columns column-output-location" data-execution_count="15">
 <div class="column">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>V <span class="op">=</span> sf.FunctionSpace(N<span class="op">+</span><span class="dv">1</span>, <span class="st">'Chebyshev'</span>, </span>
 <span id="cb13-2"><a></a>                     domain<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
@@ -1085,7 +1085,7 @@ u(x)=\frac{1}{1+25x^2} \quad x \in [-1, 1] \rightarrow \hat{u}_j = \frac{2j+1}{2
 <section id="shenfun-in-2d-using-tensor-products" class="slide level2 smaller">
 <h2>Shenfun in 2D using tensor products</h2>
 <p>Approximate <span class="math inline">\(u(x, y)=\exp(-(x^2+2(y-0.5)^2)), (x, y) \in [-1, 1]^2\)</span>:</p>
-<div id="591fe209" class="cell" data-execution_count="16">
+<div id="5dae33e1" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>ue <span class="op">=</span> sp.exp(<span class="op">-</span>(x<span class="op">**</span><span class="dv">2</span><span class="op">+</span><span class="dv">2</span><span class="op">*</span>(y<span class="op">-</span>sp.S.Half)<span class="op">**</span><span class="dv">2</span>)) </span>
 <span id="cb14-2"><a></a>T <span class="op">=</span> sf.FunctionSpace(<span class="dv">20</span>, <span class="st">'Chebyshev'</span>)</span>
 <span id="cb14-3"><a></a>W <span class="op">=</span> sf.TensorProductSpace(sf.comm, (T, T))</span>
@@ -1122,15 +1122,15 @@ u_N(x_i) = \sum_{j=0}^N \hat{u}_j T_j(x_i), \quad i=0, 1, \ldots, N
 </section>
 <section id="slow-chebyshev-transforms-implementation" class="slide level2 smaller">
 <h2>Slow Chebyshev transforms implementation</h2>
-<div id="cca0d7ad" class="cell" data-execution_count="17">
+<div id="d4edd46e" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>N <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb15-2"><a></a>T <span class="op">=</span> np.polynomial.chebyshev.chebvander(np.cos(np.arange(N)<span class="op">*</span>np.pi<span class="op">/</span>(N<span class="op">-</span><span class="dv">1</span>)), N)</span>
 <span id="cb15-3"><a></a>uhat <span class="op">=</span> np.random.random(N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb15-4"><a></a>u <span class="op">=</span> T <span class="op">@</span> uhat</span>
 <span id="cb15-5"><a></a><span class="bu">print</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[ 5.546189   -0.97260872  2.00465515 -0.6369432   1.53790556  0.12158592
-  0.747463   -0.57498476 -0.69327561  1.1134286 ]</code></pre>
+<pre><code>[ 5.90062941 -0.73633891  0.5299509  -0.25463169  1.31496437  0.1057423
+ -0.81497149  0.51141195 -0.49393353  0.32017447]</code></pre>
 </div>
 </div>
 <p>Slow because you use <span class="math inline">\(\mathcal{O}(N^2)\)</span> floating point operations and memory demanding because you need a matrix <span class="math inline">\(\boldsymbol{T} \in \mathbb{R}^{(N+1)\times (N+1)}\)</span>.</p>
@@ -1192,7 +1192,7 @@ u_N(x_i) = \frac{DCT^1(\boldsymbol{\hat{u}})_i + \hat{u}_0 + (-1)^{i}\hat{u}_N}{
 I_m = ((-1)^{i})_{i=0}^N
 \]</span></p>
 </div><div class="column">
-<div id="c0ec27b1" class="cell" data-execution_count="18">
+<div id="dc4df519" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="im">import</span> scipy</span>
 <span id="cb17-2"><a></a></span>
 <span id="cb17-3"><a></a><span class="kw">def</span> evaluate_cheb_1(uhat):</span>
@@ -1217,18 +1217,18 @@ I_m = ((-1)^{i})_{i=0}^N
 <div class="columns">
 <div class="column">
 <p>Timing of regular transform:</p>
-<div id="dfc69e1b" class="cell" data-execution_count="19">
+<div id="2e841964" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">10</span> uj <span class="op">=</span> T <span class="op">@</span> uhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
-<pre><code>&lt;TimeitResult : 154 μs ± 27.7 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;</code></pre>
+<pre><code>&lt;TimeitResult : 149 μs ± 31.6 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;</code></pre>
 </div>
 </div>
 </div><div class="column">
 <p>Timing of fast transform:</p>
-<div id="c260372e" class="cell" data-execution_count="20">
+<div id="7463f2fd" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a><span class="op">%</span>timeit <span class="op">-</span>q <span class="op">-</span>o <span class="op">-</span>n <span class="dv">10</span> uj_fast <span class="op">=</span> evaluate_cheb_1(uhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">
-<pre><code>&lt;TimeitResult : 21.1 μs ± 20.2 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;</code></pre>
+<pre><code>&lt;TimeitResult : 18.9 μs ± 15.3 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;</code></pre>
 </div>
 </div>
 </div></div>
