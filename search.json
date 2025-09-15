@@ -816,14 +816,14 @@
     "href": "wave.html#stability",
     "title": "Finite difference methods for the wave equation",
     "section": "Stability",
-    "text": "Stability\nA simpler approach is to insert for \\(u^n_j = A^n e^{ikx_j}\\) directly in\n\\[\n\\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\\Delta t^2} = c^2 \\frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\\Delta x^2}\n\\]\nand solve for \\(A\\). We get\n\\[\n\\frac{\\left(A^{n+1} - 2A^n + A^{n-1} \\right) e^{ikx_j}}{\\Delta t^2} = c^2 A^n \\frac{e^{ik(x_j+\\Delta x)} - 2e^{ikx_j} + e^{ik(x_j-\\Delta x)}}{\\Delta x^2}\n\\]\n\nDivide by \\(A^ne^{ikx_j}\\), multiply by \\(\\Delta t^2\\) and use \\(C=c\\Delta t/\\Delta x\\) to get\n\\[\nA -2 + A^{-1} = C^2 (e^{ik \\Delta x} - 2 + e^{-ik\\Delta x})\n\\]\ncontinue on next slide"
+    "text": "Stability\nA simpler approach is to insert for \\(u^n_j = A^n e^{ikx_j}\\) directly in\n\\[\n\\frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\\Delta t^2} = c^2 \\frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\\Delta x^2}\n\\]\nand solve for \\(A\\). For stability we need \\(|A|=1\\). We get\n\\[\n\\frac{\\left(A^{n+1} - 2A^n + A^{n-1} \\right) e^{ikx_j}}{\\Delta t^2} = c^2 A^n \\frac{e^{ik(x_j+\\Delta x)} - 2e^{ikx_j} + e^{ik(x_j-\\Delta x)}}{\\Delta x^2}\n\\]\n\nDivide by \\(A^ne^{ikx_j}\\), multiply by \\(\\Delta t^2\\) and use \\(C=c\\Delta t/\\Delta x\\) to get\n\\[\nA -2 + A^{-1} = C^2 (e^{ik \\Delta x} - 2 + e^{-ik\\Delta x})\n\\]\ncontinue on next slide"
   },
   {
     "objectID": "wave.html#stability-1",
     "href": "wave.html#stability-1",
     "title": "Finite difference methods for the wave equation",
     "section": "Stability",
-    "text": "Stability\n\\[\nA + A^{-1} = 2 + C^2 (e^{ik \\Delta x} - 2 + e^{-ik\\Delta x})\n\\]\nUse \\(e^{ix}+e^{-ix}=2\\cos x\\) to obtain\n\\[\nA + A^{-1} = 2 + 2 C^2(\\cos k\\Delta x - 1)\n\\]\n\nThis is a quadratic equation to solve for A. Using \\(\\beta=2(1+C^2 (\\cos(k\\Delta x)-1))\\) we get that\n\\[\nA = \\frac{\\beta \\pm \\sqrt{\\beta^2-4}}{2}\n\\]\nWe see that \\(|A| = 1\\) for any real numbers \\(-2 \\le \\beta \\le 2\\).\n\n\n\n\n\n\nFor all real numbers \\(-2 \\le \\beta \\le 2\\)\n\n\n\\[\n|\\beta \\pm \\sqrt{\\beta^2-4}| = 2\n\\] since \\(|\\beta \\pm \\sqrt{\\beta^2-4}| = |\\beta + i \\sqrt{4-\\beta^2}| = \\sqrt{\\beta^2 + 4 - \\beta^2} = 2\\)"
+    "text": "Stability\n\\[\nA + A^{-1} = 2 + C^2 (e^{ik \\Delta x} - 2 + e^{-ik\\Delta x})\n\\]\nUse \\(e^{ix}+e^{-ix}=2\\cos x\\) to obtain\n\\[\nA + A^{-1} = 2 + 2 C^2(\\cos k\\Delta x - 1)\n\\]\n\nThis is a quadratic equation to solve for A. Using \\(\\beta=2(1+C^2 (\\cos(k\\Delta x)-1))\\) we get that\n\\[\nA = \\frac{\\beta \\pm \\sqrt{\\beta^2-4}}{2}\n\\]\nWe see that \\(|A| = 1\\) for any real numbers \\(-2 \\le \\beta \\le 2\\). (Also, \\(\\beta &lt; -2 \\rightarrow\\) negative \\(A\\)).\n\n\n\n\n\n\nFor all real numbers \\(-2 \\le \\beta \\le 2\\)\n\n\n\\[\n|\\beta \\pm \\sqrt{\\beta^2-4}| = 2\n\\] since \\(|\\beta \\pm \\sqrt{\\beta^2-4}| = |\\beta + i \\sqrt{4-\\beta^2}| = \\sqrt{\\beta^2 + 4 - \\beta^2} = 2\\)"
   },
   {
     "objectID": "wave.html#for-a-le-1-and-stability-we-need--2-le-beta-le-2-and-thus",
@@ -3589,5 +3589,460 @@
     "title": "Finite difference methods for the wave equation",
     "section": "If you do not have analytic \\(I(x)\\), then what?",
     "text": "If you do not have analytic \\(I(x)\\), then what?\n\nHow to fix \\(\\frac{\\partial u}{\\partial t}(x, 0) = 0\\), option 1\nUse a forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{u^1-u^0}{\\Delta t}=0, \\quad \\text{such that} \\quad u^1 = u^0\n\\]\nOnly first order accurate, but still a possibility.\n\n\nUse a second order forward difference\n\\[\n\\frac{\\partial u}{\\partial t}(x, 0) \\approx \\frac{-u^2+4u^1-3u^0}{2 \\Delta t}=0, \\quad \\text{such that} \\quad u^1 = \\frac{3u^0+u^2}{4}\n\\]\nSecond order accurate, but implicit."
+  },
+  {
+    "objectID": "wave.html#for-a-1-and-stability-we-need--2-le-beta-le-2-and-thus",
+    "href": "wave.html#for-a-1-and-stability-we-need--2-le-beta-le-2-and-thus",
+    "title": "Finite difference methods for the wave equation",
+    "section": "For \\(|A| = 1\\) and stability we need \\(-2 \\le \\beta \\le 2\\) and thus",
+    "text": "For \\(|A| = 1\\) and stability we need \\(-2 \\le \\beta \\le 2\\) and thus\n\\[\n-2 \\le 2(1+C^2(\\cos(k\\Delta x)-1)) \\le 2\n\\]\nRearrange to get that\n\\[\n-2 \\le C^2 (\\cos (k\\Delta x)-1) \\le 0\n\\]\nSince \\(\\cos(k\\Delta x)\\) can at worst be \\(-1\\) we get that the positive real CFL number must be smaller than 1\n\\[\nC \\le 1\n\\]\n\nHence (since \\(C=c\\Delta t/\\Delta x\\)) for stability we require that\n\\[\n\\Delta t \\le  \\frac{\\Delta x}{c}\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#important-topics-todays-lecture",
+    "href": "two-dimensional.html#important-topics-todays-lecture",
+    "title": "Two-dimensional problems",
+    "section": "Important topics todays lecture",
+    "text": "Important topics todays lecture\n\nThe Cartesian product - definition and the use for computational meshes\nThe finite difference method in 2D for the Laplace operator\nThe vec-trick (also referred to as vectorization, but not the same as Numpy vectorization)\nThe Kronecker product"
+  },
+  {
+    "objectID": "two-dimensional.html#two-dimensional-spatial-domain",
+    "href": "two-dimensional.html#two-dimensional-spatial-domain",
+    "title": "Two-dimensional problems",
+    "section": "Two-dimensional spatial domain",
+    "text": "Two-dimensional spatial domain\nWe start by considering the Poisson equation\n\\[\n\\nabla^2 u = f,\n\\]\nwhich in two-dimensional Cartesian coordinates is\n\\[\n\\frac{\\partial^2 u}{\\partial x^2} + \\frac{\\partial^2 u}{\\partial y^2} = f.\n\\]\nWe consider the equation for a rectangular domain\n\\[(x, y) \\in [0, L_x] \\times [0, L_y],\\]\nand Dirichlet boundary conditions."
+  },
+  {
+    "objectID": "two-dimensional.html#the-unit-square",
+    "href": "two-dimensional.html#the-unit-square",
+    "title": "Two-dimensional problems",
+    "section": "The unit square",
+    "text": "The unit square\n\n\n\n\n\n\n\n\n\n\n\n\nBoundary conditions on any side may be a function of the non-constant variable \\[\\begin{align*}\n\\color{red}{ u(x=0, y)} &= f(y) \\\\\n\\color{blue}{u(x, y=0)} &= f(x)\n\\end{align*}\\]\nwhere \\(f\\) is a function of one variable, \\(f: \\mathbb{R}\\rightarrow \\mathbb{R}\\)\n\n\n\n\n\n\n\nNote\n\n\nThe boundary conditions need to be consistent in the corners, because each corner belongs to two sides."
+  },
+  {
+    "objectID": "two-dimensional.html#discretization",
+    "href": "two-dimensional.html#discretization",
+    "title": "Two-dimensional problems",
+    "section": "Discretization",
+    "text": "Discretization\nWe discretize the mesh using two lines, one in the \\(x\\)-direction and one in the \\(y\\)-direction:\n\\[\nx_i = i \\Delta x, \\quad i = 0, 1, \\ldots, N_x\n\\]\n\\[\ny_j = j \\Delta y, \\quad j = 0, 1, \\ldots, N_y\n\\]\nwhere \\(\\Delta x = L_x/N_x\\) and \\(\\Delta y = L_y/N_y\\). Vector notation for the mesh is\n\\[\n\\boldsymbol{x} = (x_0, x_1, \\ldots, x_{N_x})\n\\] \\[\n\\boldsymbol{y} = (y_0, y_1, \\ldots, y_{N_y})\n\\]\n\n\n\n\n\n\n\nHow do we create the 2D mesh?"
+  },
+  {
+    "objectID": "two-dimensional.html#cartesian-products",
+    "href": "two-dimensional.html#cartesian-products",
+    "title": "Two-dimensional problems",
+    "section": "Cartesian products!",
+    "text": "Cartesian products!\nConsider the two tuples\n\\[\\boldsymbol{u}=(1, 2, 3) \\quad \\boldsymbol{v}=(4, 5)\\]\n\nCompute the Cartesian product of these two tuples using the Python package itertools\n\nimport itertools\nu = (1, 2, 3)\nv = (4, 5)\nuxv = itertools.product(u, v)\ntuple(uxv)\n\n((1, 4), (1, 5), (2, 4), (2, 5), (3, 4), (3, 5))\n\n\n\n\n\n\n\n\nThe outcome is a tuple containing all possible ordered pairs of items, where the first item is from \\(\\boldsymbol{u}\\) and the second from \\(\\boldsymbol{v}\\).\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nTuples are immutable sequences."
+  },
+  {
+    "objectID": "two-dimensional.html#mathematical-description-of-the-cartesian-product",
+    "href": "two-dimensional.html#mathematical-description-of-the-cartesian-product",
+    "title": "Two-dimensional problems",
+    "section": "Mathematical description of the Cartesian product",
+    "text": "Mathematical description of the Cartesian product\nThe Cartesian product can be described mathematically as\n\\[\n\\boldsymbol{u} \\times \\boldsymbol{v} = \\{ (u, v) \\, | \\,  u \\in \\boldsymbol{u} \\text{ and } v \\in \\boldsymbol{v} \\},\n\\]\nwhich reads the set of all pairs \\((u, v)\\) such that \\(u\\) is in the set \\(\\boldsymbol{u}\\) and \\(v\\) in the set \\(\\boldsymbol{v}\\).\n\n\n\n\n\n\nNote\n\n\n\nSets are unordered collections with no duplicate elements.\nSets are written with curly brackets.\nThe pairs \\((u, v)\\) are not sets since the order of the numbers is important.\nitertools work on any kind of sequence.\n\n\n\n\n\n\n\n\n\n\n\nWhy is this relevant for computational meshes?"
+  },
+  {
+    "objectID": "two-dimensional.html#d-meshes",
+    "href": "two-dimensional.html#d-meshes",
+    "title": "Two-dimensional problems",
+    "section": "2D meshes",
+    "text": "2D meshes\nWe have grid lines \\[\n\\boldsymbol{x} = (x_0, x_1, \\ldots, x_{N_x}) = (0, \\Delta x, 2 \\Delta x, \\ldots, L_x)\n\\] \\[\n\\boldsymbol{y} = (y_0, y_1, \\ldots, y_{N_y}) = (0, \\Delta y, 2 \\Delta y, \\ldots, L_y)\n\\]\n\n\n\n\n\n\n\n\n\nSo the computational mesh is really\n\\[\n\\boldsymbol{x} \\times \\boldsymbol{y} = \\{(x, y) \\, | \\, x \\in \\boldsymbol{x} \\text{ and } y \\in \\boldsymbol{y} \\},\n\\]\nall pairs \\((x, y)\\) such that \\(x\\) is in \\(\\boldsymbol{x}\\) and \\(y\\) is in \\(\\boldsymbol{y}\\)."
+  },
+  {
+    "objectID": "two-dimensional.html#structured-2d-meshes",
+    "href": "two-dimensional.html#structured-2d-meshes",
+    "title": "Two-dimensional problems",
+    "section": "Structured 2D meshes",
+    "text": "Structured 2D meshes\nWe have grid lines \\[\n\\boldsymbol{x} = (x_0, x_1, \\ldots, x_{N_x}) = (0, \\Delta x, 2 \\Delta x, \\ldots, L_x)\n\\] \\[\n\\boldsymbol{y} = (y_0, y_1, \\ldots, y_{N_y}) = (0, \\Delta y, 2 \\Delta y, \\ldots, L_y)\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#the-computational-mesh-is-a-cartesian-product",
+    "href": "two-dimensional.html#the-computational-mesh-is-a-cartesian-product",
+    "title": "Two-dimensional problems",
+    "section": "The computational mesh is a Cartesian product!",
+    "text": "The computational mesh is a Cartesian product!\nThe mesh is all pairs \\((x, y)\\) such that \\(x\\) is in \\(\\boldsymbol{x}\\) and \\(y\\) is in \\(\\boldsymbol{y}\\).\n\\[\n\\boldsymbol{x} \\times \\boldsymbol{y} = \\{(x, y) \\, | \\, x \\in \\boldsymbol{x} \\text{ and } y \\in \\boldsymbol{y} \\}\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#the-cartesian-product-is-a-one-dimensional-array-of-pairs",
+    "href": "two-dimensional.html#the-cartesian-product-is-a-one-dimensional-array-of-pairs",
+    "title": "Two-dimensional problems",
+    "section": "The Cartesian product is a one-dimensional array of pairs",
+    "text": "The Cartesian product is a one-dimensional array of pairs\n\n\n[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0), (3, 1), (3, 2)]"
+  },
+  {
+    "objectID": "two-dimensional.html#the-cartesian-product-is-a-1d-array-of-pairs",
+    "href": "two-dimensional.html#the-cartesian-product-is-a-1d-array-of-pairs",
+    "title": "Two-dimensional problems",
+    "section": "The Cartesian product is a 1D array of pairs",
+    "text": "The Cartesian product is a 1D array of pairs\n\nxy = list(itertools.product([0, 1, 2, 3], [0, 1, 2]))\nprint(xy)\n\n[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0), (3, 1), (3, 2)]\n\n\nIt is the same as a double for-loop\n\nprint([(a, b) for a in range(4) for b in range(3)])\n\n[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0), (3, 1), (3, 2)]\n\n\n\nHowever, the numbers are naturally seen as points in a 2D mesh:"
+  },
+  {
+    "objectID": "two-dimensional.html#more-on-the-mesh",
+    "href": "two-dimensional.html#more-on-the-mesh",
+    "title": "Two-dimensional problems",
+    "section": "More on the mesh",
+    "text": "More on the mesh\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nIf this mesh was a 2D matrix, then \\(i\\) and \\(j\\) in \\((i, j)\\) would represent column and row, respectively, which is counterintuitive.\nWe normally think about a matrix \\(A\\) with items \\(a_{ij}\\), where the first index \\(i\\) represents row and second \\(j\\) represents column.\nThis is a complicating factor for the Cartesian mesh that is important to be aware of. But it is not a mistake. The numbers in the plot above are not indices of a matrix, they represent \\((x, y)\\) in a Cartesian mesh!"
+  },
+  {
+    "objectID": "two-dimensional.html#a-complicating-factor-for-the-mesh",
+    "href": "two-dimensional.html#a-complicating-factor-for-the-mesh",
+    "title": "Two-dimensional problems",
+    "section": "A complicating factor for the mesh",
+    "text": "A complicating factor for the mesh\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nIf this mesh was a 2D matrix, then \\(i\\) and \\(j\\) in \\((i, j)\\) would represent column and row, respectively, which is counterintuitive.\nWe normally think about a matrix \\(A\\) with items \\(a_{ij}\\), where the first index \\(i\\) represents row and second \\(j\\) represents column.\nThis is a complicating factor for the Cartesian mesh that is important to be aware of. But it is not a mistake. The numbers in the plot above are not indices of a matrix, they represent \\((x, y)\\) in a Cartesian mesh!"
+  },
+  {
+    "objectID": "two-dimensional.html#numpy-meshgrid",
+    "href": "two-dimensional.html#numpy-meshgrid",
+    "title": "Two-dimensional problems",
+    "section": "Numpy meshgrid",
+    "text": "Numpy meshgrid\nLet us now compute our Cartesian mesh using numpy.meshgrid. We have the 1D mesh arrays\n\\[\n\\boldsymbol{x} = (0, 1, 2, 3) \\quad \\text{ and } \\quad\n\\boldsymbol{y} = (0, 1, 2),\n\\]\nwhere we have chosen \\(\\Delta x = \\Delta y = 1\\) just for simplicity. An implementation goes like\n\nNx = 3\nNy = 2\nLx = Nx\nLy = Ny\nx = np.linspace(0, Lx, Nx+1)\ny = np.linspace(0, Ly, Ny+1)\nmesh = np.meshgrid(x, y, indexing='ij')\nmesh\n\n(array([[0., 0., 0.],\n        [1., 1., 1.],\n        [2., 2., 2.],\n        [3., 3., 3.]]),\n array([[0., 1., 2.],\n        [0., 1., 2.],\n        [0., 1., 2.],\n        [0., 1., 2.]]))"
+  },
+  {
+    "objectID": "two-dimensional.html#mesh-ordering",
+    "href": "two-dimensional.html#mesh-ordering",
+    "title": "Two-dimensional problems",
+    "section": "Mesh ordering",
+    "text": "Mesh ordering\nNumpy.meshgrid returns two arrays of shape \\(4 \\times 3\\)\n\nmesh = np.meshgrid(x, y, indexing='ij')\nmesh\n\n(array([[0., 0., 0.],\n        [1., 1., 1.],\n        [2., 2., 2.],\n        [3., 3., 3.]]),\n array([[0., 1., 2.],\n        [0., 1., 2.],\n        [0., 1., 2.],\n        [0., 1., 2.]]))\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe first array represents the \\(x\\)-coordinate, and it increases along columns.\nThe second array represents the \\(y\\)-coordinate, and it increases along rows."
+  },
+  {
+    "objectID": "two-dimensional.html#the-mesh-is-opposite-to-a-cartesian-mesh",
+    "href": "two-dimensional.html#the-mesh-is-opposite-to-a-cartesian-mesh",
+    "title": "Two-dimensional problems",
+    "section": "The mesh is opposite to a Cartesian mesh!",
+    "text": "The mesh is opposite to a Cartesian mesh!\nWe excpect a coordinate system to be like\n\n\n\n\n\n\n\n\n\nHowever, there is no mistake. This is simply how matrices are stored."
+  },
+  {
+    "objectID": "two-dimensional.html#it-all-comes-out-nicely-in-plots",
+    "href": "two-dimensional.html#it-all-comes-out-nicely-in-plots",
+    "title": "Two-dimensional problems",
+    "section": "It all comes out nicely in plots",
+    "text": "It all comes out nicely in plots\n\nx, y = mesh\nfig, (ax0, ax1) = plt.subplots(nrows=1, ncols=2, sharex=True,\n                                    figsize=(10, 3))\nc0 = ax0.contourf(x, y, x)\nc1 = ax1.contourf(x, y, y)\nax0.set_title('x');\nax1.set_title('y');\nax0.set_yticks([0, 1, 2])\nax1.set_yticks([0, 1, 2])\nfig.colorbar(c0, ticks=[0, 1, 2, 3]);\nfig.colorbar(c1, ticks=[0, 1, 2]);\n\n\n\n\n\n\n\n\nBelow we create contour plots of both \\(x\\) and \\(y\\) and we notice that \\(x\\) increases along the horizontal axis, whereas \\(y\\) increases in the vertical direction. Just as expected:-)"
+  },
+  {
+    "objectID": "two-dimensional.html#it-all-comes-out-nicely-in-plots-though",
+    "href": "two-dimensional.html#it-all-comes-out-nicely-in-plots-though",
+    "title": "Two-dimensional problems",
+    "section": "It all comes out nicely in plots though",
+    "text": "It all comes out nicely in plots though\n\nx, y = mesh\nfig, (ax0, ax1) = plt.subplots(nrows=1, ncols=2, sharex=True,\n                                    figsize=(10, 3))\nc0 = ax0.contourf(x, y, x)\nc1 = ax1.contourf(x, y, y)\nax0.set_title('x');\nax1.set_title('y');\nax0.set_yticks([0, 1, 2])\nax1.set_yticks([0, 1, 2])\nfig.colorbar(c0, ticks=[0, 1, 2, 3]);\nfig.colorbar(c1, ticks=[0, 1, 2]);\n\n\n\n\n\n\n\n\nJust as expected:-)"
+  },
+  {
+    "objectID": "two-dimensional.html#you-can-choose-cartesian-indexing-for-the-meshgrid",
+    "href": "two-dimensional.html#you-can-choose-cartesian-indexing-for-the-meshgrid",
+    "title": "Two-dimensional problems",
+    "section": "You can choose Cartesian indexing for the meshgrid",
+    "text": "You can choose Cartesian indexing for the meshgrid\n\nx = np.linspace(0, Lx, Nx+1)\ny = np.linspace(0, Ly, Ny+1)\nmesh = np.meshgrid(x, y, indexing='xy')\nmesh\n\n(array([[0., 1., 2., 3.],\n        [0., 1., 2., 3.],\n        [0., 1., 2., 3.]]),\n array([[0., 0., 0., 0.],\n        [1., 1., 1., 1.],\n        [2., 2., 2., 2.]]))\n\n\nBut then you need to transpose the contour plots!"
+  },
+  {
+    "objectID": "two-dimensional.html#cartesian-meshgrid",
+    "href": "two-dimensional.html#cartesian-meshgrid",
+    "title": "Two-dimensional problems",
+    "section": "Cartesian meshgrid",
+    "text": "Cartesian meshgrid"
+  },
+  {
+    "objectID": "two-dimensional.html#to-avoid-confusion",
+    "href": "two-dimensional.html#to-avoid-confusion",
+    "title": "Two-dimensional problems",
+    "section": "To avoid confusion",
+    "text": "To avoid confusion\nYou can also choose Cartesian indexing for the meshgrid\n\nx = np.linspace(0, Lx, Nx+1)\ny = np.linspace(0, Ly, Ny+1)\nmesh = np.meshgrid(x, y, indexing='xy')\nmesh\n\n(array([[0., 1., 2., 3.],\n        [0., 1., 2., 3.],\n        [0., 1., 2., 3.]]),\n array([[0., 0., 0., 0.],\n        [1., 1., 1., 1.],\n        [2., 2., 2., 2.]]))\n\n\nBut it is still not completely as expected, because \\(y\\) is increasing downwards!"
+  },
+  {
+    "objectID": "two-dimensional.html#sparse-meshgrid",
+    "href": "two-dimensional.html#sparse-meshgrid",
+    "title": "Two-dimensional problems",
+    "section": "Sparse meshgrid",
+    "text": "Sparse meshgrid\nIt is not necessary to store the complete arrays, because \\(x\\) is not changing along the \\(y\\)-axis and \\(y\\) is not changing along the \\(x\\)-axis.\n\nmesh = np.meshgrid(x, y, indexing='ij')\nmesh\n\n(array([[0., 0., 0.],\n        [1., 1., 1.],\n        [2., 2., 2.],\n        [3., 3., 3.]]),\n array([[0., 1., 2.],\n        [0., 1., 2.],\n        [0., 1., 2.],\n        [0., 1., 2.]]))\n\n\nUse sparse option:\n\nmesh = np.meshgrid(x, y, indexing='ij', sparse=True)\nmesh\n\n(array([[0.],\n        [1.],\n        [2.],\n        [3.]]),\n array([[0., 1., 2.]]))\n\n\nThe \\(x\\)-array is constant along the \\(y\\)-axis and the \\(y\\)-array is constant along the \\(x\\)-axis\n\nprint(mesh[0].shape, mesh[1].shape)\n\n(4, 1) (1, 3)"
+  },
+  {
+    "objectID": "two-dimensional.html#broadcasting",
+    "href": "two-dimensional.html#broadcasting",
+    "title": "Two-dimensional problems",
+    "section": "Broadcasting",
+    "text": "Broadcasting\n\ndisplay(mesh)\ndisplay(mesh[0].shape, mesh[1].shape)\n\n(array([[0.],\n        [1.],\n        [2.],\n        [3.]]),\n array([[0., 1., 2.]]))\n\n\n(4, 1)\n\n\n(1, 3)\n\n\nThe added dimension of length 1 is important for how the array broadcasts. The extra dimension tells Numpy that the array is constant along this other axis. That is, mesh[0] is constant along the second axis, no matter what size the second axis is. Similarly, mesh[1] is constant along the first axis. And since the 2D array is constant along that direction it is not necessary to actually store the numbers! So this is memory efficient.\nSo what happens if you now have this sparse mesh and you create a mesh function\n\\[\nf(x, y) = x + y\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#broadcasting-2",
+    "href": "two-dimensional.html#broadcasting-2",
+    "title": "Two-dimensional problems",
+    "section": "Broadcasting 2",
+    "text": "Broadcasting 2\nCompute \\[\nf(x, y) = x + y\n\\]\nwhen \\(x\\) and \\(y\\) are stored using sparse matrices of shape \\((4, 1)\\) and \\((1, 3)\\)\n\nx, y = mesh\nprint(x.shape, y.shape)\n\n(4, 1) (1, 3)\n\n\n\nNow compute \\(f(x, y)\\)\n\nf = x + y\n\n\n\n\n\n\n\nWhat is the shape of f!\n\n\n\n\n\n\nf\n\narray([[0., 1., 2.],\n       [1., 2., 3.],\n       [2., 3., 4.],\n       [3., 4., 5.]])\n\n\nThe shape of \\(f\\) is \\((4, 3)\\)! Exactly as it would be without the sparse matrices!"
+  },
+  {
+    "objectID": "two-dimensional.html#two-dimensional-mesh-function",
+    "href": "two-dimensional.html#two-dimensional-mesh-function",
+    "title": "Two-dimensional problems",
+    "section": "Two-dimensional mesh function",
+    "text": "Two-dimensional mesh function\nA mesh function on the two-dimensional domain will now be denoted as\n\\[\nu_{ij} = u(x_i, y_j).\n\\]\nThe mesh function is a dense two-dimensional array of shape \\({(N_x+1)\\times (N_y+1)}\\) and we will write \\(U = (u_{ij})_{i,j=0}^{N_x, N_y}\\). It may also be considered a matrix.\n\\[\n\\begin{bmatrix}\nu_{0, 0} & u_{0, 1} & \\cdots & u_{0, N_y} \\\\\nu_{1, 0} & u_{1, 1} & \\cdots & u_{1, N_y} \\\\\n\\vdots & \\vdots & \\ddots & \\vdots \\\\\nu_{N_x, 0} & u_{N_x, 1} & \\cdots & u_{N_x, N_y} \\\\\n\\end{bmatrix}\n\\]\nFor the component \\(u_{ij}\\), we note that \\(i\\) represents row and \\(j\\) represents column. This is matrix storage, like we got for meshgrid using indexing=\"ij\"."
+  },
+  {
+    "objectID": "two-dimensional.html#row-major-computer-storage",
+    "href": "two-dimensional.html#row-major-computer-storage",
+    "title": "Two-dimensional problems",
+    "section": "Row-major computer storage",
+    "text": "Row-major computer storage\nIn Python a matrix is row-major. This means that the matrix that looks like\n\\[\n\\begin{bmatrix}\nu_{0, 0} & u_{0, 1} & \\cdots & u_{0, N_y} \\\\\nu_{1, 0} & u_{1, 1} & \\cdots & u_{1, N_y} \\\\\n\\vdots & \\vdots & \\ddots & \\vdots \\\\\nu_{N_x, 0} & u_{N_x, 1} & \\cdots & u_{N_x, N_y} \\\\\n\\end{bmatrix}\n\\]\nis stored in memory with a long sequence of numbers row by row like\n\\[\n\\underbrace{u_{0, 0}, u_{0, 1}, \\cdots, u_{0, N_y}}_{\\text{First row}}, \\underbrace{u_{1, 0}, u_{1, 1}, \\cdots, u_{1, N_y}}_{\\text{Second row}}, \\cdots \\cdots, \\underbrace{u_{N_y, 0}, u_{N_y, 1}, \\cdots, u_{N_y, N_y}}_{\\text{Last row}}\n\\]\n\n\n\n\n\n\nNote\n\n\nThe computer does not know anything about these numbers belonging to a two-dimensional array. The computer only knows that \\((N_x+1)(N_y+1)\\) numbers are stored side by side."
+  },
+  {
+    "objectID": "two-dimensional.html#section",
+    "href": "two-dimensional.html#section",
+    "title": "Two-dimensional problems",
+    "section": "",
+    "text": "Lets use the method of manufactured solutions and guess a solution\n\\[\nu(x, y) = x(1-x)y(1-y)\\exp(\\cos(4 \\pi x)\\sin(2 \\pi y)),\n\\]\nand use a computational domain \\(\\Omega = [0, 1] \\times [0, 1]\\)."
+  },
+  {
+    "objectID": "two-dimensional.html#more-on-row-major",
+    "href": "two-dimensional.html#more-on-row-major",
+    "title": "Two-dimensional problems",
+    "section": "More on row-major",
+    "text": "More on row-major\nWe can get the single row \\(i\\) of the \\(U\\) matrix as \\(u_i = (u_{i,0}, u_{i,1}, \\ldots, u_{i, N_y})\\). For example, lets create a \\(3 \\times 3\\) matrix in Python\n\n\narray([[0, 1, 2],\n       [3, 4, 5],\n       [6, 7, 8]])"
+  },
+  {
+    "objectID": "two-dimensional.html#more-on-row-major-storage",
+    "href": "two-dimensional.html#more-on-row-major-storage",
+    "title": "Two-dimensional problems",
+    "section": "More on row-major storage",
+    "text": "More on row-major storage\nWe can get the single row \\(i\\) of the \\(U\\) matrix as \\(u_i = (u_{i,0}, u_{i,1}, \\ldots, u_{i, N_y})\\). For example,\n\nU = np.arange(9).reshape((3, 3))\ndisplay(U)\ndisplay(U[0])\ndisplay(U[1])\ndisplay(U[2])\n\narray([[0, 1, 2],\n       [3, 4, 5],\n       [6, 7, 8]])\n\n\narray([0, 1, 2])\n\n\narray([3, 4, 5])\n\n\narray([6, 7, 8])\n\n\nThe matrix is laid out in memory as\n\nU.ravel()\n\narray([0, 1, 2, 3, 4, 5, 6, 7, 8])\n\n\nTo get columns\n\nU[:, 0]\n\narray([0, 3, 6])"
+  },
+  {
+    "objectID": "two-dimensional.html#finite-differences-in-2d",
+    "href": "two-dimensional.html#finite-differences-in-2d",
+    "title": "Two-dimensional problems",
+    "section": "Finite differences in 2D",
+    "text": "Finite differences in 2D\nLet us move back to the Poisson equation\n\\[\n\\frac{\\partial^2 u}{\\partial x^2} + \\frac{\\partial^2 u}{\\partial y^2} = f.\n\\]\nUse second order central differences in both directions\n\\[\n\\frac{u_{i+1,j} - 2u_{i,j} + u_{i-1, j}}{\\Delta x^2} + \\frac{u_{i,j+1} - 2u_{i,j} + u_{i, j-1}}{\\Delta y^2} = f_{i,j}.\n\\]\n\n\n\n\n\n\nNote\n\n\nHow to vectorize in 2D? How to use the derivative matrix \\(D^{(2)}\\)?"
+  },
+  {
+    "objectID": "two-dimensional.html#derivative-matrices-in-2d",
+    "href": "two-dimensional.html#derivative-matrices-in-2d",
+    "title": "Two-dimensional problems",
+    "section": "Derivative matrices in 2D",
+    "text": "Derivative matrices in 2D\nThe second order second derivative matrix can be written as\n\\[\nD_x^{(2)} = \\frac{1}{\\Delta x^2}\\begin{bmatrix}\n2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\\\\n\\end{bmatrix}\n\\]\nWe use \\(D^{(2)} = \\Delta x^2 D^{(2)}_x\\) for an unscaled matrix.\nHence, for \\(y\\)-direction \\(D^{(2)}_y = \\frac{1}{\\Delta y^2} D^{(2)}\\)."
+  },
+  {
+    "objectID": "two-dimensional.html#compute-the-matrix-using-scipy.sparse",
+    "href": "two-dimensional.html#compute-the-matrix-using-scipy.sparse",
+    "title": "Two-dimensional problems",
+    "section": "Compute the matrix using scipy.sparse",
+    "text": "Compute the matrix using scipy.sparse\n\nimport scipy.sparse as sparse\n\ndef D2(N):\n    D = sparse.diags([1, -2, 1], [-1, 0, 1], (N+1, N+1), 'lil')\n    D[0, :4] = 2, -5, 4, -1\n    D[-1, -4:] = -1, 4, -5, 2\n    return D\nprint(D2(8).toarray())\n\n[[ 2. -5.  4. -1.  0.  0.  0.  0.  0.]\n [ 1. -2.  1.  0.  0.  0.  0.  0.  0.]\n [ 0.  1. -2.  1.  0.  0.  0.  0.  0.]\n [ 0.  0.  1. -2.  1.  0.  0.  0.  0.]\n [ 0.  0.  0.  1. -2.  1.  0.  0.  0.]\n [ 0.  0.  0.  0.  1. -2.  1.  0.  0.]\n [ 0.  0.  0.  0.  0.  1. -2.  1.  0.]\n [ 0.  0.  0.  0.  0.  0.  1. -2.  1.]\n [ 0.  0.  0.  0.  0. -1.  4. -5.  2.]]"
+  },
+  {
+    "objectID": "two-dimensional.html#compute-unscaled-matrix-using-scipy.sparse",
+    "href": "two-dimensional.html#compute-unscaled-matrix-using-scipy.sparse",
+    "title": "Two-dimensional problems",
+    "section": "Compute unscaled matrix using scipy.sparse",
+    "text": "Compute unscaled matrix using scipy.sparse\n\nimport scipy.sparse as sparse\n\ndef D2(N):\n    D = sparse.diags([1, -2, 1], [-1, 0, 1], (N+1, N+1), 'lil')\n    D[0, :4] = 2, -5, 4, -1\n    D[-1, -4:] = -1, 4, -5, 2\n    return D\nprint(D2(8).toarray())\n\n[[ 2. -5.  4. -1.  0.  0.  0.  0.  0.]\n [ 1. -2.  1.  0.  0.  0.  0.  0.  0.]\n [ 0.  1. -2.  1.  0.  0.  0.  0.  0.]\n [ 0.  0.  1. -2.  1.  0.  0.  0.  0.]\n [ 0.  0.  0.  1. -2.  1.  0.  0.  0.]\n [ 0.  0.  0.  0.  1. -2.  1.  0.  0.]\n [ 0.  0.  0.  0.  0.  1. -2.  1.  0.]\n [ 0.  0.  0.  0.  0.  0.  1. -2.  1.]\n [ 0.  0.  0.  0.  0. -1.  4. -5.  2.]]"
+  },
+  {
+    "objectID": "two-dimensional.html#consider-a-very-simple-function-in-2d",
+    "href": "two-dimensional.html#consider-a-very-simple-function-in-2d",
+    "title": "Two-dimensional problems",
+    "section": "Consider a very simple function in 2D",
+    "text": "Consider a very simple function in 2D\n\\[\nu(x, y) = x^2,\n\\]\nsuch that\n\\[\n\\frac{\\partial^2 u}{\\partial x^2} = 2.\n\\]\nUse domain \\([0, 4]\\times [0, 4]\\) and choose \\(\\Delta x = \\Delta y = 1\\). Create the Cartesian mesh:\n\nNx, Ny = 4, 4\nLx, Ly = Nx, Ny\nx = np.linspace(0, Lx, Nx+1)\ny = np.linspace(0, Ly, Ny+1)\nxij, yij = np.meshgrid(x, y, indexing='ij')\n\nFrom this mesh we can create the mesh function \\(u(x, y) = x^2\\)\n\nU = xij**2\nU\n\narray([[ 0.,  0.,  0.,  0.,  0.],\n       [ 1.,  1.,  1.,  1.,  1.],\n       [ 4.,  4.,  4.,  4.,  4.],\n       [ 9.,  9.,  9.,  9.,  9.],\n       [16., 16., 16., 16., 16.]])"
+  },
+  {
+    "objectID": "two-dimensional.html#how-to-compute-fracpartial2-upartial-x2",
+    "href": "two-dimensional.html#how-to-compute-fracpartial2-upartial-x2",
+    "title": "Two-dimensional problems",
+    "section": "How to compute \\(\\frac{\\partial^2 u}{\\partial x^2}\\)?",
+    "text": "How to compute \\(\\frac{\\partial^2 u}{\\partial x^2}\\)?\n\nUse the one-dimensional derivative matrix \\(D^{(2)}\\) along the first axis of \\(U=(u_{i,j})_{i,j=0}^{N_x, N_y}\\)\n\\[\nD^{(2)} U = \\sum_{k=0}^{N_x} d^{(2)}_{ik} u_{k,j}\n\\]\nSo \\(D^{(2)} U\\) is a matrix-matrix product between the two matrices \\(D^{(2)}\\in \\mathbb{R}^{(N_x+1)\\times (N_x+1)}\\) and \\(U \\in \\mathbb{R}^{(N_x+1) \\times (N_y+1)}\\), such that \\(D^{(2)}U \\in \\mathbb{R}^{(N_x+1) \\times (N_y+1)}\\)\n\n\n\nD = D2(Nx)\nprint(D @ U)\n\n[[2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]]\n\n\n\n\n\n\n\n\nVoila! The second derivative is 2 for all mesh points!"
+  },
+  {
+    "objectID": "two-dimensional.html#how-about-the-other-derivative-partial2-u-partial-y2",
+    "href": "two-dimensional.html#how-about-the-other-derivative-partial2-u-partial-y2",
+    "title": "Two-dimensional problems",
+    "section": "How about the other derivative \\(\\partial^2 u / \\partial y^2\\)?",
+    "text": "How about the other derivative \\(\\partial^2 u / \\partial y^2\\)?\n\nCreate another mesh function\n\\[\nu(x, y) = y^2,\n\\]\nsuch that again the second derivative \\(\\partial^2 u / \\partial y^2\\) should be 2. Create first \\(u\\)\n\nU = yij**2\nprint(U)\n\n[[ 0.  1.  4.  9. 16.]\n [ 0.  1.  4.  9. 16.]\n [ 0.  1.  4.  9. 16.]\n [ 0.  1.  4.  9. 16.]\n [ 0.  1.  4.  9. 16.]]\n\n\n\n\nNow since the derivative is along the second axis (the \\(y\\)-axis), we cannot simply do \\(D^{(2)} U\\) anymore. If we do we get zero\n\nprint(D @ U)\n\n[[0. 0. 0. 0. 0.]\n [0. 0. 0. 0. 0.]\n [0. 0. 0. 0. 0.]\n [0. 0. 0. 0. 0.]\n [0. 0. 0. 0. 0.]]"
+  },
+  {
+    "objectID": "two-dimensional.html#derivatives-along-y-direction",
+    "href": "two-dimensional.html#derivatives-along-y-direction",
+    "title": "Two-dimensional problems",
+    "section": "Derivatives along \\(y\\)-direction",
+    "text": "Derivatives along \\(y\\)-direction\nTo get a derivative along the second axis we need to apply the matrix \\(D^{(2)}\\) along the second axis of \\(U\\):\n\\[\n\\sum_{k=0}^{N_y} u_{i, k} d^{(2)}_{j, k}\n\\]\nIn matrix form this can be written as\n\\[\nU (D^{(2)})^T\n\\]\nwhich we can verify as follows\n\nprint(U @ D.T)\n\n[[2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]]"
+  },
+  {
+    "objectID": "two-dimensional.html#matrix-form-of-poissons-equation",
+    "href": "two-dimensional.html#matrix-form-of-poissons-equation",
+    "title": "Two-dimensional problems",
+    "section": "Matrix form of Poisson’s equation",
+    "text": "Matrix form of Poisson’s equation\nUsing now that \\(\\partial^2 u/\\partial x^2 = D_x^{(2)}U\\) and \\(\\partial^2 u/\\partial y^2 = U(D_y^{(2)})^T\\) we can write Poisson’s equation on discretized (and matrix) form as\n\\[\nD_x^{(2)} U + U (D_y^{(2)})^T = F,\n\\]\nwhere the mesh function \\(F = (f(x_i, y_j))_{i,j=0}^{N_x, N_y}\\).\n\n\n\n\n\n\n\nHow can we solve this equation for the unknown matrix \\(U\\)?\n\n\n\n\n\nCan we write this equation as\n\\[\nAx = b\n\\]\nwhere \\(A\\) is the coefficient matrix, \\(x\\) is the unknown vector and \\(b\\) is the rhs vector?\n\n\n\n\n\n\n\n\nCan we transform our unknown matrix \\(U\\) into a vector?"
+  },
+  {
+    "objectID": "two-dimensional.html#vectorization-the-vec-trick",
+    "href": "two-dimensional.html#vectorization-the-vec-trick",
+    "title": "Two-dimensional problems",
+    "section": "Vectorization (the vec-trick)",
+    "text": "Vectorization (the vec-trick)\nConsider first for simplicity a \\(2 \\times 2\\) matrix\n\\[\nA =\n\\begin{bmatrix}\na & b \\\\\nc & d\n\\end{bmatrix}\n\\]\nIn general, a row-major vectorization transforms the matrix into a vector as follows\n\\[\n\\begin{bmatrix}\na & b \\\\\nc & d\n\\end{bmatrix}\n\\longrightarrow\n\\begin{bmatrix}\na & b & c & d\n\\end{bmatrix}^T =\n\\begin{bmatrix}\na \\\\\nb \\\\\nc \\\\\nd\n\\end{bmatrix}\n\\]\nThis operation is referred to as vec(A) and thus\n\\[\n\\text{vec}(A) = \\begin{bmatrix}\na & b & c & d\n\\end{bmatrix}^T\n\\]\n\n\n\n\n\n\nNote\n\n\nThe vec-trick transforms a matrix into a vector! Just like numpy.ravel."
+  },
+  {
+    "objectID": "two-dimensional.html#vectorization-can-be-applied-to-equations",
+    "href": "two-dimensional.html#vectorization-can-be-applied-to-equations",
+    "title": "Two-dimensional problems",
+    "section": "Vectorization can be applied to equations",
+    "text": "Vectorization can be applied to equations\n\\[\n\\text{vec}\\left(D_x^{(2)}U + U (D_y^{(2)})^T \\right) = \\text{vec}(F),\n\\]\nand since vectorization is a linear process\n\\[\n\\text{vec}\\left(D_x^{(2)}U\\right) + \\text{vec}\\left(U (D_y^{(2)})^T \\right) = \\text{vec}(F).\n\\]\n\\[\n\\left(D_x^{(2)} \\otimes I_{y} + I_{x} \\otimes D_y^{(2)} \\right) \\text{vec}(U) = \\text{vec}(F).\n\\]\nThis is a linear equations of type \\(Ax=b\\), where \\(A = D_x^{(2)} \\otimes I_{y} + I_{x} \\otimes D_y^{(2)}\\), \\(x = \\text{vec}(U)\\) and \\(b = \\text{vec}(F)\\).\n\n\n\n\n\n\nNote\n\n\nVectorization is a linear process that allows us to transform a matrix into a vector. Through vectorization we can express matrix-multiplication through a larger matrix using the Kronecker product."
+  },
+  {
+    "objectID": "two-dimensional.html#what-about-matrix-products",
+    "href": "two-dimensional.html#what-about-matrix-products",
+    "title": "Two-dimensional problems",
+    "section": "What about matrix products?",
+    "text": "What about matrix products?\nPoisson’s equation contains matrix matrix products\n\\[\nD^{(2)}_x U + U (D^{(2)}_y)\n\\]\nHow can these be vectorized if we want to ravel U?\n\nEnter the Kronecker product!"
+  },
+  {
+    "objectID": "two-dimensional.html#vectorization-of-matrix-matrix-products",
+    "href": "two-dimensional.html#vectorization-of-matrix-matrix-products",
+    "title": "Two-dimensional problems",
+    "section": "Vectorization of matrix-matrix products",
+    "text": "Vectorization of matrix-matrix products\n\\[\nA =\n\\begin{bmatrix}\n  a_{00} & a_{01} \\\\\n  a_{10} & a_{11}\n\\end{bmatrix}\n\\quad \\text {and} \\quad\nB =\n\\begin{bmatrix}\n  b_{00} & b_{01} \\\\\n  b_{10} & b_{11}\n\\end{bmatrix}\n\\]\nLet\n\\[\nC = A B \\quad \\text{such that} \\quad c_{ij} = \\sum_{k\\in(0, 1)}a_{ik}b_{kj}\n\\]\nAnd as before\n\\[\n\\text{vec}(C) = \\begin{bmatrix}\nc_{00} &\nc_{01} &\nc_{10} &\nc_{11}\n\\end{bmatrix}^T\n\\quad\n\\text{vec}(B) = \\begin{bmatrix}\nb_{00} &\nb_{01} &\nb_{10} &\nb_{11}\n\\end{bmatrix}^T\n\\]\nHow do we find the matrix \\(M\\):\n\\[\n\\text{vec}(C) = \\text{vec}(AB) = M \\text{vec}(B)\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#how-to-vectorize-matrix-matrix-products",
+    "href": "two-dimensional.html#how-to-vectorize-matrix-matrix-products",
+    "title": "Two-dimensional problems",
+    "section": "How to vectorize matrix-matrix products ?",
+    "text": "How to vectorize matrix-matrix products ?\n\\[\n\\text{vec}(C) = \\text{vec}(AB) = M \\text{vec}(B)\n\\]\n\\[\n\\underbrace{\n\\begin{bmatrix}\nc_{00} \\\\\nc_{01} \\\\\nc_{10} \\\\\nc_{11}\n\\end{bmatrix}}_{\\text{vec}(C)} =\n\\underbrace{\n\\begin{bmatrix}\nm_{00} & m_{01} & m_{02} & m_{03} \\\\\nm_{10} & m_{11} & m_{12} & m_{13} \\\\\nm_{20} & m_{21} & m_{22} & m_{23} \\\\\nm_{30} & m_{31} & m_{32} & m_{33} \\\\\n\\end{bmatrix}}_{M}\n\\underbrace{\n\\begin{bmatrix}\nb_{00} \\\\\nb_{01} \\\\\nb_{10} \\\\\nb_{11}\n\\end{bmatrix}}_{\\text{vec}(B)}\n\\]\nHow to find \\(M\\)?\n\nNote that from \\(c_{ij} = a_{i0}b_{0j} + a_{i1}b_{1j}\\) we have:\n\\[\n\\begin{align*}\nc_{00} &= a_{00}b_{00} + a_{01}b_{10} \\\\\nc_{01} &= a_{00}b_{01} + a_{01}b_{11} \\\\\nc_{10} &= a_{10}b_{00} + a_{11}b_{10} \\\\\nc_{11} &= a_{10}b_{01} + a_{11}b_{11}\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#hence",
+    "href": "two-dimensional.html#hence",
+    "title": "Two-dimensional problems",
+    "section": "Hence",
+    "text": "Hence\n\\[\nC = AB \\quad \\text{and thus} \\quad c_{ij} = a_{i0}b_{0j} + a_{i1}b_{1j}\n\\]\nis obtained for the following matrix \\(M\\)\n\\[\n\\underbrace{\n\\begin{bmatrix}\nc_{00} \\\\\nc_{01} \\\\\nc_{10} \\\\\nc_{11}\n\\end{bmatrix}}_{\\text{vec}(C)} =\n\\underbrace{\n\\begin{bmatrix}\na_{00} & 0 & a_{01} & 0 \\\\\n0 & a_{00} & 0 & a_{01} \\\\\na_{10} & 0 & a_{11} & 0 \\\\\n0 & a_{10} & 0 & a_{11} \\\\\n\\end{bmatrix}}_{M}\n\\underbrace{\n\\begin{bmatrix}\nb_{00} \\\\\nb_{01} \\\\\nb_{10} \\\\\nb_{11}\n\\end{bmatrix}}_{\\text{vec}(B)}\n\\]\n\nJust check that this corresponds to \\[\n\\begin{align*}\nc_{00} &= a_{00}b_{00} + a_{01}b_{10} \\\\\nc_{01} &= a_{00}b_{01} + a_{01}b_{11} \\\\\nc_{10} &= a_{10}b_{00} + a_{11}b_{10} \\\\\nc_{11} &= a_{10}b_{01} + a_{11}b_{11}\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#the-kronecker-product",
+    "href": "two-dimensional.html#the-kronecker-product",
+    "title": "Two-dimensional problems",
+    "section": "The Kronecker product",
+    "text": "The Kronecker product\nIf \\(A\\) and \\(B\\) are matrices of dimensions \\(p \\times q\\) and \\(r \\times s\\), respectively, then \\(A \\otimes B\\) is the matrix of dimension \\(pr \\times qs\\), with \\(p \\times q\\) block form, where the \\(i, j\\) block is \\(a_{ij}B\\). The Kronecker product is most simply illustrated for two small matrices of shape \\(2 \\times 2\\):\n\\[\n\\begin{bmatrix}\n  1 & 2 \\\\\n  3 & 4\n\\end{bmatrix}\n\\otimes\n\\begin{bmatrix}\n  a & b \\\\\n  c & d\n\\end{bmatrix}\n=\n\\left(\\begin{array}{c|c}\n  \\begin{matrix}\n  a & b \\\\\n  c & d\n  \\end{matrix}\n  &  \\begin{matrix}\n  2a & 2b \\\\\n  2c & 2d\n  \\end{matrix} \\\\\n\\hline\n  \\begin{matrix}\n  3a & 3b \\\\\n  3c & 3d\n  \\end{matrix} &\n  \\begin{matrix}\n  4a & 4b \\\\\n  4c & 4d\n  \\end{matrix}\n\\end{array}\\right)\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#for-diagonal-matrices-it-is-simpler",
+    "href": "two-dimensional.html#for-diagonal-matrices-it-is-simpler",
+    "title": "Two-dimensional problems",
+    "section": "For diagonal matrices it is simpler",
+    "text": "For diagonal matrices it is simpler\n\\[\n\\begin{bmatrix}\n  1 & 0 \\\\\n  0 & 1\n\\end{bmatrix}\n\\otimes\n\\begin{bmatrix}\n  a & b \\\\\n  c & d\n\\end{bmatrix}\n=\n\\left(\\begin{array}{c|c}\n  \\begin{matrix}\n  a & b \\\\\n  c & d\n  \\end{matrix}\n  &\n  \\begin{matrix}\n   0 & 0 \\\\\n   0 & 0\n   \\end{matrix}\n   \\\\\n\\hline\n  \\begin{matrix}\n   0 & 0 \\\\\n   0 & 0\n   \\end{matrix} &\n  \\begin{matrix}\n  a & b \\\\\n  c & d\n  \\end{matrix}\n\\end{array}\\right)\n\\]\nand\n\\[\n\\begin{bmatrix}\n  a & b \\\\\n  c & d\n\\end{bmatrix}\n\\otimes\n\\begin{bmatrix}\n  1 & 0 \\\\\n  0 & 1\n\\end{bmatrix}\n=\n\\left(\\begin{array}{c|c}\n  \\begin{matrix}\n  a & 0 \\\\\n  0 & a\n  \\end{matrix}\n  &  \\begin{matrix}\n  b & 0 \\\\\n  0 & b\n  \\end{matrix} \\\\\n\\hline\n  \\begin{matrix}\n  c & 0 \\\\\n  0 & c\n  \\end{matrix} &\n  \\begin{matrix}\n  d & 0 \\\\\n  0 & d\n  \\end{matrix}\n\\end{array}\\right)\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#the-vec-trick-for-matrix-products",
+    "href": "two-dimensional.html#the-vec-trick-for-matrix-products",
+    "title": "Two-dimensional problems",
+    "section": "The vec-trick for matrix products",
+    "text": "The vec-trick for matrix products\nA very useful result is\n\\[\n\\text{vec}(ABC^T) = (A \\otimes C) \\text{vec}(B)\n\\]\n\nHence in the example from before with \\(C=AB\\):\n\\[\\text{vec}(C) = \\text{vec}(AB) = \\text{vec}(ABI) = (A \\otimes I) \\text{vec}(B)\\]\n\\[\nA \\otimes I =\n\\begin{bmatrix}\na_{00} & 0 & a_{01} & 0 \\\\\n0 & a_{00} & 0 & a_{01} \\\\\na_{10} & 0 & a_{11} & 0 \\\\\n0 & a_{10} & 0 & a_{11} \\\\\n\\end{bmatrix}\n\\] where \\(I\\) is the identity matrix."
+  },
+  {
+    "objectID": "two-dimensional.html#the-vec-trick-for-derivatives-in-2d",
+    "href": "two-dimensional.html#the-vec-trick-for-derivatives-in-2d",
+    "title": "Two-dimensional problems",
+    "section": "The vec-trick for derivatives in 2D",
+    "text": "The vec-trick for derivatives in 2D\nConsider the second derivative in the \\(x\\)-direction\n\\[\n\\frac{\\partial^2 u}{ \\partial x^2}\n\\]\nWith regular matrices we can compute this as\n\n\n\\[\nD^{(2)}_x U\n\\]\n\n\nU = xij**2\nD @ U\n\narray([[2., 2., 2., 2., 2.],\n       [2., 2., 2., 2., 2.],\n       [2., 2., 2., 2., 2.],\n       [2., 2., 2., 2., 2.],\n       [2., 2., 2., 2., 2.]])\n\n\n\n\n\n\n\n\n\n\nHow to compute the second derivative using vectorization?"
+  },
+  {
+    "objectID": "two-dimensional.html#the-vectorized-poisson-equation",
+    "href": "two-dimensional.html#the-vectorized-poisson-equation",
+    "title": "Two-dimensional problems",
+    "section": "The vectorized Poisson equation",
+    "text": "The vectorized Poisson equation\n\\[\n\\left(D_x^{(2)} \\otimes I_{y} + I_{x} \\otimes D_y^{(2)} \\right) \\text{vec}(U) = \\text{vec}(F).\n\\]\nThis is a linear equations of type \\(Ax=b\\), where \\(A = D_x^{(2)} \\otimes I_{y} + I_{x} \\otimes D_y^{(2)}\\), \\(x = \\text{vec}(U)\\) and \\(b = \\text{vec}(F)\\).\n\n\n\n\n\n\nNote\n\n\nVectorization is a linear process that allows us to transform a matrix into a vector. Through vectorization we can express matrix-multiplication through a larger matrix using the Kronecker product."
+  },
+  {
+    "objectID": "two-dimensional.html#second-derivative-with-vecgtorization",
+    "href": "two-dimensional.html#second-derivative-with-vecgtorization",
+    "title": "Two-dimensional problems",
+    "section": "Second derivative with vecgtorization",
+    "text": "Second derivative with vecgtorization\n\\[\n\\text{vec}(D^{(2)}_x U) = \\text{vec}({D^{(2)}_x U I}) = \\underbrace{(D^{(2)}_x \\otimes I)}_{M} \\text{vec}(U)\n\\]\nImplementation using scipy.sparse\n\nM = sparse.kron(D, sparse.eye(Ny+1))\nd2u = M @ U.ravel()\nprint(d2u.reshape(U.shape))\n\n[[2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]]\n\n\nSame exact result! Since the result d2u is a 1D array, we reshape into matrix form."
+  },
+  {
+    "objectID": "two-dimensional.html#second-derivative-with-vectorization",
+    "href": "two-dimensional.html#second-derivative-with-vectorization",
+    "title": "Two-dimensional problems",
+    "section": "Second derivative with vectorization",
+    "text": "Second derivative with vectorization\n\\[\n\\text{vec}(D^{(2)}_x U) = \\text{vec}({D^{(2)}_x U I}) = \\underbrace{(D^{(2)}_x \\otimes I)}_{M} \\text{vec}(U)\n\\]\nImplementation using scipy.sparse\n\nM = sparse.kron(D, sparse.eye(Ny+1))\nd2u = M @ U.ravel()\nprint(d2u.reshape(U.shape))\n\n[[2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]\n [2. 2. 2. 2. 2.]]\n\n\nSame exact result! Since the result d2u is a 1D array, we reshape into matrix form."
+  },
+  {
+    "objectID": "two-dimensional.html#the-laplace-operator",
+    "href": "two-dimensional.html#the-laplace-operator",
+    "title": "Two-dimensional problems",
+    "section": "The Laplace operator",
+    "text": "The Laplace operator\nThe Laplace operator \\(\\nabla^2\\) applied to a two-dimensional field \\(u(x, y)\\) in Cartesian coordinates is\n\\[\n\\nabla^2 u = \\frac{\\partial^2 u}{\\partial x^2} + \\frac{\\partial^2 u}{\\partial y^2}\n\\]\nDiscretized on a structured Cartesian mesh we get\n\\[\n\\nabla^2 u \\approx \\left(D_x^{(2)} \\otimes I_{y} + I_{x} \\otimes D_y^{(2)} \\right) \\text{vec}(U)\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#implementation-laplace",
+    "href": "two-dimensional.html#implementation-laplace",
+    "title": "Two-dimensional problems",
+    "section": "Implementation Laplace",
+    "text": "Implementation Laplace\n\ndef laplace(dx, dy, Nx, Ny):\n    D2x = (1./dx**2)*D2(Nx)\n    D2y = (1./dy**2)*D2(Ny)\n    return (sparse.kron(D2x, sparse.eye(Ny+1)) +\n            sparse.kron(sparse.eye(Nx+1), D2y))\n\nWe are now almost ready to solve the Poisson equation\n\\[\n\\nabla^2 u(x, y) = f(x, y), \\quad (x, y) \\in \\Omega = (0, 1) \\times (0, 1)\n\\]\nwith Dirichlet boundary conditions \\(u(x, y) = 0\\) at all four sides.\n\n\n\n\n\n\n\nBut how to fix boundary conditions?"
+  },
+  {
+    "objectID": "two-dimensional.html#boundary-conditions",
+    "href": "two-dimensional.html#boundary-conditions",
+    "title": "Two-dimensional problems",
+    "section": "Boundary conditions",
+    "text": "Boundary conditions\nIn order to set Dirichlet boundary conditions we need to set the value of \\(U\\) to zero on all four boundaries:\n\\[\n\\begin{align*}\nu_{0, j} = 0 \\quad j \\in \\{0, 1, \\ldots, N_y\\}, \\\\\nu_{N_x, j} = 0 \\quad j \\in \\{0, 1, \\ldots, N_y\\},\\\\\nu_{i, 0} = 0 \\quad i \\in \\{0, 1, \\ldots, N_x\\}, \\\\\nu_{i, N_y} = 0 \\quad i \\in \\{0, 1, \\ldots, N_x\\}.\n\\end{align*}\n\\]\nBut where are all the boundary points? Can we manipulate the matrix \\(M\\) in order to fix Dirichlet boundary conditions?\nWe can do this by identing all rows of M corresponding to a boundary point. But which indices in M correspond to boundaries? We can find this easily with a little slicing and trickery. Lets create a mesh function B that is one on the boundary and zero elsewhere"
+  },
+  {
+    "objectID": "two-dimensional.html#section-1",
+    "href": "two-dimensional.html#section-1",
+    "title": "Two-dimensional problems",
+    "section": "",
+    "text": "Lets use the method of manufactured solutions and guess a solution\n\\[\nu(x, y) = x(1-x)y(1-y)\\exp(\\cos(4 \\pi x)\\sin(2 \\pi y)),\n\\]\nand use a computational domain \\(\\Omega = [0, 1] \\times [0, 1]\\)."
+  },
+  {
+    "objectID": "two-dimensional.html#find-the-boundary-points",
+    "href": "two-dimensional.html#find-the-boundary-points",
+    "title": "Two-dimensional problems",
+    "section": "Find the boundary points",
+    "text": "Find the boundary points\n\nNx, Ny = 30, 30\nB = np.ones((Nx+1, Ny+1), dtype=bool)\nB[1:-1, 1:-1] = 0\nfig = plt.figure(figsize=(3, 3))\nplt.imshow(B, cmap='gray_r')\nplt.gca().axis('off')\n\n\n\n\n\n\n\n\nFind all the points in the vectorized array \\(\\text{vec}(B)\\) that equals 1:\n\nbnds = np.where(B.ravel() == 1)[0]\nprint(bnds)\n\n[  0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17\n  18  19  20  21  22  23  24  25  26  27  28  29  30  31  61  62  92  93\n 123 124 154 155 185 186 216 217 247 248 278 279 309 310 340 341 371 372\n 402 403 433 434 464 465 495 496 526 527 557 558 588 589 619 620 650 651\n 681 682 712 713 743 744 774 775 805 806 836 837 867 868 898 899 929 930\n 931 932 933 934 935 936 937 938 939 940 941 942 943 944 945 946 947 948\n 949 950 951 952 953 954 955 956 957 958 959 960]"
+  },
+  {
+    "objectID": "two-dimensional.html#ident-vectorized-laplace-matrix-for-all-boundary-points",
+    "href": "two-dimensional.html#ident-vectorized-laplace-matrix-for-all-boundary-points",
+    "title": "Two-dimensional problems",
+    "section": "Ident vectorized Laplace matrix for all boundary points",
+    "text": "Ident vectorized Laplace matrix for all boundary points\n\nLx, Ly = 1, 1\nA = laplace(Lx/Nx, Ly/Ny, Nx, Ny)\nA = A.tolil()\nfor i in bnds:\n    A[i] = 0\n    A[i, i] = 1\nA = A.tocsr()"
+  },
+  {
+    "objectID": "two-dimensional.html#solve-problem",
+    "href": "two-dimensional.html#solve-problem",
+    "title": "Two-dimensional problems",
+    "section": "Solve problem",
+    "text": "Solve problem\nLets use the method of manufactured solutions and guess a solution\n\\[\nu(x, y) = x(1-x)y(1-y)\\exp(\\cos(4 \\pi x)\\sin(2 \\pi y)),\n\\]\nThe right hand side function \\(f(x, y)\\) is then\n\nimport sympy as sp\nx, y = sp.symbols('x,y')\nue = x*(1-x)*y*(1-y)*sp.exp(sp.cos(4*sp.pi*x)*sp.sin(2*sp.pi*y))\nf = ue.diff(x, 2) + ue.diff(y, 2)\n\nThe 2D mesh and mesh function F can be computed as\n\ndef mesh2D(Nx, Ny, Lx, Ly):\n    x = np.linspace(0, Lx, Nx+1)\n    y = np.linspace(0, Ly, Ny+1)\n    return np.meshgrid(x, y, indexing='ij')\nxij, yij = mesh2D(Nx, Ny, Lx, Ly)\nF = sp.lambdify((x, y), f)(xij, yij)\nb = F.ravel()\nb[bnds] = 0"
+  },
+  {
+    "objectID": "two-dimensional.html#solve",
+    "href": "two-dimensional.html#solve",
+    "title": "Two-dimensional problems",
+    "section": "Solve!",
+    "text": "Solve!\n\nU = sparse.linalg.spsolve(A, b)\nU = np.reshape(U, (Nx+1, Ny+1))\nplt.contourf(xij, yij, U, 100);"
+  },
+  {
+    "objectID": "two-dimensional.html#summary",
+    "href": "two-dimensional.html#summary",
+    "title": "Two-dimensional problems",
+    "section": "Summary",
+    "text": "Summary\n\nTwo-dimensional problems on simple Cartesian domains make use of Cartesian products to create structured uniform meshes.\nIn 2D the unknown meshfunction \\(U=(u_{ij})_{i,j=0}^{N_x,N_y}\\) is a matrix and not a vector.\nIn order to use regular linear algebra solvers and recast the problem as \\[Ax=b\\] we make use of the veck-trick and the Kronecker product\nThe vec-trick transforms a matrix into a vector \\[\nA = \\begin{bmatrix}\na & b \\\\ c & d\n\\end{bmatrix} \\quad \\rightarrow \\quad\n\\text{vec}(A) = \\begin{bmatrix}\na & b & c & d\n\\end{bmatrix}^T\n\\]\nThe vec-trick transforms matrix-matrix products using the Kronecker product \\[\\text{vec}(ABC^T) = (A \\otimes C) \\text{vec}(B)\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#the-uniform-rectangle",
+    "href": "two-dimensional.html#the-uniform-rectangle",
+    "title": "Two-dimensional problems",
+    "section": "The uniform rectangle",
+    "text": "The uniform rectangle\n\n\n\n\n\n\n\n\n\n\n\n\nBoundary conditions on any side may be a function of the non-constant variable \\[\\begin{align*}\n\\color{red}{ u(x=0, y)} &= f(y) \\\\\n\\color{blue}{u(x, y=0)} &= f(x)\n\\end{align*}\\]\nwhere \\(f\\) is a function of one variable, \\(f: \\mathbb{R}\\rightarrow \\mathbb{R}\\)\n\n\n\n\n\n\n\nNote\n\n\nThe boundary conditions need to be consistent in the corners, because each corner belongs to two sides."
+  },
+  {
+    "objectID": "two-dimensional.html#to-avoid-or-increase-confusion",
+    "href": "two-dimensional.html#to-avoid-or-increase-confusion",
+    "title": "Two-dimensional problems",
+    "section": "To avoid (or increase?) confusion",
+    "text": "To avoid (or increase?) confusion\nYou can also choose Cartesian indexing for the meshgrid\n\nx = np.linspace(0, Lx, Nx+1)\ny = np.linspace(0, Ly, Ny+1)\nmesh = np.meshgrid(x, y, indexing='xy')\nmesh\n\n(array([[0., 1., 2., 3.],\n        [0., 1., 2., 3.],\n        [0., 1., 2., 3.]]),\n array([[0., 0., 0., 0.],\n        [1., 1., 1., 1.],\n        [2., 2., 2., 2.]]))\n\n\nBut it is still not completely as expected, because \\(y\\) is increasing downwards!"
+  },
+  {
+    "objectID": "two-dimensional.html#summary-2",
+    "href": "two-dimensional.html#summary-2",
+    "title": "Two-dimensional problems",
+    "section": "Summary 2",
+    "text": "Summary 2\n\nThe Poisson equation in 2D reads \\[\nD_x^{(2)} U + U (D_y^{(2)})^T = F\n\\]\nRegular linear algebra cannot easily solve the above since the unknown is a matrix. Hence we transform the equation using the vec-trick \\[\n\\underbrace{\\left(D_x^{(2)} \\otimes I_{y} + I_{x} \\otimes D_y^{(2)} \\right)}_{M} \\text{vec}(U) = \\text{vec}(F)\n\\]\nand solve \\[\n\\text{vec}(U) = M^{-1} \\text{vec}(F)\n\\]"
+  },
+  {
+    "objectID": "two-dimensional.html#summary-continued",
+    "href": "two-dimensional.html#summary-continued",
+    "title": "Two-dimensional problems",
+    "section": "Summary continued",
+    "text": "Summary continued\n\nThe Poisson equation in 2D reads \\[\nD_x^{(2)} U + U (D_y^{(2)})^T = F\n\\]\nRegular linear algebra cannot easily solve the above since the unknown is a matrix. Hence we transform the equation using the vec-trick \\[\n\\underbrace{\\left(D_x^{(2)} \\otimes I_{y} + I_{x} \\otimes D_y^{(2)} \\right)}_{M} \\text{vec}(U) = \\text{vec}(F)\n\\]\nand solve \\[\n\\text{vec}(U) = M^{-1} \\text{vec}(F)\n\\]"
   }
 ]
