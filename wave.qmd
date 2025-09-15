@@ -1058,7 +1058,7 @@ $$
 \frac{u^{n+1}_j - 2u^n_j + u^{n-1}_j}{\Delta t^2} = c^2 \frac{u^n_{j+1}-2 u^{n}_j + u^n_{j-1}}{\Delta x^2}
 $$
 
-and solve for $A$. We get
+and solve for $A$. For stability we need $|A|=1$. We get
 
 $$
 \frac{\left(A^{n+1} - 2A^n + A^{n-1} \right) e^{ikx_j}}{\Delta t^2} = c^2 A^n \frac{e^{ik(x_j+\Delta x)} - 2e^{ikx_j} + e^{ik(x_j-\Delta x)}}{\Delta x^2}
@@ -1098,7 +1098,7 @@ $$
 A = \frac{\beta \pm \sqrt{\beta^2-4}}{2}
 $$
 
-We see that $|A| = 1$ for any real numbers $-2 \le \beta \le 2$.
+We see that $|A| = 1$ for any real numbers $-2 \le \beta \le 2$. (Also, $\beta < -2 \rightarrow$ negative $A$).
 
 ::: {.callout-note}
 # For all real numbers $-2 \le \beta \le 2$
@@ -1111,7 +1111,7 @@ since $|\beta \pm \sqrt{\beta^2-4}| = |\beta + i \sqrt{4-\beta^2}| = \sqrt{\beta
 
 :::
 
-## For $|A| \le 1$ and stability we need $-2 \le \beta \le 2$ and thus {.smaller}
+## For $|A| = 1$ and stability we need $-2 \le \beta \le 2$ and thus {.smaller}
 
 $$
 -2 \le 2(1+C^2(\cos(k\Delta x)-1)) \le 2

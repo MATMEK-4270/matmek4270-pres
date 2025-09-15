@@ -1,0 +1,1345 @@
+---
+title: "Two-dimensional problems"
+subtitle: "MATMEK-4270"
+author: "Prof. Mikael Mortensen, University of Oslo"
+
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    preview-links: auto
+    css: styles.css
+    embed-resources: false
+
+pandoc:
+  to: revealjs
+  standalone: false
+  wrap: none
+  default-image-extension: png
+  html-math-method:
+    method: mathjax
+    url: >-
+      https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  slide-level: 2
+---
+
+## Important topics todays lecture {.smaller}
+
+* The Cartesian product - definition and the use for computational meshes
+* The finite difference method in 2D for the Laplace operator
+* The vec-trick (also referred to as vectorization, but not the same as Numpy vectorization)
+* The Kronecker product
+
+## Two-dimensional spatial domain {.smaller}
+
+We start by considering the Poisson equation
+
+$$
+\nabla^2 u = f,
+$$
+
+which in two-dimensional Cartesian coordinates is
+
+$$
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = f.
+$$
+
+We consider the equation for a rectangular domain
+
+$$(x, y) \in [0, L_x] \times [0, L_y],$$
+
+and Dirichlet boundary conditions.
+
+## The uniform rectangle {.smaller}
+
+:::{.columns}
+
+:::{.column}
+
+```{python}
+#| echo: false
+#| fig-align: center
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+fig = plt.figure(figsize=(5, 5))
+N = 8
+for i in range(1, N-1):
+    plt.plot((0, N-1), (i, i), 'k')
+for j in range(1, N-1):
+    plt.plot((j, j), (0, N-1), 'k')
+plt.plot((0, 0), (0, N-1), 'r')
+plt.plot((N-1, N-1), (0, N-1), 'g')
+plt.plot((0, N-1), (0, 0), 'b')
+plt.plot((0, N-1), (N-1, N-1), 'm')
+plt.arrow(-1, -1, 1, 0, head_width=0.2)
+plt.arrow(-1, -1, 0, 1, head_width=0.2)
+plt.text(0.4, -1, "x")
+plt.text(-1, 0.6, "y")
+plt.text(-0.2, -0.2, "$0$")
+plt.text(N-1.1, -0.3, "$L_x$")
+plt.text(-0.5, N-1, "$L_y$")
+plt.text(N-1+0.2, (N-1)/2-0.5, "${u(x=L_x, y)}$", color='g', rotation='vertical')
+plt.text(-0.5, (N-1)/2-0.5, "${u(x=0, y)}$", color='r', rotation='vertical')
+plt.text((N-1)/2-0.7, -0.3, "${u(x, y=0)}$", color='b')
+plt.text((N-1)/2-0.7, N-1+0.2, "${u(x, y=L_y)}$", color='m')
+ax = fig.gca()
+
+ax.axis('off')
+ax.axis('equal');
+```
+:::
+
+:::{.column}
+
+Boundary conditions on any side may be a function of the non-constant variable
+\begin{align*}
+\color{red}{ u(x=0, y)} &= f(y) \\
+\color{blue}{u(x, y=0)} &= f(x)
+\end{align*}
+
+where $f$ is a function of one variable, $f: \mathbb{R}\rightarrow \mathbb{R}$
+:::
+:::
+
+
+::: {.callout-note}
+The boundary conditions need to be consistent in the corners, because each corner belongs to two sides.
+:::
+
+## Discretization {.smaller}
+
+We discretize the mesh using two lines, one in the $x$-direction and one in the $y$-direction:
+
+$$
+x_i = i \Delta x, \quad i = 0, 1, \ldots, N_x
+$$
+
+$$
+y_j = j \Delta y, \quad j = 0, 1, \ldots, N_y
+$$
+
+where $\Delta x = L_x/N_x$ and $\Delta y = L_y/N_y$. Vector notation for the mesh is
+
+$$
+\boldsymbol{x} = (x_0, x_1, \ldots, x_{N_x})
+$$
+$$
+\boldsymbol{y} = (y_0, y_1, \ldots, y_{N_y})
+$$
+
+::: {.fragment}
+
+::: {.callout-note appearance="simple"}
+<span style="font-size: 2.0em;">How do we create the 2D mesh?</span>
+:::
+
+:::
+
+## Cartesian products! {.smaller}
+
+Consider the two [tuples](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences)
+
+$$\boldsymbol{u}=(1, 2, 3) \quad \boldsymbol{v}=(4, 5)$$
+
+::: {.fragment}
+Compute the **Cartesian product** of these two tuples using the Python package [itertools](https://docs.python.org/3/library/itertools.html)
+
+```{python}
+#| echo: true
+import itertools
+u = (1, 2, 3)
+v = (4, 5)
+uxv = itertools.product(u, v)
+tuple(uxv)
+```
+
+::: {.callout-note appearance="simple"}
+The outcome is a tuple containing all possible ordered pairs of items, where the first item is from $\boldsymbol{u}$ and the second from $\boldsymbol{v}$.
+:::
+
+:::
+::: {.fragment}
+::: {.callout-note}
+* Tuples are *immutable* sequences.
+:::
+:::
+
+## Mathematical description of the Cartesian product {.smaller}
+
+The Cartesian product can be described mathematically as
+
+$$
+\boldsymbol{u} \times \boldsymbol{v} = \{ (u, v) \, | \,  u \in \boldsymbol{u} \text{ and } v \in \boldsymbol{v} \},
+$$
+
+which reads the set of all pairs $(u, v)$ such that $u$ is in the set $\boldsymbol{u}$ and $v$ in the set $\boldsymbol{v}$.
+
+::: {.callout-note}
+* Sets are unordered collections with no duplicate elements.
+* Sets are written with curly brackets.
+* The pairs $(u, v)$ are not sets since the order of the numbers is important.
+* itertools work on any kind of sequence.
+:::
+
+::: {.fragment}
+::: {.callout-note}
+## Why is this relevant for computational meshes?
+:::
+:::
+
+## Structured 2D meshes {.smaller}
+
+We have grid lines
+$$
+\boldsymbol{x} = (x_0, x_1, \ldots, x_{N_x}) = (0, \Delta x, 2 \Delta x, \ldots, L_x)
+$$
+$$
+\boldsymbol{y} = (y_0, y_1, \ldots, y_{N_y}) = (0, \Delta y, 2 \Delta y, \ldots, L_y)
+$$
+
+```{python}
+#| echo: false
+#| fig-align: center
+fig = plt.figure(figsize=(7, 7))
+for i in range(3):
+    plt.plot((0, 3), (i, i), 'grey')
+for j in range(4):
+    plt.plot((j, j), (0, 2), 'grey')
+
+Dx = {0: '0', 1: r'$\Delta x$', 2: r'$2 \Delta x$', 3: r'$3\Delta x$' }
+Dy = {0: '0', 1: r'$\Delta y$', 2: r'$2 \Delta y$', 3: r'$3\Delta y$' }
+for i in range(4):
+    for j in range(3):
+        plt.plot(i, j, 'ko')
+        plt.text(i-0.18, j+0.07, f'({Dx[i]}, {Dy[j]})')
+plt.arrow(-0.5, -0.5, 0.5, 0, head_width=0.1)
+plt.arrow(-0.5, -0.5, 0, 0.5, head_width=0.1)
+plt.text(0.3, -0.5, '$x$')
+plt.text(-0.55, 0.3, '$y$')
+ax = fig.gca()
+ax.axis('off')
+ax.axis('equal');
+```
+
+
+## The computational mesh is a Cartesian product! {.smaller}
+
+The mesh is all pairs $(x, y)$ such that $x$ is in $\boldsymbol{x}$ and $y$ is in $\boldsymbol{y}$.
+
+$$
+\boldsymbol{x} \times \boldsymbol{y} = \{(x, y) \, | \, x \in \boldsymbol{x} \text{ and } y \in \boldsymbol{y} \}
+$$
+
+
+```{python}
+#| echo: false
+#| fig-align: center
+fig = plt.figure(figsize=(7, 7))
+for i in range(3):
+    plt.plot((0, 3), (i, i), 'grey')
+for j in range(4):
+    plt.plot((j, j), (0, 2), 'grey')
+
+Dx = {0: '0', 1: r'$\Delta x$', 2: r'$2 \Delta x$', 3: r'$3\Delta x$' }
+Dy = {0: '0', 1: r'$\Delta y$', 2: r'$2 \Delta y$', 3: r'$3\Delta y$' }
+for i in range(4):
+    for j in range(3):
+        plt.plot(i, j, 'ko')
+        plt.text(i-0.18, j+0.07, f'({Dx[i]}, {Dy[j]})')
+plt.arrow(-0.5, -0.5, 0.5, 0, head_width=0.1)
+plt.arrow(-0.5, -0.5, 0, 0.5, head_width=0.1)
+plt.text(0.3, -0.5, '$x$')
+plt.text(-0.55, 0.3, '$y$')
+ax = fig.gca()
+ax.axis('off')
+ax.axis('equal');
+```
+
+## The Cartesian product is a 1D array of pairs {.smaller}
+
+```{python}
+#| echo: true
+xy = list(itertools.product([0, 1, 2, 3], [0, 1, 2]))
+print(xy)
+```
+
+It is the same as a double for-loop
+
+```{python}
+#| echo: true
+print([(a, b) for a in range(4) for b in range(3)])
+```
+
+::: {.fragment}
+
+However, the numbers are naturally seen as points in a 2D mesh:
+```{python}
+#| fig-align: center
+fig = plt.figure(figsize=(5, 5))
+for i in range(3):
+    plt.plot((0, 3), (i, i), 'grey')
+for j in range(4):
+    plt.plot((j, j), (0, 2), 'grey')
+for m in xy:
+    plt.text(m[0], m[1], f'({m[0]}, {m[1]})', horizontalalignment='center')
+
+ax = fig.gca()
+ax.axis('off')
+ax.axis('equal');
+```
+
+:::
+
+## A complicating factor for the mesh {.smaller}
+
+```{python}
+#| fig-align: center
+fig = plt.figure(figsize=(5, 5))
+for i in range(3):
+    plt.plot((0, 3), (i, i), 'grey')
+for j in range(4):
+    plt.plot((j, j), (0, 2), 'grey')
+for m in xy:
+    plt.text(m[0], m[1], f'({m[0]}, {m[1]})', horizontalalignment='center')
+
+ax = fig.gca()
+ax.axis('off')
+ax.axis('equal');
+```
+
+::: {.callout-note}
+* If this mesh was a 2D matrix, then $i$ and $j$ in $(i, j)$ would represent column and row, respectively, which is counterintuitive.
+* We normally think about a matrix $A$ with items $a_{ij}$, where the first index $i$ represents row and second $j$ represents column.
+* This is a complicating factor for the Cartesian mesh that is important to be aware of. But it is not a mistake. The numbers in the plot above are not indices of a matrix, they represent $(x, y)$ in a Cartesian mesh!
+:::
+
+
+## Numpy meshgrid {.smaller}
+
+Let us now compute our Cartesian mesh using [numpy.meshgrid](https://numpy.org/doc/stable/reference/generated/numpy.meshgrid.html). We have the 1D mesh arrays
+
+$$
+\boldsymbol{x} = (0, 1, 2, 3) \quad \text{ and } \quad
+\boldsymbol{y} = (0, 1, 2),
+$$
+
+where we have chosen $\Delta x = \Delta y = 1$ just for simplicity. An implementation goes like
+
+```{python}
+#| echo: true
+Nx = 3
+Ny = 2
+Lx = Nx
+Ly = Ny
+x = np.linspace(0, Lx, Nx+1)
+y = np.linspace(0, Ly, Ny+1)
+mesh = np.meshgrid(x, y, indexing='ij')
+mesh
+```
+
+## Mesh ordering {.smaller}
+
+Numpy.meshgrid returns two arrays of shape $4 \times 3$
+
+```{python}
+#| echo: true
+mesh = np.meshgrid(x, y, indexing='ij')
+mesh
+```
+
+::: {.callout-note}
+* The first array represents the $x$-coordinate, and it increases along columns.
+* The second array represents the $y$-coordinate, and it increases along rows.
+:::
+
+```{python}
+fig = plt.figure(figsize=(2, 2))
+plt.arrow(0, 0, 1, 0, head_width=0.1);plt.text(0, -1.3, 'x')
+plt.arrow(0, 0, 0, -1, head_width=0.1);plt.text(1.3, 0, 'y')
+fig.gca().axis('off');
+```
+
+## The mesh is opposite to a Cartesian mesh! {.smaller}
+
+We excpect a coordinate system to be like
+
+```{python}
+fig = plt.figure(figsize=(2, 2))
+plt.arrow(0, 0, 1, 0, head_width=0.1);plt.text(1.3, 0, 'x')
+plt.arrow(0, 0, 0, 1, head_width=0.1);plt.text(0, 1.3, 'y')
+fig.gca().axis('off');
+```
+
+However, there is no mistake. This is simply how matrices are stored.
+
+
+## It all comes out nicely in plots though {.smaller}
+
+```{python}
+#| echo: true
+#| code-line-numbers: 1,4-5
+x, y = mesh
+fig, (ax0, ax1) = plt.subplots(nrows=1, ncols=2, sharex=True,
+                                    figsize=(10, 3))
+c0 = ax0.contourf(x, y, x)
+c1 = ax1.contourf(x, y, y)
+ax0.set_title('x');
+ax1.set_title('y');
+ax0.set_yticks([0, 1, 2])
+ax1.set_yticks([0, 1, 2])
+fig.colorbar(c0, ticks=[0, 1, 2, 3]);
+fig.colorbar(c1, ticks=[0, 1, 2]);
+```
+
+
+Just as expected:-)
+
+## To avoid (or increase?) confusion {.smaller}
+
+You can also choose Cartesian indexing for the meshgrid
+
+```{python}
+#| echo: true
+x = np.linspace(0, Lx, Nx+1)
+y = np.linspace(0, Ly, Ny+1)
+mesh = np.meshgrid(x, y, indexing='xy')
+mesh
+```
+
+But it is still not completely as expected, because $y$ is increasing downwards!
+
+```{python}
+fig = plt.figure(figsize=(2, 2))
+plt.arrow(0, 0, 1, 0, head_width=0.1);plt.text(0, -1.3, 'y')
+plt.arrow(0, 0, 0, -1, head_width=0.1);plt.text(1.3, 0, 'x')
+fig.gca().axis('off');
+```
+
+## Sparse meshgrid {.smaller}
+
+It is not necessary to store the complete arrays, because $x$ is not changing along the $y$-axis and $y$ is not changing along the $x$-axis.
+
+```{python}
+#| echo: true
+mesh = np.meshgrid(x, y, indexing='ij')
+mesh
+```
+
+Use sparse option:
+
+```{python}
+#| echo: true
+mesh = np.meshgrid(x, y, indexing='ij', sparse=True)
+mesh
+```
+
+The $x$-array is constant along the $y$-axis and the $y$-array is constant along the $x$-axis
+
+```{python}
+#| echo: true
+print(mesh[0].shape, mesh[1].shape)
+```
+
+## Broadcasting {.smaller}
+
+```{python}
+#| echo: true
+display(mesh)
+display(mesh[0].shape, mesh[1].shape)
+```
+
+The added dimension of length 1 is important for how the array [broadcasts](https://numpy.org/doc/stable/user/basics.broadcasting.html). The extra dimension tells Numpy that the array is constant along this other axis. That is, `mesh[0]` is constant along the second axis, no matter what size the second axis is. Similarly, `mesh[1]` is constant along the first axis. And since the 2D array is constant along that direction it is not necessary to actually store the numbers! So this is memory efficient.
+
+So what happens if you now have this sparse mesh and you create a mesh function
+
+$$
+f(x, y) = x + y
+$$
+
+## Broadcasting 2 {.smaller}
+
+Compute
+$$
+f(x, y) = x + y
+$$
+
+when $x$ and $y$ are stored using sparse matrices of shape $(4, 1)$ and $(1, 3)$
+
+```{python}
+#| echo: true
+x, y = mesh
+print(x.shape, y.shape)
+```
+
+::: {.fragment}
+
+Now compute $f(x, y)$
+
+```{python}
+#| echo: true
+f = x + y
+```
+
+::: {.callout-important appearance="simple"}
+What is the shape of f!
+:::
+
+:::
+::: {.fragment}
+
+
+```{python}
+#| echo: true
+f
+```
+The shape of $f$ is $(4, 3)$! Exactly as it would be without the sparse matrices!
+
+:::
+
+## Two-dimensional mesh function {.smaller}
+
+A mesh function on the two-dimensional domain will now be denoted as
+
+$$
+u_{ij} = u(x_i, y_j).
+$$
+
+The mesh function is a dense two-dimensional array of shape ${(N_x+1)\times (N_y+1)}$ and we will write $U = (u_{ij})_{i,j=0}^{N_x, N_y}$. It may also be considered a matrix.
+
+$$
+\begin{bmatrix}
+u_{0, 0} & u_{0, 1} & \cdots & u_{0, N_y} \\
+u_{1, 0} & u_{1, 1} & \cdots & u_{1, N_y} \\
+\vdots & \vdots & \ddots & \vdots \\
+u_{N_x, 0} & u_{N_x, 1} & \cdots & u_{N_x, N_y} \\
+\end{bmatrix}
+$$
+
+For the component $u_{ij}$, we note that $i$ represents row and $j$ represents column. This is matrix storage, like we got for meshgrid using `indexing="ij"`.
+
+
+## Row-major computer storage {.smaller}
+
+In Python a matrix is row-major. This means that the matrix that looks like
+
+$$
+\begin{bmatrix}
+u_{0, 0} & u_{0, 1} & \cdots & u_{0, N_y} \\
+u_{1, 0} & u_{1, 1} & \cdots & u_{1, N_y} \\
+\vdots & \vdots & \ddots & \vdots \\
+u_{N_x, 0} & u_{N_x, 1} & \cdots & u_{N_x, N_y} \\
+\end{bmatrix}
+$$
+
+is stored in memory with a long sequence of numbers row by row like
+
+$$
+ \underbrace{u_{0, 0}, u_{0, 1}, \cdots, u_{0, N_y}}_{\text{First row}}, \underbrace{u_{1, 0}, u_{1, 1}, \cdots, u_{1, N_y}}_{\text{Second row}}, \cdots \cdots, \underbrace{u_{N_y, 0}, u_{N_y, 1}, \cdots, u_{N_y, N_y}}_{\text{Last row}}
+$$
+
+::: {.callout-note}
+The computer does not know anything about these numbers belonging to a two-dimensional array. The computer only knows that $(N_x+1)(N_y+1)$ numbers are stored side by side.
+:::
+
+## More on row-major storage {.smaller}
+
+We can get the single row $i$ of the $U$ matrix as $u_i = (u_{i,0}, u_{i,1}, \ldots, u_{i, N_y})$. For example,
+
+```{python}
+#| echo: true
+U = np.arange(9).reshape((3, 3))
+display(U)
+display(U[0])
+display(U[1])
+display(U[2])
+```
+
+The matrix is laid out in memory as
+
+```{python}
+#| echo: true
+U.ravel()
+```
+
+To get columns
+
+```{python}
+#| echo: true
+U[:, 0]
+```
+
+## Finite differences in 2D {.smaller}
+
+Let us move back to the Poisson equation
+
+$$
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = f.
+$$
+
+Use second order central differences in both directions
+
+$$
+\frac{u_{i+1,j} - 2u_{i,j} + u_{i-1, j}}{\Delta x^2} + \frac{u_{i,j+1} - 2u_{i,j} + u_{i, j-1}}{\Delta y^2} = f_{i,j}.
+$$
+
+::: {.callout-note}
+How to vectorize in 2D? How to use the derivative matrix $D^{(2)}$?
+:::
+
+## Derivative matrices in 2D {.smaller}
+
+The second order second derivative matrix can be written as
+
+$$
+D_x^{(2)} = \frac{1}{\Delta x^2}\begin{bmatrix}
+2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\
+1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
+0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
+\vdots & & & \ddots &  & & &\cdots \\
+\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\
+\end{bmatrix}
+$$
+
+We use $D^{(2)} = \Delta x^2 D^{(2)}_x$ for an unscaled matrix.
+
+Hence, for $y$-direction $D^{(2)}_y = \frac{1}{\Delta y^2} D^{(2)}$.
+
+## Compute unscaled matrix using `scipy.sparse` {.smaller}
+
+```{python}
+#| echo: true
+import scipy.sparse as sparse
+
+def D2(N):
+    D = sparse.diags([1, -2, 1], [-1, 0, 1], (N+1, N+1), 'lil')
+    D[0, :4] = 2, -5, 4, -1
+    D[-1, -4:] = -1, 4, -5, 2
+    return D
+print(D2(8).toarray())
+```
+
+## Consider a very simple function in 2D {.smaller}
+
+$$
+u(x, y) = x^2,
+$$
+
+such that
+
+$$
+\frac{\partial^2 u}{\partial x^2} = 2.
+$$
+
+Use domain $[0, 4]\times [0, 4]$ and choose $\Delta x = \Delta y = 1$. Create the Cartesian mesh:
+
+```{python}
+#| echo: true
+Nx, Ny = 4, 4
+Lx, Ly = Nx, Ny
+x = np.linspace(0, Lx, Nx+1)
+y = np.linspace(0, Ly, Ny+1)
+xij, yij = np.meshgrid(x, y, indexing='ij')
+```
+
+From this mesh we can create the mesh function $u(x, y) = x^2$
+
+```{python}
+#| echo: true
+U = xij**2
+U
+```
+
+## How to compute $\frac{\partial^2 u}{\partial x^2}$? {.smaller}
+
+::: {.fragment}
+
+Use the one-dimensional derivative matrix $D^{(2)}$ along the first axis of $U=(u_{i,j})_{i,j=0}^{N_x, N_y}$
+
+$$
+D^{(2)} U = \sum_{k=0}^{N_x} d^{(2)}_{ik} u_{k,j}
+$$
+
+So $D^{(2)} U$ is a matrix-matrix product between the two matrices $D^{(2)}\in \mathbb{R}^{(N_x+1)\times (N_x+1)}$ and $U \in \mathbb{R}^{(N_x+1) \times (N_y+1)}$, such that $D^{(2)}U \in \mathbb{R}^{(N_x+1) \times (N_y+1)}$
+
+:::
+
+::: {.fragment}
+```{python}
+#| echo: true
+D = D2(Nx)
+print(D @ U)
+```
+::: {.callout-note}
+# Voila! The second derivative is 2 for all mesh points!
+:::
+:::
+
+## How about the other derivative $\partial^2 u / \partial y^2$? {.smaller}
+::: {.fragment}
+
+Create another mesh function
+
+$$
+u(x, y) = y^2,
+$$
+
+such that again the second derivative $\partial^2 u / \partial y^2$ should be 2. Create first $u$
+
+```{python}
+#| echo: true
+U = yij**2
+print(U)
+```
+
+:::
+
+::: {.fragment}
+
+
+Now since the derivative is along the second axis (the $y$-axis), we cannot simply do $D^{(2)} U$ anymore. If we do we get zero
+
+```{python}
+#| echo: true
+print(D @ U)
+```
+
+:::
+
+## Derivatives along $y$-direction {.smaller}
+
+To get a derivative along the second axis we need to apply the matrix $D^{(2)}$ along the second axis of $U$:
+
+$$
+\sum_{k=0}^{N_y} u_{i, k} d^{(2)}_{j, k}
+$$
+
+In matrix form this can be written as
+
+$$
+U (D^{(2)})^T
+$$
+
+which we can verify as follows
+
+```{python}
+#| echo: true
+print(U @ D.T)
+```
+
+## Matrix form of Poisson's equation {.smaller}
+
+Using now that $\partial^2 u/\partial x^2 = D_x^{(2)}U$ and $\partial^2 u/\partial y^2 = U(D_y^{(2)})^T$ we can write Poisson's equation on discretized (and matrix) form as
+
+$$
+D_x^{(2)} U + U (D_y^{(2)})^T = F,
+$$
+
+where the mesh function $F = (f(x_i, y_j))_{i,j=0}^{N_x, N_y}$.
+
+::: {.fragment}
+
+::: {.callout-note appearance="simple"}
+<span style="font-size: 1.8em;">How can we solve this equation for the unknown matrix $U$?</span>
+:::
+
+:::
+
+::: {.fragment}
+
+Can we write this equation as
+
+$$
+Ax = b
+$$
+
+
+where $A$ is the coefficient matrix, $x$ is the unknown vector and $b$ is the rhs vector?
+
+:::
+
+::: {.fragment}
+::: {.callout-note appearance="simple"}
+<span style="font-size: 1.8em;">Can we transform our unknown matrix $U$ into a vector?</span>
+:::
+:::
+
+## Vectorization (the vec-trick) {.smaller}
+
+Consider first for simplicity a  $2 \times 2$ matrix
+
+$$
+A =
+\begin{bmatrix}
+a & b \\
+c & d
+\end{bmatrix}
+$$
+
+In general, a row-major vectorization transforms the matrix into a vector as follows
+
+$$
+\begin{bmatrix}
+a & b \\
+c & d
+\end{bmatrix}
+\longrightarrow
+\begin{bmatrix}
+a & b & c & d
+\end{bmatrix}^T =
+\begin{bmatrix}
+a \\
+b \\
+c \\
+d
+\end{bmatrix}
+$$
+
+This operation is referred to as `vec(A)` and thus
+
+$$
+\text{vec}(A) = \begin{bmatrix}
+a & b & c & d
+\end{bmatrix}^T
+$$
+
+::: {.callout-note}
+The vec-trick transforms a matrix into a vector! Just like [numpy.ravel](https://numpy.org/doc/2.3/reference/generated/numpy.ravel.html).
+:::
+
+## What about matrix products? {.smaller}
+
+Poisson's equation contains matrix matrix products
+
+$$
+D^{(2)}_x U + U (D^{(2)}_y)
+$$
+
+How can these be vectorized if we want to ravel U?
+
+::: {.fragment}
+Enter the Kronecker product!
+:::
+
+## Vectorization of matrix-matrix products {.smaller}
+
+$$
+A =
+\begin{bmatrix}
+  a_{00} & a_{01} \\
+  a_{10} & a_{11}
+\end{bmatrix}
+\quad \text {and} \quad
+B =
+\begin{bmatrix}
+  b_{00} & b_{01} \\
+  b_{10} & b_{11}
+\end{bmatrix}
+$$
+
+Let
+
+$$
+C = A B \quad \text{such that} \quad c_{ij} = \sum_{k\in(0, 1)}a_{ik}b_{kj}
+$$
+
+And as before
+
+$$
+\text{vec}(C) = \begin{bmatrix}
+c_{00} &
+c_{01} &
+c_{10} &
+c_{11}
+\end{bmatrix}^T
+\quad
+\text{vec}(B) = \begin{bmatrix}
+b_{00} &
+b_{01} &
+b_{10} &
+b_{11}
+\end{bmatrix}^T
+$$
+
+How do we find the matrix $M$:
+
+$$
+\text{vec}(C) = \text{vec}(AB) = M \text{vec}(B)
+$$
+
+## How to vectorize matrix-matrix products ? {.smaller}
+
+$$
+\text{vec}(C) = \text{vec}(AB) = M \text{vec}(B)
+$$
+
+$$
+\underbrace{
+\begin{bmatrix}
+c_{00} \\
+c_{01} \\
+c_{10} \\
+c_{11}
+\end{bmatrix}}_{\text{vec}(C)} =
+\underbrace{
+\begin{bmatrix}
+m_{00} & m_{01} & m_{02} & m_{03} \\
+m_{10} & m_{11} & m_{12} & m_{13} \\
+m_{20} & m_{21} & m_{22} & m_{23} \\
+m_{30} & m_{31} & m_{32} & m_{33} \\
+\end{bmatrix}}_{M}
+\underbrace{
+\begin{bmatrix}
+b_{00} \\
+b_{01} \\
+b_{10} \\
+b_{11}
+\end{bmatrix}}_{\text{vec}(B)}
+$$
+
+How to find $M$?
+
+::: {.fragment}
+
+Note that from $c_{ij} = a_{i0}b_{0j} + a_{i1}b_{1j}$ we have:
+
+$$
+\begin{align*}
+c_{00} &= a_{00}b_{00} + a_{01}b_{10} \\
+c_{01} &= a_{00}b_{01} + a_{01}b_{11} \\
+c_{10} &= a_{10}b_{00} + a_{11}b_{10} \\
+c_{11} &= a_{10}b_{01} + a_{11}b_{11}
+\end{align*}
+$$
+
+:::
+
+## Hence {.smaller}
+
+$$
+C = AB \quad \text{and thus} \quad c_{ij} = a_{i0}b_{0j} + a_{i1}b_{1j}
+$$
+
+is obtained for the following matrix $M$
+
+$$
+\underbrace{
+\begin{bmatrix}
+c_{00} \\
+c_{01} \\
+c_{10} \\
+c_{11}
+\end{bmatrix}}_{\text{vec}(C)} =
+\underbrace{
+\begin{bmatrix}
+a_{00} & 0 & a_{01} & 0 \\
+0 & a_{00} & 0 & a_{01} \\
+a_{10} & 0 & a_{11} & 0 \\
+0 & a_{10} & 0 & a_{11} \\
+\end{bmatrix}}_{M}
+\underbrace{
+\begin{bmatrix}
+b_{00} \\
+b_{01} \\
+b_{10} \\
+b_{11}
+\end{bmatrix}}_{\text{vec}(B)}
+$$
+
+::: {.fragment}
+
+Just check that this corresponds to
+$$
+\begin{align*}
+c_{00} &= a_{00}b_{00} + a_{01}b_{10} \\
+c_{01} &= a_{00}b_{01} + a_{01}b_{11} \\
+c_{10} &= a_{10}b_{00} + a_{11}b_{10} \\
+c_{11} &= a_{10}b_{01} + a_{11}b_{11}
+\end{align*}
+$$
+
+:::
+
+## The Kronecker product {.smaller}
+
+If $A$ and $B$ are matrices of dimensions $p \times q$ and $r \times s$, respectively, then $A \otimes B$ is the matrix
+of dimension $pr \times qs$, with $p \times q$ block form, where the $i, j$ block is $a_{ij}B$. The Kronecker product is most simply illustrated for two small matrices of shape $2 \times 2$:
+
+$$
+\begin{bmatrix}
+  1 & 2 \\
+  3 & 4
+\end{bmatrix}
+\otimes
+\begin{bmatrix}
+  a & b \\
+  c & d
+\end{bmatrix}
+=
+\left(\begin{array}{c|c}
+  \begin{matrix}
+  a & b \\
+  c & d
+  \end{matrix}
+  &  \begin{matrix}
+  2a & 2b \\
+  2c & 2d
+  \end{matrix} \\
+\hline
+  \begin{matrix}
+  3a & 3b \\
+  3c & 3d
+  \end{matrix} &
+  \begin{matrix}
+  4a & 4b \\
+  4c & 4d
+  \end{matrix}
+\end{array}\right)
+$$
+
+
+## For diagonal matrices it is simpler {.smaller}
+
+$$
+\begin{bmatrix}
+  1 & 0 \\
+  0 & 1
+\end{bmatrix}
+\otimes
+\begin{bmatrix}
+  a & b \\
+  c & d
+\end{bmatrix}
+=
+\left(\begin{array}{c|c}
+  \begin{matrix}
+  a & b \\
+  c & d
+  \end{matrix}
+  &
+  \begin{matrix}
+   0 & 0 \\
+   0 & 0
+   \end{matrix}
+   \\
+\hline
+  \begin{matrix}
+   0 & 0 \\
+   0 & 0
+   \end{matrix} &
+  \begin{matrix}
+  a & b \\
+  c & d
+  \end{matrix}
+\end{array}\right)
+$$
+
+and
+
+$$
+\begin{bmatrix}
+  a & b \\
+  c & d
+\end{bmatrix}
+\otimes
+\begin{bmatrix}
+  1 & 0 \\
+  0 & 1
+\end{bmatrix}
+=
+\left(\begin{array}{c|c}
+  \begin{matrix}
+  a & 0 \\
+  0 & a
+  \end{matrix}
+  &  \begin{matrix}
+  b & 0 \\
+  0 & b
+  \end{matrix} \\
+\hline
+  \begin{matrix}
+  c & 0 \\
+  0 & c
+  \end{matrix} &
+  \begin{matrix}
+  d & 0 \\
+  0 & d
+  \end{matrix}
+\end{array}\right)
+$$
+
+## The vec-trick for matrix products {.smaller}
+
+A very useful result is
+
+$$
+\text{vec}(ABC^T) = (A \otimes C) \text{vec}(B)
+$$
+
+::: {.fragment}
+
+Hence in the example from before with $C=AB$:
+
+$$\text{vec}(C) = \text{vec}(AB) = \text{vec}(ABI) = (A \otimes I) \text{vec}(B)$$
+
+$$
+A \otimes I =
+\begin{bmatrix}
+a_{00} & 0 & a_{01} & 0 \\
+0 & a_{00} & 0 & a_{01} \\
+a_{10} & 0 & a_{11} & 0 \\
+0 & a_{10} & 0 & a_{11} \\
+\end{bmatrix}
+$$
+where $I$ is the identity matrix.
+
+:::
+
+
+## The vec-trick for derivatives in 2D {.smaller}
+
+Consider the second derivative in the $x$-direction
+
+$$
+\frac{\partial^2 u}{ \partial x^2}
+$$
+
+With regular matrices we can compute this as
+
+::: {.columns}
+::: {.column}
+$$
+D^{(2)}_x U
+$$
+:::
+::: {.column}
+```{python}
+#| echo: true
+U = xij**2
+D @ U
+```
+:::
+:::
+
+::: {.fragment}
+
+::: {.callout-note appearance="simple"}
+How to compute the second derivative using vectorization?
+:::
+:::
+
+## Second derivative with vectorization {.smaller}
+
+$$
+\text{vec}(D^{(2)}_x U) = \text{vec}({D^{(2)}_x U I}) = \underbrace{(D^{(2)}_x \otimes I)}_{M} \text{vec}(U)
+$$
+
+Implementation using `scipy.sparse`
+
+```{python}
+#| echo: true
+M = sparse.kron(D, sparse.eye(Ny+1))
+d2u = M @ U.ravel()
+print(d2u.reshape(U.shape))
+```
+
+Same exact result! Since the result `d2u` is a 1D array, we reshape into matrix form.
+
+## Vectorization can be applied to equations {.smaller}
+
+$$
+\text{vec}\left(D_x^{(2)}U + U (D_y^{(2)})^T \right) = \text{vec}(F),
+$$
+
+and since vectorization is a linear process
+
+$$
+\text{vec}\left(D_x^{(2)}U\right) + \text{vec}\left(U (D_y^{(2)})^T \right) = \text{vec}(F).
+$$
+
+
+$$
+\left(D_x^{(2)} \otimes I_{y} + I_{x} \otimes D_y^{(2)} \right) \text{vec}(U) = \text{vec}(F).
+$$
+
+This is a linear equations of type $Ax=b$, where $A = D_x^{(2)} \otimes I_{y} + I_{x} \otimes D_y^{(2)}$, $x = \text{vec}(U)$ and $b = \text{vec}(F)$.
+
+::: {.callout-note}
+
+Vectorization is a linear process that allows us to transform a matrix into a vector. Through vectorization we can express matrix-multiplication through a larger matrix using the Kronecker product.
+
+:::
+
+## The Laplace operator
+
+The Laplace operator $\nabla^2$ applied to a two-dimensional field $u(x, y)$ in Cartesian coordinates is
+
+$$
+\nabla^2 u = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}
+$$
+
+Discretized on a structured Cartesian mesh we get
+
+$$
+\nabla^2 u \approx \left(D_x^{(2)} \otimes I_{y} + I_{x} \otimes D_y^{(2)} \right) \text{vec}(U)
+$$
+
+## Implementation Laplace {.smaller}
+
+```{python}
+#| echo: true
+def laplace(dx, dy, Nx, Ny):
+    D2x = (1./dx**2)*D2(Nx)
+    D2y = (1./dy**2)*D2(Ny)
+    return (sparse.kron(D2x, sparse.eye(Ny+1)) +
+            sparse.kron(sparse.eye(Nx+1), D2y))
+```
+
+We are now almost ready to solve the Poisson equation
+
+$$
+\nabla^2 u(x, y) = f(x, y), \quad (x, y) \in \Omega = (0, 1) \times (0, 1)
+$$
+
+with Dirichlet boundary conditions $u(x, y) = 0$ at all four sides.
+
+::: {.fragment}
+::: {.callout-note appearance="simple"}
+<span style="font-size: 1.6em;">But how to fix boundary conditions?</span>
+:::
+
+:::
+
+## Boundary conditions {.smaller}
+
+In order to set Dirichlet boundary conditions we need to set the value of $U$ to zero on all four boundaries:
+
+$$
+\begin{align*}
+u_{0, j} = 0 \quad j \in \{0, 1, \ldots, N_y\}, \\
+u_{N_x, j} = 0 \quad j \in \{0, 1, \ldots, N_y\},\\
+u_{i, 0} = 0 \quad i \in \{0, 1, \ldots, N_x\}, \\
+u_{i, N_y} = 0 \quad i \in \{0, 1, \ldots, N_x\}.
+\end{align*}
+$$
+
+But where are all the boundary points? Can we manipulate the matrix $M$ in order to fix Dirichlet boundary conditions?
+
+We can do this by identing all rows of `M` corresponding to a boundary point. But which indices in `M` correspond to boundaries? We can find this easily with a little slicing and trickery. Lets create a mesh function `B` that is one on the boundary and zero elsewhere
+
+## Find the boundary points {.smaller}
+
+```{python}
+#| echo: true
+#| fig-align: center
+Nx, Ny = 30, 30
+B = np.ones((Nx+1, Ny+1), dtype=bool)
+B[1:-1, 1:-1] = 0
+fig = plt.figure(figsize=(3, 3))
+plt.imshow(B, cmap='gray_r')
+plt.gca().axis('off')
+```
+Find all the points in the vectorized array $\text{vec}(B)$ that equals 1:
+```{python}
+#| echo: true
+bnds = np.where(B.ravel() == 1)[0]
+print(bnds)
+```
+
+## Ident vectorized Laplace matrix for all boundary points {.smaller}
+
+```{python}
+#| echo: true
+Lx, Ly = 1, 1
+A = laplace(Lx/Nx, Ly/Ny, Nx, Ny)
+A = A.tolil()
+for i in bnds:
+    A[i] = 0
+    A[i, i] = 1
+A = A.tocsr()
+```
+
+## Solve problem {.smaller}
+
+Lets use the method of manufactured solutions and guess a solution
+
+$$
+u(x, y) = x(1-x)y(1-y)\exp(\cos(4 \pi x)\sin(2 \pi y)),
+$$
+
+The right hand side function $f(x, y)$ is then
+
+```{python}
+#| echo: true
+import sympy as sp
+x, y = sp.symbols('x,y')
+ue = x*(1-x)*y*(1-y)*sp.exp(sp.cos(4*sp.pi*x)*sp.sin(2*sp.pi*y))
+f = ue.diff(x, 2) + ue.diff(y, 2)
+```
+The 2D mesh and mesh function `F` can be computed as
+
+```{python}
+#| echo: true
+def mesh2D(Nx, Ny, Lx, Ly):
+    x = np.linspace(0, Lx, Nx+1)
+    y = np.linspace(0, Ly, Ny+1)
+    return np.meshgrid(x, y, indexing='ij')
+xij, yij = mesh2D(Nx, Ny, Lx, Ly)
+F = sp.lambdify((x, y), f)(xij, yij)
+b = F.ravel()
+b[bnds] = 0
+```
+
+## Solve! {.smaller}
+
+```{python}
+#| echo : true
+U = sparse.linalg.spsolve(A, b)
+U = np.reshape(U, (Nx+1, Ny+1))
+plt.contourf(xij, yij, U, 100);
+```
+
+## Summary {.smaller}
+
+::: {.incremental}
+
+* Two-dimensional problems on simple Cartesian domains make use of Cartesian products to create structured uniform meshes.
+* In 2D the unknown meshfunction $U=(u_{ij})_{i,j=0}^{N_x,N_y}$ is a matrix and not a vector.
+* In order to use regular linear algebra solvers and recast the problem as
+  $$Ax=b$$
+  we make use of the veck-trick and the Kronecker product
+* The vec-trick transforms a matrix into a vector
+  $$
+  A = \begin{bmatrix}
+  a & b \\ c & d
+  \end{bmatrix} \quad \rightarrow \quad
+  \text{vec}(A) = \begin{bmatrix}
+a & b & c & d
+\end{bmatrix}^T
+  $$
+* The vec-trick transforms matrix-matrix products using the Kronecker product
+  $$\text{vec}(ABC^T) = (A \otimes C) \text{vec}(B)$$
+
+:::
+
+## Summary continued {.smaller}
+
+::: {.incremental}
+
+* The Poisson equation in 2D reads
+  $$
+D_x^{(2)} U + U (D_y^{(2)})^T = F
+  $$
+* Regular linear algebra cannot easily solve the above since the unknown is a matrix. Hence we transform the equation using the vec-trick
+  $$
+  \underbrace{\left(D_x^{(2)} \otimes I_{y} + I_{x} \otimes D_y^{(2)} \right)}_{M} \text{vec}(U) = \text{vec}(F)
+  $$
+* and solve
+  $$
+  \text{vec}(U) = M^{-1} \text{vec}(F)
+  $$
+
+:::
