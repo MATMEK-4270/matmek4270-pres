@@ -3378,14 +3378,14 @@
     "href": "postprocessing.html#postprocessing",
     "title": "Postprocessing and Interpolation",
     "section": "Postprocessing",
-    "text": "Postprocessing\nWe have computed the solution. Now what?\n\nWe analyze the solution!\nWe process the solution into presentable tables and figures\nWe extract important numbers that the solution allows us to compute. For example lift or drag on an airplane wing, or the flux through a boundary.\n\n\nIn order to achieve this we need\n\nInterpolation - to get the solution everywhere and not just in nodes\nIntegrals - Averages arise from integrals over domains and boundaries\nDerivatives - For example, drag is the integral of the gradient over a boundary \\(\\int_{\\Gamma}\\nu \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\\).\nLagrange interpolation polynomials will help us get there!"
+    "text": "Postprocessing\nWe have computed the solution. Now what?\n\nWe analyse the solution!\nWe process the solution into presentable tables and figures\nWe extract important numbers that the solution allows us to compute. For example lift or drag on an airplane wing, or the flux through a boundary.\n\n\nIn order to achieve this we need\n\nInterpolation - to get the solution everywhere and not just in nodes\nIntegrals - Averages arise from integrals over domains and boundaries\nDerivatives - For example, drag is the integral of the gradient over a boundary \\(\\int_{\\Gamma}\\nu \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\\)\nLagrange interpolation polynomials will help us get there!"
   },
   {
     "objectID": "postprocessing.html#one-dimensional-interpolation",
     "href": "postprocessing.html#one-dimensional-interpolation",
     "title": "Postprocessing and Interpolation",
     "section": "One-dimensional interpolation",
-    "text": "One-dimensional interpolation\n\\[\nu(x) = x(1-x)\n\\]\n\n\n\n\n\n\n\n\n\n\nWe have the mesh function \\((u(x_i))_{i=0}^{5}\\). What is \\(u(0.75)\\)?\nLinear interpolation requires interpolating between \\(u(x_3)\\) and \\(u(x_4)\\)\n\\[\n\\overline{u}(x) = u_3 + (u_4-u_3)\\frac{x-x_3}{x_4-x_3}.\n\\]"
+    "text": "One-dimensional interpolation\n\\[\nu(x) = x(1-x)\n\\]\n\n\n\n\n\n\n\n\n\n\nWe have the mesh function \\((u(x_i))_{i=0}^{5}\\). What is \\(u(0.75)\\)?\nLinear interpolation requires interpolating between \\(u(x_3)\\) and \\(u(x_4)\\)\n\\[\n\\overline{u}(x) = u_3 + (u_4-u_3)\\frac{x-x_3}{x_4-x_3}\n\\]"
   },
   {
     "objectID": "postprocessing.html#linear-interpolation-using-sympy",
@@ -3413,14 +3413,14 @@
     "href": "postprocessing.html#lagrange-basis-functions-are-defined-as",
     "title": "Postprocessing and Interpolation",
     "section": "Lagrange basis functions are defined as",
-    "text": "Lagrange basis functions are defined as\n\\[\n    \\ell_j(x) = \\frac{x-x^0}{x^j-x^0} \\cdots \\frac{x-x^{j-1}}{x^j-x^{j-1}}\\frac{x-x^{j+1}}{x^j-x^{j+1}} \\cdots \\frac{x-x^{k}}{x^j-x^{k}}\n\\]\nLet that one sink in.\n\n\nNote index \\(j\\) in \\(\\ell_j(x)\\), the \\(j\\)’th basis function.\nNumerator contains the product of all differences \\((x-x^m)\\) for all \\(m\\) except \\(m=j\\)\nDenominator contains the product of all differences \\((x^j-x^m)\\) for all \\(m\\) except \\(m=j\\)\n\n\n\nWe can write\n\\[\n\\ell_j(x) = \\prod_{\\substack{0 \\le m \\le k \\\\ m \\ne j}} \\frac{x-x^m}{x^j-x^m}.\n\\]"
+    "text": "Lagrange basis functions are defined as\n\\[\n    \\ell_j(x) = \\frac{x-x^0}{x^j-x^0} \\cdots \\frac{x-x^{j-1}}{x^j-x^{j-1}}\\frac{x-x^{j+1}}{x^j-x^{j+1}} \\cdots \\frac{x-x^{k}}{x^j-x^{k}}\n\\]\nLet that one sink in.\n\n\nNote index \\(j\\) in \\(\\ell_j(x)\\), the \\(j\\)’th basis function\nNumerator contains the product of all differences \\((x-x^m)\\) for all \\(m\\) except \\(m=j\\)\nDenominator contains the product of all differences \\((x^j-x^m)\\) for all \\(m\\) except \\(m=j\\)\n\n\n\nWe can write\n\\[\n\\ell_j(x) = \\prod_{\\substack{0 \\le m \\le k \\\\ m \\ne j}} \\frac{x-x^m}{x^j-x^m}\n\\]"
   },
   {
     "objectID": "postprocessing.html#lagrange-basis-in-sympy",
     "href": "postprocessing.html#lagrange-basis-in-sympy",
     "title": "Postprocessing and Interpolation",
     "section": "Lagrange basis in Sympy",
-    "text": "Lagrange basis in Sympy\nA basis is a collection of basis functions\n\\[\n\\{\\ell_j(x)\\}_{j=0}^k\n\\]\n\ndef Lagrangebasis(xj, x=x):\n  \"\"\"Construct Lagrange basis for points in xj\n\n  Parameters\n  ----------\n  xj : array\n    Interpolation points (nodes)\n  x : Sympy Symbol\n\n  Returns\n  -------\n  Lagrange basis as a list of Sympy functions \n  \"\"\"\n  from sympy import Mul\n  n = len(xj)\n  ell = []\n  numert = Mul(*[x - xj[i] for i in range(n)])\n  for i in range(n):\n    numer = numert/(x - xj[i])\n    denom = Mul(*[(xj[i] - xj[j]) for j in range(n) if i != j])\n    ell.append(numer/denom)\n  return ell"
+    "text": "Lagrange basis in Sympy\nA basis is a collection (set) of basis functions\n\\[\n\\{\\ell_j(x)\\}_{j=0}^k\n\\]\n\ndef Lagrangebasis(xj, x=x):\n  \"\"\"Construct Lagrange basis for points in xj\n\n  Parameters\n  ----------\n  xj : array\n    Interpolation points (nodes)\n  x : Sympy Symbol\n\n  Returns\n  -------\n  Lagrange basis as a list of Sympy functions\n  \"\"\"\n  from sympy import Mul\n  n = len(xj)\n  ell = []\n  numert = Mul(*[x - xj[i] for i in range(n)])\n  for i in range(n):\n    numer = numert/(x - xj[i])\n    denom = Mul(*[(xj[i] - xj[j]) for j in range(n) if i != j])\n    ell.append(numer/denom)\n  return ell"
   },
   {
     "objectID": "postprocessing.html#the-basis-for-linear-interpolation-of-our-first-example-is",
@@ -3434,28 +3434,28 @@
     "href": "postprocessing.html#lagrange-interpolation-polynomial",
     "title": "Postprocessing and Interpolation",
     "section": "Lagrange interpolation polynomial",
-    "text": "Lagrange interpolation polynomial\nWith the basis we can now compute the Lagrange interpolation polynomial\n\\[\nL(x) = \\sum_{j=0}^k u^j \\ell_j(x)\n\\]\n\n\n\ndef Lagrangefunction(u, basis):\n  \"\"\"Return Lagrange polynomial\n\n  Parameters\n  ----------\n  u : array\n    Mesh function values\n  basis : tuple of Lagrange basis functions\n    Output from Lagrangebasis\n  \"\"\"\n  f = 0\n  for j, uj in enumerate(u):\n    f += basis[j]*uj\n  return f\n\n\n\nL = Lagrangefunction(u[3:5], ell)\nxf = np.linspace(xj[3]-0.1, xj[4]+0.1, 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
+    "text": "Lagrange interpolation polynomial\nWith the basis we can now compute the Lagrange interpolation polynomial\n\\[\nL(x) = \\sum_{j=0}^k u^j \\ell_j(x)\n\\]\n\n\n\ndef Lagrangefunction(u, basis):\n  \"\"\"Return Lagrange polynomial\n\n  Parameters\n  ----------\n  u : array\n    Mesh function values\n  basis : tuple of Lagrange basis functions\n    Output from Lagrangebasis\n  \"\"\"\n  f = 0\n  for j, uj in enumerate(u):\n    f += basis[j]*uj\n  return f\n\n\n\nL = Lagrangefunction(u[3:5], ell)\nxf = np.linspace(xj[3]-0.1, xj[4]+0.1, 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g')\nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
   },
   {
     "objectID": "postprocessing.html#we-can-choose-any-and-any-number-of-basis-functions",
     "href": "postprocessing.html#we-can-choose-any-and-any-number-of-basis-functions",
     "title": "Postprocessing and Interpolation",
     "section": "We can choose any, and any number of basis functions",
-    "text": "We can choose any, and any number of basis functions\n\n\nChoose \\((x^0, x^1, x^2) = (x_2, x_3, x_4)\\)\n\nell2 = Lagrangebasis(xj[2:5], x=x) \nL = Lagrangefunction(u[2:5], ell2)\nxf = np.linspace(xj[2], xj[4], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')\n\n\n\n\n\n\n\n\n\nChoose \\((x^0, x^1, x^2) = (x_3, x_4, x_5)\\)\n\nell3 = Lagrangebasis(xj[3:6], x=x) \nL = Lagrangefunction(u[3:6], ell3)\nxf = np.linspace(xj[3], xj[5], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g') \nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
+    "text": "We can choose any, and any number of basis functions\n\n\nChoose \\((x^0, x^1, x^2) = (x_2, x_3, x_4)\\)\n\nell2 = Lagrangebasis(xj[2:5], x=x)\nL = Lagrangefunction(u[2:5], ell2)\nxf = np.linspace(xj[2], xj[4], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g')\nplt.plot(0.75, L.subs(x, 0.75), 'ko')\n\n\n\n\n\n\n\n\n\nChoose \\((x^0, x^1, x^2) = (x_3, x_4, x_5)\\)\n\nell3 = Lagrangebasis(xj[3:6], x=x)\nL = Lagrangefunction(u[3:6], ell3)\nxf = np.linspace(xj[3], xj[5], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g')\nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
   },
   {
     "objectID": "postprocessing.html#with-three-nodes-the-lagrange-basis-functions-are-second-order-polynomials",
     "href": "postprocessing.html#with-three-nodes-the-lagrange-basis-functions-are-second-order-polynomials",
     "title": "Postprocessing and Interpolation",
     "section": "With three nodes the Lagrange basis functions are second order polynomials",
-    "text": "With three nodes the Lagrange basis functions are second order polynomials\n\n\n\nplt.figure(figsize=(6, 4)) \nell2 = Lagrangebasis(xj[2:5], x=x) \nplt.plot(xj, u, 'bo-')\nxl = np.linspace(xj[2], xj[4], 100)\nplt.plot(xl, sp.lambdify(x, ell2[0])(xl), 'r:')\nplt.plot(xl, sp.lambdify(x, ell2[1])(xl), 'g:')\nplt.plot(xl, sp.lambdify(x, ell2[2])(xl), 'b:')\nplt.legend([r'$u(x_i)$', r'$\\ell_0(x)$', r'$\\ell_1(x)$', r'$\\ell_2(x)$'], loc='upper left'); \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\nAll Lagrange basis functions are such that on the chosen mesh points \\(\\{x^{i}\\}_{i=0}^{k}\\) we have\n\\[\n\\ell_j(x^i) = \\delta_{ij} = \\begin{cases} 1 \\text{ for } i=j \\\\\n0 \\text{ for }  i\\ne j\n\\end{cases}\n\\]\n\n\n\n\n\n\n\n\n\nNote\n\n\nThe Lagrange basis functions do not depend on the mesh function values, only on the mesh points. The mesh points do not need to be uniform, any mesh will do as long as all points are different."
+    "text": "With three nodes the Lagrange basis functions are second order polynomials\n\n\n\nplt.figure(figsize=(6, 4))\nell2 = Lagrangebasis(xj[2:5], x=x)\nplt.plot(xj, u, 'bo-')\nxl = np.linspace(xj[2], xj[4], 100)\nplt.plot(xl, sp.lambdify(x, ell2[0])(xl), 'r:')\nplt.plot(xl, sp.lambdify(x, ell2[1])(xl), 'g:')\nplt.plot(xl, sp.lambdify(x, ell2[2])(xl), 'b:')\nplt.legend([r'$u(x_i)$', r'$\\ell_0(x)$', r'$\\ell_1(x)$', r'$\\ell_2(x)$'], loc='upper left');\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\nAll Lagrange basis functions are such that on the chosen mesh points \\(\\{x^{i}\\}_{i=0}^{k}\\) we have\n\\[\n\\ell_j(x^i) = \\delta_{ij} = \\begin{cases} 1 \\text{ for } i=j \\\\\n0 \\text{ for }  i\\ne j\n\\end{cases}\n\\]\n\n\n\n\n\n\n\n\n\nNote\n\n\nThe Lagrange basis functions do not depend on the mesh function values, only on the mesh points. The mesh points do not need to be uniform, any mesh will do as long as all points are different."
   },
   {
     "objectID": "postprocessing.html#interpolation-of-derivatives",
     "href": "postprocessing.html#interpolation-of-derivatives",
     "title": "Postprocessing and Interpolation",
     "section": "Interpolation of derivatives",
-    "text": "Interpolation of derivatives\nThe solution has been obtained in mesh points \\(\\boldsymbol{u}=(u(x_j))_{j=0}^N\\). How can we compute \\(u'(x)\\) for any given \\(x\\)?\n\nCan we use the derivative matrix \\(D^{(1)}\\) and thus\n\\[\n\\boldsymbol{f} = D^{(1)} \\boldsymbol{u}\n\\]\nsuch that the mesh function \\(\\boldsymbol{f}=(u'(x_j))_{j=0}^N\\)?\n\n\nYes, but you then need to interpolate \\(\\boldsymbol{f}\\)!\nIs there a better way?\n\n\nYes! Just take the derivative of the Lagrange function\n\n\n\\[\nu' \\approx L'(x) = \\sum_{j=0}^k u^j \\ell'_j(x)\n\\]\n\n\nell2 = Lagrangebasis(xj[2:5], x=x) \nL = Lagrangefunction(u[2:5], ell2) \nf = L.diff(x, 1)\ndisplay(L)\ndisplay(f)\n\n\\(\\displaystyle 3.0 \\left(x - 0.8\\right) \\left(x - 0.6\\right) - 6.0 \\left(x - 0.8\\right) \\left(x - 0.4\\right) + 2.0 \\left(x - 0.6\\right) \\left(x - 0.4\\right)\\)\n\n\n\\(\\displaystyle 1.0 - 2.0 x\\)"
+    "text": "Interpolation of derivatives\nThe solution has been obtained in mesh points \\(\\boldsymbol{u}=(u(x_j))_{j=0}^N\\). How can we compute \\(u'(x)\\) for any given \\(x\\)?\n\nCan we use the derivative matrix \\(D^{(1)}\\) and thus\n\\[\n\\boldsymbol{f} = D^{(1)} \\boldsymbol{u}\n\\]\nsuch that the mesh function \\(\\boldsymbol{f}=(u'(x_j))_{j=0}^N\\)?\n\n\nYes, but you then need to interpolate \\(\\boldsymbol{f}\\)!\nIs there a better way?\n\n\nYes! Just take the derivative of the Lagrange function\n\n\n\\[\nu' \\approx L'(x) = \\sum_{j=0}^k u^j \\ell'_j(x)\n\\]\n\n\nell2 = Lagrangebasis(xj[2:5], x=x)\nL = Lagrangefunction(u[2:5], ell2)\nf = L.diff(x, 1)\ndisplay(L)\ndisplay(f)\n\n\\(\\displaystyle 3.0 \\left(x - 0.8\\right) \\left(x - 0.6\\right) - 6.0 \\left(x - 0.8\\right) \\left(x - 0.4\\right) + 2.0 \\left(x - 0.6\\right) \\left(x - 0.4\\right)\\)\n\n\n\\(\\displaystyle 1.0 - 2.0 x\\)"
   },
   {
     "objectID": "postprocessing.html#if-the-problem-is-two-dimensional-then-we-have-the-solution-as-a-mesh-function",
@@ -3490,35 +3490,35 @@
     "href": "postprocessing.html#d-lagrange",
     "title": "Postprocessing and Interpolation",
     "section": "2D Lagrange",
-    "text": "2D Lagrange\n\nxij, yij = mesh2D(N, N, 1, 1, False) \ny = sp.Symbol('y')\nlx = Lagrangebasis(xij[5:7, 0], x=x)\nly = Lagrangebasis(yij[0, 6:8], x=y)\n\ndef Lagrangefunction2D(u, basisx, basisy):\n  N, M = u.shape\n  f = 0\n  for i in range(N):\n    for j in range(M):\n      f += basisx[i]*basisy[j]*u[i, j]\n  return f\n\nf = Lagrangefunction2D(U[5:7, 6:8], lx, ly)\nprint('The 2D Lagrange polynomial is:')\nsp.nsimplify(sp.simplify(f), tolerance=1e-8)\n\nThe 2D Lagrange polynomial is:\n\n\n\\(\\displaystyle \\frac{3 x y}{100} - \\frac{21 x}{500} - \\frac{9 y}{100} + \\frac{63}{500}\\)\n\n\nCompare with exact. Not perfect since only linear interpolation.\n\nue = x*(1-x)*y*(1-y)\nprint('Numerical          Exact')\nprint(f.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n0.0551250000000000 0.0563062500000000"
+    "text": "2D Lagrange\n\nxij, yij = mesh2D(N, N, 1, 1, False)\ny = sp.Symbol('y')\nlx = Lagrangebasis(xij[5:7, 0], x=x)\nly = Lagrangebasis(yij[0, 6:8], x=y)\n\ndef Lagrangefunction2D(u, basisx, basisy):\n  N, M = u.shape\n  f = 0\n  for i in range(N):\n    for j in range(M):\n      f += basisx[i]*basisy[j]*u[i, j]\n  return f\n\nf = Lagrangefunction2D(U[5:7, 6:8], lx, ly)\nprint('The 2D Lagrange polynomial is:')\nsp.nsimplify(sp.simplify(f), tolerance=1e-8)\n\nThe 2D Lagrange polynomial is:\n\n\n\\(\\displaystyle \\frac{3 x y}{100} - \\frac{21 x}{500} - \\frac{9 y}{100} + \\frac{63}{500}\\)\n\n\nCompare with exact. Not perfect since only linear interpolation.\n\nue = x*(1-x)*y*(1-y)\nprint('Numerical          Exact')\nprint(f.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65}))\n\nNumerical          Exact\n0.0551250000000000 0.0563062500000000"
   },
   {
     "objectID": "postprocessing.html#improve-accuracy-using-more-interpolation-points",
     "href": "postprocessing.html#improve-accuracy-using-more-interpolation-points",
     "title": "Postprocessing and Interpolation",
     "section": "Improve accuracy using more interpolation points",
-    "text": "Improve accuracy using more interpolation points\n\nlx = Lagrangebasis(xij[5:8, 0], x=x)\nly = Lagrangebasis(yij[0, 5:8], x=y)\nL2 = Lagrangefunction2D(U[5:8, 5:8], lx, ly)\nprint('Numerical          Exact')\nprint(L2.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n0.0563062500000000 0.0563062500000000"
+    "text": "Improve accuracy using more interpolation points\n\nlx = Lagrangebasis(xij[5:8, 0], x=x)\nly = Lagrangebasis(yij[0, 5:8], x=y)\nL2 = Lagrangefunction2D(U[5:8, 5:8], lx, ly)\nprint('Numerical          Exact')\nprint(L2.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65}))\n\nNumerical          Exact\n0.0563062500000000 0.0563062500000000"
   },
   {
     "objectID": "postprocessing.html#in-2d-we-need-partial-derivatives",
     "href": "postprocessing.html#in-2d-we-need-partial-derivatives",
     "title": "Postprocessing and Interpolation",
     "section": "In 2D we need partial derivatives",
-    "text": "In 2D we need partial derivatives\nUsing finite difference matrices is possible, but requires interpolation of outcome:\n\\[ \\small\n\\left(\\frac{\\partial u}{\\partial x}(x_i, y_j)\\right)_{i,j=0}^{N} = D^{(1)} U \\quad \\text{and} \\quad \\left(\\frac{\\partial u}{\\partial y}(x_i, y_j)\\right)_{i,j=0}^{N} =  U (D^{(1)})^T.\n\\]\n\nAs in 1D take the derivatives of the Lagrange polynomials:\n\\[ \\small\n\\frac{\\partial u}{\\partial x} = \\frac{\\partial L(x, y)}{\\partial x} = \\sum_{m=0}^k\\sum_{n=0}^l u^{m,n} \\frac{\\partial \\ell_{m}(x)}{\\partial x} \\ell_{n}(y)\n\\] \\[ \\small\n\\frac{\\partial u}{\\partial y} = \\frac{\\partial L(x, y)}{\\partial y} = \\sum_{m=0}^k\\sum_{n=0}^l u^{m,n} \\ell_{m}(x) \\frac{\\partial \\ell_{n}(y)}{\\partial y}\n\\]\nVerification:\n\ndLx = sp.diff(L2, x)\ndLy = sp.diff(L2, y)\nprint('Numerical          Exact')\nprint(dLx.subs({x: 0.55, y: 0.65}), sp.diff(ue, x).subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n-0.0227500000000000 -0.0227500000000000"
+    "text": "In 2D we need partial derivatives\nUsing finite difference matrices is possible, but requires interpolation of outcome:\n\\[ \\small\n\\left(\\frac{\\partial u}{\\partial x}(x_i, y_j)\\right)_{i,j=0}^{N} = D^{(1)} U \\quad \\text{and} \\quad \\left(\\frac{\\partial u}{\\partial y}(x_i, y_j)\\right)_{i,j=0}^{N} =  U (D^{(1)})^T\n\\]\n\nAs in 1D take the derivatives of the Lagrange polynomials:\n\\[ \\small\n\\frac{\\partial u}{\\partial x} = \\frac{\\partial L(x, y)}{\\partial x} = \\sum_{m=0}^k\\sum_{n=0}^l u^{m,n} \\frac{\\partial \\ell_{m}(x)}{\\partial x} \\ell_{n}(y)\n\\] \\[ \\small\n\\frac{\\partial u}{\\partial y} = \\frac{\\partial L(x, y)}{\\partial y} = \\sum_{m=0}^k\\sum_{n=0}^l u^{m,n} \\ell_{m}(x) \\frac{\\partial \\ell_{n}(y)}{\\partial y}\n\\]\nVerification:\n\ndLx = sp.diff(L2, x)\ndLy = sp.diff(L2, y)\nprint('Numerical          Exact')\nprint(dLx.subs({x: 0.55, y: 0.65}), sp.diff(ue, x).subs({x: 0.55, y: 0.65}))\n\nNumerical          Exact\n-0.0227500000000000 -0.0227500000000000"
   },
   {
     "objectID": "postprocessing.html#other-tools-for-interpolation-are-available",
     "href": "postprocessing.html#other-tools-for-interpolation-are-available",
     "title": "Postprocessing and Interpolation",
     "section": "Other tools for interpolation are available",
-    "text": "Other tools for interpolation are available\nScipy.interpolate\n\nfrom scipy.interpolate import interpn\nprint('Numerical          Exact')\nprint(interpn((xij[5:8, 0], yij[0, 5:8]), U[5:8, 5:8], np.array([0.55, 0.65])), ue.subs({x: 0.55, y: 0.65}))\n\nNumerical          Exact\n[0.055125] 0.0563062500000000\n\n\nDefaults to linear interpolation, so not very accurate.\n\nEasy to use more points and cubic interpolation:\n\nprint('Numerical          Exact') \nprint(interpn((xij[5:9, 0], yij[0, 5:9]), U[5:9, 5:9], np.array([0.55, 0.65]), method='cubic'), ue.subs({x: 0.55, y: 0.65})) \n\nNumerical          Exact\n[0.05630625] 0.0563062500000000"
+    "text": "Other tools for interpolation are available\nScipy.interpolate\n\nfrom scipy.interpolate import interpn\nprint('Numerical          Exact')\nprint(interpn((xij[5:8, 0], yij[0, 5:8]), U[5:8, 5:8], np.array([0.55, 0.65])), ue.subs({x: 0.55, y: 0.65}))\n\nNumerical          Exact\n[0.055125] 0.0563062500000000\n\n\nDefaults to linear interpolation, so not very accurate.\n\nEasy to use more points and cubic interpolation:\n\nprint('Numerical          Exact')\nprint(interpn((xij[5:9, 0], yij[0, 5:9]), U[5:9, 5:9], np.array([0.55, 0.65]), method='cubic'), ue.subs({x: 0.55, y: 0.65}))\n\nNumerical          Exact\n[0.05630625] 0.0563062500000000"
   },
   {
     "objectID": "postprocessing.html#how-to-compute-errors-in-2d",
     "href": "postprocessing.html#how-to-compute-errors-in-2d",
     "title": "Postprocessing and Interpolation",
     "section": "How to compute errors in 2D",
-    "text": "How to compute errors in 2D\nFor the numerical solution \\(u\\) and the exact solution \\(u^{e}\\) the \\(L^2\\) error norm can in general, for any domain \\(\\Omega\\) and number of dimensions, be defined as\n\\[\n\\|u-u^{e}\\|_{L^2(\\Omega)} = \\sqrt{\\int_{\\Omega} (u-u^{e})^2 d\\Omega}.\n\\]\nIn 2D \\(\\Omega = [0, L_x] \\times [0, L_y]\\) and the integral becomes\n\\[\n\\|u-u^{e}\\|_{L^2(\\Omega)} = \\sqrt{\\int_{0}^{L_x}\\int_0^{L_y}(u-u^{e})^2 dy dx}.\n\\]\n\nNumerical integration can be performed using, e.g., the midpoint rule\n\\[\nI(u)  = \\sum_{i=0}^{N_x-1} \\sum_{j=0}^{N_y-1} u((i+0.5)\\Delta x, (j+0.5) \\Delta y) \\Delta x \\Delta y \\approx \\int_{0}^{L_x}\\int_0^{L_y}u(x,y) dy dx.\n\\]"
+    "text": "How to compute errors in 2D\nFor the numerical solution \\(u\\) and the exact solution \\(u^{e}\\) the \\(L^2\\) error norm can in general, for any domain \\(\\Omega\\) and number of dimensions, be defined as\n\\[\n\\|u-u^{e}\\|_{L^2(\\Omega)} = \\sqrt{\\int_{\\Omega} (u-u^{e})^2 d\\Omega}\n\\]\nIn 2D \\(\\Omega = [0, L_x] \\times [0, L_y]\\) and the integral becomes\n\\[\n\\|u-u^{e}\\|_{L^2(\\Omega)} = \\sqrt{\\int_{0}^{L_x}\\int_0^{L_y}(u-u^{e})^2 dy dx}\n\\]\n\nNumerical integration can be performed using, e.g., the midpoint rule\n\\[\nI(u)  = \\sum_{i=0}^{N_x-1} \\sum_{j=0}^{N_y-1} u((i+0.5)\\Delta x, (j+0.5) \\Delta y) \\Delta x \\Delta y \\approx \\int_{0}^{L_x}\\int_0^{L_y}u(x,y) dy dx\n\\]"
   },
   {
     "objectID": "postprocessing.html#midpoint-integration",
@@ -3532,7 +3532,7 @@
     "href": "postprocessing.html#numerical-midpoint-integration-tested",
     "title": "Postprocessing and Interpolation",
     "section": "Numerical midpoint integration tested",
-    "text": "Numerical midpoint integration tested\n\nN = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um*dx*dy))\n\nI(U, 1/N, 1/N)\n\nnp.float64(0.2696557024695919)\n\n\nCompared to the exact integral\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue, (y, 0, 1)), (x, 0, 1))).n())\n\n0.26995448271292816\n\n\n\nThe error norm \\(\\|u-u^{e}\\|_{L^2} = \\sqrt{I((u-u^{e})^2)}\\) is\n\nnp.sqrt(I((U-sp.lambdify((x, y), ue)(xij, yij))**2, 1/N, 1/N))\n\nnp.float64(3.1759481967064892e-09)\n\n\nwhich is very small because the Lagrange interpolator happens to be close to exact exact for all the midpoints for this function. It is not zero in general."
+    "text": "Numerical midpoint integration tested\n\nN = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um*dx*dy))\n\nI(U, 1/N, 1/N)\n\nnp.float64(0.2696557024695919)\n\n\nCompared to the exact integral\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue, (y, 0, 1)), (x, 0, 1))).n())\n\n0.26995448271292816\n\n\n\nThe error norm \\(\\|u-u^{e}\\|_{L^2} = \\sqrt{I((u-u^{e})^2)}\\) is\n\nnp.sqrt(I((U-sp.lambdify((x, y), ue)(xij, yij))**2, 1/N, 1/N))\n\nnp.float64(3.1759481967064892e-09)\n\n\nwhich is very small because the Lagrange interpolator happens to be close to exact for all the midpoints for this function. It is not zero in general."
   },
   {
     "objectID": "postprocessing.html#numerical-integration-can-also-for-example-use-the-trapezoidal-or-simpson-methods",
@@ -3560,14 +3560,14 @@
     "href": "postprocessing.html#our-computational-domain-is-simpler-and-boundary-integrals-are-simpler-as-well",
     "title": "Postprocessing and Interpolation",
     "section": "Our computational domain is simpler and boundary integrals are simpler as well",
-    "text": "Our computational domain is simpler and boundary integrals are simpler as well\n\n\n\n\n\n\n\n\n\n\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} u(x=L_x, y) dy\n\\]\n\nnp.trapz(U[-1], dx=1/N, axis=0) \n\nnp.float64(0.0)\n\n\nIntegrate over boundary at \\(y=L_y\\)\n\\[\n\\int_{0}^{L_x} u(x, y=L_y) dx\n\\]\n\nnp.trapz(U[:, -1], dx=1/N, axis=0) \n\nnp.float64(0.0)"
+    "text": "Our computational domain is simpler and boundary integrals are simpler as well\n\n\n\n\n\n\n\n\n\n\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} u(x=L_x, y) dy\n\\]\n\nnp.trapz(U[-1], dx=1/N, axis=0)\n\nnp.float64(0.0)\n\n\nIntegrate over boundary at \\(y=L_y\\)\n\\[\n\\int_{0}^{L_x} u(x, y=L_y) dx\n\\]\n\nnp.trapz(U[:, -1], dx=1/N, axis=0)\n\nnp.float64(0.0)"
   },
   {
     "objectID": "postprocessing.html#friction-requires-derivatives",
     "href": "postprocessing.html#friction-requires-derivatives",
     "title": "Postprocessing and Interpolation",
     "section": "Friction requires derivatives",
-    "text": "Friction requires derivatives\n\n\n\n\n\n\n\n\n\n\n\nGradient in normal direction\n\\[\n\\int_{\\Gamma} \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\n\\]\n\nIntegrate gradient at \\(y=0\\)\n\\[\n\\int_{0}^{L_x} \\frac{\\partial u}{\\partial y}(x, y=0) dx\n\\]\n\ndudy = (N/2)*(-3*U[:, 0] + 4*U[:, 1] - U[:, 2])\nnp.trapz(dudy, dx=1/N)\n\nnp.float64(0.4601188642377852)\n\n\n\ndudye = sp.diff(ue, y)\nfloat(sp.integrate(dudye.subs(y, 0), (x, 0, 1)).n())\n\n0.4596976941318603\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} \\frac{\\partial u}{\\partial x}(x=L_x, y) dy\n\\]\n\ndudx = (N/2)*(3*U[-1] - 4*U[-2] + U[-3])\nnp.trapz(dudx, dx=1/N) \n\nnp.float64(-0.08567622273572727)"
+    "text": "Friction requires derivatives\n\n\n\n\n\n\n\n\n\n\n\nGradient in normal direction\n\\[\n\\int_{\\Gamma} \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\n\\]\n\nIntegrate gradient at \\(y=0\\)\n\\[\n\\int_{0}^{L_x} \\frac{\\partial u}{\\partial y}(x, y=0) dx\n\\]\n\ndudy = (N/2)*(-3*U[:, 0] + 4*U[:, 1] - U[:, 2])\nnp.trapz(dudy, dx=1/N)\n\nnp.float64(0.4601188642377852)\n\n\n\ndudye = sp.diff(ue, y)\nfloat(sp.integrate(dudye.subs(y, 0), (x, 0, 1)).n())\n\n0.4596976941318603\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} \\frac{\\partial u}{\\partial x}(x=L_x, y) dy\n\\]\n\ndudx = (N/2)*(3*U[-1] - 4*U[-2] + U[-3])\nnp.trapz(dudx, dx=1/N)\n\nnp.float64(-0.08567622273572727)"
   },
   {
     "objectID": "postprocessing.html#two-dimensional-wave-equation-1",
@@ -3581,7 +3581,7 @@
     "href": "postprocessing.html#discretization-of-the-wave-equation-in-2d",
     "title": "Postprocessing and Interpolation",
     "section": "Discretization of the wave equation in 2D",
-    "text": "Discretization of the wave equation in 2D\nFor all internal points we have the second order accurate \\[\n\\frac{u^{n+1}_{i,j} - 2u^n_{i,j} + u^{n-1}_{i, j}}{\\Delta t^2} =\nc^2 \\left(\\frac{u^n_{i+1,j} - 2u^n_{i,j} + u^n_{i-1, j}}{\\Delta x^2} + \\frac{u^n_{i,j+1} - 2u^n_{i,j} + u^n_{i, j-1}}{\\Delta y^2}\\right)\n\\]\n\nor on vectorized form using \\(U^n = \\Big( u(x_i, y_j, n \\Delta t)\\Big)_{i,j=0}^{N, N}\\) and \\(D_x^{(2)}\\) and \\(D_y^{(2)}\\) as second derivative matrices for \\(x\\) and \\(y\\) directions, respectively\n\\[\n\\frac{U^{n+1}-2U^n+U^{n-1}}{\\Delta t^2} = c^2 \\left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \\right).\n\\]"
+    "text": "Discretization of the wave equation in 2D\nFor all internal points we have the second order accurate \\[\n\\frac{u^{n+1}_{i,j} - 2u^n_{i,j} + u^{n-1}_{i, j}}{\\Delta t^2} =\nc^2 \\left(\\frac{u^n_{i+1,j} - 2u^n_{i,j} + u^n_{i-1, j}}{\\Delta x^2} + \\frac{u^n_{i,j+1} - 2u^n_{i,j} + u^n_{i, j-1}}{\\Delta y^2}\\right)\n\\]\n\nor on vectorized form using \\(U^n = \\Big( u(x_i, y_j, n \\Delta t)\\Big)_{i,j=0}^{N, N}\\) and \\(D_x^{(2)}\\) and \\(D_y^{(2)}\\) as second derivative matrices for \\(x\\) and \\(y\\) directions, respectively\n\\[\n\\frac{U^{n+1}-2U^n+U^{n-1}}{\\Delta t^2} = c^2 \\left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \\right)\n\\]"
   },
   {
     "objectID": "postprocessing.html#how-to-specify-initial-conditions",
@@ -3918,5 +3918,12 @@
     "title": "Function approximation by the finite element method",
     "section": "Summary",
     "text": "Summary\n\nThe finite element method (FEM) is a variational method using local basis functions.\nThe FEM uses the same Galerkin method as the methods using global basis functions.\nThe FEM is assembled by running over all elements and assembling local matrices and vectors that are subsequently added to global matrices and vectors.\nSince all assembly work is performed elementwise, the FEM is very well suited for unstructured meshes."
+  },
+  {
+    "objectID": "postprocessing.html#we-can-choose-any-points-and-any-number-of-basis-functions",
+    "href": "postprocessing.html#we-can-choose-any-points-and-any-number-of-basis-functions",
+    "title": "Postprocessing and Interpolation",
+    "section": "We can choose any points, and any number of basis functions",
+    "text": "We can choose any points, and any number of basis functions\n\n\nChoose \\((x^0, x^1, x^2) = (x_2, x_3, x_4)\\)\n\nell2 = Lagrangebasis(xj[2:5], x=x)\nL = Lagrangefunction(u[2:5], ell2)\nxf = np.linspace(xj[2], xj[4], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g')\nplt.plot(0.75, L.subs(x, 0.75), 'ko')\n\n\n\n\n\n\n\n\n\nChoose \\((x^0, x^1, x^2) = (x_3, x_4, x_5)\\)\n\nell3 = Lagrangebasis(xj[3:6], x=x)\nL = Lagrangefunction(u[3:6], ell3)\nxf = np.linspace(xj[3], xj[5], 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g')\nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
   }
 ]
