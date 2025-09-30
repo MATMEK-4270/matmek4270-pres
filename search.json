@@ -2853,7 +2853,7 @@
     "href": "functions.html#the-least-squares-method-for-function-approximation",
     "title": "Function approximation with global functions",
     "section": "The least squares method for function approximation",
-    "text": "The least squares method for function approximation\nWe want to approximate\n\\[\nu_N(x) \\approx u(x)\n\\]\nusing a function space \\(V_N\\) for \\(u_N\\). The pointwise error in \\(u_N\\) is defined as\n\\[\ne(x) = u(x) - u_N(x)\n\\]\nDefine the square of the \\(L^2\\) error norm\n\\[\nE = \\| e\\|^2 = (e, e)\n\\]\nThe least squares method is to find \\(u_N \\in V_N\\) such that\n\\[\n\\frac{\\partial E}{\\partial \\hat{u}_j} = 0, \\quad j=0, 1, \\ldots, N.\n\\]"
+    "text": "The least squares method for function approximation\nWe want to approximate\n\\[\nu_N(x) \\approx u(x)\n\\]\nusing a function space \\(V_N\\) for \\(u_N\\). The pointwise error in \\(u_N\\) is defined as\n\\[\ne(x) = u(x) - u_N(x)\n\\]\n\nDefine the square of the \\(L^2\\) error norm\n\\[\nE = \\| e\\|^2 = (e, e)\n\\]\nThe least squares method is to find \\(u_N \\in V_N\\) such that\n\\[\n\\frac{\\partial E}{\\partial \\hat{u}_j} = 0, \\quad j=0, 1, \\ldots, N.\n\\]"
   },
   {
     "objectID": "functions.html#the-least-squares-method",
@@ -2958,7 +2958,7 @@
     "href": "functions.html#the-mapping-complicates-the-inner-product",
     "title": "Function approximation with global functions",
     "section": "The mapping complicates the inner product",
-    "text": "The mapping complicates the inner product\nThe Galerkin method is defined on the true domain using \\(L^2([a, b])\\)\n\\[\n(u(x) - u_N(x), \\psi_j(x))_{L^2([a,b])}= \\int_{a}^b (u(x)-u_N(x)) \\psi_j(x) dx = 0, \\quad j=0,1,\\ldots, N.\n\\]\nInsert for \\(u_N = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x)\\) and rearrange\n\\[\n\\sum_{k=0}^N \\int_{a}^b \\psi_k(x)  \\psi_j(x) \\, dx \\, \\hat{u}_k =  \\int_{a}^b u(x) \\psi_j(x) dx, \\quad  j = 0, 1, \\ldots, N.\n\\]\nSo far just regular Galerkin.\n\nNow introduce \\(\\psi_j(x) = P_j(X(x))\\) and \\(\\psi_k(x) = P_k(X(x))\\) integrate with a change of variables \\(x\\rightarrow X\\). The new integration limits are then \\(X(a)=-1\\) and \\(X(b)=1\\)\n\\[\n\\sum_{k=0}^N \\int_{-1}^1 P_k(X)  P_j(X)\\, \\cancel{\\frac{dx}{dX}} \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, \\cancel{\\frac{dx}{dX}} \\, dX, \\quad j=0, 1, \\ldots, N\n\\]"
+    "text": "The mapping complicates the inner product\nThe Galerkin method is defined on the true domain using \\(L^2([a, b])\\)\n\\[\n(u(x) - u_N(x), \\psi_j(x))_{L^2([a,b])}= \\int_{a}^b (u(x)-u_N(x)) \\psi_j(x) dx = 0, \\quad j=0,1,\\ldots, N.\n\\]\nInsert for \\(u_N = \\sum_{k=0}^N \\hat{u}_k \\psi_k(x)\\) and rearrange\n\\[\n\\sum_{k=0}^N \\int_{a}^b \\psi_k(x)  \\psi_j(x) \\, dx \\, \\hat{u}_k =  \\int_{a}^b u(x) \\psi_j(x) dx, \\quad  j = 0, 1, \\ldots, N.\n\\]\nSo far just regular Galerkin.\n\nNow introduce \\(\\psi_j(x) = P_j(X(x))\\) and \\(\\psi_k(x) = P_k(X(x))\\) and integrate with a change of variables \\(x\\rightarrow X\\). The new integration limits are then \\(X(a)=-1\\) and \\(X(b)=1\\)\n\\[\n\\sum_{k=0}^N \\int_{-1}^1 P_k(X)  P_j(X)\\, \\cancel{\\frac{dx}{dX}} \\, dX \\, \\hat{u}_k =  \\int_{-1}^1 u(x(X)) P_j(X) \\, \\cancel{\\frac{dx}{dX}} \\, dX, \\quad j=0, 1, \\ldots, N\n\\]"
   },
   {
     "objectID": "functions.html#we-get-the-linear-system-with-inner-products-over-the-reference-domain",
