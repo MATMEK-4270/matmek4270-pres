@@ -2818,7 +2818,7 @@
     "href": "functions.html#example-ux-10x-12-1-for-xin-12",
     "title": "Function approximation with global functions",
     "section": "Example: \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)",
-    "text": "Example: \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)\n\n\n\n\n\n\n\n\n\nLet \\(V_N = \\{1, x\\}\\) be the space of all straight lines.\nWhat is the best approximation \\(u_N \\in V_N\\) to the function \\(u(x)\\)?\n\nHow do we decide what is best? All we know is that\n\\[\nu_N(x) = \\hat{u}_0 + \\hat{u}_1 x.\n\\]\nHow to find the best \\(\\{\\hat{u}_0, \\hat{u}_1\\}\\)?"
+    "text": "Example: \\(u(x) = 10(x-1)^2-1\\) for \\(x\\in [1,2]\\)\n\n\n\n\n\n\n\n\n\nLet \\(V_N = \\text{span}\\{1, x\\}\\) be the space of all straight lines.\nWhat is the best approximation \\(u_N \\in V_N\\) to the function \\(u(x)\\)?\n\nHow do we decide what is best? All we know is that\n\\[\nu_N(x) = \\hat{u}_0 + \\hat{u}_1 x.\n\\]\nHow to find the best \\(\\{\\hat{u}_0, \\hat{u}_1\\}\\)?"
   },
   {
     "objectID": "functions.html#how-to-find-the-best-approximation",
