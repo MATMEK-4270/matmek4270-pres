@@ -4,7 +4,7 @@ subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
 
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     slide-number: true
     preview-links: auto
@@ -36,7 +36,7 @@ pandoc:
 
 ## Function approximation with global functions {.smaller}
 
-Consider a generic function 
+Consider a generic function
 
 $$
 u(x), \quad x \in [a, b],
@@ -44,7 +44,7 @@ $$
 
 where $u(x)$ can by anything, like $u(x)=\exp(\sin(2\pi x))$, $u(x) = x^x$, etc., etc.
 
-We want to find an approximation to $u(x)$ using 
+We want to find an approximation to $u(x)$ using
 
 $$
 u(x) \approx u_N(x) = \sum_{k=0}^N \hat{u}_k \psi_k(x)
@@ -91,7 +91,7 @@ plt.figure(figsize=(5, 3))
 plt.plot(xj, sp.lambdify(x, u)(xj));
 ```
 
-Let $V_N = \{1, x\}$ be the space of all straight lines.
+Let $V_N = \text{span}\{1, x\}$ be the space of all straight lines.
 
 
 What is the best approximation $u_N \in V_N$ to the function $u(x)$?
@@ -119,8 +119,8 @@ What options are there? Who decides what is **best**?
 
 The three methods covered in this class are
 
-* The least squares method 
-* The Galerkin method 
+* The least squares method
+* The Galerkin method
 * The collocation method
 
 :::
@@ -143,7 +143,7 @@ plt.plot(xj, sp.lambdify(x, u)(xj), xj, -38/3+10*xj, 'r', xj, -1+10*(xj-1), 'g',
 ```
 
 :::
-::: 
+:::
 
 
 ::: {.fragment}
@@ -169,7 +169,7 @@ $$
 \left(f, g \right) = \int_{\Omega} f(x)g(x) d\Omega,
 $$
 
-for two real functions $f(x)$ and $g(x)$ (complex functions have a slightly different inner product). The symbol $\Omega$ here represents the domain of interest. For our first example $\Omega = [1, 2]$. 
+for two real functions $f(x)$ and $g(x)$ (complex functions have a slightly different inner product). The symbol $\Omega$ here represents the domain of interest. For our first example $\Omega = [1, 2]$.
 
 ::: {.callout-note}
 Sometimes the inner product is written as $\left(f, g \right)_{L^2(\Omega)}$, in order to clarify that it is the $L^2$ inner product on a certain domain. Normally, the $L^2(\Omega)$ subscript will be dropped.
@@ -183,7 +183,9 @@ $$
 \|u\| = \sqrt{(u, u)}
 $$
 
-The norm gives us a measure for the length or size of a vector. 
+The norm gives us a measure for the length or size of a vector.
+
+::: {.fragment}
 
 ### The $\small L^2(\Omega)$ error norm
 
@@ -193,13 +195,15 @@ $$
 e(x) = u(x) - u_N(x)
 $$
 
-then the $L^2(\Omega)$ error norm 
+then the $L^2(\Omega)$ error norm
 
 $$
 \| e \| = \sqrt{(e, e)} = \sqrt{\int_{\Omega} e^2 dx}
 $$
 
 gives us a measure of the error over the entire domain
+
+:::
 
 ## Back to our example - how do we find the best possible $u_N \approx u$? {.smaller}
 
@@ -228,7 +232,7 @@ Why don't we find $u_N$ such that it minimizes the $L^2$ error norm!
 
 ## The least squares method for function approximation {.smaller}
 
-We want to approximate 
+We want to approximate
 
 $$
 u_N(x) \approx u(x)
@@ -239,6 +243,8 @@ using a function space $V_N$ for $u_N$. The pointwise error in $u_N$ is defined 
 $$
 e(x) = u(x) - u_N(x)
 $$
+
+::: {.fragment}
 
 Define the square of the $L^2$ error norm
 
@@ -251,6 +257,8 @@ The least squares method is to find $u_N \in V_N$ such that
 $$
 \frac{\partial E}{\partial \hat{u}_j} = 0, \quad j=0, 1, \ldots, N.
 $$
+
+:::
 
 ## The least squares method {.smaller}
 
@@ -306,10 +314,10 @@ gives us $N+1$ linear equations for the $N+1$ unknown $\{\hat{u}_k\}_{k=0}^N$
 Find $u_N \in \mathbb{P}_1$ (meaning find $\hat{u}_0$ and $\hat{u}_1$) such that
 
 $$
-\frac{\partial E}{\partial \hat{u}_0}=0 \text{ and } \frac{\partial E}{\partial \hat{u}_1}=0 
+\frac{\partial E}{\partial \hat{u}_0}=0 \text{ and } \frac{\partial E}{\partial \hat{u}_1}=0
 $$
 
-Two equations for two unknowns. 
+Two equations for two unknowns.
 
 :::
 
@@ -333,9 +341,9 @@ display(eq2)
 ::: {.column width=40%}
 
 ```{python}
-#| echo : true 
+#| echo : true
 uhat = sp.solve((eq1, eq2), (u0, u1))
-print(uhat) 
+print(uhat)
 ```
 The LSM best fit equation is
 
@@ -346,12 +354,13 @@ print(f"uN = {uhat[u0]} + {uhat[u1]}x")
 :::
 ::: {.column}
 ```{python}
+#| fig-align: center
 plt.figure(figsize=(5, 3))
 plt.plot(xj, sp.lambdify(x, u)(xj), 'b', xj, uhat[u0]+uhat[u1]*xj, 'r:')
 plt.legend(['$u(x)$', '$u_{N}(x)$']);
 ```
 :::
-::: 
+:::
 
 ## Linear algebra approach {.smaller}
 
@@ -365,7 +374,7 @@ $$
 Assemble **mass matrix** $a_{jk}=\int \psi_k \psi_j dx$ and vector $b_j = \int u \psi_j dx$
 
 ```{python}
-#| echo : true  
+#| echo : true
 A = sp.zeros(2, 2)
 b = sp.zeros(2, 1)
 psi = (sp.S(1), x)
@@ -394,11 +403,11 @@ Again $N+1$ equations for $N+1$ unknowns.
 Not as much work as the least squares method, and even easier to implement in Sympy:
 
 ```{python}
-#| echo : true 
+#| echo : true
 eq1 = sp.Eq(inner(err, 1, domain=(1, 2)), 0)
 eq2 = sp.Eq(inner(err, x, domain=(1, 2)), 0)
 display(eq1)
-display(eq2) 
+display(eq2)
 ```
 
 ```{python}
@@ -430,7 +439,7 @@ $$
 
 ::: {.callout-note}
 
-In order to satisfy $(e, v)=0$ for all $v \in V_N$, we can insert for $v=\sum_{j=0}^N\hat{v}_j \psi_j$ such that 
+In order to satisfy $(e, v)=0$ for all $v \in V_N$, we can insert for $v=\sum_{j=0}^N\hat{v}_j \psi_j$ such that
 
 $$
 \sum_{j=0}^N (e, \psi_j) \hat{v}_j =0.
@@ -503,7 +512,7 @@ $$
 \{x^n \}_{n=0}^N,
 $$
 
-is a basis for $\mathbb{P}_N$. However, it is not a good basis. This is because the basis functions are **not orthogonal** and the mass matrix $A$ is **ill conditioned**. In short, this means it is difficult to solve $A\boldsymbol{x}=\boldsymbol{b}$ with good accuracy using finite precision computers. 
+is a basis for $\mathbb{P}_N$. However, it is not a good basis. This is because the basis functions are **not orthogonal** and the mass matrix $A$ is **ill conditioned**. In short, this means it is difficult to solve $A\boldsymbol{x}=\boldsymbol{b}$ with good accuracy using finite precision computers.
 
 The basis functions are shown below for $x\in [-1, 1]$
 
@@ -522,7 +531,7 @@ plt.legend(legend);
 
 ## Legendre polynomials are much better basis functions {.smaller}
 
-Legendre polynomials are defined on the domain $\Omega = [-1, 1]$ as the recursion
+Legendre polynomials, $P_i(x)$, are defined on the domain $\Omega = [-1, 1]$ as the recursion
 
 $$ \small
 \begin{align*}
@@ -556,18 +565,18 @@ plt.legend(legend);
 ```
 
 :::
-::: 
+:::
 
 
 ## The Legendre polynomials are $L^2$ orthogonal on the reference domain $\Omega=[-1, 1]$ {.smaller}
 
 $$
-(P_j, P_i)_{L^2(-1, 1)} =  \frac{2}{2j+1}\delta_{ij}.
-$$ 
+(P_j, P_i)_{L^2(-1, 1)} =  \frac{2}{2j+1}\delta_{ij}
+$$
 
 Orthogonality in the $L^2$ inner product space makes the Legendre polynomials very popular!
 
-Using $\|P_j\|^2 = \frac{2}{2j+1}$ we get that 
+Using $\|P_j\|^2 = \frac{2}{2j+1}$ we get that
 
 $$
 \hat{u}_j = \frac{(u, P_j)}{\|P_j\|^2} = \frac{2j+1}{2}(u, P_j)
@@ -661,14 +670,14 @@ $$
 \sum_{k=0}^N \int_{a}^b \psi_k(x)  \psi_j(x) \, dx \, \hat{u}_k =  \int_{a}^b u(x) \psi_j(x) dx, \quad  j = 0, 1, \ldots, N.
 $$
 
-So far just regular Galerkin. 
+So far just regular Galerkin.
 
 ::: {.fragment}
 
-Now introduce $\psi_j(x) = P_j(X(x))$ and integrate with a change of variables $x\rightarrow X$. The new integration limits are then $X(a)=-1$ and $X(b)=1$ 
+Now introduce $\psi_j(x) = P_j(X(x))$ and $\psi_k(x) = P_k(X(x))$ and integrate with a change of variables $x\rightarrow X$. The new integration limits are then $X(a)=-1$ and $X(b)=1$
 
 $$
-\sum_{j=0}^N \int_{-1}^1 P_k(X)  P_j(X)\, \cancel{\frac{dx}{dX}} \, dX \, \hat{u}_k =  \int_{-1}^1 u(x(X)) P_j(X) \, \cancel{\frac{dx}{dX}} \, dX, \quad j=0, 1, \ldots, N
+\sum_{k=0}^N \int_{-1}^1 P_k(X)  P_j(X)\, \cancel{\frac{dx}{dX}} \, dX \, \hat{u}_k =  \int_{-1}^1 u(x(X)) P_j(X) \, \cancel{\frac{dx}{dX}} \, dX, \quad j=0, 1, \ldots, N
 $$
 
 :::
@@ -677,7 +686,7 @@ $$
 
 
 $$
-\sum_{j=0}^N \int_{-1}^1 P_k(X)  P_j(X) \, dX \, \hat{u}_k =  \int_{-1}^1 u(x(X)) P_j(X) \, dX, \quad j=0, 1, \ldots, N
+\sum_{k=0}^N \int_{-1}^1 P_k(X)  P_j(X) \, dX \, \hat{u}_k =  \int_{-1}^1 u(x(X)) P_j(X) \, dX, \quad j=0, 1, \ldots, N
 $$
 
 which can be written as
@@ -714,9 +723,9 @@ For example, for our $u(x)=10(x-1)^2-1$ in the domain $\Omega = [a, b] = [1, 2]$
 ```{python}
 #| echo : true
 uhat = lambda u, j: (2*j+1) * inner(u, sp.legendre(j, x), (1, 2))/2
-u = 10*(x-1)**2-1 
+u = 10*(x-1)**2-1
 u0, u1 = uhat(u, 0), uhat(u, 1)
-print(u0, u1) 
+print(u0, u1)
 print(f"uN(x) = {u0}+{u1}X(x)")
 ```
 
@@ -767,7 +776,7 @@ $$
 
 ### Least squares method
 
-Find $u_N \in V_N$ such that 
+Find $u_N \in V_N$ such that
 
 $$
 \frac{\partial E}{\partial \hat{u}_j} = 0, \quad j=0,1,\ldots, N
@@ -780,9 +789,9 @@ Minimizing the $L^2$ error norm.
 :::
 ::: {.column}
 
-### Galerkin method 
+### Galerkin method
 
-Find $u_N \in V_N$ such that 
+Find $u_N \in V_N$ such that
 
 $$
 (u-u_N, v) = 0, \quad \forall \, v \in V_N
@@ -889,7 +898,7 @@ Use three points and the approximation is perfect because $u(x)$ is a 2nd order 
 #| echo : true
 #| code-line-numbers: "1-3,6"
 #| output-location: column
-xp = np.array([1, 1.5, 2]) 
+xp = np.array([1, 1.5, 2])
 ell = Lagrangebasis(xp)
 L = Lagrangefunction([u.subs(x, xi) for xi in xp], ell)
 plt.figure(figsize=(5, 3))
@@ -910,7 +919,7 @@ $$
 
 and attempt to approximate it with Lagrange polynomials on a uniform grid.
 
-Use 
+Use
 
 \begin{align}
 N &= 15 \\
@@ -922,8 +931,8 @@ u(x_i) &= u_N(x_i) = \sum_{j=0}^N u(x_j) \ell_j(x_i), \quad i=0, 1, \ldots, N
 
 ```{python}
 #| echo : true
-#| code-line-numbers: "1,3,5,6,11" 
-#| output-location: column 
+#| code-line-numbers: "1,3,5,6,11"
+#| output-location: column
 u = 1/(1+25*x**2)
 N = 15
 xj = np.linspace(-1, 1, N+1)
@@ -959,7 +968,7 @@ $$
 u(x)-u_N(x)=\frac{u^{(N)}(\xi)}{(N+1)!}p_N(x)
 $$
 
-for some $\xi \in [a, b]$. 
+for some $\xi \in [a, b]$.
 
 Hence, large errors occur when $p_N(x)$ is large or $u^{(N)}(\xi) = \frac{d^N u}{dx^N}(\xi)$ is large.
 
@@ -967,7 +976,7 @@ Lets look at $p_N(x)$, which is independent of the function $u(x)$!
 
 ## The monic $p_N(x)$ can be created for any mesh {.smaller}
 
-Lets use both a uniform mesh and Chebyshev points: 
+Lets use both a uniform mesh and Chebyshev points:
 
 $$
 x_j = -1 + \frac{2j}{N} \quad \text{and} \quad x_j = \cos(j \pi / N), \quad j=0, 1, \ldots, N
@@ -992,8 +1001,8 @@ Lets construct $p_N(x)$ using either the uniform mesh or Chebyshev nodes..
 
 ```{python}
 #| echo : true
-#| code-line-numbers: "1,2,5" 
-xp = np.linspace(-1, 1, N+1); xc = np.cos(np.arange(N+1)*np.pi/N) 
+#| code-line-numbers: "1,2,5"
+xp = np.linspace(-1, 1, N+1); xc = np.cos(np.arange(N+1)*np.pi/N)
 pp = np.poly(xp); pc = np.poly(xc)
 xj = np.linspace(-1, 1, 1000)
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 3))
@@ -1001,15 +1010,15 @@ ax1.plot(xj, np.polyval(pp, xj)); ax2.plot(xj, np.polyval(pc, xj))
 ax1.plot(xp, np.zeros(N+1), 'bo'); ax2.plot(xc, np.zeros(N+1), 'bo')
 ax1.set_title('Uniform grid'); ax2.set_title('Chebyshev grid');
 ```
- 
-* A uniform mesh leads to large oscillations near the edges, whereas Chebyshev points leads to a polynomial with near uniform oscillations. 
+
+* A uniform mesh leads to large oscillations near the edges, whereas Chebyshev points leads to a polynomial with near uniform oscillations.
 * The oscillations on the uniform mesh grow even larger when increasing $N$.
 
 ## Compute the Lagrange polynomial using Chebyshev points {.smaller}
 
 ```{python}
 #| echo : true
-#| output-location: column 
+#| output-location: column
 xj = np.cos(np.arange(N+1)*np.pi/N)
 uj = sp.lambdify(x, u)(xj)
 ell = Lagrangebasis(xj)
@@ -1035,10 +1044,10 @@ $$
 
 ```{python}
 #| echo : true
-#| output-location: column 
+#| output-location: column
 # Use scipy to compute integral
-from numpy.polynomial import Legendre 
-from scipy.integrate import quad 
+from numpy.polynomial import Legendre
+from scipy.integrate import quad
 def innern(u, v):
     uj = lambda xj: sp.lambdify(x, u)(xj)*v(xj)
     return quad(uj, -1, 1)[0]
@@ -1059,9 +1068,9 @@ ax2.legend(['Legendre', 'Lagrange on Chebyshev'])
 ```
 :::
 
-## Error in Legendre approximations {.smaller} 
+## Error in Legendre approximations {.smaller}
 
-The smooth function $u(x)$ can be exactly represented as 
+The smooth function $u(x)$ can be exactly represented as
 
 $$
 u(x) = \sum_{k=0}^{\infty} \hat{u}_k P_k(x)
@@ -1079,11 +1088,11 @@ $$
 \| u - u_N\| \sim | \hat{u}_{N+1}| \sim e^{-\mu N}, \quad \mu \in \mathbb{R}^+
 $$
 
-Exponential convergence! 
+Exponential convergence!
 
 ## An example of spectral (exponential) convergence {.smaller}
 
-Lets appriximate the smooth function 
+Lets appriximate the smooth function
 
 $$
 u = e^{\cos(x)}, \quad x \in [-1, 1]
@@ -1093,7 +1102,7 @@ and monitor the $L^2$ error as we increase $N$.
 
 ```{python}
 #| echo : true
-#| output-location: column 
+#| output-location: column
 def L2_error(uh, ue):
     uej = sp.lambdify(x, ue)
     err = []
@@ -1110,7 +1119,7 @@ plt.loglog(np.arange(0, 40, 2), L2_error(uh, u), 'ko')
 plt.title('$L^2 error$');plt.xlabel('N');
 ```
 
-* Exponentially fast convergence rate! 
+* Exponentially fast convergence rate!
 * Error does not go down further due to machine precision.
 
 ## Boundary issues {.smaller}
@@ -1126,20 +1135,20 @@ and attempt to find $u_N \in V_N = \text{span}\{\sin((j+1)\pi x)\}_{j=0}^N$ with
 The sines are orthogonal such that the mass matrix becomes diagonal
 
 $$
-\int_0^1 \sin((j+1) \pi x) \sin((i + 1) \pi x) dx = \frac{1}{2} \delta_{ij}.
+\int_0^1 \sin((j+1) \pi x) \sin((i + 1) \pi x) dx = \frac{1}{2} \delta_{ij}
 $$
 
 Hence we can easily get the coefficients with the Galerkin method
 
 $$
-\hat{u}_i = 2 \left( u(x),  \sin((i+1) \pi x) \right)_{L^2(0, 1)}.
+\hat{u}_i = 2 \left( u(x),  \sin((i+1) \pi x) \right)_{L^2(0, 1)}
 $$
 
 ## Implementation {.smaller}
 
 ```{python}
-#| echo : true 
-#| output-location : column 
+#| echo : true
+#| output-location : column
 u = 10*(x-1)**2-1
 uhat = lambda u, i: 2*inner(u, sp.sin((i+1)*sp.pi*x), (0, 1), (0, 1))
 ul = []
@@ -1166,7 +1175,7 @@ plt.legend(['$u(x)$', 'N=3', 'N=12']);
 
 ::: {.fragment}
 
-All basis functions are zero at the domain boundaries! And as such  
+All basis functions are zero at the domain boundaries! And as such
 
 $$
 u_N(0)=u_N(1)=0
@@ -1187,7 +1196,7 @@ $$
 B(x) = u(1)x + u(0)(1-x)
 $$
 
-such that 
+such that
 
 $$
 u_N(0)=B(0)=u(0) \quad \text{and} \quad u_N(1)=B(1)=u(1)
@@ -1195,7 +1204,7 @@ $$
 
 ::: {.fragment}
 
-The variational problem becomes: Find $\tilde{u}_N \in V_N$ such that 
+The variational problem becomes: Find $\tilde{u}_N \in V_N$ such that
 
 $$
 (B + \tilde{u}_N - u, v) = 0 \quad \forall \, v \in V_N
@@ -1225,8 +1234,8 @@ $$
 ## Result using boundary function $\small B(x)$ {.smaller}
 
 ```{python}
-#| echo: true 
-#| output-location: column 
+#| echo: true
+#| output-location: column
 uc = []
 B = u.subs(x, 0)*(1-x) + u.subs(x, 1)*x
 for i in range(15):
@@ -1255,11 +1264,11 @@ $$
 P_j(-1) = (-1)^j \quad \text{and} \quad P_j(1)=1
 $$
 
-Hence there is no need for boundary functions or adjustments 
+Hence there is no need for boundary functions or adjustments
 
 ```{python}
-#| echo : true 
-#| fig-align: center 
+#| echo : true
+#| fig-align: center
 uhat = lambda u, j: (2*j+1) * inner(u, sp.legendre(j, x), (0, 1))/2
 uL = [uhat(u, i) for i in range(6)]
 plt.figure(figsize=(8, 3.5))
@@ -1278,7 +1287,7 @@ print(uL)
     - Variational methods
         - The least squares method
         - The Galerkin method
-    - Collocation - an interpolation method 
+    - Collocation - an interpolation method
 
 * Interpolation on uniform grids is bad for large $N$ due to Runge's phenomenon
 * Basis functions are often defined on a reference domain, and problems thus need mapping.

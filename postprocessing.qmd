@@ -4,7 +4,7 @@ subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
 
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     slide-number: true
     preview-links: auto
@@ -29,7 +29,7 @@ We have computed the solution. Now what?
 
 ::: {.incremental}
 
-* We analyze the solution!
+* We analyse the solution!
 * We process the solution into presentable tables and figures
 * We extract important numbers that the solution allows us to compute. For example lift or drag on an airplane wing, or the flux through a boundary.
 
@@ -43,7 +43,7 @@ In order to achieve this we need
 
 * **Interpolation** - to get the solution everywhere and not just in nodes
 * **Integrals** - Averages arise from integrals over domains and boundaries
-* **Derivatives** - For example, drag is the integral of the gradient over a boundary $\int_{\Gamma}\nu \nabla u \cdot \boldsymbol{n} d\Gamma$. 
+* **Derivatives** - For example, drag is the integral of the gradient over a boundary $\int_{\Gamma}\nu \nabla u \cdot \boldsymbol{n} d\Gamma$
 * **Lagrange** interpolation polynomials will help us get there!
 :::
 
@@ -56,7 +56,7 @@ u(x) = x(1-x)
 $$
 
 ```{python}
-#| echo : false 
+#| echo : false
 import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
@@ -76,12 +76,12 @@ ax2.set_title('Exact solution');
 
 ::: {.fragment}
 
-We have the mesh function $(u(x_i))_{i=0}^{5}$. What is $u(0.75)$? 
+We have the mesh function $(u(x_i))_{i=0}^{5}$. What is $u(0.75)$?
 
 Linear interpolation requires interpolating between $u(x_3)$ and $u(x_4)$
 
 $$
-\overline{u}(x) = u_3 + (u_4-u_3)\frac{x-x_3}{x_4-x_3}.
+\overline{u}(x) = u_3 + (u_4-u_3)\frac{x-x_3}{x_4-x_3}
 $$
 
 :::
@@ -121,7 +121,7 @@ $$
 $$
 
 ::: {.callout-note}
-Lagrange mesh function values are given a superscript that starts counting from 0. 
+Lagrange mesh function values are given a superscript that starts counting from 0.
 :::
 
 ## Lagrange basis functions and nodes {.smaller}
@@ -138,7 +138,7 @@ contains $k+1$ **basis functions** $\{\ell_j(x)\}_{j=0}^k$.
 The basis functions are defined using any number of chosen interpolation nodes $(x^0, \ldots, x^k)$. For our linear example the nodes are simply
 
 $$
-(x^0, x^1) = (x_3, x_4) 
+(x^0, x^1) = (x_3, x_4)
 $$
 
 ::: {.callout-note}
@@ -156,13 +156,13 @@ $$
     \ell_j(x) = \frac{x-x^0}{x^j-x^0} \cdots \frac{x-x^{j-1}}{x^j-x^{j-1}}\frac{x-x^{j+1}}{x^j-x^{j+1}} \cdots \frac{x-x^{k}}{x^j-x^{k}}
 $$
 
-Let that one sink in. 
+Let that one sink in.
 
 ::: {.fragment}
 
-* Note index $j$ in $\ell_j(x)$, the $j$'th basis function.
+* Note index $j$ in $\ell_j(x)$, the $j$'th basis function
 * Numerator contains the product of all differences $(x-x^m)$ for all $m$ except $m=j$
-* Denominator contains the product of all differences $(x^j-x^m)$ for all $m$ except $m=j$ 
+* Denominator contains the product of all differences $(x^j-x^m)$ for all $m$ except $m=j$
 
 :::
 
@@ -171,19 +171,19 @@ Let that one sink in.
 We can write
 
 $$
-\ell_j(x) = \prod_{\substack{0 \le m \le k \\ m \ne j}} \frac{x-x^m}{x^j-x^m}.
+\ell_j(x) = \prod_{\substack{0 \le m \le k \\ m \ne j}} \frac{x-x^m}{x^j-x^m}
 $$
 
 :::
 
 ## Lagrange basis in Sympy {.smaller}
 
-A **basis** is a collection of basis functions
+A **basis** is a collection (set) of basis functions
 
 $$
 \{\ell_j(x)\}_{j=0}^k
 $$
- 
+
 
 ```{python}
 #| echo : true
@@ -198,7 +198,7 @@ def Lagrangebasis(xj, x=x):
 
   Returns
   -------
-  Lagrange basis as a list of Sympy functions 
+  Lagrange basis as a list of Sympy functions
   """
   from sympy import Mul
   n = len(xj)
@@ -208,7 +208,7 @@ def Lagrangebasis(xj, x=x):
     numer = numert/(x - xj[i])
     denom = Mul(*[(xj[i] - xj[j]) for j in range(n) if i != j])
     ell.append(numer/denom)
-  return ell 
+  return ell
 ```
 
 ## The basis for linear interpolation of our first example is {.smaller}
@@ -268,14 +268,14 @@ L = Lagrangefunction(u[3:5], ell)
 xf = np.linspace(xj[3]-0.1, xj[4]+0.1, 10)
 plt.figure(figsize=(6, 3))
 plt.plot(xj, u, 'bo')
-plt.plot(xf, sp.lambdify(x, L)(xf), 'g') 
+plt.plot(xf, sp.lambdify(x, L)(xf), 'g')
 plt.plot(0.75, L.subs(x, 0.75), 'ko')
 ```
 
 :::
-::: 
+:::
 
-## We can choose any, and any number of basis functions {.smaller}
+## We can choose any points, and any number of basis functions {.smaller}
 
 ::: {.columns}
 ::: {.column}
@@ -283,13 +283,13 @@ plt.plot(0.75, L.subs(x, 0.75), 'ko')
 #### Choose $(x^0, x^1, x^2) = (x_2, x_3, x_4)$
 
 ```{python}
-#| echo : true 
-ell2 = Lagrangebasis(xj[2:5], x=x) 
+#| echo : true
+ell2 = Lagrangebasis(xj[2:5], x=x)
 L = Lagrangefunction(u[2:5], ell2)
 xf = np.linspace(xj[2], xj[4], 10)
 plt.figure(figsize=(6, 3))
 plt.plot(xj, u, 'bo')
-plt.plot(xf, sp.lambdify(x, L)(xf), 'g') 
+plt.plot(xf, sp.lambdify(x, L)(xf), 'g')
 plt.plot(0.75, L.subs(x, 0.75), 'ko')
 
 ```
@@ -300,19 +300,19 @@ plt.plot(0.75, L.subs(x, 0.75), 'ko')
 #### Choose $(x^0, x^1, x^2) = (x_3, x_4, x_5)$
 
 ```{python}
-#| echo : true 
-ell3 = Lagrangebasis(xj[3:6], x=x) 
+#| echo : true
+ell3 = Lagrangebasis(xj[3:6], x=x)
 L = Lagrangefunction(u[3:6], ell3)
 xf = np.linspace(xj[3], xj[5], 10)
 plt.figure(figsize=(6, 3))
 plt.plot(xj, u, 'bo')
-plt.plot(xf, sp.lambdify(x, L)(xf), 'g') 
+plt.plot(xf, sp.lambdify(x, L)(xf), 'g')
 plt.plot(0.75, L.subs(x, 0.75), 'ko')
 
 ```
 
 :::
-::: 
+:::
 
 ## With three nodes the Lagrange basis functions are second order polynomials {.smaller}
 
@@ -321,15 +321,15 @@ plt.plot(0.75, L.subs(x, 0.75), 'ko')
 ::: {.column}
 
 ```{python}
-#| echo : true 
-plt.figure(figsize=(6, 4)) 
-ell2 = Lagrangebasis(xj[2:5], x=x) 
+#| echo : true
+plt.figure(figsize=(6, 4))
+ell2 = Lagrangebasis(xj[2:5], x=x)
 plt.plot(xj, u, 'bo-')
 xl = np.linspace(xj[2], xj[4], 100)
 plt.plot(xl, sp.lambdify(x, ell2[0])(xl), 'r:')
 plt.plot(xl, sp.lambdify(x, ell2[1])(xl), 'g:')
 plt.plot(xl, sp.lambdify(x, ell2[2])(xl), 'b:')
-plt.legend([r'$u(x_i)$', r'$\ell_0(x)$', r'$\ell_1(x)$', r'$\ell_2(x)$'], loc='upper left'); 
+plt.legend([r'$u(x_i)$', r'$\ell_0(x)$', r'$\ell_1(x)$', r'$\ell_2(x)$'], loc='upper left');
 ```
 
 :::
@@ -339,7 +339,7 @@ plt.legend([r'$u(x_i)$', r'$\ell_0(x)$', r'$\ell_1(x)$', r'$\ell_2(x)$'], loc='u
 
 ::: {.callout-note}
 
-All Lagrange basis functions are such that on the chosen mesh points $\{x^{i}\}_{i=0}^{k}$ we have 
+All Lagrange basis functions are such that on the chosen mesh points $\{x^{i}\}_{i=0}^{k}$ we have
 
 $$
 \ell_j(x^i) = \delta_{ij} = \begin{cases} 1 \text{ for } i=j \\
@@ -395,8 +395,8 @@ $$
 
 ```{python}
 #| echo : true
-ell2 = Lagrangebasis(xj[2:5], x=x) 
-L = Lagrangefunction(u[2:5], ell2) 
+ell2 = Lagrangebasis(xj[2:5], x=x)
+L = Lagrangefunction(u[2:5], ell2)
 f = L.diff(x, 1)
 display(L)
 display(f)
@@ -406,7 +406,7 @@ display(f)
 :::
 :::
 
-## If the problem is two-dimensional, then we have the solution as a mesh function {.smaller} 
+## If the problem is two-dimensional, then we have the solution as a mesh function {.smaller}
 
 $$
 u_{ij} = u(x_i, y_j), \quad i=0, 1, \ldots, N \, \text{and} \, j=0, 1, \ldots, N
@@ -428,17 +428,17 @@ We need to do interpolation in 2D!
 
 ## 2D-interpolation {.smaller}
 
-We consider first a simple function 
+We consider first a simple function
 
 $$
 u(x, y) = x(1-x)y(1-y), \quad x, y \in \Omega = [0, 1]^2
-$$ 
+$$
 
 and we want to find $u(0.55, 0.65)$ from the mesh function $(u(x_i, y_j))_{i,j=0}^{10}$.
 
 ```{python}
 #| echo : true
-#| fig-align : center 
+#| fig-align : center
 def mesh2D(Nx, Ny, Lx, Ly, sparse=False):
   x = np.linspace(0, Lx, Nx+1)
   y = np.linspace(0, Ly, Ny+1)
@@ -485,7 +485,7 @@ plt.title('Third order');
 ```
 
 :::
-::: 
+:::
 
 ## 2D Lagrange interpolation polynomials makes use of tensor product basis functions {.smaller}
 
@@ -493,13 +493,13 @@ $$
 L(x, y) = \sum_{m=0}^k\sum_{n=0}^l u^{m,n} \ell_{m}(x) \ell_{n}(y),
 $$
 
-Here one (tensor product) basis function is 
+Here one (tensor product) basis function is
 
 $$
 \psi_{mn}(x, y) = \ell_{m}(x) \ell_{n}(y)
 $$
 
-and 
+and
 
 $$
 u^{m,n}  \quad m=0, \ldots, k \quad \text{and} \quad n=0, \ldots, l
@@ -514,7 +514,7 @@ are the $(k+1)(l+1)$ mesh points used for the interpolation.
 
 ```{python}
 #| echo : true
-xij, yij = mesh2D(N, N, 1, 1, False) 
+xij, yij = mesh2D(N, N, 1, 1, False)
 y = sp.Symbol('y')
 lx = Lagrangebasis(xij[5:7, 0], x=x)
 ly = Lagrangebasis(yij[0, 6:8], x=y)
@@ -535,21 +535,21 @@ sp.nsimplify(sp.simplify(f), tolerance=1e-8)
 Compare with exact. Not perfect since only linear interpolation.
 
 ```{python}
-#| echo : true 
+#| echo : true
 ue = x*(1-x)*y*(1-y)
 print('Numerical          Exact')
-print(f.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65})) 
+print(f.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65}))
 ```
 
 ## Improve accuracy using more interpolation points {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 lx = Lagrangebasis(xij[5:8, 0], x=x)
 ly = Lagrangebasis(yij[0, 5:8], x=y)
 L2 = Lagrangefunction2D(U[5:8, 5:8], lx, ly)
 print('Numerical          Exact')
-print(L2.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65})) 
+print(L2.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65}))
 ```
 
 ## In 2D we need partial derivatives {.smaller}
@@ -557,7 +557,7 @@ print(L2.subs({x: 0.55, y: 0.65}), ue.subs({x: 0.55, y: 0.65}))
 Using finite difference matrices is possible, but requires interpolation of outcome:
 
 $$ \small
-\left(\frac{\partial u}{\partial x}(x_i, y_j)\right)_{i,j=0}^{N} = D^{(1)} U \quad \text{and} \quad \left(\frac{\partial u}{\partial y}(x_i, y_j)\right)_{i,j=0}^{N} =  U (D^{(1)})^T.
+\left(\frac{\partial u}{\partial x}(x_i, y_j)\right)_{i,j=0}^{N} = D^{(1)} U \quad \text{and} \quad \left(\frac{\partial u}{\partial y}(x_i, y_j)\right)_{i,j=0}^{N} =  U (D^{(1)})^T
 $$
 
 ::: {.fragment}
@@ -574,11 +574,11 @@ $$
 Verification:
 
 ```{python}
-#| echo : true 
+#| echo : true
 dLx = sp.diff(L2, x)
 dLy = sp.diff(L2, y)
 print('Numerical          Exact')
-print(dLx.subs({x: 0.55, y: 0.65}), sp.diff(ue, x).subs({x: 0.55, y: 0.65})) 
+print(dLx.subs({x: 0.55, y: 0.65}), sp.diff(ue, x).subs({x: 0.55, y: 0.65}))
 ```
 :::
 
@@ -600,8 +600,8 @@ Easy to use more points and cubic interpolation:
 
 ```{python}
 #| echo : true
-print('Numerical          Exact') 
-print(interpn((xij[5:9, 0], yij[0, 5:9]), U[5:9, 5:9], np.array([0.55, 0.65]), method='cubic'), ue.subs({x: 0.55, y: 0.65})) 
+print('Numerical          Exact')
+print(interpn((xij[5:9, 0], yij[0, 5:9]), U[5:9, 5:9], np.array([0.55, 0.65]), method='cubic'), ue.subs({x: 0.55, y: 0.65}))
 ```
 
 :::
@@ -611,13 +611,13 @@ print(interpn((xij[5:9, 0], yij[0, 5:9]), U[5:9, 5:9], np.array([0.55, 0.65]), m
 For the numerical solution $u$ and the exact solution $u^{e}$ the $L^2$ error norm can in general, for any domain $\Omega$ and number of dimensions, be defined as
 
 $$
-\|u-u^{e}\|_{L^2(\Omega)} = \sqrt{\int_{\Omega} (u-u^{e})^2 d\Omega}.
+\|u-u^{e}\|_{L^2(\Omega)} = \sqrt{\int_{\Omega} (u-u^{e})^2 d\Omega}
 $$
 
 In 2D $\Omega = [0, L_x] \times [0, L_y]$ and the integral becomes
 
 $$
-\|u-u^{e}\|_{L^2(\Omega)} = \sqrt{\int_{0}^{L_x}\int_0^{L_y}(u-u^{e})^2 dy dx}.
+\|u-u^{e}\|_{L^2(\Omega)} = \sqrt{\int_{0}^{L_x}\int_0^{L_y}(u-u^{e})^2 dy dx}
 $$
 
 ::: {.fragment}
@@ -625,7 +625,7 @@ $$
 Numerical integration can be performed using, e.g., the midpoint rule
 
 $$
-I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta y) \Delta x \Delta y \approx \int_{0}^{L_x}\int_0^{L_y}u(x,y) dy dx.
+I(u)  = \sum_{i=0}^{N_x-1} \sum_{j=0}^{N_y-1} u((i+0.5)\Delta x, (j+0.5) \Delta y) \Delta x \Delta y \approx \int_{0}^{L_x}\int_0^{L_y}u(x,y) dy dx
 $$
 
 :::
@@ -676,7 +676,7 @@ I(U, 1/N, 1/N)
 Compared to the exact integral
 
 ```{python}
-#| echo : true 
+#| echo : true
 float(sp.sqrt(sp.integrate(sp.integrate(ue, (y, 0, 1)), (x, 0, 1))).n())
 ```
 ::: {.fragment}
@@ -687,7 +687,7 @@ The error norm $\|u-u^{e}\|_{L^2} = \sqrt{I((u-u^{e})^2)}$ is
 #| echo : true
 np.sqrt(I((U-sp.lambdify((x, y), ue)(xij, yij))**2, 1/N, 1/N))
 ```
-which is very small because the Lagrange interpolator happens to be close to exact exact for all the midpoints for this function. It is not zero in general.
+which is very small because the Lagrange interpolator happens to be close to exact for all the midpoints for this function. It is not zero in general.
 
 :::
 
@@ -712,7 +712,7 @@ I_simps(U, 1/N, 1/N)
 
 Exact:
 ```{python}
-#| echo : true 
+#| echo : true
 float(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))).n())
 ```
 
@@ -736,7 +736,7 @@ l2_error(U-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)
 
 ## Integration over boundary {.smaller}
 
-In many real problems we are not interested in the solution at a point, but rather in average values, or values integrated over a boundary. 
+In many real problems we are not interested in the solution at a point, but rather in average values, or values integrated over a boundary.
 
 ![](./figures/plane-wing-shape-design-lift-600nw-2155331617.webp)
 
@@ -786,8 +786,8 @@ $$
 $$
 
 ```{python}
-#| echo : true 
-np.trapz(U[-1], dx=1/N, axis=0) 
+#| echo : true
+np.trapz(U[-1], dx=1/N, axis=0)
 ```
 
 Integrate over boundary at $y=L_y$
@@ -797,12 +797,12 @@ $$
 $$
 
 ```{python}
-#| echo : true 
-np.trapz(U[:, -1], dx=1/N, axis=0) 
+#| echo : true
+np.trapz(U[:, -1], dx=1/N, axis=0)
 ```
 
 :::
-::: 
+:::
 
 ## Friction requires derivatives {.smaller}
 
@@ -855,7 +855,7 @@ $$
 $$
 
 ```{python}
-#| echo : true 
+#| echo : true
 dudy = (N/2)*(-3*U[:, 0] + 4*U[:, 1] - U[:, 2])
 np.trapz(dudy, dx=1/N)
 ```
@@ -873,9 +873,9 @@ $$
 $$
 
 ```{python}
-#| echo : true 
+#| echo : true
 dudx = (N/2)*(3*U[-1] - 4*U[-2] + U[-3])
-np.trapz(dudx, dx=1/N) 
+np.trapz(dudx, dx=1/N)
 ```
 
 :::
@@ -905,7 +905,7 @@ $$
 
 ::: {.fragment}
 
-Any solution to the wave equation can be written as combinations of waves 
+Any solution to the wave equation can be written as combinations of waves
 
 $$
 u(x, y, t) = g(k_x x + k_y y - |\boldsymbol{k}|ct)
@@ -932,7 +932,7 @@ $$
 or on vectorized form using $U^n = \Big( u(x_i, y_j, n \Delta t)\Big)_{i,j=0}^{N, N}$ and $D_x^{(2)}$ and $D_y^{(2)}$ as second derivative matrices for $x$ and $y$ directions, respectively
 
 $$
-\frac{U^{n+1}-2U^n+U^{n-1}}{\Delta t^2} = c^2 \left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \right).
+\frac{U^{n+1}-2U^n+U^{n-1}}{\Delta t^2} = c^2 \left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \right)
 $$
 
 :::
@@ -952,7 +952,7 @@ $$
 \frac{U^{1}-2U^0+U^{-1}}{\Delta t^2} = c^2 \left( D^{(2)}_x U^0 + U^0 (D^{(2)}_y)^T \right),
 $$
 
-such that 
+such that
 
 $$
 U^1 = U^0 + \frac{c^2 \Delta t^2}{2} \left( D^{(2)}_x U^0 + U^0 (D^{(2)}_y)^T \right).
@@ -962,7 +962,7 @@ $$
 
    1. Specify $U^0$ and $U^1$ from initial conditions
    2. for n in (1, 2, ..., $N_t-1$) compute
-       * $U^{n+1} = 2U^n - U^{n-1} + (c\Delta t)^2 \left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \right)$ 
+       * $U^{n+1} = 2U^n - U^{n-1} + (c\Delta t)^2 \left( D^{(2)}_x U^n + U^n (D^{(2)}_y)^T \right)$
        * Apply boundary conditions to $U^{n+1}$
        * Swap $U^{n-1} \leftarrow U^n$ and $U^n \leftarrow U^{n+1}$ if using only three solution vectors
 
@@ -972,7 +972,7 @@ $$
 u(x, y, t) = e^{\hat{\imath} (\boldsymbol{k} \cdot \boldsymbol{x} + \omega t)}
 $$
 
-where $\omega = |\boldsymbol{k}| c$ and $\hat{\imath}=\sqrt{-1}$. 
+where $\omega = |\boldsymbol{k}| c$ and $\hat{\imath}=\sqrt{-1}$.
 
 ::: {.callout-note}
 $\boldsymbol{x} = x \boldsymbol{i} + y \boldsymbol{j}$ and $\boldsymbol{k} = k_x \boldsymbol{i} + k_y \boldsymbol{j}$,  such that $\boldsymbol{k} \cdot \boldsymbol{x} = k_x x + k_y y$.
@@ -997,7 +997,7 @@ with amplification factor $A=e^{\hat{\imath} \omega \Delta t}$ and $E(i, j) = e^
 
 ## Stability of discretization {.smaller}
 
-We have 
+We have
 
 $$
 \frac{u^{n+1}_{i,j} - 2u^n_{i,j} + u^{n-1}_{i, j}}{\Delta t^2} =
@@ -1006,7 +1006,7 @@ $$
 
 ::: {.fragment}
 
-To calculate the stability of this scheme we need to insert for $u^n_{ij} = A^n E(i, j)$ and compute the amplification factor $A$. For stability we require 
+To calculate the stability of this scheme we need to insert for $u^n_{ij} = A^n E(i, j)$ and compute the amplification factor $A$. For stability we require
 
 $$
 |A| \le 1
@@ -1014,7 +1014,7 @@ $$
 
 This is the same stability criterion as used in the 1D case.
 
-::: 
+:::
 
 
 ## Insert for $\small u^n_{ij} = A^n E(i, j)$ in the discretized wave equation  {.smaller}
@@ -1024,13 +1024,13 @@ $$ \small
 \begin{split}
 \frac{(A^{n+1} - 2A^n + A^{n-1})E(i, j)}{\Delta t^2} &=
  c^2 A^n \Big\{ \\
-    & \frac{ E(i+1, j) - 2E(i, j) +  E(i-1, j)}{\Delta x^2} \\ 
+    & \frac{ E(i+1, j) - 2E(i, j) +  E(i-1, j)}{\Delta x^2} \\
  + & \frac{E(i, j+1) - 2E(i, j) + E(i, j-1)}{\Delta y^2} \Big\}
 \end{split}
 \end{equation}
 $$
 
-Divide by $A^n E(i, j)$ and multiply by $\Delta t^2$ in order to find $A$. We also use that, e.g., 
+Divide by $A^n E(i, j)$ and multiply by $\Delta t^2$ in order to find $A$. We also use that, e.g.,
 
 $$ \small
 \frac{E(i+1, j)}{E(i, j)} = \frac{e^{\hat{\imath}((i+1)k_x \Delta x + j k_y \Delta y)}}{e^{\hat{\imath}(i k_x \Delta x + j k_y \Delta y)}} = e^{\hat{\imath} k_x \Delta x}
@@ -1047,7 +1047,7 @@ A - 2 + A^{-1} =
  c^2 \Delta t^2 \left( \frac{ e^{\hat{\imath} k_x \Delta x} - 2 + e^{- \hat{\imath} k_x \Delta x} }{\Delta x^2} + \frac{ e^{\hat{\imath} k_y \Delta y} - 2 + e^{- \hat{\imath} k_y \Delta y} }{\Delta y^2} \right)
 $$
 
-which can be written as 
+which can be written as
 
 $$
 A + A^{-1} = \beta
@@ -1083,29 +1083,29 @@ $$
 -2 \le 2 + 2 c^2 \Delta t^2 \left(\frac{\cos (k_x \Delta x) - 1}{\Delta x^2} + \frac{\cos (k_y \Delta y) - 1}{\Delta y^2} \right) \le 2
 $$
 
-or 
+or
 
 $$
--2 \le c^2 \Delta t^2 \left(\frac{\cos (k_x \Delta x) - 1}{\Delta x^2} + \frac{\cos (k_y \Delta y) - 1}{\Delta y^2} \right) \le 0 
+-2 \le c^2 \Delta t^2 \left(\frac{\cos (k_x \Delta x) - 1}{\Delta x^2} + \frac{\cos (k_y \Delta y) - 1}{\Delta y^2} \right) \le 0
 $$
 
 ## Stability limit on time step {.smaller}
 
 Since $\cos (k_x \Delta x)$ and $\cos (k_y \Delta y)$ are at worst $-1$ each, we get from
 $$ \small
--2 \le c^2 \Delta t^2 \left(\frac{\cos (k_x \Delta x) - 1}{\Delta x^2} + \frac{\cos (k_y \Delta y) - 1}{\Delta y^2} \right) \le 0 
+-2 \le c^2 \Delta t^2 \left(\frac{\cos (k_x \Delta x) - 1}{\Delta x^2} + \frac{\cos (k_y \Delta y) - 1}{\Delta y^2} \right) \le 0
 $$
 
 that
 
 $$ \small
--2 \le c^2 \Delta t^2 \left( \frac{-2}{\Delta x^2} + \frac{-2}{\Delta y^2} \right) 
+-2 \le c^2 \Delta t^2 \left( \frac{-2}{\Delta x^2} + \frac{-2}{\Delta y^2} \right)
 $$
 
 which is simplified further into
 
 $$ \small
-\left(\frac{c \Delta t}{\Delta x} \right)^2 + \left(\frac{c \Delta t}{\Delta y} \right)^2 \le 1 
+\left(\frac{c \Delta t}{\Delta x} \right)^2 + \left(\frac{c \Delta t}{\Delta y} \right)^2 \le 1
 $$
 
 This is the stability limit on $\Delta t$ for the 2D wave equation. If $\Delta x = \Delta y = h$, then
@@ -1162,7 +1162,7 @@ ani = animation.ArtistAnimation(fig, frames, interval=400, blit=True,  repeat_de
 ```
 ![](./figures/wavemovie2d.apng){fig-align="center"}
 
-## Test solver with slightly higher than allowed CFL 
+## Test solver with slightly higher than allowed CFL
 
 ```{.python code-line-numbers="1-2"}
 CFL = 0.71

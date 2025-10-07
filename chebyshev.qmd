@@ -5,7 +5,7 @@ author: "Prof. Mikael Mortensen, University of Oslo"
 
 #jupyter: shenfun
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     slide-number: true
     preview-links: auto
@@ -27,13 +27,13 @@ pandoc:
 ## Short recap {.smaller}
 
 ```{python}
-import numpy as np 
-import sympy as sp 
+import numpy as np
+import sympy as sp
 import matplotlib.pyplot as plt
 x = sp.Symbol('x')
 ```
 
-We want to find an approximation to $u(x)$ using 
+We want to find an approximation to $u(x)$ using
 
 $$
 u(x) \approx u_N(x) = \sum_{k=0}^N \hat{u}_k \psi_k(x)
@@ -46,9 +46,10 @@ $$
 * Collocation method (Lagrange interpolation)
 :::
 ::: {.column}
-* $\psi_j$ is a basis function 
-* $\{\psi_j\}_{j=0}^N$ is a basis 
+* $\psi_j$ is a basis function
+* $\{\psi_j\}_{j=0}^N$ is a basis
 * $V_N = \text{span}\{\psi_j\}_{j=0}^N$ is a function space
+* $\{\hat{u}_k\}_{k=0}^N$ are the unknowns
 :::
 :::
 
@@ -103,7 +104,7 @@ $$
 
 * Insert for $v=P_i$ and $u_N=\sum_{j=0}^N \hat{u}_j P_j$ and solve to get $\hat{u}_i=\frac{(u, P_i)}{\|P_i\|^2}, i=0,1, \ldots, N$
 * Requires mapping if $\Omega \ne [-1, 1]$
-* The Galerkin method is also be referred to as a **projection** of $u(x)$ onto $V_N$
+* The Galerkin method is also referred to as a **projection** of $u(x)$ onto $V_N$
 :::
 
 ## Chebyshev polynomials {.smaller}
@@ -117,7 +118,7 @@ $$
 ::: {.columns}
 ::: {.column}
 
-As recursion: 
+As recursion:
 $$ \small
 \begin{align*}
 T_0(x) &= 1, \\
@@ -132,7 +133,7 @@ $$
 ::: {.column}
 
 ```{python}
-import numpy as np 
+import numpy as np
 import matplotlib.pyplot as plt
 xj = np.linspace(-1, 1, 100)
 fig, ax = plt.subplots(figsize=(6, 3))
@@ -151,14 +152,14 @@ For $T_N(x)$ all extrema points (max and mins) and all roots are, respectively
 
 $$
 \begin{align}
-x_j &= \cos\left(\frac{j \pi}{N}\right),  &j=0, 1, \ldots, N \\ 
+x_j &= \cos\left(\frac{j \pi}{N}\right),  &j=0, 1, \ldots, N \\
 x_j &= \cos\left( \frac{(2j+1)\pi}{2N}\right),  &j=0, 1, \ldots, N-1
 \end{align}
 $$
 
 ## Chebyshev polynomials as a basis {.smaller}
 
-The Chebyshev polynomials $\{T_j\}_{j=0}^N$ also form a basis for $\mathbb{P}_N$. However, the Chebyshev polynomials are not orthogonal in the $L^2(-1, 1)$ space! 
+The Chebyshev polynomials $\{T_j\}_{j=0}^N$ also form a basis for $\mathbb{P}_N$. However, the Chebyshev polynomials are **not orthogonal** in the $L^2(-1, 1)$ space!
 
 $$
 (T_i, T_j)_{L^2(\Omega)} \ne \|T_i\|^2 \delta_{ij}
@@ -166,7 +167,7 @@ $$
 
 ::: {.fragment}
 
-The Chebyshev polynomials are, on the other hand, orthogonal in a special **weighted** inner product space. 
+The Chebyshev polynomials are, on the other hand, orthogonal in a special **weighted** inner product space.
 
 We define the weighted $L^2_{\omega}(\Omega)$ inner product as
 
@@ -198,7 +199,7 @@ The Galerkin method for approximating a smooth function $u(x)$ is now:
 Find $u_N \in \mathbb{P}_N$ such that
 
 $$
-(u-u_N, v)_{\omega} = 0, \quad \forall \, v \in \mathbb{P}_N 
+(u-u_N, v)_{\omega} = 0, \quad \forall \, v \in \mathbb{P}_N
 $$
 
 ::: {.fragment}
@@ -224,7 +225,7 @@ $$
 
 ::: {.fragment}
 
-We get the linear algebra problem using 
+We get the linear algebra problem using
 
 $$
 \frac{\partial E_{\omega}}{\partial \hat{u}_j} = \frac{\partial}{\partial \hat{u}_j} \int_{-1}^1 e^2 \omega dx = \int_{-1}^1 2e \frac{\partial e}{\partial \hat{u}_j} \omega dx
@@ -274,7 +275,7 @@ $$
 
 The procedure is exactly like for Legendre polynomials, but with a weighted inner product using $L^2_{\omega}(-1,1)$ instead of $L^2(-1,1)$.
 
-## The weighted inner product requires some extra attention {.smaller} 
+## The weighted inner product requires some extra attention {.smaller}
 
 
 $$
@@ -319,7 +320,7 @@ $$
 \hat{u}_i = \frac{2}{c_i \pi}\int_{0}^{\pi} u(x(\cos \theta)) \cos(i \theta) d\theta, \quad  i=0, 1, \ldots, N
 $$
 
-Lets try this with an example. 
+Lets try this with an example.
 
 ## Implementation of the weighted inner product {.smaller}
 
@@ -346,15 +347,15 @@ def innerw(u, v, domain, ref_domain=(-1, 1)):
 
 ::: {.callout-note}
 
-We use the Sympy function `simplify` with `inverse=True`, which is required for Sympy to use that $\cos^{-1}(\cos x) = x$, which is not necessarily true. 
+We use the Sympy function `simplify` with `inverse=True`, which is required for Sympy to use that $\cos^{-1}(\cos x) = x$, which is not necessarily true.
 
 :::
 
-## Try with $\small u(x)=10(x-1)^2-1, x\in [1,2]$ {.smaller} 
+## Try with $\small u(x)=10(x-1)^2-1, x\in [1,2]$ {.smaller}
 
 ```{python}
 #| echo : true
-#| fig-align: center 
+#| fig-align: center
 from numpy.polynomial import Chebyshev
 u = 10*(x-1)**2-1
 uhat = lambda u, j: 2 / (cj(j) * sp.pi) * innerw(u, Tk(j, x), (1, 2))
@@ -415,7 +416,7 @@ $$
 
 ```{python}
 #| echo : true
-#| output-location: column 
+#| output-location: column
 # Compute Chebyshev coefficients:
 N = 25
 uc = [uhatn(u, n) for n in range(N)]
@@ -440,8 +441,8 @@ Very similar convergence. Chebyshev coefficients are slightly smaller than Legen
 ## $L^2$ error - $\|e\|=\sqrt{\int_{-1}^1 e^2 dx}$ (not weighted) {.smaller}
 
 ```{python}
-#| echo : true 
-#| fig-align: center 
+#| echo : true
+#| fig-align: center
 def L2_error(uh, ue, space=Legendre):
     xj = np.linspace(-1, 1, 1000)
     uej = sp.lambdify(x, ue)(xj)
@@ -472,7 +473,7 @@ $$
 
 * $\Psi_{i}(x, y)$ is a two-dimensional basis function
 * $\{\Psi_i\}_{i=0}^N$ is a basis
-* $W_N = \text{span}\{\Psi_i\}_{i=0}^N$ is a 2D function space. 
+* $W_N = \text{span}\{\Psi_i\}_{i=0}^N$ is a 2D function space.
 
 ##  It is more common to use one basis function for each direction {.smaller}
 
@@ -480,14 +481,14 @@ There are not all that many two-dimensional basis functions and a more common ap
 
 $$
 u_N(x, y) = \sum_{i=0}^{N_x}\sum_{j=0}^{N_y} \hat{u}_{ij}\psi_{i}(x) \varphi_j(y).
-$$ 
+$$
 
 ::: {.callout-note}
 The unknowns $\{\hat{u}_{ij}\}_{i,j=0}^{N_x,N_y}$ are now in the form of a matrix. The total number of unknowns: $N+1=(N_x+1)\cdot (N_y+1)$.
 :::
 ::: {.fragment}
 
-The most straightforward approach is to use the same basis functions for both directions. For example, with a Chebyshev basis 
+The most straightforward approach is to use the same basis functions for both directions. For example, with a Chebyshev basis
 
 $$
 u_N(x, y) = \sum_{i=0}^{N_x}\sum_{j=0}^{N_y} \hat{u}_{ij}T_{i}(x)T_j(y).
@@ -498,7 +499,7 @@ $$
 
 ## Two-dimensional function spaces {.smaller}
 
-We can define two one-dimensional function spaces for the two directions as 
+We can define two one-dimensional function spaces for the two directions as
 
 $$
 V_{N_x} = \text{span}\{\psi_i\}_{i=0}^{N_x} \quad \text{and} \quad V_{N_y} = \text{span}\{\varphi_i\}_{i=0}^{N_y}
@@ -510,7 +511,7 @@ $$
 {I}_x = [a, b] \quad \text{and} \quad {I}_y = [c, d] \rightarrow \Omega = I_x \times I_y
 $$
 
-A two-dimensional function space can then be created as 
+A two-dimensional function space can then be created as
 
 $$
 W_N = V_{N_x} \otimes V_{N_y}, \quad (x, y) \in \Omega.
@@ -520,7 +521,7 @@ $W_N$ is the **tensor product** of $V_{N_x}$ and $V_{N_y}$
 
 ::: {.fragment}
 
-Similarly, 
+Similarly,
 
 $$
 \Psi_{ij}(x, y) = \psi_i(x) \varphi_j(y)
@@ -558,21 +559,21 @@ $$
 2 \cdot 4 \\
 2 \cdot 5 \\
 3 \cdot 4 \\
-3 \cdot 5 
+3 \cdot 5
 \end{bmatrix}
-= 
+=
 \begin{bmatrix}
 4 \\
 5 \\
 8 \\
 10 \\
 12 \\
-15 
+15
 \end{bmatrix}
 $$
 
 :::
-::: 
+:::
 
 ##  Tensor product of functions {.smaller}
 
@@ -585,7 +586,7 @@ $$
 \left(\psi_0, \varphi_0\right) \\
 \left(\psi_0, \varphi_1\right) \\
 \left(\psi_1, \varphi_0\right) \\
-\left(\psi_1, \varphi_1\right) 
+\left(\psi_1, \varphi_1\right)
 \end{bmatrix}
 $$
 :::
@@ -596,7 +597,7 @@ $$
 \psi_0 \cdot \varphi_0 \\
 \psi_0 \cdot \varphi_1 \\
 \psi_1 \cdot \varphi_0 \\
-\psi_1 \cdot \varphi_1 
+\psi_1 \cdot \varphi_1
 \end{bmatrix}
 $$
 :::
@@ -613,17 +614,17 @@ $$
 which can also be arranged in matrix notation $\{\psi_i\varphi_j\}_{i,j=0}^{1,1}$ ($i$ is row, $j$ is column)
 
 $$
-(\psi_0, \psi_1) \otimes (\varphi_0, \varphi_1) =  
+(\psi_0, \psi_1) \otimes (\varphi_0, \varphi_1) =
 \begin{bmatrix}
 \psi_0 \\
 \psi_1
 \end{bmatrix}
 \begin{bmatrix}
 \varphi_0 & \varphi_1
-\end{bmatrix} = 
+\end{bmatrix} =
 \begin{bmatrix}
 \psi_0 \cdot \varphi_0, \psi_0 \cdot \varphi_1 \\
-\psi_1 \cdot \varphi_0, \psi_1 \cdot \varphi_1 
+\psi_1 \cdot \varphi_0, \psi_1 \cdot \varphi_1
 \end{bmatrix}
 $$
 
@@ -639,30 +640,30 @@ $$
 
 ::: {.columns}
 ::: {.column}
-Cartesian product 
+Cartesian product
 
 $$
-(1, x) \times (1, y) = \begin{bmatrix} 
+(1, x) \times (1, y) = \begin{bmatrix}
 (1, 1) \\
-(1, y) \\ 
+(1, y) \\
 (x, 1) \\
 (x, y)
 \end{bmatrix}
 $$
 :::
 ::: {.column}
-Tensor product 
+Tensor product
 
 $$
-(1, x) \otimes (1, y) = \begin{bmatrix} 
+(1, x) \otimes (1, y) = \begin{bmatrix}
 1 \\
-y \\ 
+y \\
 x \\
 xy
 \end{bmatrix}
 $$
 :::
-::: 
+:::
 
 ::: {.fragment}
 
@@ -670,7 +671,7 @@ Numpy naturally arranges the outer product into matrix form:
 
 ```{python}
 #| echo : true
-#| output-location: column 
+#| output-location: column
 y = sp.Symbol('y')
 Vx = np.array([1, x])
 Vy = np.array([1, y])
@@ -680,7 +681,7 @@ print(W)
 
 :::
 
-## We have a function space and a basis, now it's time to approximate $\small u(x,y)$ {.smaller} 
+## We have a function space and a basis, now it's time to approximate $\small u(x,y)$ {.smaller}
 
 The variational methods require the $L^2(\Omega)$ inner product
 
@@ -697,7 +698,7 @@ The first line is identical to the definition used for the 1D case and is valid 
 
 ## Galerkin for 2D approximations {.smaller}
 
-We want to approximate 
+We want to approximate
 
 $$
 u(x, y) \approx u_N(x, y)
@@ -777,7 +778,7 @@ $$
 
 :::
 
-## Solve the linear algebra problem {.smaller} 
+## Solve the linear algebra problem {.smaller}
 
 $$
 \begin{align}
@@ -790,7 +791,7 @@ Can solve for $U$ with the vec-trick ($\text{vec}(A \hat{U} A^T) = (A \otimes A)
 
 $$
 \begin{align}
-(A \otimes A) \text{vec}(\hat{U}) &= \text{vec}(U) \\ 
+(A \otimes A) \text{vec}(\hat{U}) &= \text{vec}(U) \\
 \text{vec}(\hat{U}) &= (A \otimes A)^{-1} \text{vec}(U)
 \end{align}
 $$
@@ -813,12 +814,16 @@ $$
 (u-u_N,v)=0 \quad \forall \, v \in W_N
 $$
 
+::: {.columns}
+::: {.column}
 1. Find the matrix $U=\{u_{ij}\}_{i,j=0}^{N_x,N_y}$, $u_{ij}=(u, P_iP_j)$
 2. Find the matrix $A=\{a_{ij}\}_{i,j=0}^{N_x,N_y}$, $a_{ij}=\|P_i\|^2 \delta_{ij}$
-2. Compute $\hat{U} = A^{-1} U A^{-1}$ 
-
+3. Compute $\hat{U} = A^{-1} U A^{-1}$
+:::
+::: {.column}
 ```{python}
 #| echo : true
+#| code-overflow: wrap
 import scipy.sparse as sparse
 from scipy.integrate import dblquad
 ue = sp.exp(-(x**2+2*(y-sp.S.Half)**2))
@@ -831,6 +836,9 @@ for i in range(N+1):
 A_inv = sparse.diags([(2*np.arange(N+1)+1)/2], [0], (N+1, N+1))
 uhat_ij = A_inv @ uij @ A_inv
 ```
+
+:::
+:::
 
 ## Evaluate the 2D solution {.smaller}
 
@@ -850,9 +858,9 @@ A simple double for-loop will do, or on matrix-vector form to avoid the for-loop
 
 $$
 \boldsymbol{P_x} \hat{U} \boldsymbol{P_{y}}^T =
-\begin{bmatrix} P_0(x)&  \ldots& P_{N_x}(x)\end{bmatrix} \begin{bmatrix} u_{0,0} & \cdots & u_{0,N_y} \\
+\begin{bmatrix} P_0(x)&  \ldots& P_{N_x}(x)\end{bmatrix} \begin{bmatrix} \hat{u}_{0,0} & \cdots & \hat{u}_{0,N_y} \\
 \vdots & \ddots & \vdots \\
-u_{N_x, 0} & \cdots & u_{N_x,N_y}
+\hat{u}_{N_x, 0} & \cdots & \hat{u}_{N_x,N_y}
 \end{bmatrix}
 \begin{bmatrix}
 P_0(y) \\
@@ -880,7 +888,7 @@ Four nested for-loops, or a triple matrix product
 
 $$
 \begin{bmatrix} P_0(x_0)&  \ldots& P_{N_x}(x_0) \\
-\vdots&  \ddots & \vdots \\ 
+\vdots&  \ddots & \vdots \\
 P_{0}(x_{N_x})&  \ldots & P_{N_x}(x_{N_x})
 \end{bmatrix} \begin{bmatrix} \hat{u}_{0,0} & \cdots & \hat{u}_{0,N_y} \\
 \vdots & \ddots & \vdots \\
@@ -888,7 +896,7 @@ P_{0}(x_{N_x})&  \ldots & P_{N_x}(x_{N_x})
 \end{bmatrix}
 \begin{bmatrix}
 P_0(y_0)&  \ldots& P_{0}(y_{N_y}) \\
-\vdots&  \ddots & \vdots \\ 
+\vdots&  \ddots & \vdots \\
 P_{N_y}(y_{0})&  \ldots & P_{N_y}(y_{N_y})
 \end{bmatrix}
 $$
@@ -902,11 +910,11 @@ $$
 
 ```{python}
 #| echo : true
-#| fig-align: center 
+#| fig-align: center
 def eval2D(xi, yi, uhat):
-    Vx = np.polynomial.legendre.legvander(xi, uhat.shape[0]-1)
-    Vy = np.polynomial.legendre.legvander(yi, uhat.shape[1]-1) 
-    return Vx @ uhat @ Vy.T
+    Px = np.polynomial.legendre.legvander(xi, uhat.shape[0]-1)
+    Py = np.polynomial.legendre.legvander(yi, uhat.shape[1]-1)
+    return Px @ uhat @ Py.T
 
 N = 20
 xi = np.linspace(-1, 1, N+1)
@@ -926,7 +934,7 @@ $$
 ::: {.column}
 
 ```{.python}
-def l2error(uh_ij): 
+def l2error(uh_ij):
     N = uh_ij.shape[0]-1
     xi = np.linspace(-1, 1, N+1)
     U = eval2D(xi, xi, uh_ij)
@@ -941,7 +949,7 @@ def solve(N):
             uij[i, j] = uh(i, j)
     A_inv = sparse.diags([(2*np.arange(N+1)+1)/2], [0], (N+1, N+1))
     return A_inv @ uij @ A_inv
-    
+
 error = []
 for n in range(4, 24, 2):
     error.append(l2error(solve(n)))
@@ -987,15 +995,15 @@ u(x)=\frac{1}{1+25x^2} \quad x \in [-1, 1] \rightarrow \hat{u}_j = \frac{2j+1}{2
 $$
 
 ```{python}
-#| echo : true 
+#| echo : true
 #| output-location: column
-#| code-line-numbers: "1-6" 
-import shenfun as sf  
+#| code-line-numbers: "1-6"
+import shenfun as sf
 N = 50
 ue = 1./(1+25*x**2)
 V = sf.FunctionSpace(N+1, 'Legendre', domain=(-1, 1))
 v = sf.TestFunction(V)
-uh = (2*np.arange(N+1)+1)/2*sf.inner(ue, v) 
+uh = (2*np.arange(N+1)+1)/2*sf.inner(ue, v)
 plt.figure(figsize=(6, 3))
 plt.plot(V.mesh(), uh.backward(), 'b', V.mesh(), sp.lambdify(x, ue)(V.mesh()), 'ro')
 plt.legend(['Legendre', 'Exact'])
@@ -1011,12 +1019,12 @@ Note the implementation. Choose [FunctionSpace](https://shenfun.readthedocs.io/e
 xj = np.linspace(-1, 1, 1000)
 plt.figure(figsize=(5, 3))
 plt.plot(xj, uh(xj)-sp.lambdify(x, ue)(xj), 'r')
-plt.ticklabel_format(axis='y', style='sci', 
+plt.ticklabel_format(axis='y', style='sci',
                      scilimits=(-5,-5))
 plt.gca().set_yticks([-1e-4, -5e-5, 0, 5e-5]);
 ```
 
-Note the oscillation in the error that is typical of a spactral method.
+Note the oscillation in the error that is typical of a spectral method.
 
 Who thinks that Chebyshev can do better?
 
@@ -1024,9 +1032,9 @@ Who thinks that Chebyshev can do better?
 
 
 ```{python}
-#| echo : true 
-#| output-location: column 
-V = sf.FunctionSpace(N+1, 'Chebyshev', 
+#| echo : true
+#| output-location: column
+V = sf.FunctionSpace(N+1, 'Chebyshev',
                      domain=(-1, 1))
 uhc = sf.project(ue, V)
 plt.figure(figsize=(5, 3))
@@ -1037,12 +1045,12 @@ plt.plot(xj, uhc(xj)-sp.lambdify(x, ue)(xj), 'r');
 
 ## Shenfun in 2D using tensor products {.smaller}
 
-Approximate $u(x, y)=\exp(-(x^2+2(y-0.5)^2)), (x, y) \in [-1, 1]^2$: 
+Approximate $u(x, y)=\exp(-(x^2+2(y-0.5)^2)), (x, y) \in [-1, 1]^2$:
 
 ```{python}
 #| echo : true
-#| fig-align: center 
-ue = sp.exp(-(x**2+2*(y-sp.S.Half)**2)) 
+#| fig-align: center
+ue = sp.exp(-(x**2+2*(y-sp.S.Half)**2))
 T = sf.FunctionSpace(20, 'Chebyshev')
 W = sf.TensorProductSpace(sf.comm, (T, T))
 uN = sf.project(ue, W) # projection is Galerkin approximation
@@ -1093,7 +1101,7 @@ Lets describe a faster way to compute $\boldsymbol{u}=(u_N(x_i))_{i=0}^N$ from $
 
 ## Fast cosine transform {.smaller}
 
-Let 
+Let
 
 $$
 x_i = \cos(i \pi / N), \quad i=0, 1, \ldots, N
@@ -1105,9 +1113,9 @@ $$
 \begin{align}
 u_N(x_i) &= \sum_{j=0}^N \hat{u}_j T_j(x_i)\\
 u_N(x_i) &= \sum_{j=0}^N \hat{u}_j \cos(j i \pi /N) \\
-u_N(x_i) &= \hat{u}_0 + (-1)^{i}\hat{u}_N + \sum_{j=1}^{N-1} \hat{u}_j \cos(j i \pi /N) 
+u_N(x_i) &= \hat{u}_0 + (-1)^{i}\hat{u}_N + \sum_{j=1}^{N-1} \hat{u}_j \cos(j i \pi /N)
 \end{align}
-$$ 
+$$
 
 ## The discrete cosine transform {.smaller}
 
@@ -1129,7 +1137,7 @@ The DCT is found in [scipy](https://docs.scipy.org/doc/scipy/reference/generated
 
 We have the $DCT^1$ for any $\boldsymbol{Y}$ and $\boldsymbol{y}$
 $$ \small
-Y_i = y_0 + (-1)^{i}y_N + 2\sum_{j=1}^{N-1}y_j \cos(ij\pi / N), \quad i=0,1,\ldots, N 
+Y_i = y_0 + (-1)^{i}y_N + 2\sum_{j=1}^{N-1}y_j \cos(ij\pi / N), \quad i=0,1,\ldots, N
 $$
 
 We want to compute the following using the fast $DCT^1$
@@ -1168,7 +1176,7 @@ $$
 ::: {.column}
 
 ```{python}
-#| echo : true 
+#| echo : true
 import scipy
 
 def evaluate_cheb_1(uhat):
@@ -1186,7 +1194,7 @@ T = np.polynomial.chebyshev.chebvander(xi, N)
 uhat = np.ones(N+1)
 uj = T @ uhat
 uj_fast = evaluate_cheb_1(uhat)
-assert np.allclose(uj, uj_fast) 
+assert np.allclose(uj, uj_fast)
 ```
 
 :::
