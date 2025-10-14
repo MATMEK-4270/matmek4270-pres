@@ -3714,14 +3714,14 @@
     "href": "fem.html#finite-element-basis-functions",
     "title": "Function approximation by the finite element method",
     "section": "Finite element basis functions",
-    "text": "Finite element basis functions\n\nAn element with no internal nodes can at best use piecewise linear basis functions\n\\[\n\\psi_j(x) = \\begin{cases}\n\\frac{x-x_{j-1}}{x_{j}-x_{j-1}} \\quad &x \\in [x_{j-1}, x_{j}],\\\\\n\\frac{x-x_{j+1}}{x_{j}-x_{j+1}} \\quad &x \\in [x_{j}, x_{j+1}],\\\\\n0 \\quad &\\text{otherwise},\n\\end{cases}\n\\]"
+    "text": "Finite element basis functions\n\nAn element with no internal nodes can at best use piecewise linear basis functions\n\\[\n\\psi_j(x) = \\begin{cases}\n\\frac{x-x_{j-1}}{x_{j}-x_{j-1}} \\quad &x \\in [x_{j-1}, x_{j}] = \\Omega^{(j-1)},\\\\\n\\frac{x-x_{j+1}}{x_{j}-x_{j+1}} \\quad &x \\in [x_{j}, x_{j+1}] = \\Omega^{(j)},\\\\\n0 \\quad &\\text{otherwise},\n\\end{cases}\n\\]"
   },
   {
     "objectID": "fem.html#the-fem-is-a-variational-method",
     "href": "fem.html#the-fem-is-a-variational-method",
     "title": "Function approximation by the finite element method",
     "section": "The FEM is a variational method",
-    "text": "The FEM is a variational method\nUse a continuous piecewise linear function space \\(V_N=\\text{span}\\{\\psi_j\\}_{j=0}^N\\), where\n\\[\n\\psi_j(x) = \\begin{cases}\n\\frac{x-x_{j-1}}{x_{j}-x_{j-1}} \\quad &x \\in [x_{j-1}, x_{j}]\\\\\n\\frac{x-x_{j+1}}{x_{j}-x_{j+1}} \\quad &x \\in [x_{j}, x_{j+1}]\\\\\n0 \\quad &\\text{otherwise}\n\\end{cases}\n\\]\nTo approximate a function \\(u(x), x \\in \\Omega = [a, b]\\), we can now use the variational Galerkin method: Find \\(u_N \\in V_N\\) such that\n\\[\n(u-u_N, v) = 0 \\quad \\forall \\, v \\in V_N\n\\]\nWe can still use \\(v=\\psi_i\\) and \\(u_N(x) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x)\\), exactly like for the global Galerkin method and obtain:\n\\[\n\\sum_{j=0}^N (\\psi_j, \\psi_i) \\hat{u}_j = (u, \\psi_i), \\quad i=0,1,\\ldots, N\n\\]"
+    "text": "The FEM is a variational method\nUse a continuous piecewise linear function space \\(V_N=\\text{span}\\{\\psi_j\\}_{j=0}^N\\), where\n\\[\n\\psi_j(x) = \\begin{cases}\n\\frac{x-x_{j-1}}{x_{j}-x_{j-1}} \\quad &x \\in [x_{j-1}, x_{j}] = \\Omega^{(j-1)}\\\\\n\\frac{x-x_{j+1}}{x_{j}-x_{j+1}} \\quad &x \\in [x_{j}, x_{j+1}] = \\Omega^{(j)}\\\\\n0 \\quad &\\text{otherwise}\n\\end{cases}\n\\]\nTo approximate a function \\(u(x), x \\in \\Omega = [a, b]\\), we can now use the variational Galerkin method: Find \\(u_N \\in V_N\\) such that\n\\[\n(u-u_N, v) = 0 \\quad \\forall \\, v \\in V_N\n\\]\nWe can still use \\(v=\\psi_i\\) and \\(u_N(x) = \\sum_{j=0}^N \\hat{u}_j \\psi_j(x)\\), exactly like for the global Galerkin method and obtain:\n\\[\n\\sum_{j=0}^N (\\psi_j, \\psi_i) \\hat{u}_j = (u, \\psi_i), \\quad i=0,1,\\ldots, N\n\\]"
   },
   {
     "objectID": "fem.html#the-element-mass-matrix",
@@ -3749,7 +3749,7 @@
     "href": "fem.html#use-a-local-dense-element-mass-matrix",
     "title": "Function approximation by the finite element method",
     "section": "Use a local dense element mass matrix",
-    "text": "Use a local dense element mass matrix\nWith \\(d+1\\) nonzero basis functions on element \\(e\\) all the non-zero items of \\(A^{(e)}\\) can be stored in the dense matrix:\n\\[\n\\tilde{A}^{(e)} = (\\tilde{a}_{rs}^{(e)})_{r,s=0}^d\n\\]\n\\[\n\\tilde{a}_{rs}^{(e)} = \\int_{\\Omega^{(e)}} \\psi_{q(e,r)} \\psi_{q(e,r)} dx\n\\]\n\n\n\n\n\n\nNote\n\n\nThe matrix \\(\\tilde{A}^{(e)}\\) contains the same nonzero items as \\(A^{(e)}\\), but \\(\\tilde{A}^{(e)}\\in \\mathbb{R}^{(d+1) \\times (d+1)}\\) is dense, whereas \\(A^{(e)} \\in \\mathbb{R}^{(N+1)\\times (N+1)}\\) is highly sparse."
+    "text": "Use a local dense element mass matrix\nWith \\(d+1\\) nonzero basis functions on element \\(e\\) all the non-zero items of \\(A^{(e)}\\) can be stored in the dense matrix:\n\\[\n\\tilde{A}^{(e)} = (\\tilde{a}_{rs}^{(e)})_{r,s=0}^d\n\\]\n\\[\n\\tilde{a}_{rs}^{(e)} = \\int_{\\Omega^{(e)}} \\psi_{q(e,r)} \\psi_{q(e,s)} dx = a^{(e)}_{q(e, r), q(e, s)}\n\\]\n\n\n\n\n\n\nNote\n\n\nThe matrix \\(\\tilde{A}^{(e)}\\) contains the same nonzero items as \\(A^{(e)}\\), but \\(\\tilde{A}^{(e)}\\in \\mathbb{R}^{(d+1) \\times (d+1)}\\) is dense, whereas \\(A^{(e)} \\in \\mathbb{R}^{(N+1)\\times (N+1)}\\) is highly sparse."
   },
   {
     "objectID": "fem.html#local-to-global-mapping-in-assembly-of-a",
@@ -3896,14 +3896,14 @@
     "href": "fem.html#first-example---function-approximation-using-piecewise-linear-lagrange-elements",
     "title": "Function approximation by the finite element method",
     "section": "First example - function approximation using piecewise linear Lagrange elements",
-    "text": "First example - function approximation using piecewise linear Lagrange elements\nfrom mpi4py import MPI\nfrom dolfinx import mesh, fem, cpp\nfrom dolfinx.fem.petsc import LinearProblem\nimport ufl \nfrom ufl import dx, inner\n\nmsh = mesh.create_interval(MPI.COMM_SELF, 4, (-1, 1))\nV = fem.functionspace(msh, (\"Lagrange\", 1))\nu = ufl.TrialFunction(V)\nv = ufl.TestFunction(V)\nxp = ufl.SpatialCoordinate(msh)\nue = ufl.exp(ufl.cos(xp[0]))\na = inner(u, v) * dx\nL = inner(ue, v) * dx\nproblem = LinearProblem(a, L)\nuh = problem.solve()\n\nAlternatively assemble and solve linear problem yourself:\nfrom scipy.sparse.linalg import spsolve\nA = fem.assemble_matrix(fem.form(a))\nb = fem.assemble_vector(fem.form(L))\nuh = fem.Function(V)\nuh.x.array[:] = spsolve(A.to_scipy(), b.array)"
+    "text": "First example - function approximation using piecewise linear Lagrange elements\nfrom mpi4py import MPI\nfrom dolfinx import mesh, fem, cpp\nfrom dolfinx.fem.petsc import LinearProblem\nimport ufl\nfrom ufl import dx, inner\n\nmsh = mesh.create_interval(MPI.COMM_SELF, 4, (-1, 1))\nV = fem.functionspace(msh, (\"Lagrange\", 1))\nu = ufl.TrialFunction(V)\nv = ufl.TestFunction(V)\nxp = ufl.SpatialCoordinate(msh)\nue = ufl.exp(ufl.cos(xp[0]))\na = inner(u, v) * dx\nL = inner(ue, v) * dx\nproblem = LinearProblem(a, L)\nuh = problem.solve()\n\nAlternatively assemble and solve linear problem yourself:\nfrom scipy.sparse.linalg import spsolve\nA = fem.assemble_matrix(fem.form(a))\nb = fem.assemble_vector(fem.form(L))\nuh = fem.Function(V)\nuh.x.array[:] = spsolve(A.to_scipy(), b.array)"
   },
   {
     "objectID": "fem.html#result-4-piecewise-linear-basis-functions",
     "href": "fem.html#result-4-piecewise-linear-basis-functions",
     "title": "Function approximation by the finite element method",
     "section": "Result 4 piecewise linear basis functions",
-    "text": "Result 4 piecewise linear basis functions\n\n\nFEniCS\nN = 100\nxj = np.zeros((N, 3))\nxj[:, 0] = np.linspace(-1, 1, N)\ndata = cpp.geometry.determine_point_ownership(msh._cpp_object, xj, 1e-8)\nplt.plot(xj[:, 0], uh.eval(xj, data.dest_cells), 'b')\nplt.plot(xj[:, 0], sp.lambdify(x, sp.exp(sp.cos(x)))(xj[:, 0]), 'r')\n\n\n\n\n\n\nOur implementation\n\nN = 4 \nA1, b1 = assemble(u, N, (-1, 1), 1)\nuN = np.linalg.inv(A1) @ b1\nplt.figure(figsize=(5.5, 3.8))\nplt.plot(np.linspace(-1, 1, N+1), uN, 'b')\nxj = np.linspace(-1, 1, 100)\nplt.plot(xj, sp.lambdify(x, u)(xj), 'r')"
+    "text": "Result 4 piecewise linear basis functions\n\n\nFEniCS\nN = 100\nxj = np.zeros((N, 3))\nxj[:, 0] = np.linspace(-1, 1, N)\ndata = cpp.geometry.determine_point_ownership(msh._cpp_object, xj, 1e-8)\nplt.plot(xj[:, 0], uh.eval(xj, data.dest_cells), 'b')\nplt.plot(xj[:, 0], sp.lambdify(x, sp.exp(sp.cos(x)))(xj[:, 0]), 'r')\n\n\n\n\n\n\nOur implementation\n\nN = 4\nA1, b1 = assemble(u, N, (-1, 1), 1)\nuN = np.linalg.inv(A1) @ b1\nplt.figure(figsize=(5.5, 3.8))\nplt.plot(np.linspace(-1, 1, N+1), uN, 'b')\nxj = np.linspace(-1, 1, 100)\nplt.plot(xj, sp.lambdify(x, u)(xj), 'r')"
   },
   {
     "objectID": "fem.html#exactly-the-same-result-for-the-same-method",
