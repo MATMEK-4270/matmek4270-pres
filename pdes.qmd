@@ -7,7 +7,7 @@ execute:
   cache: true
 
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     slide-number: true
     preview-links: auto
@@ -87,7 +87,7 @@ For function approximation $\mathcal{R}_N = e = u_N - f = u_N - u$.
 
 ## The method of weighted residuals (MWR) {.smaller}
 
-is defined such that the residual must satisfy
+is defined such that the residual (with $u_N \in V_N$) must satisfy
 
 $$
 (\mathcal{R}_N, v) = 0 \quad \forall \, v \in W
@@ -131,12 +131,12 @@ $$
 
 ### The least squares method is a MWR with $\small W=\text{span}\{\frac{\partial \mathcal{R}_N}{\partial \hat{u}_j}\}_{j=0}^N$
 
-since 
+since
 $$
 \frac{\partial (\mathcal{R_N}, \mathcal{R}_N)}{\partial \hat{u}_j} = 0, \quad j = 0, 1, \ldots, N
 $$
 
-can be written as 
+can be written as
 
 $$
 \left(\mathcal{R}_N, \frac{\partial \mathcal{R}_N}{\partial \hat{u}_j}\right)=0, \quad j = 0, 1, \ldots, N
@@ -170,6 +170,16 @@ $$
 So the collocation method can technically also be considered a MWR!
 
 :::
+::: {.fragment}
+
+::: {.callout-note}
+# However, collocation is not a regular variational method since $\delta(x)$ is a distribution and
+
+$$W \ne  \text{span}\{\delta(x-x_i)\}_{i=0}^N$$
+
+:::
+
+:::
 
 ## The MWR is thus {.smaller}
 
@@ -181,7 +191,7 @@ $$
 
 $N+1$ equations for $N+1$ unknowns!
 
-Find $\{\hat{u}_j\}_{j=0}^N$ by choosing $N+1$ test functions for $W$. Choose test functions (basis functions for $W$) using either one of: 
+Find $\{\hat{u}_j\}_{j=0}^N$ by choosing $N+1$ test functions for $W$. Choose test functions (basis functions for $W$) using either one of:
 
 * Galerkin
 * Least squares
@@ -207,7 +217,7 @@ How to choose $V_N$ and $W$? How do we satisfy the 2 boundary conditions?
 
 ::: {.fragment}
 
-If we choose all the trial functions $\psi_j$ such that 
+If we choose all the trial functions $\psi_j$ such that
 
 $$
 \psi_j(\pm 1) = 0
@@ -229,7 +239,7 @@ $$
 \psi_j(x) = \sin(\pi (j+1) (x+1)/2)
 $$
 
-The $(j+1)$ is there because we start at $j=0$ and $\sin(0)=0$ is not a basis function. These sines are also alternating odd/even functions. 
+The $(j+1)$ is there because we start at $j=0$ and $\sin(0)=0$ is not a basis function. These sines are also alternating odd/even functions.
 
 ```{python}
 #| fig-align: center
@@ -248,7 +258,7 @@ ax1.legend([f"$\\psi_{i}(x)$" for i in range(0, 6, 2)]);
 ax2.legend([f"$\\psi_{i}(x)$" for i in range(1, 6, 2)]);
 ```
 
-::: {.callout-note appearance="minimal"} 
+::: {.callout-note appearance="minimal"}
 
 In comparison the (unmapped) sine functions $\sin(\pi(j+1)x), x \in [-1, 1]$ are odd for all integer $j \ge 0$
 
@@ -307,7 +317,7 @@ $$
 
 ::: {.callout-note}
 
-The integration by parts is not really necessary here, as it is actually just as easy to compute $\left(\psi''_j, \psi_i  \right)$ as $\left(\psi'_j, \psi'_i  \right)$! 
+The integration by parts is not really necessary here, as it is actually just as easy to compute $\left(\psi''_j, \psi_i  \right)$ as $\left(\psi'_j, \psi'_i  \right)$!
 
 :::
 
@@ -341,8 +351,8 @@ $$
 
 ```{python}
 #| echo : true
-#| fig-align: center 
-#| code-line-numbers: "3-4|5-6|" 
+#| fig-align: center
+#| code-line-numbers: "3-4|5-6|"
 from scipy.integrate import quad
 x = sp.Symbol('x')
 ue = (1-x**2)*sp.exp(sp.cos(sp.pi*(x-0.5)))
@@ -368,7 +378,7 @@ ax1.set_title('Solution');ax2.set_title(r'$|\hat{u}|$');
 $$
 \begin{align}
 \psi_j(x) &= P_j(x) - P_{j+2}(x)\\
-\psi_j(\pm 1) &= 0 
+\psi_j(\pm 1) &= 0
 \end{align}
 $$
 
@@ -414,10 +424,10 @@ The second is very useful for computing the diagonal (!) stiffness matrix
 
 $$
 \begin{align}
-(\psi'_j, \psi'_i) &= (P'_j-P'_{j+2}, P'_i-P'_{i+2}) \\ 
+(\psi'_j, \psi'_i) &= (P'_j-P'_{j+2}, P'_i-P'_{i+2}) \\
 &= (-(2j+3) P_{j+1}, -(2i+3)P_{i+1}) \\
-&= (2i+3)^2 (P_{j+1}, P_{i+1}) \\ 
-&= (2i+3)^2 \frac{2}{2(i+1)+1} \delta_{i+1,j+1} \\ 
+&= (2i+3)^2 (P_{j+1}, P_{i+1}) \\
+&= (2i+3)^2 \frac{2}{2(i+1)+1} \delta_{i+1,j+1} \\
 &= (4i+6)\delta_{ij}
 \end{align}
 $$
@@ -433,11 +443,11 @@ $$
 ## Implementation {.smaller}
 
 ```{python}
-#| echo: true 
-#| fig-align: center 
-#| code-line-numbers: 1-7| 
+#| echo: true
+#| fig-align: center
+#| code-line-numbers: 1-7|
 from numpy.polynomial import Legendre as Leg
-psi = lambda j: Leg.basis(j)-Leg.basis(j+2) 
+psi = lambda j: Leg.basis(j)-Leg.basis(j+2)
 fl = sp.lambdify(x, f)
 def uv(xj, j): return psi(j)(xj) * fl(xj)
 uhat = lambda j: (-1/(4*j+6))*quad(uv, -1, 1, args=(j,))[0]
@@ -445,7 +455,7 @@ N = 60
 uL = [uhat(j) for j in range(N)]
 j = sp.Symbol('j', integer=True, positive=True)
 V = np.polynomial.legendre.legvander(xj, N+1)
-Ps = V[:, :-2] - V[:, 2:] 
+Ps = V[:, :-2] - V[:, 2:]
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 3))
 ax1.plot(xj, uej, 'b',
          xj, Ps[:, :1] @ np.array(uL)[:1], 'k:',
@@ -463,10 +473,10 @@ L^2(\Omega) = \sqrt{\int_{-1}^1(u-u_e)^2dx}
 $$
 
 ```{python}
-#| echo : true 
-#| output-location: column 
-uh = np.array(uh) 
-uL = np.array(uL) 
+#| echo : true
+#| output-location: column
+uh = np.array(uh)
+uL = np.array(uL)
 error = np.zeros((2, N))
 for n in range(N):
     us = sines[:, :n] @ uh[:n]
@@ -485,7 +495,7 @@ Why are the Legendre basis functions better than the sines?
 All the sine basis functions $\psi_j=\sin(\pi(j+1)(x+1)/2)$ have even derivatives equal to zero at the boundaries, unlike the chosen manufactured solution...
 
 $$
-\frac{d^{2n} \psi_j}{dx^{2n}}(\pm 1) = 0 \rightarrow \frac{d^{2n}u_N}{dx^{2n}}(\pm 1)=0, \quad n=0, 1, \ldots 
+\frac{d^{2n} \psi_j}{dx^{2n}}(\pm 1) = 0 \rightarrow \frac{d^{2n}u_N}{dx^{2n}}(\pm 1)=0, \quad n=0, 1, \ldots
 $$
 
 :::
@@ -493,8 +503,8 @@ $$
 ## Implementation using Shenfun {.smaller}
 
 ```{python}
-#| echo : true 
-#| fig-align: center 
+#| echo : true
+#| fig-align: center
 #| code-line-numbers: 1-9
 from shenfun import FunctionSpace, TestFunction, TrialFunction, inner, Dx
 
@@ -506,7 +516,7 @@ S = inner(Dx(u, 0, 1), Dx(v, 0, 1))
 b = inner(-f, v)
 uh = S.solve(b.copy())
 fig = plt.figure(figsize=(6, 3))
-plt.loglog(np.arange(0, N+1, 2), abs(uh[:-2:2]), '*'); 
+plt.loglog(np.arange(0, N+1, 2), abs(uh[:-2:2]), '*');
 ```
 
 ## Inhomogeneous Poisson {.smaller}
@@ -528,13 +538,13 @@ $$
 u_N(x) = B(x) + \tilde{u}_N(x)
 $$
 
-where $B(-1) = a$ and $B(1) = b$ such that 
+where $B(-1) = a$ and $B(1) = b$ such that
 
 $$
 u_N(-1)=B(-1)=a \quad \text{and} \quad u_N(1) = B(1) = b
 $$
 
-A function that satisfies this in the current domain is 
+A function that satisfies this in the current domain is
 
 $$
 B(x) = \frac{b}{2}(1+x) + \frac{a}{2}(1-x)
@@ -566,9 +576,9 @@ $$
 ## Implementation {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 #| output-location: column
-#| code-line-numbers: 1-7|8-9|14,17-18| 
+#| code-line-numbers: 1-7|8-9|14,17-18|
 ue = sp.exp(sp.cos(x-0.5))
 f = ue.diff(x, 2)
 fl = sp.lambdify(x, f)
@@ -602,7 +612,7 @@ u'(\pm 1) &= 0
 \end{align}
 $$
 
-This problem is **ill-defined** because if $u$ is a solution, then $u + c$, where $c$ is a constant, is also a solution! 
+This problem is **ill-defined** because if $u$ is a solution, then $u + c$, where $c$ is a constant, is also a solution!
 
 If $u(x)$ satisfies the above problem, then
 
@@ -630,7 +640,7 @@ How about basis functions?
 
 ::: {.fragment}
 
-If we choose basis functions $\psi_j$ that satisfy 
+If we choose basis functions $\psi_j$ that satisfy
 
 $$
 \psi'_j(\pm 1) = 0, \quad j=0, 1, \ldots
@@ -666,7 +676,7 @@ $$
 \psi_j = P_j + b(j) P_{j+1} + a(j) P_{j+2}
 $$
 
-and try to find $a(j)$ and $b(j)$ such that $\psi'_j(\pm 1) = 0$. 
+and try to find $a(j)$ and $b(j)$ such that $\psi'_j(\pm 1) = 0$.
 
 :::
 
@@ -685,7 +695,7 @@ We have two conditions and two unknowns
 
 $$\small
 \begin{align}
-\psi'_j(-1) &= P'_j(-1) + b(j)P'_{j+1}(-1) + a(j) P'_{j+2}(-1) \\ 
+\psi'_j(-1) &= P'_j(-1) + b(j)P'_{j+1}(-1) + a(j) P'_{j+2}(-1) \\
 &= \left(\frac{j(j+1)}{2}-b(j)\frac{(j+1)(j+2)}{2} +a(j)\frac{(j+2)(j+3)}{2}\right)(-1)^j = 0
 \end{align}
 $$
@@ -729,7 +739,7 @@ So we already know that $\hat{u}_0=c/2$ and only have unknowns $\{\hat{u}_{j}\}_
 
 ## Solve Neumann with Galerkin {.smaller}
 
-Define 
+Define
 
 $$
 \tilde{V}_N = \text{span}\Big\{P_j - \frac{j(j+1)}{(j+2)(j+3)} P_{j+2}\Big\}_{j=1}^N (= V_N \backslash \{P_0\})
@@ -761,7 +771,7 @@ $$
 (\psi^{''}_j, \psi_i) = -(\psi^{'}_j, \psi^{'}_i) = (\psi_j, \psi^{''}_i)
 $$
 
-is fortunately diagonal (derivation later) and we can easily solve for $\{\hat{u}_i\}_{i=1}^N$ 
+is fortunately diagonal (derivation later) and we can easily solve for $\{\hat{u}_i\}_{i=1}^N$
 
 $$
 (\psi^{''}_j, \psi_i) = a(j) (4j+6) \delta_{ij}
@@ -773,7 +783,7 @@ $$
 
 ## Derivation of $(\psi^{''}_j, \psi_i)$ {.smaller}
 
-There is a series expansion for the second derivative $P^{''}_j$ 
+There is a series expansion for the second derivative $P^{''}_j$
 
 $$
 P^{''}_j = \sum_{\substack{k=0 \\ k+j \text{ even}}}^{j-2}c(k, j) P_k, \, \text{where}\, c(k, j) = (k+1/2)(j(j+1)-k(k+1)) \tag{1}
@@ -791,15 +801,15 @@ Based on the orthogonality $(P_i, P_j)=\frac{2}{2j+1}\delta_{ij}$ and (1) we get
 
 * If $i>j$ then $\small(P^{''}_j+a(j)P^{''}_{j+2}, P_i + a(i)P_{i+2})=0$ since $\small P^{''}_{j+2}=\sum_{k=0}^j c(k,j) P_k$
 
-* If $i< j$ then $(P^{''}_j+a(j)P^{''}_{j+2}, P_i)=0$ due to symmetry $(\psi^{''}_j, \psi_i) = (\psi_j, \psi^{''}_i)$
+* If $i< j$ then $\small (P^{''}_j+a(j)P^{''}_{j+2}, P_i + a(i)P_{j+2})=0$ due to symmetry $(\psi^{''}_j, \psi_i) = (\psi_j, \psi^{''}_i)$
 
-Hence $\Big(P^{''}_j+a(j)P^{''}_{j+2}, \, P_i + a(i)P_{i+2} \Big)$ is diagonal! 
+Hence $\Big(P^{''}_j+a(j)P^{''}_{j+2}, \, P_i + a(i)P_{i+2} \Big)$ is diagonal!
 
 :::
 
 ## Compute $(\psi^{''}_i, \psi_i)$ {.smaller}
 
-Using again the expression $P^{''}_i = \sum_{k=0}^{i-2} c(k, i) P_{k}$ 
+Using again the expression $P^{''}_i = \sum_{k=0}^{i-2} c(k, i) P_{k}$
 
 $$ \small
 \begin{multline}
@@ -807,12 +817,12 @@ $$ \small
 \end{multline}
 $$
 
-All cancellations because of orthogonality and $P^{''}_i = \sum_{k=0}^{i-2} (\cdots) P_{k}$  
+All cancellations because of orthogonality and $P^{''}_i = \sum_{k=0}^{i-2} (\cdots) P_{k}$
 
 $$ \small
 \begin{align}
 a(i)(P^{''}_{i+2}, P_i) &= a(i) \sum_{\substack{k=0 \\ k+i \text{ even}}}^{i} \Big( (k+1/2)((i+2)(i+3)-k(k+1))P_k, \, P_i \Big) \\
-&= a(i)(i+1/2)((i+2)(i+3)-i(i+1)) (L_i, L_i) \\
+&= a(i)(i+1/2)((i+2)(i+3)-i(i+1)) (P_i, P_i) \\
 &= a(i)(4i+6)
 \end{align}
 $$
@@ -833,7 +843,7 @@ $$
 
 ```{python}
 #| echo : true
-#| code-line-numbers: 1-2| 
+#| code-line-numbers: 1-2|
 ue = sp.integrate((1-x**2)*sp.cos(x-sp.S.Half), x)
 f = ue.diff(x, 2) # manufactured f
 c = sp.integrate(ue, (x, -1, 1)).n() # constraint c
@@ -937,7 +947,7 @@ Using basis function $\psi_j = P_j$ leads to a dense stiffness matrix
 
 ```{python}
 #| echo : true
-#| fig-align: center 
+#| fig-align: center
 plt.spy(S)
 ```
 
@@ -950,7 +960,7 @@ uh = np.linalg.solve(S, fh)
 
 * Exactly the same approach as for Legendre, only with a weighted  inner product
 $$
-(u, v)_{\omega} = \int_{-1}^1 \frac{u v}{\sqrt{1-x^2}}dx 
+(u, v)_{\omega} = \int_{-1}^1 \frac{u v}{\sqrt{1-x^2}}dx
 $$
 
 ::: {.incremental}
@@ -999,7 +1009,7 @@ u(x_0) = a \quad &\text{and} \quad u(x_N) = b
 \end{align}
 $$
 
-where $\mathcal{R}_N(x) = u^{''}_N(x)-f(x)$. 
+where $\mathcal{R}_N(x) = u^{''}_N(x)-f(x)$.
 
 ## Solve by inserting for $u_N$ in $\mathcal{R}_N$  {.smaller}
 
@@ -1031,12 +1041,12 @@ $$
 \ell_j(x) = \ell(x) \frac{w_j}{x-x_j},
 $$
 
-where 
+where
 
 $$
 \ell(x) = \prod^N_{\substack{i=0}}(x-x_i) \quad \text{and} \quad
 w_j = \frac{1}{\ell'(x_j)}= \frac{1}{\prod^N_{\substack{i=0 \\ i \neq j}} (x_j - x_i)}
-$$ 
+$$
 
 Here $(w_j)_{j=0}^N$ are the **barycentric weights**. [Scipy](https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.BarycentricInterpolator.html) will give you these weights: `from scipy.interpolate import BarycentricInterpolator`
 
@@ -1086,7 +1096,7 @@ d^{(n)}_{ii} &= -\sum_{\substack{j=0 \\ j \ne i}}^N d^{(n)}_{ij}
 $$
 
 ```{python}
-#| echo : true 
+#| echo : true
 def PolyDerivative(xj, m):
     w = BarycentricInterpolator(xj).wi * (2*(len(xj)-1))
     W = w[None, :] / w[:, None]
@@ -1102,7 +1112,7 @@ def PolyDerivative(xj, m):
         np.fill_diagonal(D2, 0)
         np.fill_diagonal(D2, -np.sum(D2, axis=1))
         D[:] = D2
-    return D2 
+    return D2
 ```
 
 ## Use Chebyshev points for spectral accuracy {.smaller}
@@ -1115,20 +1125,20 @@ The barycentric weights are then simply
 
 $$
 w_i = (-1)^{i} c_i, \quad c_i = \begin{cases} 0.5 \quad i=0 \text{ or } i = N \\
-1 \quad \text{ otherwise} 
+1 \quad \text{ otherwise}
  \end{cases} \tag{1}
 $$
 
 ```{python}
 #| echo : true
-N = 8 
+N = 8
 xj = np.cos(np.arange(N+1)*np.pi/N)
 w = BarycentricInterpolator(xj).wi * 2*N
 w
 ```
 
 ::: {.callout-note}
-The weights are only relative, so we have here scaled by $2N$ to get (1) 
+The weights are only relative, so we have here scaled by $2N$ to get (1)
 :::
 
 ## And then we solve any equation by replacing the ordinary derivatives with derivative matrices {.smaller}
@@ -1179,13 +1189,13 @@ def l2_error(uh, ue):
     L = BarycentricInterpolator(np.cos(np.arange(N+1)*np.pi/N)[::-1], yi=uh)
     N = 4*len(uh) # Use denser mesh to compute L2-error
     xj = np.linspace(-1, 1, N+1)
-    return np.sqrt(np.trapz((uj(xj)-L(xj).astype(float))**2, dx=2./N)) 
+    return np.sqrt(np.trapz((uj(xj)-L(xj).astype(float))**2, dx=2./N))
 ```
 
 
 ```{python}
 #| echo : true
-#| output-location: column 
+#| output-location: column
 ue = sp.exp(sp.cos(x-0.5))
 f = ue.diff(x, 2)
 bc = ue.subs(x, -1), ue.subs(x, 1)
@@ -1197,3 +1207,20 @@ fig = plt.figure(figsize=(6, 2.5))
 plt.loglog(np.arange(2, 46, 2), err, '*')
 plt.title("L2-error Posson's equation");
 ```
+
+## Summary {.smaller}
+
+::: {.incremental}
+
+* Find $u_N \in V_N$ such that
+  $$(\mathcal{L}(u_N) - f, v) = (\mathcal{R}_N, v) = 0 \quad \forall v \in W$$
+
+* Differential equations are solved using the method of weighted residuals
+  * Galerkin ($W=V_N$)
+  * Least squares ($W = \text{span}\{\frac{\partial \mathcal{R}_N}{\partial \hat{u}_i}\}_{i=0}^N$)
+  * Collocation ($v = \delta(x-x_i)$)
+* Same approach as function approximation, but assembling matrices is more work!
+* Basis functions chosen to satisfy homogeneous boundary conditions (either Dirichlet or Neumann) and then a lifting function $B(x)$ handles nonzero conditions $u_N(x) = \sum_{i=0}^N \hat{u}_i \psi_i(x) + B(x)$
+* Multi-dimensional problems (PDEs) can be solved using tensor-product spaces, vectorization and the Kronecker product (see lecture notes).
+
+:::
