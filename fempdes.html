@@ -253,7 +253,7 @@ V_N = \text{span}\{\psi_j(x)\}_{j=0}^N
 \psi_j(x_i) = \delta_{ij}
 \]</span></p>
 <p>so each basis function is one in exactly one node and zero in all the others. Quadratic:</p>
-<div id="709012b9" class="cell" data-execution_count="2">
+<div id="c55028cf" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -280,7 +280,7 @@ V_N = \text{span}\{\psi_j(x)\}_{j=0}^N
 </div>
 </div>
 <div class="fragment">
-<p>Solution: integration by parts <span class="math inline">\(\left((u'', v) = -(u', v')+ [u'v]_{x=x_L}^{x=x_R}\right)\)</span></p>
+<p>Solution: integration by parts</p>
 <p><span class="math display">\[
 (u_N', v') = -(f, v) + [u_N'v]_{x=0}^{x=L}, \quad \forall \, v \in V_N
 \]</span></p>
@@ -414,7 +414,7 @@ x = \frac{1}{2}(x_L+x_R) + \frac{h(e)}{2}X \quad \text{and} \quad
 </section>
 <section id="implementation" class="slide level2 smaller">
 <h2>Implementation</h2>
-<div id="a0adaea4" class="cell" data-execution_count="3">
+<div id="a67f91fd" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> lagrange <span class="im">import</span> Lagrangebasis, Lagrangefunction</span>
 <span id="cb1-2"><a></a>x, h <span class="op">=</span> sp.symbols(<span class="st">'x,h'</span>)</span>
 <span id="cb1-3"><a></a>l <span class="op">=</span> Lagrangebasis([<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>])</span>
@@ -439,7 +439,7 @@ x = \frac{1}{2}(x_L+x_R) + \frac{h(e)}{2}X \quad \text{and} \quad
 </div>
 </div>
 <div class="fragment">
-<div id="16775d1b" class="cell" data-execution_count="4">
+<div id="226a675e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>l <span class="op">=</span> Lagrangebasis([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]) <span class="co"># 3 nodes per element</span></span>
 <span id="cb2-2"><a></a>S2e <span class="op">=</span> <span class="dv">2</span><span class="op">/</span>h<span class="op">*</span>sp.Matrix(np.array([[se(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>)]]).reshape(<span class="dv">3</span>, <span class="dv">3</span>))</span>
 <span id="cb2-3"><a></a>S2e</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -511,8 +511,8 @@ q^{(m,n)}_{ij} = \left(\frac{d^n \psi_j}{dx^n}, \frac{d^m \psi_i}{dx^m} \right)
 <p><span class="math display">\[
 X_j = -1 + \frac{2j}{d}, \quad j=0,1,\ldots, d
 \]</span></p>
-<div id="8728fb1b" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>Xj <span class="op">=</span> <span class="kw">lambda</span> d: np.array([sp.Rational(<span class="dv">2</span><span class="op">*</span>i, d) <span class="cf">for</span> i <span class="kw">in</span> np.arange(d<span class="op">+</span><span class="dv">1</span>)])<span class="op">-</span><span class="dv">1</span> </span>
+<div id="1143ff75" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>Xj <span class="op">=</span> <span class="kw">lambda</span> d: np.array([sp.Rational(<span class="dv">2</span><span class="op">*</span>i, d) <span class="cf">for</span> i <span class="kw">in</span> np.arange(d<span class="op">+</span><span class="dv">1</span>)])<span class="op">-</span><span class="dv">1</span></span>
 <span id="cb3-2"><a></a>qe <span class="op">=</span> <span class="kw">lambda</span> l, r, s, m, n: sp.integrate(l[r].diff(x, m)<span class="op">*</span>l[s].diff(x, n), (x, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
 <span id="cb3-3"><a></a><span class="kw">def</span> Qe(d<span class="op">=</span><span class="dv">1</span>, m<span class="op">=</span><span class="dv">0</span>, n<span class="op">=</span><span class="dv">0</span>):</span>
 <span id="cb3-4"><a></a>    A <span class="op">=</span> np.zeros((d<span class="op">+</span><span class="dv">1</span>, d<span class="op">+</span><span class="dv">1</span>), dtype<span class="op">=</span><span class="bu">object</span>)</span>
@@ -524,15 +524,15 @@ X_j = -1 + \frac{2j}{d}, \quad j=0,1,\ldots, d
 </div>
 <div class="columns">
 <div class="column">
-<div id="095a84d8" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>Qe(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="95eb050b" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>Qe(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="5">
 <p><span class="math inline">\(\displaystyle \left[\begin{matrix}\frac{7}{3 h} &amp; - \frac{8}{3 h} &amp; \frac{1}{3 h}\\- \frac{8}{3 h} &amp; \frac{16}{3 h} &amp; - \frac{8}{3 h}\\\frac{1}{3 h} &amp; - \frac{8}{3 h} &amp; \frac{7}{3 h}\end{matrix}\right]\)</span></p>
 </div>
 </div>
 </div><div class="column">
-<div id="19dc7514" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>Qe(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e1b40a1c" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>Qe(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="6">
 <p><span class="math inline">\(\displaystyle \left[\begin{matrix}\frac{81}{h^{3}} &amp; - \frac{405}{2 h^{3}} &amp; \frac{162}{h^{3}} &amp; - \frac{81}{2 h^{3}}\\- \frac{405}{2 h^{3}} &amp; \frac{567}{h^{3}} &amp; - \frac{1053}{2 h^{3}} &amp; \frac{162}{h^{3}}\\\frac{162}{h^{3}} &amp; - \frac{1053}{2 h^{3}} &amp; \frac{567}{h^{3}} &amp; - \frac{405}{2 h^{3}}\\- \frac{81}{2 h^{3}} &amp; \frac{162}{h^{3}} &amp; - \frac{405}{2 h^{3}} &amp; \frac{81}{h^{3}}\end{matrix}\right]\)</span></p>
 </div>
@@ -559,7 +559,7 @@ q^{(m, n)}_{ij} = \int_{\Omega} \psi^{(n)}_j \psi^{(m)}_i dx
 </section>
 <section id="implementation-1" class="slide level2 smaller">
 <h2>Implementation</h2>
-<div id="99b04513" class="cell" data-execution_count="8">
+<div id="86793bf3" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> fem <span class="im">import</span> get_element_boundaries, get_element_length, local_to_global_map, map_u_true_domain, fe_evaluate_v</span>
 <span id="cb6-2"><a></a></span>
 <span id="cb6-3"><a></a><span class="kw">def</span> assemble_q(xj, d<span class="op">=</span><span class="dv">1</span>, m<span class="op">=</span><span class="dv">0</span>, n<span class="op">=</span><span class="dv">0</span>):</span>
@@ -577,11 +577,11 @@ q^{(m, n)}_{ij} = \int_{\Omega} \psi^{(n)}_j \psi^{(m)}_i dx
 <div class="columns">
 <div class="column">
 <h3 id="q11-using-d1-n6"><span class="math inline">\(Q^{(1,1)}\)</span> using <span class="math inline">\(d=1, N=6\)</span></h3>
-<div id="b7892882" class="cell" data-execution_count="9">
+<div id="1f5ea093" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>N <span class="op">=</span> <span class="dv">6</span></span>
 <span id="cb7-2"><a></a>xj <span class="op">=</span> np.linspace(<span class="dv">1</span>, <span class="dv">2</span>, N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb7-3"><a></a>S <span class="op">=</span> assemble_q(xj, d<span class="op">=</span><span class="dv">1</span>, m<span class="op">=</span><span class="dv">1</span>, n<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-4"><a></a><span class="bu">print</span>(S) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-4"><a></a><span class="bu">print</span>(S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[ 6. -6.  0.  0.  0.  0.  0.]
  [-6. 12. -6.  0.  0.  0.  0.]
@@ -594,11 +594,11 @@ q^{(m, n)}_{ij} = \int_{\Omega} \psi^{(n)}_j \psi^{(m)}_i dx
 </div>
 </div><div class="column">
 <h3 id="q22-using-d2-n6"><span class="math inline">\(Q^{(2,2)}\)</span> using <span class="math inline">\(d=2, N=6\)</span></h3>
-<div id="7298be81" class="cell" data-execution_count="10">
+<div id="41881f2e" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>N <span class="op">=</span> <span class="dv">6</span></span>
 <span id="cb9-2"><a></a>xj <span class="op">=</span> np.linspace(<span class="dv">1</span>, <span class="dv">2</span>, N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb9-3"><a></a>Q <span class="op">=</span> assemble_q(xj, d<span class="op">=</span><span class="dv">2</span>, m<span class="op">=</span><span class="dv">2</span>, n<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb9-4"><a></a><span class="bu">print</span>(Q) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a></a><span class="bu">print</span>(Q)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[ 432. -864.  432.    0.    0.    0.    0.]
  [-864. 1728. -864.    0.    0.    0.    0.]
@@ -621,11 +621,11 @@ u''+\alpha u = f, \quad x \in (0, 10)
 -(u'_N, v') + \alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \quad \forall \, v \in V_N
 \]</span></p>
 <p>Assume manufactured solution <span class="math inline">\(u(x)=J_0(x)\)</span>, where <span class="math inline">\(J_0(x)\)</span> is the 0 order Bessel function of the first kind. Use Dirichlet boundary conditions, <span class="math inline">\(u(0)=J_0(0)\)</span> and <span class="math inline">\(u(10)=J_0(10)\)</span>, and thus neglect <span class="math inline">\([u'_Nv]_{x=0}^{x=10}\)</span>.</p>
-<div id="058a21cc" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>N <span class="op">=</span> <span class="dv">20</span> </span>
+<div id="2cc96f30" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>N <span class="op">=</span> <span class="dv">20</span></span>
 <span id="cb11-2"><a></a>xj <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, N<span class="op">+</span><span class="dv">1</span>)</span>
 <span id="cb11-3"><a></a>d <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb11-4"><a></a>S <span class="op">=</span> assemble_q(xj, d<span class="op">=</span>d, m<span class="op">=</span><span class="dv">1</span>, n<span class="op">=</span><span class="dv">1</span>) </span>
+<span id="cb11-4"><a></a>S <span class="op">=</span> assemble_q(xj, d<span class="op">=</span>d, m<span class="op">=</span><span class="dv">1</span>, n<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb11-5"><a></a>M <span class="op">=</span> assemble_q(xj, d<span class="op">=</span>d, m<span class="op">=</span><span class="dv">0</span>, n<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb11-6"><a></a>alpha <span class="op">=</span> <span class="dv">10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -635,7 +635,7 @@ u''+\alpha u = f, \quad x \in (0, 10)
 </section>
 <section id="assemble-right-hand-side-and-solve" class="slide level2 smaller">
 <h2>Assemble right hand side and solve</h2>
-<div id="e22f217c" class="cell" data-execution_count="12">
+<div id="bc815727" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>ue <span class="op">=</span> sp.besselj(<span class="dv">0</span>, x)</span>
 <span id="cb12-2"><a></a>f <span class="op">=</span> ue.diff(x, <span class="dv">2</span>) <span class="op">+</span> alpha<span class="op">*</span>ue</span>
 <span id="cb12-3"><a></a><span class="kw">def</span> assemble_b(u, xj, d<span class="op">=</span><span class="dv">1</span>):</span>
@@ -656,7 +656,7 @@ u''+\alpha u = f, \quad x \in (0, 10)
 <span id="cb12-18"><a></a>A[<span class="op">-</span><span class="dv">1</span>, :] <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> A[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> <span class="dv">1</span> <span class="co"># ident last row for bc at u(L)</span></span>
 <span id="cb12-19"><a></a>uh <span class="op">=</span> np.linalg.solve(A, b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e4f28587" class="cell" data-execution_count="13">
+<div id="93f56e4e" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -715,7 +715,7 @@ u''+\alpha u = f, \quad x \in (0, 10)
 (f, \psi_N) - J'_0(10)
 \end{bmatrix}
 \]</span></p>
-<div id="8f5a0d27" class="cell columns column-output-location" data-execution_count="14">
+<div id="b2dbd2eb" class="cell columns column-output-location" data-execution_count="14">
 <div class="column">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>S <span class="op">=</span> assemble_q(xj, d, <span class="dv">1</span>, <span class="dv">1</span>)</span>
 <span id="cb13-2"><a></a>M <span class="op">=</span> assemble_q(xj, d, <span class="dv">0</span>, <span class="dv">0</span>)</span>
@@ -772,7 +772,7 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 <img data-src="./figures/demo2D_basisfunc.png" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="reference-triangle-and-reference-basis-functions" class="slide level2 smaller">
 <h2>Reference triangle and reference basis functions</h2>
-<div id="e7145c26" class="cell" data-execution_count="15">
+<div id="8b6e4e03" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -791,7 +791,7 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 </section>
 <section id="visualization-of-basis-functions-on-reference-triangle" class="slide level2 smaller">
 <h2>Visualization of basis functions on reference triangle</h2>
-<div id="3216b48a" class="cell" data-execution_count="16">
+<div id="c315bdc4" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -803,7 +803,7 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 </section>
 <section id="p2-elements" class="slide level2 smaller">
 <h2>P2 elements</h2>
-<div id="267c455e" class="cell" data-execution_count="17">
+<div id="1d96b224" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -845,7 +845,7 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 </section>
 <section id="visualization-of-p2-basis-functions" class="slide level2 smaller">
 <h2>Visualization of P2 basis functions</h2>
-<div id="548221c9" class="cell" data-execution_count="18">
+<div id="9b2d1b79" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -881,22 +881,20 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 </section>
 <section id="assembly-on-the-reference-domain" class="slide level2 smaller">
 <h2>Assembly on the reference domain</h2>
-<div id="0bc74989" class="cell" data-execution_count="19">
+<div id="9fad7d6c" class="cell" data-execution_count="19">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="fempdes_files/figure-revealjs/cell-19-output-1.png" class="quarto-figure quarto-figure-center" width="587" height="256"></p>
+<p><img data-src="fempdes_files/figure-revealjs/cell-19-output-1.png" class="quarto-figure quarto-figure-center" width="515" height="229"></p>
 </figure>
 </div>
 </div>
 </div>
 <p><span class="math display">\[ \small
 \int_{\Omega^{(e)}} \psi_j(\boldsymbol{x}) \cdot \psi_i(\boldsymbol{x}) \, d\Omega = \int_{\tilde{\Omega}} \tilde{\psi}_s(\boldsymbol{X}) \cdot \tilde{\psi}_r(\boldsymbol{X}) \det J d\tilde{\Omega}
-\]</span></p>
-<p>We here use the Jacobian <span class="math inline">\(J\)</span> of the transformation, defined such that <span class="math display">\[ \small
-(J)_{ij} = \frac{\partial x_j}{\partial X_i}, \quad (J^{-1})_{ij} = \frac{\partial X_j}{\partial x_i}
-\]</span></p>
-<p><span class="math display">\[
+\]</span> We here use the Jacobian <span class="math inline">\(J\)</span> of the transformation, defined such that (where <span class="math inline">\((m, n)\)</span> runs over the number of coordinates, 2 in 2D and 3 in 3D) <span class="math display">\[ \small
+(J)_{mn} = \frac{\partial x_m}{\partial X_n}, \quad (J^{-1})_{mn} = \frac{\partial X_n}{\partial x_m}
+\]</span> <span class="math display">\[
 \text{2D Cartesian mesh: } \quad d\Omega = dxdy, \quad d\tilde{\Omega} = dXdY, \quad \det J = \frac{\partial x}{\partial X}\frac{\partial y}{\partial Y} - \frac{\partial x}{\partial Y}\frac{\partial y}{\partial X}
 \]</span></p>
 </section>
@@ -906,15 +904,15 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 \int_{\Omega^{(e)}} \nabla \psi_j(\boldsymbol{x}) \cdot \nabla \psi_i(\boldsymbol{x}) \, d\Omega
 \]</span></p>
 <p>The gradient of <span class="math inline">\(\psi_j\)</span> on index form is <span class="math display">\[
-(\nabla \psi_j)_i = \frac{\partial \psi_j}{ \partial x_i}
+(\nabla \psi_j)_m = \frac{\partial \psi_j}{ \partial x_m}
 \]</span></p>
 <p>and with transformation to the reference domain (with summation on repeated indices)</p>
 <p><span class="math display">\[
-\frac{\partial \psi_{q(e, r)}(\boldsymbol{x})}{\partial x_i} =\frac{\partial \tilde{\psi}_r(\boldsymbol{X})}{\partial x_i} = \frac{\partial \tilde{\psi}_r}{\partial X_j}\frac{\partial X_j}{\partial x_i}
+\frac{\partial \psi_{q(e, r)}(\boldsymbol{x})}{\partial x_m} =\frac{\partial \tilde{\psi}_r(\boldsymbol{X})}{\partial x_m} = \frac{\partial \tilde{\psi}_r}{\partial X_n}\frac{\partial X_n}{\partial x_m}
 \]</span></p>
 <p>Using the inverse Jacobian we can write the last term as</p>
 <p><span class="math display">\[
-\frac{\partial \tilde{\psi}_r}{\partial X_j}\frac{\partial X_j}{\partial x_i} = J_{ij}^{-1}  \frac{\partial \tilde{\psi}_r}{\partial X_j}
+\frac{\partial \tilde{\psi}_r}{\partial X_n}\frac{\partial X_n}{\partial x_m} = J_{mn}^{-1}  \frac{\partial \tilde{\psi}_r}{\partial X_n}
 \]</span></p>
 </section>
 <section id="stiffness-matrix-continued" class="slide level2 smaller">
@@ -924,7 +922,7 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 \nabla  u= \begin{bmatrix} \frac{\partial u}{\partial x} \\[0.1cm]
 \frac{\partial u}{\partial y} \\[0.1cm]
 \frac{\partial u}{\partial z}
-\end{bmatrix} \quad \text{and} \quad  
+\end{bmatrix} \quad \text{and} \quad
 \nabla_X  u = \begin{bmatrix} \frac{\partial u}{\partial X} \\[0.1cm]
 \frac{\partial u}{\partial Y} \\[0.1cm]
 \frac{\partial u}{\partial Z} \end{bmatrix}
@@ -950,7 +948,7 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 <li><p>A coordinate map: <span class="math inline">\(\boldsymbol{x}(\boldsymbol{X}) = \sum_{r} \tilde{\psi}_r(\boldsymbol{X}) \boldsymbol{x}_{q(e, r)}\)</span>, where <span class="math inline">\(\begin{align} \tilde{\psi}_0(X, Y) &amp;= 1-X-Y \\ \tilde{\psi}_1(X, Y) &amp;= X \\ \tilde{\psi}_2(X, Y) &amp;= Y \end{align}\)</span></p></li>
 </ul>
 </div><div class="column">
-<div id="7ea32b77" class="cell" data-execution_count="20">
+<div id="6ea3ee15" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -962,12 +960,12 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 </div></div>
 <p>From this we can easily compute the Jacobian</p>
 <p><span class="math display">\[
-J_{ij} = \frac{\partial x_j}{\partial X_i} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_i} (\boldsymbol{x}_{q(e, r)})_j\]</span></p>
+J_{mn} = \frac{\partial x_n}{\partial X_m} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_m} (\boldsymbol{x}_{q(e, r)})_n\]</span></p>
 </section>
 <section id="for-each-triangle-compute-the-jacobian" class="slide level2 smaller">
 <h2>For each triangle compute the Jacobian</h2>
 <p><span class="math display">\[
-J_{ij} = \frac{\partial x_j}{\partial X_i} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_i} (\boldsymbol{x}_{q(e, r)})_j\]</span></p>
+J_{mn} = \frac{\partial x_n}{\partial X_m} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_m} (\boldsymbol{x}_{q(e, r)})_n\]</span></p>
 <p><span class="math display">\[
 \nabla_X \tilde{\psi} = \underbrace{\begin{bmatrix} \frac{\partial \tilde{\psi}_0}{\partial X} &amp; \frac{\partial \tilde{\psi}_1}{\partial X} &amp; \frac{\partial \tilde{\psi}_2}{\partial X} \\[0.1cm]
 \frac{\partial \tilde{\psi}_0}{\partial Y} &amp; \frac{\partial \tilde{\psi}_1}{\partial Y} &amp; \frac{\partial \tilde{\psi}_2}{\partial Y} \\[0.1cm] \end{bmatrix}}_{\mathbb{R}^{2 \times 3}} \quad \text{and} \quad \boldsymbol{x}_{q(e)} = \underbrace{\begin{bmatrix} (\boldsymbol{x}_{q(e, 0)})_0 &amp; (\boldsymbol{x}_{q(e, 0)})_1 \\
@@ -999,7 +997,7 @@ a_{q(e, r), q(e, s)} \mathrel += \tilde{a}_{rs}
 </section>
 <section id="example-for-simple-yet-unstructured-mesh" class="slide level2 smaller">
 <h2>Example for simple, yet unstructured mesh</h2>
-<div id="dbb92019" class="cell" data-execution_count="21">
+<div id="eda05582" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>xi <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>)</span>
 <span id="cb14-2"><a></a>xj, yj <span class="op">=</span> np.meshgrid(xi, xi, indexing<span class="op">=</span><span class="st">'ij'</span>)</span>
 <span id="cb14-3"><a></a>nodes <span class="op">=</span> np.array([xj.flatten(), yj.flatten()])</span>
@@ -1012,14 +1010,13 @@ a_{q(e, r), q(e, s)} \mathrel += \tilde{a}_{rs}
 <span id="cb14-10"><a></a>    <span class="dv">5</span>: (<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">5</span>),</span>
 <span id="cb14-11"><a></a>    <span class="dv">6</span>: (<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">5</span>),</span>
 <span id="cb14-12"><a></a>    <span class="dv">7</span>: (<span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">8</span>)</span>
-<span id="cb14-13"><a></a>}</span>
-<span id="cb14-14"><a></a>xj, yj <span class="op">=</span> xj.flatten(), yj.flatten()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-13"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="4a80ba2b" class="cell" data-execution_count="22">
+<div id="7402acac" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="fempdes_files/figure-revealjs/cell-22-output-1.png" width="763" height="389"></p>
+<p><img data-src="fempdes_files/figure-revealjs/cell-22-output-1.png" class="quarto-figure quarto-figure-center" width="317" height="316"></p>
 </figure>
 </div>
 </div>
@@ -1027,11 +1024,11 @@ a_{q(e, r), q(e, s)} \mathrel += \tilde{a}_{rs}
 </section>
 <section id="assemble-stiffness-matrix" class="slide level2 smaller">
 <h2>Assemble stiffness matrix</h2>
-<div id="7e7b2936" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>A <span class="op">=</span> np.zeros((<span class="dv">9</span>, <span class="dv">9</span>)) </span>
+<div id="b5662507" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>A <span class="op">=</span> np.zeros((<span class="dv">9</span>, <span class="dv">9</span>))</span>
 <span id="cb15-2"><a></a>Ae <span class="op">=</span> np.zeros((<span class="dv">3</span>, <span class="dv">3</span>))</span>
 <span id="cb15-3"><a></a>dpsi <span class="op">=</span> np.array([[<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]])</span>
-<span id="cb15-4"><a></a><span class="cf">for</span> e, q <span class="kw">in</span> elements.items(): </span>
+<span id="cb15-4"><a></a><span class="cf">for</span> e, q <span class="kw">in</span> elements.items():</span>
 <span id="cb15-5"><a></a>    xq <span class="op">=</span> np.take(nodes, q, axis<span class="op">=</span><span class="dv">1</span>).T</span>
 <span id="cb15-6"><a></a>    J <span class="op">=</span> dpsi <span class="op">@</span> xq</span>
 <span id="cb15-7"><a></a>    detJ <span class="op">=</span> np.linalg.det(J)</span>
