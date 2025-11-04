@@ -215,10 +215,8 @@ Prof.&nbsp;Mikael Mortensen, University of Oslo
 <p>for a variety of operators <span class="math inline">\(\mathcal{L}\)</span> and a numerical solution depending only on space <span class="math inline">\(u_N(\boldsymbol{x})\)</span>.</p>
 <p>In this lecture we will add two types of time-dependency</p>
 <p><span class="math display">\[
-\begin{align}
-\frac{\partial u}{\partial t} + \mathcal{L}(u) &amp;=  f \\
-\frac{\partial^2 u}{\partial t^2} + \mathcal{L}(u) &amp;= f
-\end{align}
+\frac{\partial u}{\partial t} + \mathcal{L}(u) =  f \quad \text{and} \quad
+\frac{\partial^2 u}{\partial t^2} + \mathcal{L}(u) = f
 \]</span></p>
 <p>and approximations <span class="math inline">\(u_N(\boldsymbol{x}, t) \in V_N = \text{span}\{\psi_j\}_{j=0}^N\)</span>:</p>
 <p><span class="math display">\[
@@ -350,9 +348,7 @@ g^n(g-2+g^{-1})u^{0} + (\omega \Delta t)^2 g^n u^0 = 0
 <p>Divide by <span class="math inline">\(g^n u^0\)</span> <span class="math display">\[
 g+g^{-1} = 2-(\omega \Delta t)^2
 \]</span></p>
-<p>and solve quadratic equation (<span class="math inline">\(g\)</span> may be complex) to find stability <span class="math inline">\(|g|=1\)</span> for <span class="math display">\[
-\omega \Delta t \le 2
-\]</span></p>
+<p>and solve quadratic equation (<span class="math inline">\(g\)</span> may be complex) to find stability <span class="math inline">\(|g|=1\)</span> for <span class="math inline">\(\omega \Delta t \le 2\)</span></p>
 </section>
 <section id="recap---stability-of-the-diffusion-equation" class="slide level2 smaller">
 <h2>Recap - stability of the diffusion equation</h2>
@@ -444,7 +440,7 @@ g = 1 - \frac{4 \Delta t}{\Delta x^2}\sin^2\left(\frac{k\Delta x}{2}\right)
 <p><span class="math display">\[
 (g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \tilde{D}^{(2)} \boldsymbol{u}^0
 \]</span></p>
-<p>But we cannot eliminate the two <span class="math inline">\(\boldsymbol{u}^0\)</span> terms on each side because of the matrix <span class="math inline">\(\tilde{D}^{(2)}\)</span>!</p>
+<p>But how can we eliminate the two <span class="math inline">\(\boldsymbol{u}^0\)</span> terms on each side when there is the matrix <span class="math inline">\(\tilde{D}^{(2)}\)</span>?</p>
 </div>
 <div class="fragment">
 <p>Eigenvalues! The eigenvalues <span class="math inline">\(\lambda\)</span> of a matrix <span class="math inline">\(A\)</span> with associated eigenvectors <span class="math inline">\(\boldsymbol{x}\)</span> are</p>
@@ -474,7 +470,7 @@ g=1+\frac{\lambda \Delta t}{ \Delta x^2}
 </section>
 <section id="compute-eigenvalues" class="slide level2 smaller">
 <h2>Compute eigenvalues</h2>
-<div id="7a91df7a" class="cell" data-execution_count="2">
+<div id="64311b4b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
 <span id="cb1-3"><a></a>N <span class="op">=</span> <span class="dv">11</span></span>
@@ -685,7 +681,7 @@ M = ((\psi''_j, \psi_i))_{i,j=0}^{N} = S Q S^T
 </section>
 <section id="implementation-using-shenfun" class="slide level2 smaller">
 <h2>Implementation using shenfun</h2>
-<div id="a2e57f42" class="cell" data-execution_count="3">
+<div id="0b7a2968" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
 <span id="cb3-3"><a></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
@@ -706,7 +702,7 @@ M = ((\psi''_j, \psi_i))_{i,j=0}^{N} = S Q S^T
 <span id="cb3-18"><a></a>        <span class="va">self</span>.sol <span class="op">=</span> la.Solver(<span class="va">self</span>.A)</span>
 <span id="cb3-19"><a></a>        <span class="va">self</span>.A <span class="op">=</span> <span class="va">self</span>.A.diags()</span>
 <span id="cb3-20"><a></a>        <span class="va">self</span>.S <span class="op">=</span> <span class="va">self</span>.S.diags()</span>
-<span id="cb3-21"><a></a>        </span>
+<span id="cb3-21"><a></a></span>
 <span id="cb3-22"><a></a>    <span class="kw">def</span> get_function_space(<span class="va">self</span>, family<span class="op">=</span><span class="st">'L'</span>):</span>
 <span id="cb3-23"><a></a>        <span class="cf">return</span> FunctionSpace(<span class="va">self</span>.N<span class="op">+</span><span class="dv">1</span>, family, bc<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>), domain<span class="op">=</span>(<span class="dv">0</span>, <span class="va">self</span>.L))</span>
 <span id="cb3-24"><a></a></span>
@@ -740,7 +736,7 @@ M = ((\psi''_j, \psi_i))_{i,j=0}^{N} = S Q S^T
 <div class="columns">
 <div class="column">
 <p>Use longest stable time step <span class="math inline">\(dt=2/\max (\lambda)\)</span></p>
-<div id="a7b6d0f4" class="cell" data-execution_count="4">
+<div id="a4460352" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> utilities <span class="im">import</span> plot_with_offset</span>
 <span id="cb4-2"><a></a>sol <span class="op">=</span> FE_Diffusion(<span class="dv">42</span>, L0<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb4-3"><a></a>dt <span class="op">=</span> <span class="dv">2</span><span class="op">/</span><span class="bu">max</span>(sol.get_eigenvalues())</span>
@@ -756,7 +752,7 @@ M = ((\psi''_j, \psi_i))_{i,j=0}^{N} = S Q S^T
 </div>
 </div><div class="column">
 <p>Use slightly too large time step <span class="math inline">\(dt=2.04/\max (\lambda)\)</span></p>
-<div id="3ae7a512" class="cell" data-execution_count="5">
+<div id="3b6e0d8d" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co">#</span></span>
 <span id="cb5-2"><a></a><span class="co">#</span></span>
 <span id="cb5-3"><a></a><span class="co">#</span></span>
@@ -851,7 +847,7 @@ u(x, 0) = f(x) \quad \frac{\partial u}{\partial t}(x, 0) = 0
 <p><strong>Note</strong></p>
 </div>
 <div class="callout-content">
-<p>All time dependency is in the expansion coefficients <span class="math inline">\(\hat{u}^n_{j}, \hat{u}^{n}_{j}, \hat{u}^{n-1}_{j}\)</span>.</p>
+<p>All time dependency is in the expansion coefficients <span class="math inline">\(\hat{u}^{n+1}_{j}, \hat{u}^{n}_{j}, \hat{u}^{n-1}_{j}\)</span>.</p>
 </div>
 </div>
 </div>
@@ -976,7 +972,7 @@ B(x) = \tilde{B}(X) = \frac{L}{8}\left({g_L}(1+X)^2 - {g_0}(1-X)^2\right)
 <div class="fragment">
 <ul>
 <li><p>This works for the finite element method, where <span class="math inline">\(\psi_0(0)=1\)</span> and <span class="math inline">\(\psi_N(L)=1\)</span>. Nothing else is required</p></li>
-<li><p>Also works for the global Galerkin method, e.g., Legendre polynomials <span class="math inline">\(\psi_i(x)=P_i(X)\)</span>.</p></li>
+<li><p>Also works for the global Galerkin method, e.g., Legendre polynomials <span class="math inline">\(\psi_i(x)=P_i(X)\)</span></p></li>
 <li><p>Does not work for Chebyshev because the method relies on integration by parts, which does not work with the Chebyshev weights <span class="math inline">\(\omega(x)=1/\sqrt{1-X^2}\)</span>.</p></li>
 </ul>
 </div>
@@ -1078,7 +1074,7 @@ g = \frac{\beta \pm \sqrt{\beta^2-4}}{2}
 <section id="implementation---overload-diffusion-solver" class="slide level2 smaller">
 <h2>Implementation - Overload diffusion solver</h2>
 <p>We are using the same function space and thus the same matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(S\)</span> as the diffusion equation. We only need to reimplement the time stepper in <code>__call__</code>.</p>
-<div id="e26d665f" class="cell" data-execution_count="6">
+<div id="ee7eb518" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">class</span> Wave(FE_Diffusion):</span>
 <span id="cb6-2"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, N, L0<span class="op">=</span><span class="dv">1</span>, c0<span class="op">=</span><span class="dv">1</span>, u0<span class="op">=</span>sp.sin(sp.pi<span class="op">*</span>x<span class="op">/</span>L)):</span>
 <span id="cb6-3"><a></a>        u0 <span class="op">=</span> u0.subs({c: c0})</span>
@@ -1103,12 +1099,12 @@ g = \frac{\beta \pm \sqrt{\beta^2-4}}{2}
 <span id="cb6-22"><a></a>            <span class="va">self</span>.uh_n[:] <span class="op">=</span> <span class="va">self</span>.uh_np1</span>
 <span id="cb6-23"><a></a>            <span class="cf">if</span> n <span class="op">%</span> save_step <span class="op">==</span> <span class="dv">0</span>: <span class="co"># save every save_step timestep</span></span>
 <span id="cb6-24"><a></a>                plotdata[n] <span class="op">=</span> <span class="va">self</span>.uh_np1(xj)</span>
-<span id="cb6-25"><a></a>        <span class="cf">return</span> plotdata </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-25"><a></a>        <span class="cf">return</span> plotdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="check-stability" class="slide level2 smaller">
 <h2>Check stability</h2>
-<div id="6ee82e55" class="cell" data-execution_count="7">
+<div id="7ce27dc2" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>sol <span class="op">=</span> Wave(<span class="dv">40</span>, L0<span class="op">=</span><span class="dv">2</span>, c0<span class="op">=</span><span class="dv">1</span>, u0<span class="op">=</span>sp.exp(<span class="op">-</span><span class="dv">40</span><span class="op">*</span>(x<span class="op">-</span>L<span class="op">/</span><span class="dv">2</span><span class="op">+</span>c<span class="op">*</span>t)<span class="op">**</span><span class="dv">2</span>))</span>
 <span id="cb7-2"><a></a>dt <span class="op">=</span> <span class="dv">1</span><span class="op">/</span>sol.c<span class="op">*</span>np.sqrt(<span class="dv">4</span><span class="op">/</span><span class="bu">max</span>(sol.get_eigenvalues()))</span>
 <span id="cb7-3"><a></a>data <span class="op">=</span> sol(<span class="dv">400</span>, dt<span class="op">=</span>dt, save_step<span class="op">=</span><span class="dv">40</span>)</span>
@@ -1121,7 +1117,7 @@ g = \frac{\beta \pm \sqrt{\beta^2-4}}{2}
 </div>
 </div>
 </div>
-<div id="efcb6fb2" class="cell" data-execution_count="8">
+<div id="1a8cd1cb" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>data <span class="op">=</span> sol(<span class="dv">400</span>, dt<span class="op">=</span>dt<span class="op">*</span><span class="fl">1.01</span>, save_step<span class="op">=</span><span class="dv">40</span>)</span>
 <span id="cb8-2"><a></a>plot_with_offset(data, sol.V.mesh(), figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">2.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
