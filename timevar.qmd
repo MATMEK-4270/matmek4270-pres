@@ -7,7 +7,7 @@ execute:
   cache: true
 
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     slide-number: true
     preview-links: auto
@@ -34,15 +34,13 @@ $$
 \mathcal{L}(u) = f
 $$
 
-for a variety of operators $\mathcal{L}$ and a numerical solution depending only on space $u_N(\boldsymbol{x})$. 
+for a variety of operators $\mathcal{L}$ and a numerical solution depending only on space $u_N(\boldsymbol{x})$.
 
 In this lecture we will add two types of time-dependency
 
 $$
-\begin{align}
-\frac{\partial u}{\partial t} + \mathcal{L}(u) &=  f \\
-\frac{\partial^2 u}{\partial t^2} + \mathcal{L}(u) &= f
-\end{align}
+\frac{\partial u}{\partial t} + \mathcal{L}(u) =  f \quad \text{and} \quad
+\frac{\partial^2 u}{\partial t^2} + \mathcal{L}(u) = f
 $$
 
 and approximations $u_N(\boldsymbol{x}, t) \in V_N = \text{span}\{\psi_j\}_{j=0}^N$:
@@ -67,7 +65,7 @@ $$
 \frac{u^{n+1}-u^n}{\Delta t} + \mathcal{L}(u^n) = f^n
 $$
 
-where 
+where
 
 $$
 u^n(\boldsymbol{x}) = u(\boldsymbol{x}, t_n), f^n(\boldsymbol{x}) = f(\boldsymbol{x}, t_n)
@@ -119,7 +117,7 @@ and for the Galerkin method $W = V_N$.
 
 ::: {.fragment}
 
-In order to solve the time-dependent problem we need to solve this Galerkin problem many times. The procedure is 
+In order to solve the time-dependent problem we need to solve this Galerkin problem many times. The procedure is
 
 1. Initialize $u_N^0(\boldsymbol{x})$ by projecting the given initial condition $u(\boldsymbol{x}, 0)$ to $V_N$ (function approximation, see lectures 8, 9). That is, find $u^0_N \in V_N$ such that
 $$
@@ -184,10 +182,7 @@ $$
 g+g^{-1} = 2-(\omega \Delta t)^2
 $$
 
-and solve quadratic equation ($g$ may be complex) to find stability $|g|=1$ for
-$$
-\omega \Delta t \le 2
-$$
+and solve quadratic equation ($g$ may be complex) to find stability $|g|=1$ for $\omega \Delta t \le 2$
 
 ## Recap - stability of the diffusion equation {.smaller}
 
@@ -310,7 +305,7 @@ $$
 (g-1)\boldsymbol{u}^0 = \frac{\Delta t}{\Delta x^2} \tilde{D}^{(2)} \boldsymbol{u}^0
 $$
 
-But we cannot eliminate the two $\boldsymbol{u}^0$ terms on each side because of the matrix $\tilde{D}^{(2)}$!
+But how can we eliminate the two $\boldsymbol{u}^0$ terms on each side when there is the matrix $\tilde{D}^{(2)}$?
 
 :::
 
@@ -354,7 +349,7 @@ But we need to compute the eigenvalues..
 ## Compute eigenvalues {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 import numpy as np
 from scipy import sparse
 N = 11
@@ -386,7 +381,7 @@ $$
 and make the same ansatz as before
 
 $$
-u_N^{n+1} = g u_N^n \quad \text{and thus} \quad u^{n}_N = g^n u^0_N 
+u_N^{n+1} = g u_N^n \quad \text{and thus} \quad u^{n}_N = g^n u^0_N
 $$
 
 ::: {.fragment}
@@ -417,7 +412,7 @@ $$
 In matrix form this is
 
 $$
-g A \boldsymbol{\hat{u}}^0 = A \boldsymbol{\hat{u}}^0 + \Delta t M \boldsymbol{\hat{u}}^0 
+g A \boldsymbol{\hat{u}}^0 = A \boldsymbol{\hat{u}}^0 + \Delta t M \boldsymbol{\hat{u}}^0
 $$
 
 where $a_{ij}=(\psi_j, \psi_i)$ and $m_{ij} = \left( \mathcal{L}(\psi_j), \psi_i\right)$. Multiply from the left by $A^{-1}$ to obtain
@@ -435,7 +430,7 @@ g \boldsymbol{\hat{u}}^0 = \boldsymbol{\hat{u}}^0 + \lambda \Delta t \boldsymbol
 $$
 
 $$
-\text{Stability limit:}\quad |g| = |1+\lambda \Delta t| \le 1 
+\text{Stability limit:}\quad |g| = |1+\lambda \Delta t| \le 1
 $$
 
 :::
@@ -448,7 +443,7 @@ $$
 
 $$
 \begin{align}
-u(x, 0) &= \sin(\pi x /L) + \sin(10 \pi x/L) \\ 
+u(x, 0) &= \sin(\pi x /L) + \sin(10 \pi x/L) \\
 u(0, t) &= 0, u(L, t) = 0
 \end{align}
 $$
@@ -475,7 +470,7 @@ $$
 
 $$
 \begin{align}
-\int_{0}^L\psi'_j(x) \psi'_i(x) dx &= \int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X))\frac{dX}{dx} (P'_{i}(X)-P'_{i+2}(X))\frac{dX}{dx} \frac{dx}{dX}dX \\ 
+\int_{0}^L\psi'_j(x) \psi'_i(x) dx &= \int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X))\frac{dX}{dx} (P'_{i}(X)-P'_{i+2}(X))\frac{dX}{dx} \frac{dx}{dX}dX \\
 &= \frac{2}{L} \int_{-1}^1 (P'_{j}(X)-P'_{j+2}(X)) (P'_{i}(X)-P'_{i+2}(X))dX \\
 &= \frac{2}{L}(P'_{j}-P'_{j+2}, P'_{i}-P'_{i+2})_{L^2(-1, 1)}
 \end{align}
@@ -488,7 +483,7 @@ Using equality: $(2j+3)P_{j+1} = P'_{j+2}-P'_{j}$ and $(P_{i+1}, P_{j+1})_{L^2(-
 
 $$
 \begin{align}
-\int_{0}^L\psi'_j(x) \psi'_i(x) dx &= \frac{2}{L}(-(2j+3)P_{j+1}, -(2j+3)P_{i+1}) \\ 
+\int_{0}^L\psi'_j(x) \psi'_i(x) dx &= \frac{2}{L}(-(2j+3)P_{j+1}, -(2j+3)P_{i+1}) \\
 &= \frac{2}{L}(2j+3)^2\|P_{i+1}\|^2 \delta_{ij}\\
 &= \frac{8j+12}{L} \delta_{ij}
 \end{align}
@@ -546,7 +541,7 @@ s_{ij} = \begin{cases} 1 \quad &i=j \\
 1 & 0 & -1 & 0 & 0 & \cdots\\
 0 & 1 & 0 & -1 & 0 & \cdots\\
 0 & 0 & 1 & 0 & -1 & \cdots\\
-\vdots & \vdots & \vdots & \ddots & \ddots & \ddots \\ 
+\vdots & \vdots & \vdots & \ddots & \ddots & \ddots \\
 0 & 0 & 0 & \cdots & 1 & 0 & -1
 \end{bmatrix}
 $$
@@ -559,11 +554,11 @@ $$
 
 ## Why is the stencil matrix smart? {.smaller}
 
-Consider the mass matrix 
+Consider the mass matrix
 
 $$
 \begin{align}
-(\psi_j, \psi_i) &= (P_j-P_{j+2}, P_i-P_{i+2}) \\ 
+(\psi_j, \psi_i) &= (P_j-P_{j+2}, P_i-P_{i+2}) \\
 &= (P_j, P_i) - (P_j, P_{i+2}) - (P_{j+2}, P_i) + (P_{j+2}, P_{i+2})
 \end{align}
 $$
@@ -576,7 +571,7 @@ Now use stencil matrix instead (summation on $k$ and $l$):
 
 $$
 \begin{align}
-(\psi_j, \psi_i) &= (s_{jk}P_k, s_{il}P_l) \\ 
+(\psi_j, \psi_i) &= (s_{jk}P_k, s_{il}P_l) \\
 &= s_{il} (P_l, P_k) s_{jk}
 \end{align}
 $$
@@ -595,7 +590,7 @@ $$
 
 $$
 \begin{align}
-(\psi''_j, \psi_i) &= (s_{jk}P''_k, s_{il}P_l) \\ 
+(\psi''_j, \psi_i) &= (s_{jk}P''_k, s_{il}P_l) \\
 &= s_{il} (P''_l, P_k) s_{jk}
 \end{align}
 $$
@@ -610,7 +605,7 @@ $$
 ## Implementation using shenfun {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 import numpy as np
 import sympy as sp
 from scipy import sparse
@@ -631,7 +626,7 @@ class FE_Diffusion:
         self.sol = la.Solver(self.A)
         self.A = self.A.diags()
         self.S = self.S.diags()
-        
+
     def get_function_space(self, family='L'):
         return FunctionSpace(self.N+1, family, bc=(0, 0), domain=(0, self.L))
 
@@ -725,13 +720,13 @@ $$
 g (I + \Delta t A^{-1}S) \boldsymbol{\hat{u}}^0 = \boldsymbol{\hat{u}}^0
 $$
 
-Here we can once again use $H=A^{-1}S$ and $H \boldsymbol{\hat{u}}^0 = \lambda \boldsymbol{\hat{u}}^0$ and thus we find 
+Here we can once again use $H=A^{-1}S$ and $H \boldsymbol{\hat{u}}^0 = \lambda \boldsymbol{\hat{u}}^0$ and thus we find
 
 $$
 g = \frac{1}{1+\Delta t \lambda}
 $$
 
-Since all time steps and eigenvalues are real numbers larger than 0, $g$ is always less than 1 and positive and the backward Euler method is as such *unconditionally* stable. 
+Since all time steps and eigenvalues are real numbers larger than 0, $g$ is always less than 1 and positive and the backward Euler method is as such *unconditionally* stable.
 
 ## The wave equation as a variational problem {.smaller}
 
@@ -757,7 +752,7 @@ $$
 \mathcal{R}_N={u_N^{n+1}-2u_N^n+u_N^{n-1}} - \alpha^2 (u_N^n)''
 $$
 
-with $\alpha = c \Delta t$ and $u'=\frac{\partial u}{\partial x}$. 
+with $\alpha = c \Delta t$ and $u'=\frac{\partial u}{\partial x}$.
 
 
 :::
@@ -788,7 +783,7 @@ $$
 
 ::: {.callout-note appearance="default"}
 
-All time dependency is in the expansion coefficients $\hat{u}^n_{j}, \hat{u}^{n}_{j}, \hat{u}^{n-1}_{j}$.
+All time dependency is in the expansion coefficients $\hat{u}^{n+1}_{j}, \hat{u}^{n}_{j}, \hat{u}^{n-1}_{j}$.
 
 :::
 
@@ -808,7 +803,7 @@ $$
 A \boldsymbol{\hat{u}}^{n+1} = A (2 \boldsymbol{\hat{u}}^n - \boldsymbol{\hat{u}}^{n-1}) - \alpha^2 \left( S \boldsymbol{\hat{u}}^n  - \boldsymbol{b}^n \right)
 $$
 
-where $\boldsymbol{b}^n = ((u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0))_{i=0}^N$. 
+where $\boldsymbol{b}^n = ((u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0))_{i=0}^N$.
 
 ::: {.fragment}
 
@@ -829,7 +824,7 @@ $$
 {b}_i^n = (u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0), \quad i=0,1, \ldots, N
 $$
 
-### Global variational methods 
+### Global variational methods
 
 $$
 \psi_i(0) = \psi_i(L) = 0, \quad i=0, 1, \ldots, N
@@ -860,7 +855,7 @@ Makes use of Lagrange polynomials and $\psi_i(0)= 1$ for $i=0$ and zero otherwis
 
 $$
 u(0, t)=a = \hat{u}^{n+1}_0 \quad \text{and} \quad u(L, t) = b = \hat{u}^{n+1}_N
-$$ 
+$$
 
 ::: {.callout-note}
 
@@ -874,7 +869,7 @@ $$
 a_{10} & a_{11}& a_{12} & \cdots & a_{1N} \\
 \vdots & \vdots & \vdots & \ddots & \vdots \\
 a_{N-1, 0} & a_{N-1, 1}& a_{N-1, 2}& \cdots & a_{N-1,N} \\
-0 & \cdots & 0 & 0 & 1 
+0 & \cdots & 0 & 0 & 1
 \end{bmatrix}
 \begin{bmatrix}
 \hat{u}^{n+1}_0 \\
@@ -925,7 +920,7 @@ $$
 
 ## Neumann boundary conditions weakly {.smaller}
 
-### Apply boundary condition weakly through variational form 
+### Apply boundary condition weakly through variational form
 
 $$
 {b}_i^n = (u^n_N)'(L) \psi_i(L) - (u^n_N)'(0) \psi_i(0), \quad i=0,1,\ldots, N
@@ -937,13 +932,13 @@ $$
 {b}_i^n = g_L \psi_i(L) - g_0 \psi_i(0)
 $$
 
-Use any basis function, except those where all $\psi_i(0)=0$ and $\psi_i(L)=0$, for all $i=0,1,\ldots, N$. 
+Use any basis function, except those where all $\psi_i(0)=0$ and $\psi_i(L)=0$, for all $i=0,1,\ldots, N$.
 
 ::: {.fragment}
 
-* This works for the finite element method, where $\psi_0(0)=1$ and $\psi_N(L)=1$. Nothing else is required 
+* This works for the finite element method, where $\psi_0(0)=1$ and $\psi_N(L)=1$. Nothing else is required
 
-* Also works for the global Galerkin method, e.g., Legendre polynomials $\psi_i(x)=P_i(X)$.
+* Also works for the global Galerkin method, e.g., Legendre polynomials $\psi_i(x)=P_i(X)$
 
 * Does not work for Chebyshev because the method relies on integration by parts, which does not work with the Chebyshev weights $\omega(x)=1/\sqrt{1-X^2}$.
 
@@ -957,16 +952,16 @@ $$
 A (\boldsymbol{\hat{u}}^{n+1} -2 \boldsymbol{\hat{u}}^n + \boldsymbol{\hat{u}}^{n-1}) = - \alpha^2 \left( S \boldsymbol{\hat{u}}^n  - \boldsymbol{b}^n \right)
 $$
 
-The ansatz $u_N^{n+1}=gu^{n}_N=g^{n+1}u_N^0$ also implies that 
+The ansatz $u_N^{n+1}=gu^{n}_N=g^{n+1}u_N^0$ also implies that
 
 $$
 \boldsymbol{\hat{u}}^{n+1} = g \boldsymbol{\hat{u}}^n  = g^{n+1} \boldsymbol{\hat{u}}^0 \tag{1}
 $$
 
-since 
+since
 
 $$
-u^{n+1}_N = g u^{n}_N \Rightarrow \sum_{j=0}^N \hat{u}^{n+1}_j \psi_j = g \sum_{j=0}^N \hat{u}^{n}_j \psi_j = \sum_{j=0}^N (g\hat{u}^{n}_j) \psi_j 
+u^{n+1}_N = g u^{n}_N \Rightarrow \sum_{j=0}^N \hat{u}^{n+1}_j \psi_j = g \sum_{j=0}^N \hat{u}^{n}_j \psi_j = \sum_{j=0}^N (g\hat{u}^{n}_j) \psi_j
 $$
 
 Hence $\hat{u}^{n+1}_j = g\hat{u}^n_j$. Recursively, we get (1).
@@ -1011,7 +1006,7 @@ $$
 g + g^{-1} = \beta \tag{1}
 $$
 
-where $\beta = -\alpha^2 \lambda +2$. 
+where $\beta = -\alpha^2 \lambda +2$.
 
 ### For stability we need $|g| \le 1$.
 
@@ -1061,7 +1056,7 @@ $$
 We are using the same function space and thus the same matrices $A$ and $S$ as the diffusion equation. We only need to reimplement the time stepper in `__call__`.
 
 ```{python}
-#| echo : true 
+#| echo : true
 class Wave(FE_Diffusion):
     def __init__(self, N, L0=1, c0=1, u0=sp.sin(sp.pi*x/L)):
         u0 = u0.subs({c: c0})
@@ -1086,14 +1081,14 @@ class Wave(FE_Diffusion):
             self.uh_n[:] = self.uh_np1
             if n % save_step == 0: # save every save_step timestep
                 plotdata[n] = self.uh_np1(xj)
-        return plotdata 
+        return plotdata
 ```
 
 ## Check stability {.smaller}
 
 ```{python}
 #| echo : true
-#| fig-align: center 
+#| fig-align: center
 sol = Wave(40, L0=2, c0=1, u0=sp.exp(-40*(x-L/2+c*t)**2))
 dt = 1/sol.c*np.sqrt(4/max(sol.get_eigenvalues()))
 data = sol(400, dt=dt, save_step=40)
@@ -1101,7 +1096,7 @@ plot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))
 ```
 ```{python}
 #| echo : true
-#| fig-align: center 
+#| fig-align: center
 data = sol(400, dt=dt*1.01, save_step=40)
 plot_with_offset(data, sol.V.mesh(), figsize=(8, 2.5))
 ```

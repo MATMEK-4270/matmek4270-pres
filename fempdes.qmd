@@ -7,7 +7,7 @@ execute:
   cache: true
 
 format:
-  revealjs: 
+  revealjs:
     theme: [default, custom.scss]
     slide-number: true
     preview-links: auto
@@ -40,7 +40,7 @@ $$
 * We always use reference elements (lines, triangles, tetrahedra)
 * Matrices and vectors are assembled elementwise
 $$
-a_{ij} = (\psi_j, \psi_i) = \sum_{e=0}^{N_e-1} \int_{\Omega^{(e)}} \psi_j \psi_i d\Omega = \sum_{e=0}^{N_e-1} A_e 
+a_{ij} = (\psi_j, \psi_i) = \sum_{e=0}^{N_e-1} \int_{\Omega^{(e)}} \psi_j \psi_i d\Omega = \sum_{e=0}^{N_e-1} A_e
 $$
 * It is very common to use Lagrange polynomials for basis functions
 * PDEs are normally not solved using tensor products in multiple dimensions
@@ -74,7 +74,7 @@ $$
 First choose $V_N$. We can here use piecewise linear polynomials or even higher order
 
 $$
-V_N = \text{span}\{\psi_j(x)\}_{j=0}^N 
+V_N = \text{span}\{\psi_j(x)\}_{j=0}^N
 $$
 
 Remember
@@ -108,8 +108,8 @@ plt.plot(yj, sp.lambdify(x, l0)(yj), 'k',
          zj, sp.lambdify(x, z0)(zj), 'r',
          zj, sp.lambdify(x, z1)(zj), 'b',
          zj, sp.lambdify(x, z2)(zj), 'k',
-         hj, sp.lambdify(x, w2)(hj), 'k', 
-         vj, sp.lambdify(x, v0)(vj), 'k',  
+         hj, sp.lambdify(x, w2)(hj), 'k',
+         vj, sp.lambdify(x, v0)(vj), 'k',
          )
 ax = fig.gca()
 ax.text(1.0, 1.15, "$\\psi_i(x)$", horizontalalignment='center')
@@ -128,7 +128,7 @@ ax.axis('off');
 
 ## Use integration by parts {.smaller}
 
-The variational Galerkin form is now to find $u_N \in V_N$ such that 
+The variational Galerkin form is now to find $u_N \in V_N$ such that
 
 $$
 (u_N'', v) = (f, v), \quad \forall \, v \in V_N
@@ -140,7 +140,7 @@ But piecewise polynomials cannot be differentiated twice!
 
 ::: {.fragment}
 
-Solution: integration by parts $\left((u'', v) = -(u', v')+ [u'v]_{x=x_L}^{x=x_R}\right)$
+Solution: integration by parts
 
 $$
 (u_N', v') = -(f, v) + [u_N'v]_{x=0}^{x=L}, \quad \forall \, v \in V_N
@@ -169,7 +169,7 @@ $$
 u(0) = u_N(x_0) = \sum_{j=0}^N \hat{u}_j \psi_j(x_0) = \psi_0(x_0) \hat{u}_0 = \hat{u}_0 = a
 $$
 
-and 
+and
 
 $$
 u(L) = u_N(x_N) = \sum_{j=0}^N \hat{u}_j \psi_j(x_N) = \psi_N(x_N) \hat{u}_N = \hat{u}_N = b.
@@ -195,7 +195,7 @@ $$
 s_{10} & s_{11}& s_{12} & \cdots & s_{1N} \\
 \vdots & \vdots & \vdots & \ddots & \cdots \\
 s_{N-1, 0} & s_{N-1, 1}& s_{N-1, 2}& \cdots & s_{N-1,N} \\
-0 & \cdots & 0 & 0 & 1 
+0 & \cdots & 0 & 0 & 1
 \end{bmatrix}
 \begin{bmatrix}
 \hat{u}_0 \\
@@ -222,7 +222,7 @@ $$
 s_{ij} = (\psi'_j, \psi'_i) = \sum_{e=0}^{N_e-1} \int_{\Omega^{(e)}} \psi'_j \psi'_i d\Omega
 $$
 
-We will use the same notation as in lecture 10 and 
+We will use the same notation as in lecture 10 and
 
 $$
 s^{(e)}_{ij} = \int_{\Omega^{(e)}} \psi'_j \psi'_i d\Omega
@@ -234,7 +234,7 @@ $$
 \tilde{s}^{(e)}_{rs} = s^{(e)}_{q(e,r), q(e, s)}, \, (r, s) \in \mathcal{I}_d^2
 $$
 
-for finite elements of order $d$ and $\mathcal{I}_d=\{0, 1, \ldots, d\}$. Remember that $d=1$ for linear elements, and then higher order elements ($d>1$) simply use more nodes within each element. 
+for finite elements of order $d$ and $\mathcal{I}_d=\{0, 1, \ldots, d\}$. Remember that $d=1$ for linear elements, and then higher order elements ($d>1$) simply use more nodes within each element.
 
 ## Mapping to reference domain $\tilde{\Omega} = [-1, 1]$ {.smaller}
 
@@ -338,7 +338,7 @@ $$
 ## Generic element matrix {.smaller}
 
 $$
-\tilde{q}^{(e,m,n)}_{rs} =  \int_{\Omega^{(e)}} \frac{d^n \psi_{q(e, s)}}{dx^n} \frac{d^m \psi_{q(e, r)}}{dx^m}  dx \quad \text{and} \quad \frac{d^n \psi_{q(e, r)}}{dx^n} = \left(\frac{2}{h}\right)^n \frac{d^n \ell_r}{dX^n} 
+\tilde{q}^{(e,m,n)}_{rs} =  \int_{\Omega^{(e)}} \frac{d^n \psi_{q(e, s)}}{dx^n} \frac{d^m \psi_{q(e, r)}}{dx^m}  dx \quad \text{and} \quad \frac{d^n \psi_{q(e, r)}}{dx^n} = \left(\frac{2}{h}\right)^n \frac{d^n \ell_r}{dX^n}
 $$
 
 leads to
@@ -347,7 +347,7 @@ $$
 \tilde{q}^{(e,m,n)}_{rs} = \left(\frac{h}{2}\right)^{1-(m+n)} \int_{-1}^1 \ell^{(n)}_s(X) \ell^{(m)}_r(X)  dX,
 $$
 
-where $\ell^{(n)}_r = \frac{d^{n} \ell_r}{dX^n}$. 
+where $\ell^{(n)}_r = \frac{d^{n} \ell_r}{dX^n}$.
 
 ::: {.callout-note}
 This represents all the element matrices you will ever need, and it is easily implemented using a few lines of Sympy code.
@@ -359,7 +359,7 @@ Higher order of the derivatives $(m, n)$ requires higher order elements. Remembe
 
 ## Sympy implementation of generic element matrix {.smaller}
 
-Using uniform nodes 
+Using uniform nodes
 
 $$
 X_j = -1 + \frac{2j}{d}, \quad j=0,1,\ldots, d
@@ -367,7 +367,7 @@ $$
 
 ```{python}
 #| echo : true
-Xj = lambda d: np.array([sp.Rational(2*i, d) for i in np.arange(d+1)])-1 
+Xj = lambda d: np.array([sp.Rational(2*i, d) for i in np.arange(d+1)])-1
 qe = lambda l, r, s, m, n: sp.integrate(l[r].diff(x, m)*l[s].diff(x, n), (x, -1, 1))
 def Qe(d=1, m=0, n=0):
     A = np.zeros((d+1, d+1), dtype=object)
@@ -382,21 +382,21 @@ def Qe(d=1, m=0, n=0):
 ::: {.column}
 ```{python}
 #| echo : true
-Qe(2, 1, 1) 
+Qe(2, 1, 1)
 ```
 :::
 ::: {.column}
 ```{python}
 #| echo : true
-Qe(3, 2, 2) 
+Qe(3, 2, 2)
 ```
 :::
 :::
- 
+
 ## Assemble the generic matrix $Q^{(m,n)}$ {.smaller}
 
 $$
-q^{(m, n)}_{ij} = \int_{\Omega} \psi^{(n)}_j \psi^{(m)}_i dx 
+q^{(m, n)}_{ij} = \int_{\Omega} \psi^{(n)}_j \psi^{(m)}_i dx
 $$
 
 * For all elements $e=0,\ldots, N_e-1$
@@ -436,7 +436,7 @@ Create mesh and assemble any generic, numerical matrix:
 N = 6
 xj = np.linspace(1, 2, N+1)
 S = assemble_q(xj, d=1, m=1, n=1)
-print(S) 
+print(S)
 ```
 :::
 ::: {.column}
@@ -446,7 +446,7 @@ print(S)
 N = 6
 xj = np.linspace(1, 2, N+1)
 Q = assemble_q(xj, d=2, m=2, n=2)
-print(Q) 
+print(Q)
 ```
 :::
 :::
@@ -459,20 +459,20 @@ $$
 u''+\alpha u = f, \quad x \in (0, 10)
 $$
 
-Find $u_N \in V_N$ such that 
+Find $u_N \in V_N$ such that
 
 $$
--(u'_N, v') + \alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \quad \forall \, v \in V_N 
+-(u'_N, v') + \alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \quad \forall \, v \in V_N
 $$
 
 Assume manufactured solution $u(x)=J_0(x)$, where $J_0(x)$ is the 0 order Bessel function of the first kind. Use Dirichlet boundary conditions, $u(0)=J_0(0)$ and $u(10)=J_0(10)$, and thus neglect $[u'_Nv]_{x=0}^{x=10}$.
 
 ```{python}
-#| echo : true 
-N = 20 
+#| echo : true
+N = 20
 xj = np.linspace(0, 10, N+1)
 d = 1
-S = assemble_q(xj, d=d, m=1, n=1) 
+S = assemble_q(xj, d=d, m=1, n=1)
 M = assemble_q(xj, d=d, m=0, n=0)
 alpha = 10
 ```
@@ -515,10 +515,10 @@ plt.legend([f'FEM d=1 N={N}', 'Exact']);
 
 ## Use Neumann boundary conditions instead {.smaller}
 
-Find $u_N \in V_N$ such that 
+Find $u_N \in V_N$ such that
 
 $$
--(u'_N, v') + \alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \quad \forall \, v \in V_N 
+-(u'_N, v') + \alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \quad \forall \, v \in V_N
 $$
 
 Insert for boundary conditions $u'(0)=J'_0(0)$ and $u'(10)=J'_0(10)$
@@ -532,7 +532,7 @@ The boundary term $J'_0(10)\psi_i(10)$ is only nonzero for $i=N$ and $J'_0(0) \p
 :::
 
 ::: {.callout-note}
-The term $(J'_0(10)\psi_i(10) - J'_0(0) \psi_i(0))$ goes into $\boldsymbol{b}$, because it is a linear form containing the test function $\psi_i$ but not the trial function $\psi_j$. 
+The term $(J'_0(10)\psi_i(10) - J'_0(0) \psi_i(0))$ goes into $\boldsymbol{b}$, because it is a linear form containing the test function $\psi_i$ but not the trial function $\psi_j$.
 :::
 
 ## Solve {.smaller}
@@ -540,7 +540,7 @@ The term $(J'_0(10)\psi_i(10) - J'_0(0) \psi_i(0))$ goes into $\boldsymbol{b}$, 
 The coefficient matrix $-S+\alpha M$ is unmodified (no identing first/last rows) and the right hand side $\boldsymbol{b}$ takes care of the Neumann boundary conditions
 
 $$
-(-S+\alpha M)\boldsymbol{\hat{u}} = \boldsymbol{b} = \begin{bmatrix} 
+(-S+\alpha M)\boldsymbol{\hat{u}} = \boldsymbol{b} = \begin{bmatrix}
 (f, \psi_0)+J'_0(0) \\
 (f, \psi_1) \\
 \vdots \\
@@ -623,7 +623,7 @@ ref = patches.Polygon(ref_vertices, closed=True, facecolor='green', edgecolor='b
 ax.add_patch(ref)
 for v0, v1 in zip(triangle_vertices, ref_vertices):
     ax.scatter(*v0, color='black', zorder=5)
-    ax.scatter(*v1, color='black', zorder=5) 
+    ax.scatter(*v1, color='black', zorder=5)
 
 ax.text(0.05-2, 0.05, r'$\boldsymbol{x}_{q(e, 0)}$')
 ax.text(0.8-2, 0.15, r'$\boldsymbol{x}_{q(e, 1)}$')
@@ -724,7 +724,7 @@ ref = patches.Polygon(ref_vertices, closed=True, facecolor='green', edgecolor='b
 ax.add_patch(ref)
 for v0, v1 in zip(triangle_vertices, ref_vertices):
     ax.scatter(*v0, color='black', zorder=5)
-    ax.scatter(*v1, color='black', zorder=5) 
+    ax.scatter(*v1, color='black', zorder=5)
 
 for v2 in ((0.5, 0), (0.5, 0.5), (0, 0.5)):
     ax.scatter(*v2, color='black', zorder=5)
@@ -787,7 +787,7 @@ $$
 \tilde{\psi}_2(X, Y) &= Y(2Y-1)\\
 \tilde{\psi}_3(X, Y) &= 4X (1-X-Y) \\
 \tilde{\psi}_4(X, Y) &= 4XY \\
-\tilde{\psi}_5(X, Y) &= 4Y (1-X-Y) 
+\tilde{\psi}_5(X, Y) &= 4Y (1-X-Y)
 \end{align}
 $$
 
@@ -866,7 +866,7 @@ $$
 $$
 
 ::: {.callout-note}
-Piecewise linear basis functions have only one nonzero derivative in each direction. So for P1 elements $(\nabla^2u, v)=0$, but $(\nabla u, \nabla v)$ may be nonzero. 
+Piecewise linear basis functions have only one nonzero derivative in each direction. So for P1 elements $(\nabla^2u, v)=0$, but $(\nabla u, \nabla v)$ may be nonzero.
 :::
 
 ## Assembly on the reference domain {.smaller}
@@ -875,7 +875,7 @@ Piecewise linear basis functions have only one nonzero derivative in each direct
 #| fig-align: center
 import matplotlib.patches as patches
 
-fig, ax = plt.subplots(figsize=(8, 3))
+fig, ax = plt.subplots(figsize=(8, 2.8))
 triangle_vertices = [(0.1-2, 0.1), (0.8-2, 0.2), (0.4-2, 0.7)]
 ref_vertices = [(0, 0), (1, 0), (0, 1)]
 triangle = patches.Polygon(triangle_vertices, closed=True, facecolor='skyblue', edgecolor='black')
@@ -884,7 +884,7 @@ ref = patches.Polygon(ref_vertices, closed=True, facecolor='green', edgecolor='b
 ax.add_patch(ref)
 for v0, v1 in zip(triangle_vertices, ref_vertices):
     ax.scatter(*v0, color='black', zorder=5)
-    ax.scatter(*v1, color='black', zorder=5) 
+    ax.scatter(*v1, color='black', zorder=5)
 
 ax.text(-0.1, -0.1, '(0, 0)')
 ax.text(0.9, -0.1, '(1, 0)')
@@ -903,21 +903,19 @@ ax.add_patch(arrow)
 ax.add_patch(arrow2)
 
 ax.set_xlim(-2.1, 1.1)
-ax.set_ylim(-0.15, 1.1)
+ax.set_ylim(-0.25, 1.1)
 ax.set_aspect('equal')
 ax.axis('off')
 ```
 $$ \small
 \int_{\Omega^{(e)}} \psi_j(\boldsymbol{x}) \cdot \psi_i(\boldsymbol{x}) \, d\Omega = \int_{\tilde{\Omega}} \tilde{\psi}_s(\boldsymbol{X}) \cdot \tilde{\psi}_r(\boldsymbol{X}) \det J d\tilde{\Omega}
 $$
-
-We here use the Jacobian $J$ of the transformation, defined such that
+We here use the Jacobian $J$ of the transformation, defined such that (where $(m, n)$ runs over the number of coordinates, 2 in 2D and 3 in 3D)
 $$ \small
-(J)_{ij} = \frac{\partial x_j}{\partial X_i}, \quad (J^{-1})_{ij} = \frac{\partial X_j}{\partial x_i}
+(J)_{mn} = \frac{\partial x_m}{\partial X_n}, \quad (J^{-1})_{mn} = \frac{\partial X_n}{\partial x_m}
 $$
-
 $$
-\text{2D Cartesian mesh: } \quad d\Omega = dxdy, \quad d\tilde{\Omega} = dXdY, \quad \det J = \frac{\partial x}{\partial X}\frac{\partial y}{\partial Y} - \frac{\partial x}{\partial Y}\frac{\partial y}{\partial X} 
+\text{2D Cartesian mesh: } \quad d\Omega = dxdy, \quad d\tilde{\Omega} = dXdY, \quad \det J = \frac{\partial x}{\partial X}\frac{\partial y}{\partial Y} - \frac{\partial x}{\partial Y}\frac{\partial y}{\partial X}
 $$
 
 ## Stiffness matrix {.smaller}
@@ -928,19 +926,19 @@ $$
 
 The gradient of $\psi_j$ on index form is
 $$
-(\nabla \psi_j)_i = \frac{\partial \psi_j}{ \partial x_i}
+(\nabla \psi_j)_m = \frac{\partial \psi_j}{ \partial x_m}
 $$
 
 and with transformation to the reference domain (with summation on repeated indices)
 
 $$
-\frac{\partial \psi_{q(e, r)}(\boldsymbol{x})}{\partial x_i} =\frac{\partial \tilde{\psi}_r(\boldsymbol{X})}{\partial x_i} = \frac{\partial \tilde{\psi}_r}{\partial X_j}\frac{\partial X_j}{\partial x_i}
+\frac{\partial \psi_{q(e, r)}(\boldsymbol{x})}{\partial x_m} =\frac{\partial \tilde{\psi}_r(\boldsymbol{X})}{\partial x_m} = \frac{\partial \tilde{\psi}_r}{\partial X_n}\frac{\partial X_n}{\partial x_m}
 $$
 
 Using the inverse Jacobian we can write the last term as
 
 $$
-\frac{\partial \tilde{\psi}_r}{\partial X_j}\frac{\partial X_j}{\partial x_i} = J_{ij}^{-1}  \frac{\partial \tilde{\psi}_r}{\partial X_j}
+\frac{\partial \tilde{\psi}_r}{\partial X_n}\frac{\partial X_n}{\partial x_m} = J_{mn}^{-1}  \frac{\partial \tilde{\psi}_r}{\partial X_n}
 $$
 
 
@@ -949,11 +947,11 @@ $$
 We can also define this on matrix form using notation
 
 $$
-\nabla  u= \begin{bmatrix} \frac{\partial u}{\partial x} \\[0.1cm] 
-\frac{\partial u}{\partial y} \\[0.1cm] 
-\frac{\partial u}{\partial z} 
-\end{bmatrix} \quad \text{and} \quad  
-\nabla_X  u = \begin{bmatrix} \frac{\partial u}{\partial X} \\[0.1cm] 
+\nabla  u= \begin{bmatrix} \frac{\partial u}{\partial x} \\[0.1cm]
+\frac{\partial u}{\partial y} \\[0.1cm]
+\frac{\partial u}{\partial z}
+\end{bmatrix} \quad \text{and} \quad
+\nabla_X  u = \begin{bmatrix} \frac{\partial u}{\partial X} \\[0.1cm]
 \frac{\partial u}{\partial Y} \\[0.1cm]
  \frac{\partial u}{\partial Z} \end{bmatrix}
 $$
@@ -1007,28 +1005,28 @@ for v0 in triangle_vertices:
     ax.scatter(*v0, color='black', zorder=5)
 
 ax.set_xlim(-2, -1.1)
-ax.set_ylim(-0, 0.8)   
-ax.axis('off'); 
+ax.set_ylim(-0, 0.8)
+ax.axis('off');
 ```
 
 :::
-::: 
+:::
 
 From this we can easily compute the Jacobian
 
 $$
-J_{ij} = \frac{\partial x_j}{\partial X_i} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_i} (\boldsymbol{x}_{q(e, r)})_j$$
+J_{mn} = \frac{\partial x_n}{\partial X_m} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_m} (\boldsymbol{x}_{q(e, r)})_n$$
 
 ## For each triangle compute the Jacobian {.smaller}
 
 $$
-J_{ij} = \frac{\partial x_j}{\partial X_i} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_i} (\boldsymbol{x}_{q(e, r)})_j$$
+J_{mn} = \frac{\partial x_n}{\partial X_m} = \sum_{r=0}^2 \frac{\partial \tilde{\psi}_r}{\partial X_m} (\boldsymbol{x}_{q(e, r)})_n$$
 
 
 $$
-\nabla_X \tilde{\psi} = \underbrace{\begin{bmatrix} \frac{\partial \tilde{\psi}_0}{\partial X} & \frac{\partial \tilde{\psi}_1}{\partial X} & \frac{\partial \tilde{\psi}_2}{\partial X} \\[0.1cm] 
+\nabla_X \tilde{\psi} = \underbrace{\begin{bmatrix} \frac{\partial \tilde{\psi}_0}{\partial X} & \frac{\partial \tilde{\psi}_1}{\partial X} & \frac{\partial \tilde{\psi}_2}{\partial X} \\[0.1cm]
 \frac{\partial \tilde{\psi}_0}{\partial Y} & \frac{\partial \tilde{\psi}_1}{\partial Y} & \frac{\partial \tilde{\psi}_2}{\partial Y} \\[0.1cm] \end{bmatrix}}_{\mathbb{R}^{2 \times 3}} \quad \text{and} \quad \boldsymbol{x}_{q(e)} = \underbrace{\begin{bmatrix} (\boldsymbol{x}_{q(e, 0)})_0 & (\boldsymbol{x}_{q(e, 0)})_1 \\
-(\boldsymbol{x}_{q(e, 1)})_0 & (\boldsymbol{x}_{q(e, 1)})_1 \\ 
+(\boldsymbol{x}_{q(e, 1)})_0 & (\boldsymbol{x}_{q(e, 1)})_1 \\
 (\boldsymbol{x}_{q(e, 2)})_0 & (\boldsymbol{x}_{q(e, 2)})_1
   \end{bmatrix}}_{\mathbb{R}^{3 \times 2}}
 $$
@@ -1036,11 +1034,11 @@ $$
 Note that $\tilde{\psi}_r$ here are the **linear** basis functions, such that
 
 $$
-\begin{align} \tilde{\psi}_0(X, Y) &= 1-X-Y \\ \tilde{\psi}_1(X, Y) &= X \\ \tilde{\psi}_2(X, Y) &= Y \end{align} \quad \rightarrow \nabla_X \tilde{\psi} = \begin{bmatrix} -1 & 1 & 0 \\ -1 & 0 & 1 \end{bmatrix} 
+\begin{align} \tilde{\psi}_0(X, Y) &= 1-X-Y \\ \tilde{\psi}_1(X, Y) &= X \\ \tilde{\psi}_2(X, Y) &= Y \end{align} \quad \rightarrow \nabla_X \tilde{\psi} = \begin{bmatrix} -1 & 1 & 0 \\ -1 & 0 & 1 \end{bmatrix}
 $$
 
 $$
-\boxed{J = \nabla_X \tilde{\psi} \cdot \boldsymbol{x}_{q(e)} \in \mathbb{R}^{2 \times 2} } 
+\boxed{J = \nabla_X \tilde{\psi} \cdot \boldsymbol{x}_{q(e)} \in \mathbb{R}^{2 \times 2} }
 $$
 
 ## Implementation summary {.smaller}
@@ -1056,14 +1054,14 @@ For piecewise linear elements the integrand is a constant and you only need to c
 
 * Add element matrix to global matrix (finite element assembly). For all $e$ and $r$ and $s$ do
 $$
-a_{q(e, r), q(e, s)} \mathrel += \tilde{a}_{rs} 
+a_{q(e, r), q(e, s)} \mathrel += \tilde{a}_{rs}
 $$
 
 
 ## Example for simple, yet unstructured mesh {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 xi = np.linspace(0, 1, 3)
 xj, yj = np.meshgrid(xi, xi, indexing='ij')
 nodes = np.array([xj.flatten(), yj.flatten()])
@@ -1077,10 +1075,11 @@ elements = {
     6: (4, 8, 5),
     7: (4, 7, 8)
 }
-xj, yj = xj.flatten(), yj.flatten()
 ```
 ```{python}
-fig, ax = plt.subplots()
+#| fig-align: center
+xj, yj = xj.flatten(), yj.flatten()
+fig, ax = plt.subplots(figsize=(4, 4))
 for xx, yy in zip(xj, yj):
     ax.scatter(xx, yy, color='black', zorder=5)
 
@@ -1096,7 +1095,7 @@ plt.plot(np.take(xj, (3, 7)), np.take(yj, (3, 7)), 'k')
 
 for key, val in elements.items():
     xm = np.mean(np.take(xj, val))
-    ym = np.mean(np.take(yj, val))  
+    ym = np.mean(np.take(yj, val))
     ax.text(xm, ym, f'({key})')
 
 for i in range(len(xj)):
@@ -1113,11 +1112,11 @@ ax.axis('off');
 ## Assemble stiffness matrix {.smaller}
 
 ```{python}
-#| echo : true 
-A = np.zeros((9, 9)) 
+#| echo : true
+A = np.zeros((9, 9))
 Ae = np.zeros((3, 3))
 dpsi = np.array([[-1, 1, 0], [-1, 0, 1]])
-for e, q in elements.items(): 
+for e, q in elements.items():
     xq = np.take(nodes, q, axis=1).T
     J = dpsi @ xq
     detJ = np.linalg.det(J)
@@ -1142,7 +1141,7 @@ A better implementation would use vectorization for the inner $r, s$ loops.
 * Higher order elements use internal points on each element.
 * Green's first identity, which is similar to an integration by substitution in multiple dimensions, is used to transform weak variational forms.
 * Neumann boundary conditions are implemented directly in the weak form.
-* Dirichlet boundary conditions are implemented as always by identing rows in the coefficient matrix belonging to a Dirichlet boundary. The procedure eliminates boundary terms from the weak form. 
+* Dirichlet boundary conditions are implemented as always by identing rows in the coefficient matrix belonging to a Dirichlet boundary. The procedure eliminates boundary terms from the weak form.
 * There are several good open source finite element solvers out there! (e.g., [FEniCS](https://fenicsproject.org), [Elmer](https://www.csc.fi/web/elmer), [FreeFEM](https://freefem.org))
 
 :::
