@@ -1873,7 +1873,7 @@
     "href": "intro.html#step-3-replacing-derivatives-by-finite-differences",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Step 3: Replacing derivatives by finite differences",
-    "text": "Step 3: Replacing derivatives by finite differences\nNow it is time for the finite difference approximations of derivatives:\n\\[\nu'(t_n) \\approx \\frac{u^{n+1}-u^{n}}{t_{n+1}-t_n}\n\\]"
+    "text": "Step 3: Replacing derivatives by finite differences\nNow it is time for the finite difference approximations of derivatives:\n\\[\nu'(t_n) \\approx \\frac{\\color{red}{u^{n+1}}-\\color{blue}u^{n}}{t_{n+1}-t_n}\n\\]"
   },
   {
     "objectID": "intro.html#step-3-replacing-derivatives-by-finite-differences-1",
@@ -1901,7 +1901,7 @@
     "href": "intro.html#a-backward-difference",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "A backward difference",
-    "text": "A backward difference\nHere is another finite difference approximation to the derivative (backward difference):\n\\[\nu'(t_n) \\approx \\frac{u^{n}-u^{n-1}}{t_{n}-t_{n-1}}\n\\]"
+    "text": "A backward difference\nHere is another finite difference approximation to the derivative (backward difference):\n\\[\nu'(t_n) \\approx \\frac{\\color{blue}{u^{n}}-\\color{green}{u^{n-1}}}{t_{n}-t_{n-1}}\n\\]"
   },
   {
     "objectID": "intro.html#the-backward-euler-scheme",
@@ -1964,7 +1964,7 @@
     "href": "intro.html#algorithm",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Algorithm",
-    "text": "Algorithm\n\nStore \\(u^n\\), \\(n=0,1,\\ldots,N_t\\) in an array \\(\\boldsymbol{u} = \\{u^n\\}_{n=0}^{N_t}\\).\nAlgorithm:\n\ninitialize \\(u^0\\)\nfor \\(n=1, 2, \\ldots, N_t\\): compute \\(u^n\\) using the \\(\\theta\\)-rule formula"
+    "text": "Algorithm\n\nStore \\(u^n\\), \\(n=0,1,\\ldots,N_t\\) in an array \\(\\boldsymbol{u} = (u^n)_{n=0}^{N_t}\\).\nAlgorithm:\n\ninitialize \\(u^0\\)\nfor \\(n=1, 2, \\ldots, N_t\\): compute \\(u^n\\) using the \\(\\theta\\)-rule formula"
   },
   {
     "objectID": "intro.html#in-python",
@@ -2041,7 +2041,7 @@
     "href": "intro.html#quantifying-the-error",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Quantifying the error",
-    "text": "Quantifying the error\nComputing the norm of the error\n\n\\(e^n = u^n - u_e(t_n)\\) is a mesh function\nUsually we want one number for the error\nUse a norm of \\(e^n\\)\n\nNorms of a function \\(f(t)\\):\n\\[\n\\begin{align}\n||f||_{L^2} &= \\left( \\int_0^T f(t)^2 dt\\right)^{1/2} \\\\\n||f||_{L^1} &= \\int_0^T |f(t)| dt \\\\\n||f||_{L^\\infty} &= \\max_{t\\in [0,T]}|f(t)|\n\\end{align}\n\\]"
+    "text": "Quantifying the error\nComputing the norm of the error\n\nPointwise error is \\(e^n = u^n - u_e(t_n)\\). The array of points \\((e^n)_{n=0}^{N}\\) is a mesh function\nUsually we want one number for the error\nUse a norm of \\((e^n)\\)\n\nNorms of a function \\(f(t)\\):\n\\[\n\\begin{align}\n||f||_{L^2} &= \\left( \\int_0^T f(t)^2 dt\\right)^{1/2} \\\\\n||f||_{L^1} &= \\int_0^T |f(t)| dt \\\\\n||f||_{L^\\infty} &= \\max_{t\\in [0,T]}|f(t)|\n\\end{align}\n\\]"
   },
   {
     "objectID": "intro.html#norms-of-mesh-functions",
@@ -2111,21 +2111,21 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I\n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.54 μs ± 187 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.14 μs ± 124 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I\n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.56 μs ± 56.9 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.11 μs ± 116 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.97 μs ± 270 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 20.6 μs ± 1.49 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 4.9 μs ± 2.19 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 211 μs ± 3.81 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.72 μs ± 123 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 20.7 μs ± 1.21 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 4.23 μs ± 1.54 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 207 μs ± 3.06 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 49.1 μs ± 117 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.17 μs ± 17.2 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 48 μs ± 115 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.27 μs ± 111 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
@@ -2139,14 +2139,14 @@
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.2 μs ± 73.2 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.31 μs ± 27 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
     "objectID": "intro.html#jax",
     "href": "intro.html#jax",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "JAX",
-    "text": "JAX\nJAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.\n\nimport jax\nimport jax.numpy as jnp\njax.config.update(\"jax_enable_x64\", True)\n\n@jax.jit(static_argnums=0)\ndef f4(N: int, I: float, A: float):\n\n    def step(un: float, i: int):\n        unp1 = jax.lax.cond(i == 0, lambda: un, lambda: un * A)\n        return unp1, unp1\n\n    return jax.lax.scan(step, I, jnp.arange(N))[1]\n\nA: float = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a)\nN: int = u.shape[0]\nassert jnp.linalg.norm(f4(N, float(I), A) - u) &lt; 1e-8\n\n\n%timeit -q -o -n 100 f4(N, float(I), A)\n\n&lt;TimeitResult : 13.8 μs ± 2.19 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nJAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython."
+    "text": "JAX\nJAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.\n\nimport jax\nimport jax.numpy as jnp\njax.config.update(\"jax_enable_x64\", True)\n\n@jax.jit(static_argnums=0)\ndef f4(N: int, I: float, A: float):\n\n    def step(un: float, i: int):\n        unp1 = jax.lax.cond(i == 0, lambda: un, lambda: un * A)\n        return unp1, unp1\n\n    return jax.lax.scan(step, I, jnp.arange(N))[1]\n\nA: float = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a)\nN: int = u.shape[0]\nassert jnp.linalg.norm(f4(N, float(I), A) - u) &lt; 1e-8\n\n\n%timeit -q -o -n 100 f4(N, float(I), A)\n\n&lt;TimeitResult : 15.5 μs ± 2.22 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nJAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython."
   },
   {
     "objectID": "finitedifferences.html#initial-or-boundary-value-problems",
