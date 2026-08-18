@@ -5,7 +5,7 @@ author: "Prof. Mikael Mortensen, University of Oslo"
 
 jupyter: matmek4270-25
 format:
-  revealjs: 
+  revealjs:
     slide-number: true
     preview-links: auto
     css: styles.css
@@ -17,7 +17,7 @@ format:
     include-before-body:
       text: |
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_SVG"></script>
-      
+
 pandoc:
   to: revealjs
   standalone: false
@@ -25,7 +25,7 @@ pandoc:
   default-image-extension: png
   html-math-method:
     method: mathjax
-          
+
   slide-level: 2
 
 ---
@@ -41,7 +41,7 @@ pandoc:
 \newcommand{\half}{{}^1{\mskip -3mu/\mskip -3mu}_2}
 :::
 
-::: columns 
+::: columns
 ::: {.column width=50%}
 ![](./figures/SIM135194_Simula_Hans_Petter_004-1024x681.jpg)
 
@@ -63,7 +63,7 @@ pandoc:
 
 ## A little bit about myself {.smaller}
 
-![](https://raw.githack.com/spectralDNS/spectralutilities/master/movies/RB_256_512_movie_jet.png){.absolute bottom=0 right=50 width="600" height="200"}
+![](https://jsdelivr.net/spectralDNS/spectralutilities/master/movies/RB_256_512_movie_jet.png){.absolute bottom=0 right=50 width="600" height="200"}
 ![](./figures/chalmers.png){.absolute top=200 right=0}
 ![](./figures/FFI_logo_eng.png){.absolute bottom=0 left=0}
 
@@ -75,23 +75,26 @@ pandoc:
   * Spectral methods
   * Scientific Machine Learning
 
-## Principal developer of Shenfun {.smaller}
+## Developer of Shenfun/Jaxfun {.smaller}
 
-High performance computing platform for solving PDEs by the spectral Galerkin method. Written in Python (Cython). [https://github.com/spectralDNS/shenfun](https://github.com/spectralDNS/shenfun)
+High performance computing platforms for solving PDEs by the spectral Galerkin method. Written in [Python]((https://github.com/spectralDNS/shenfun))/[JAX](https://github.com/spectralDNS/jaxfun)
 
 ::: {layout-ncol="3" height="300"}
+
 ![](https://raw.githack.com/spectralDNS/spectralutilities/master/figures/strong_scaling_pencil_col.png)
 
-![](https://raw.githack.com/spectralDNS/spectralutilities/master/movies/Kuramato_movie_128.gif)
+
+![](https://raw.githack.com/spectralDNS/spectralutilities/0a0780baf7e2eeb7b34e57ff7b79fd43940a3bfe/movies/Kuramato_movie_128.gif)
 
 ![](https://raw.githack.com/spectralDNS/spectralutilities/master/movies/KHmovie_3.gif)
 :::
 ::: {layout-ncol="3"}
 ![](https://raw.githack.com/spectralDNS/spectralutilities/master/movies/isotropic300_12.gif)
 
-![](https://cdn.jsdelivr.net/gh/spectralDNS/spectralutilities@master/figures/moebius8_trans.png)
+![](https://raw.githack.com/spectralDNS/spectralutilities/master/figures/moebius8_trans.png)
 
 ![](https://raw.githack.com/spectralDNS/spectralutilities/master/figures/torus2.png)
+
 :::
 
 ## MAT-MEK4270 in a nutshell {.smaller}
@@ -101,7 +104,7 @@ High performance computing platform for solving PDEs by the spectral Galerkin me
  * How do we solve a PDE in practice?
  * How do we trust the answer?
  * Is the numerical scheme stable? accurate? consistent?
- * Focus on programming (github, python, testing code) 
+ * Focus on programming (github, python, testing code)
  * IN5670 -> IN5270 -> MAT-MEK4270 - Lots of old material
 
 ## Syllabus {.smaller}
@@ -114,7 +117,7 @@ High performance computing platform for solving PDEs by the spectral Galerkin me
 :::
 
 ::: {.callout-warning appearance="simple"}
-## Also important stuff, but less so as most really important stuff is put in the lecture notes 
+## Also important stuff, but less so as most really important stuff is put in the lecture notes
 
   * [Langtangen, Finite Difference Computing with exponential decay](https://link.springer.com/book/10.1007/978-3-319-29439-1) - Chapters 1 and 2.
   * [Langtangen and Linge, Finite Difference Computing with PDEs](https://link.springer.com/book/10.1007/978-3-319-55456-3)  - Parts of chapters 1 and 2.
@@ -123,7 +126,7 @@ High performance computing platform for solving PDEs by the spectral Galerkin me
 
 ## Two major approaches {.smaller}
 
-::: columns 
+::: columns
 
 ::: {.column width=50%}
 ### Finite differences
@@ -143,10 +146,10 @@ $$
 ### Variational methods
 
 $$
-\int_{\Omega} u'' v d\Omega = -\int_{\Omega} u' v' d\Omega + \int_{\Gamma} u'v d\Gamma 
+\int_{\Omega} u'' v d\Omega = -\int_{\Omega} u' v' d\Omega + \int_{\Gamma} u'v d\Gamma
 $$
 
-* Approximate weakly 
+* Approximate weakly
 * Finite element method
 * Least squares method
 * Galerkin method
@@ -161,6 +164,7 @@ We will use both approaches to first consider **function** approximations and th
  * Important Python packages: `numpy`, `scipy`, `matplotlib`,
    `sympy`, `shenfun`, ...
  * Anaconda Python, conda environments
+ * uv package manager
  * Github and git
 
 ## Assumed/ideal background {.smaller}
@@ -175,9 +179,9 @@ We will use both approaches to first consider **function** approximations and th
 
 # Start-up example - exponential decay
 
-## Exponential decay model 
+## Exponential decay model
 
-::: {.callout-note} 
+::: {.callout-note}
 ## ODE problem
 $$
 u'=-au,\quad u(0)=I,\ t\in (0,T]
@@ -186,7 +190,7 @@ $$
 where $a>0$ is a constant and $u(t)$ is the time-dependent solution.
 :::
 
-* We study first a simple 1D ODE, because this will lead us to the building blocks that we need for solving PDEs! 
+* We study first a simple 1D ODE, because this will lead us to the building blocks that we need for solving PDEs!
 * We can more easily study the concepts of stability, accuracy, convergence and consistency.
 
 ::: footer
@@ -205,7 +209,7 @@ See [Langtangen, Finite Difference Computing - Chapter 1](https://link.springer.
  * How to analyse the numerical solution
 
 
-## What to learn in the start-up example; programming topics {.smaller visibility="hidden"} 
+## What to learn in the start-up example; programming topics {.smaller visibility="hidden"}
 
  * How to verify an implementation and automate verification
    through tests in Python
@@ -299,7 +303,7 @@ $u^n$ is a **mesh function**, defined at the mesh points $t_n$, $n=0,\ldots,N_t$
 #| fig-align: center
 N = 100
 t = np.linspace(0, T, N)
-fig, ax = plt.subplots(1, 1) 
+fig, ax = plt.subplots(1, 1)
 ax.plot(t, f(t), 'k--')
 t = np.linspace(0, T, 7)
 ax.plot(t, f(t)+rnd, 'ko')
@@ -350,7 +354,7 @@ Now it is time for the **finite difference** approximations of
 derivatives:
 
 $$
-u'(t_n) \approx \frac{u^{n+1}-u^{n}}{t_{n+1}-t_n}
+u'(t_n) \approx \frac{\color{red}{u^{n+1}}-\color{blue}{u^{n}}}{t_{n+1}-t_n}
 $$
 
 ![](./figures/fd_forward.png){.absolute top=300 left=250 width=550}
@@ -385,7 +389,7 @@ How can we actually compute the $u^n$ values?
 
 In general: we have $u^n$ and seek $u^{n+1}$
 
-::: {.callout-note} 
+::: {.callout-note}
 ## The Forward Euler scheme
 Solve wrt $u^{n+1}$ to get the computational formula:
 $$
@@ -415,7 +419,7 @@ Here is another finite difference approximation to the
 derivative (backward difference):
 
 $$
-u'(t_n) \approx \frac{u^{n}-u^{n-1}}{t_{n}-t_{n-1}}
+u'(t_n) \approx \frac{\color{blue}{u^{n}}-\color{green}{u^{n-1}}}{t_{n}-t_{n-1}}
 $$
 
 ![](./figures/fd_backward.png){.absolute top=280 left=250 width=550}
@@ -559,7 +563,7 @@ for $\theta\in [0,1]$. Note
 
 ## Algorithm
 
- * Store $u^n$, $n=0,1,\ldots,N_t$ in an array $\boldsymbol{u} = \{u^n\}_{n=0}^{N_t}$.
+ * Store $u^n$, $n=0,1,\ldots,N_t$ in an array $\boldsymbol{u} = (u^n)_{n=0}^{N_t}$.
  * Algorithm:
    - initialize $u^0$
    - for $n=1, 2, \ldots, N_t$: compute $u^n$ using the $\theta$-rule formula
@@ -615,7 +619,7 @@ We will also learn about plotting. It is very important to present data in a cle
 
 ```{python}
 #| echo : true
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 I, a, T, dt, theta = 1, 2, 8, 0.8, 1
 u, t = solver(I, a, T, dt, theta)
 fig = plt.figure(figsize=(6, 4))
@@ -643,10 +647,10 @@ plt.xlabel('Time'), plt.ylabel('u(t)');
 ## [Plotly](https://plotly.com/) is a very good alternative
 
 ```{python}
-#| echo: True 
+#| echo: True
 #| eval: True
 import plotly.express as px
-pfig = px.line(x=t, y=u, labels={'x': 'Time', 'y': 'u(t)'}, 
+pfig = px.line(x=t, y=u, labels={'x': 'Time', 'y': 'u(t)'},
                width=600, height=400, title='Decay',
                template="simple_white")
 pfig.show()
@@ -679,7 +683,7 @@ u^n &= A^nu^{n-1} = A^nI
 \end{align*}
 $$
 
-Exact solution on the other hand: 
+Exact solution on the other hand:
 
 $$
 u(t) = \exp(-a t), \quad u(t_n) = \exp(-a t_n)
@@ -696,7 +700,7 @@ $$
 
 Test if your solver gives
 
-$$ 
+$$
 \max_n |u^n - IA^n| < \epsilon\sim 10^{-15}
 $$
 
@@ -710,7 +714,7 @@ Make sure you understand what $n$ in $u^n$ and in $A^n$ means! $n$ is not used a
 
 Use a calculator ($I=0.1$, $\theta=0.8$, $\Delta t =0.8$):
 
-$$ 
+$$
 A\equiv \frac{1 - (1-\theta) a\Delta t}{1 + \theta a \Delta t} = 0.298245614035
 $$
 
@@ -748,16 +752,16 @@ test_solver_three_steps(solver)
 ```
 
 ::: {.callout-note}
-We do not use the **exact** solution because the numerical solution will not equal the exact! 
+We do not use the **exact** solution because the numerical solution will not equal the exact!
 :::
 
 ## Quantifying the error {.smaller}
 
-### Computing the norm of the error 
+### Computing the norm of the error
 
- * $e^n = u^n - u_e(t_n)$ is a **mesh function**
+ * Pointwise error is $e^n = u^n - u_e(t_n)$. The array of points $(e^n)_{n=0}^{N}$ is a **mesh function**
  * Usually we want one number for the error
- * Use a norm of $e^n$
+ * Use a norm of $(e^n)$
 
 Norms of a function $f(t)$:
 
@@ -795,7 +799,7 @@ $$
 
 ## Implementation of the error norm
 
-$$ 
+$$
 E = ||e^n||_{\ell^2}  = \sqrt{\Delta t\sum_{n=0}^{N_t} (e^n)^2}
 $$
 
@@ -846,7 +850,7 @@ The code is naive and not very efficient. It is not vectorized!
 
 **Vectorization** refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.
 
-::: 
+:::
 
 Regular (scalar) implementation:
 
@@ -879,7 +883,7 @@ The code is naive and not very efficient. It is not vectorized!
 
 **Vectorization** refers to the process of converting iterative operations on individual elements of an array (or other data structures) into batch operations on entire arrays.
 
-::: 
+:::
 
 ::: {.callout-warning}
 ## Vectorization warning
@@ -911,7 +915,7 @@ $$
 u^1 & = A u^0,\\
 u^2 & = A u^1,\\
 &\vdots\\
-u^{N_t} &= A u^{N_t-1} 
+u^{N_t} &= A u^{N_t-1}
 \end{align*}
 $$
 
@@ -930,7 +934,7 @@ Can be implemented as
 ```{.python}
 u[0] = I                  # assign initial condition
 u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)
-u[:] = np.cumprod(u)     
+u[:] = np.cumprod(u)
 ```
 :::
 
@@ -943,7 +947,7 @@ u^n = A^n u^0, \quad \text{since }
 u^1 & = A u^0,\\
 u^2 & = A u^1 = A^2 u^0,\\
 &\vdots\\
-u^{N_t} &= A u^{N_t-1} = A^{N_t} u^0 
+u^{N_t} &= A u^{N_t-1} = A^{N_t} u^0
 \end{cases}
 $$
 
@@ -962,21 +966,21 @@ np.cumprod([1, 2, 2, 2])
 ```{python}
 #| echo : true
 def f0(u, I, theta, a, dt):
-    u[0] = I                  
+    u[0] = I
     u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)
     u[:] = np.cumprod(u)
     return u
 
 def f1(u,  I, theta, a, dt):
-    u[0] = I                 
-    for n in range(0, len(u)-1):  
+    u[0] = I
+    for n in range(0, len(u)-1):
         u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]
     return u
 
 I, a, T, dt, theta = 1, 2, 8, 0.8, 1
 u, t = solver(I, a, T, dt, theta)
 
-assert np.allclose(f0(u.copy(), I, theta, a, dt), 
+assert np.allclose(f0(u.copy(), I, theta, a, dt),
                    f1(u.copy(), I, theta, a, dt))
 ```
 
@@ -992,13 +996,13 @@ Lets try some timings!
 ```{python}
 #| echo : true
 def f0(u, I, theta, a, dt):
-    u[0] = I                  
+    u[0] = I
     u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)
     u[:] = np.cumprod(u)
 
 def f1(u,  I, theta, a, dt):
-    u[0] = I                 
-    for n in range(0, len(u)-1):  
+    u[0] = I
+    for n in range(0, len(u)-1):
         u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]
 ```
 
@@ -1020,7 +1024,7 @@ Hmm. Not really what's expected. Why? Because the array `u` is really short! Let
 
 ```{python}
 #| echo : true
-print(f"Length of u = {u.shape[0]}") 
+print(f"Length of u = {u.shape[0]}")
 ```
 
 :::
@@ -1030,7 +1034,7 @@ print(f"Length of u = {u.shape[0]}")
 ```{python}
 #| echo : true
 dt = dt/10
-u, t = solver(I, a, T, dt, theta) 
+u, t = solver(I, a, T, dt, theta)
 print(f"Length of u = {u.shape[0]}")
 ```
 
@@ -1050,7 +1054,7 @@ Even longer array:
 ```{python}
 #| echo : true
 dt = dt/10
-u, t = solver(I, a, T, dt, theta) 
+u, t = solver(I, a, T, dt, theta)
 print(f"Length of u = {u.shape[0]}")
 ```
 
@@ -1069,12 +1073,12 @@ Vectorized code takes the same time! Only overhead costs, not the actual computa
 ## What else is there? [Numba](https://numba.pydata.org/) {.smaller}
 
 ```{python}
-#| echo : true 
+#| echo : true
 import numba as nb
 @nb.jit
 def f2(u,  I, theta, a, dt):
-    u[0] = I                 
-    for n in range(0, len(u)-1):  
+    u[0] = I
+    for n in range(0, len(u)-1):
         u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]
 ```
 
@@ -1091,7 +1095,7 @@ Slow because the code needs to be compiled. Try again
 %timeit -q -o -n 100 f2(u, I, theta, a, dt)
 ```
 
-That is even faster than the vectorized code! 
+That is even faster than the vectorized code!
 
 :::
 
@@ -1109,8 +1113,8 @@ That is even faster than the vectorized code!
 cpdef void f3(double[::1] u, int  I, double theta, double a, double dt):
     cdef int n
     cdef int N = u.shape[0]
-    u[0] = I                 
-    for n in range(0, N-1):  
+    u[0] = I
+    for n in range(0, N-1):
         u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]
     return
 ```
@@ -1141,9 +1145,9 @@ JAX is a Python library for accelerator-oriented array computation and program t
 # | echo : true
 import jax
 import jax.numpy as jnp
-from functools import partial
 jax.config.update("jax_enable_x64", True)
-@partial(jax.jit, static_argnums=0)
+
+@jax.jit(static_argnums=0)
 def f4(N: int, I: float, A: float):
 
     def step(un: float, i: int):
@@ -1162,4 +1166,4 @@ assert jnp.linalg.norm(f4(N, float(I), A) - u) < 1e-8
 %timeit -q -o -n 100 f4(N, float(I), A)
 ```
 
-JAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython. 
+JAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython.
