@@ -84,7 +84,7 @@ High performance computing platforms for solving PDEs by the spectral Galerkin m
 ![](https://raw.githack.com/spectralDNS/spectralutilities/master/figures/strong_scaling_pencil_col.png)
 
 
-![](https://raw.githack.com/spectralDNS/spectralutilities/0a0780baf7e2eeb7b34e57ff7b79fd43940a3bfe/movies/Kuramato_movie_128.gif)
+![](https://raw.githack.com/spectralDNS/spectralutilities/master/movies/Kuramato_movie_128.gif)
 
 ![](https://raw.githack.com/spectralDNS/spectralutilities/master/movies/KHmovie_3.gif)
 :::
