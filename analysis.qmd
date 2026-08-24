@@ -4,7 +4,7 @@ subtitle: "MATMEK-4270"
 author: "Prof. Mikael Mortensen, University of Oslo"
 
 format:
-  revealjs: 
+  revealjs:
     slide-number: true
     preview-links: auto
     css: styles.css
@@ -52,7 +52,7 @@ Solve the ODE by finite difference methods:
     u'(t_n) &= -a u(t_n), \quad &n\in [1, \ldots, N_t], \text{ or} \\
     u'(t_{n+\half}) &= -a u(t_{n+\half}), \quad &n\in [0, \ldots, N_t-1]
     \end{align}
-    $$ 
+    $$
 
 ## Finite difference algorithms {.smaller}
 
@@ -78,7 +78,7 @@ $$
 u^{n+1} = \frac{1-(1-\theta)a \triangle t}{1+\theta a \triangle t}u^{n} \quad \text{for } n=0, 1, \ldots
 $$
 
-## Analysis of finite difference equations 
+## Analysis of finite difference equations
 
 Model:
 $$
@@ -102,7 +102,7 @@ How good is this method? Is it safe to use it?
 We already have a solver that we can use to experiment with. Lets run it for a range of different timesteps.
 
 ```{python}
-#| echo : true 
+#| echo : true
 import numpy as np
 def solver(I, a, T, dt, theta):
     """Solve u'=-a*u, u(0)=I, for t in (0, T] with steps of dt."""
@@ -188,7 +188,7 @@ The characteristics of the displayed curves can be summarized as follows:
   * The Forward Euler scheme gives a growing, oscillating solution for $\Delta t=1.25$; a decaying, oscillating solution for $\Delta t=0.75$; a strange solution $u^n=0$ for $n\geq 1$ when $\Delta t=0.5$; and a solution seemingly as accurate as the one by the Backward Euler scheme for $\Delta t = 0.1$, but the curve lies *below* the exact solution.
   * Small enough $\Delta t$ gives stable and accurate solution for all methods!
 
-## Problem setting 
+## Problem setting
 
 ::: {.callout-note}
 ## We ask the question
@@ -276,7 +276,7 @@ $$
 $$
 
 * $-1$ is the critical limit (because $A\le 1$ is always satisfied).
-* $-1 < A$ is always fulfilled for Backward Euler ($\theta=1$) and Crank-Nicolson ($\theta=0.5$). 
+* $-1 < A$ is always fulfilled for Backward Euler ($\theta=1$) and Crank-Nicolson ($\theta=0.5$).
 * For forward Euler or simply $\theta < 0.5$ we have
 $$
 \Delta t \leq \frac{2}{(1-2\theta)a},\quad
@@ -337,7 +337,7 @@ for i in range(2):
 
 ::: {.column width="45%"}
  a. $\Delta t=1.25$ and $A=-0.25$: oscillatory solution
- 
+
 Never any growing solution
 :::
 
@@ -376,13 +376,13 @@ $$
 
 A possible measure of accuracy: $A_e - A$
 
-## Plotting amplification factors 
+## Plotting amplification factors
 
 ```{python}
 colors = ['g', 'r', 'b', 'm', 'k']
 markers = ['o', '^', 's', '>']
 N = 10
-adt = np.linspace(0, 3, N)  
+adt = np.linspace(0, 3, N)
 An = lambda t, theta: (1-(1-theta)*t)/(1+theta*t)
 for i, th in enumerate((0, 0.5, 1)):
   plt.plot(adt, An(adt, th), colors[i], marker=markers[i])
@@ -430,7 +430,7 @@ This is the Taylor expansion of the exact amplification factor. How does it comp
 
 Compute the Taylor expansions of $A_e - A$
 ```{python}
-#| echo : true 
+#| echo : true
 from IPython.display import display
 theta = Symbol('theta', positive=True)
 A = (1-(1-theta)*p)/(1+theta*p)
@@ -446,15 +446,15 @@ display(CN)
 * Forward/backward Euler have leading error $p^2$, or more commonly $\Delta t^2$
 * Crank-Nicolson has leading error $p^3$, or $\Delta t^3$
 
-## The true/global error at a point 
+## The true/global error at a point
 
  * The error in $A$ reflects the **local (amplification) error** when going from one time step to the next
- * What is the **global (true) error** at $t_n$? 
- 
+ * What is the **global (true) error** at $t_n$?
+
  $$
  e^n = u_e(t_n) - u^n = Ie^{-at_n} - IA^n
  $$
- 
+
  * Taylor series expansions of $e^n$ simplify the expression
 
 ## Computing the global error at a point {.smaller}
@@ -477,7 +477,7 @@ Substitute $n$ by $t/\Delta t$ and $p$ by $a \Delta t$:
  * Forward and Backward Euler: leading order term $\frac{1}{2} ta^2\Delta t$
  * Crank-Nicolson: leading order term $\frac{1}{12}ta^3\Delta t^2$
 
-## Convergence 
+## Convergence
 
 The numerical scheme is convergent if the global error
 $e^n\rightarrow 0$ as $\Delta t\rightarrow 0$.
@@ -495,7 +495,7 @@ $$
 We can compute this using Sympy. Forward/Backward Euler has $e^n \sim np^2/2$
 
 ```{python}
-#| echo : true 
+#| echo : true
 h, N, a, T = symbols('h,N,a,T') # h represents Delta t
 simplify(sqrt(h * summation((n*p**2/2)**2, (n, 0, N))).subs(p, a*h).subs(N, T/h))
 ```
@@ -535,7 +535,7 @@ Analysis of both the pointwise and the time-integrated true errors:
  * Possible answer: see how well $\uex$ fits the discrete equation
 
 Consider the forward difference equation
-$$ 
+$$
 \frac{u^{n+1}-u^n}{\Delta t} = -au^n
 $$
 
@@ -552,34 +552,34 @@ $$
 Tool: Taylor expand $\uex$ around the point where the ODE is sampled
 (here $t_n$)
 
-$$ 
+$$
 \uex(t_{n+1}) = \uex(t_n) + \uex'(t_n)\Delta t + \frac{1}{2}\uex''(t_n)
 \Delta t^2 + \cdots
 $$
 
-Inserting this Taylor series for $\uex$ in the forward difference equation 
+Inserting this Taylor series for $\uex$ in the forward difference equation
 
 $$
-R^n = \frac{\uex(t_{n+1})-\uex(t_n)}{\Delta t} + a\uex(t_n) 
+R^n = \frac{\uex(t_{n+1})-\uex(t_n)}{\Delta t} + a\uex(t_n)
 $$
 
 to get
 
-$$ 
+$$
 R^n = \uex'(t_n) + \frac{1}{2}\uex''(t_n)\Delta t + \ldots + a\uex(t_n)
 $$
 
 
 ## The truncation error forward Euler {.smaller}
 
-We have 
-$$ 
+We have
+$$
 R^n = \uex'(t_n) + \frac{1}{2}\uex''(t_n)\Delta t + \ldots + a\uex(t_n)
 $$
 
 Since $\uex$ solves the ODE $\uex'(t_n)=-a\uex(t_n)$, we get that $\uex'(t_n)$ and $a\uex(t_n)$ cancel out. We are left with leading term
 
-$$ 
+$$
 R^n \approx \frac{1}{2}\uex''(t_n)\Delta t
 $$
 
@@ -589,15 +589,15 @@ This is a mathematical expression for the truncation error.
 
 Backward Euler:
 
-$$ 
-R^n \approx -\frac{1}{2}\uex''(t_n)\Delta t 
+$$
+R^n \approx -\frac{1}{2}\uex''(t_n)\Delta t
 $$
 
 Crank-Nicolson:
 
 $$
 R^{n+\half} \approx \frac{1}{24}\uex'''(t_{n+\half})\Delta t^2
-$$ 
+$$
 
 ## Consistency, stability, and convergence {.smaller}
 
@@ -623,7 +623,7 @@ convergence.)
 
 ## Numerical computation of convergence rate {.smaller}
 
-We assume that the $\ell^2$ error norm on the mesh with level $i$ can be written as 
+We assume that the $\ell^2$ error norm on the mesh with level $i$ can be written as
 
 $$
 E_i = C (\Delta t_i)^r
@@ -631,13 +631,13 @@ $$
 
 where $C$ is a constant. This way, if we have the error on two levels, then we can compute
 
-$$ 
+$$
 \frac{E_{i-1}}{E_i} = \frac{ (\Delta t_{i-1})^r}{(\Delta t_{i})^r} = \left( \frac{\Delta t_{i-1}}{ \Delta t_i} \right)^r
 $$
 
 and isolate $r$ by computing
 
-$$ 
+$$
 r = \frac{\log {\frac{E_{i-1}}{E_i}}}{\log {\frac{\Delta t_{i-1}}{\Delta t_i}}}
 $$
 
@@ -647,10 +647,10 @@ $$
 #| echo : true
 u_exact = lambda t, I, a: I*np.exp(-a*t)
 
-def l2_error(I, a, theta, dt): 
+def l2_error(I, a, theta, dt):
     u, t = solver(I, a, T, dt, theta)
     en = u_exact(t, I, a) - u
-    return np.sqrt(dt*np.sum(en**2)) 
+    return np.sqrt(dt*np.sum(en**2))
 
 def convergence_rates(m, I=1, a=2, T=8, theta=1, dt=1.):
     dt_values, E_values = [], []
