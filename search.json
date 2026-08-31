@@ -2188,14 +2188,14 @@
     "href": "finitedifferences.html#assemble-matrix-problem",
     "title": "The finite difference method",
     "section": "Assemble matrix problem",
-    "text": "Assemble matrix problem\n\nN = 8\na = 2\nI = 1\ntheta = 0.5\ndt = 0.5\nT = N*dt\nt = np.linspace(0, N*dt, N+1)\nu = np.zeros(N+1)\ng = (1 - (1-theta) * a * dt)/(1 + theta * a * dt)\n\nAssemble\n\nfrom scipy import sparse\nA = sparse.diags([-g, 1], np.array([-1, 0]), (N+1, N+1), 'csr')\nb = np.zeros(N+1); b[0] = I"
+    "text": "Assemble matrix problem\n\na = 2\ntheta = 0.5\ndt = 0.5\nI = 1\nN = 8\ng = (1 - (1-theta) * a * dt)/(1 + theta * a * dt)\n\nAssemble\n\nfrom scipy import sparse\nA = sparse.diags([-g, 1], np.array([-1, 0]), (N+1, N+1), 'csr')\nb = np.zeros(N+1); b[0] = I\nu = np.zeros(N+1)"
   },
   {
     "objectID": "finitedifferences.html#solve-and-compare-with-recurrence",
     "href": "finitedifferences.html#solve-and-compare-with-recurrence",
     "title": "The finite difference method",
     "section": "Solve and compare with recurrence",
-    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n]\n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I)\n\n832 ns ± 33.1 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b)\n\n21 μs ± 2.39 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n]\n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I)\n\n882 ns ± 55.7 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b)\n\n26.3 μs ± 12.4 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
@@ -2209,14 +2209,14 @@
     "href": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse-1",
     "title": "The finite difference method",
     "section": "Try to speed up by computing the inverse",
-    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True)\nAi = np.linalg.inv(A.toarray())\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b\n\n1.15 μs ± 515 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True)\nAi = np.linalg.inv(A.toarray())\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b\n\n601 ns ± 76.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "href": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "title": "The finite difference method",
     "section": "Until we try Numba on the explicit solver",
-    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb\n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n123 ns ± 8.76 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
+    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb\n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n288 ns ± 34.9 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
   },
   {
     "objectID": "finitedifferences.html#the-bv-vibration-problem",
@@ -2251,14 +2251,14 @@
     "href": "finitedifferences.html#the-fd-stencil-can-be-applied-to-the-entire-mesh",
     "title": "The finite difference method",
     "section": "The FD stencil can be applied to the entire mesh",
-    "text": "The FD stencil can be applied to the entire mesh\nThat is, we can compute \\(\\boldsymbol{u}^{(2)}=(u''(t_n))_{n=0}^{N}\\) from the mesh function \\(\\boldsymbol{u} = (u(t_n))_{n=0}^N \\in \\mathbb{R}^{N+1}\\) as\n\\[\n\\boldsymbol{u}^{(2)} = D^{(2)} \\boldsymbol{u},\n\\]\nwhere \\(D^{(2)} \\in \\mathbb{R}^{N+1 \\times N+1}\\) is the second derivative matrix.\n\n\\[ \\small\n\\underbrace{\n\\begin{bmatrix}\nu^{(2)}_0 \\\\\nu^{(2)}_1 \\\\\nu^{(2)}_2 \\\\\n\\vdots \\\\\nu^{(2)}_{N-2} \\\\\nu^{(2)}_{N-1} \\\\\nu^{(2)}_{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{u}^{(2)}} =\n\\underbrace{\n  \\frac{1}{h^2} \\begin{bmatrix}\n? & ? & ? & ?  & ? & ? & ? & ?  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n? & ? & ? & ?  & ? & ? & ? & ? \\\\\n\\end{bmatrix}\n}_{D^{(2)}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-1} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n\\]"
+    "text": "The FD stencil can be applied to the entire mesh\nThat is, we can compute \\(\\boldsymbol{u}^{(2)}=(u''(t_n))_{n=0}^{N}\\) from the mesh function \\(\\boldsymbol{u} = (u(t_n))_{n=0}^N \\in \\mathbb{R}^{N+1}\\) as\n\\[\n\\boldsymbol{u}^{(2)} = D^{(2)} \\boldsymbol{u},\n\\]\nwhere \\(D^{(2)} \\in \\mathbb{R}^{N+1 \\times N+1}\\) is the second derivative matrix.\n\n\\[ \\small\n\\underbrace{\n\\begin{bmatrix}\nu^{(2)}_0 \\\\\nu^{(2)}_1 \\\\\nu^{(2)}_2 \\\\\n\\vdots \\\\\nu^{(2)}_{N-2} \\\\\nu^{(2)}_{N-1} \\\\\nu^{(2)}_{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{u}^{(2)}} =\n\\underbrace{\n  \\frac{1}{h^2} \\begin{bmatrix}\n? & ? & ? & ?  & ? & ? & ? & ?  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n\\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\cdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n? & ? & ? & ?  & ? & ? & ? & ? \\\\\n\\end{bmatrix}\n}_{D^{(2)}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-1} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n\\]"
   },
   {
     "objectID": "finitedifferences.html#how-about-the-boundary-nodes",
     "href": "finitedifferences.html#how-about-the-boundary-nodes",
     "title": "The finite difference method",
     "section": "How about the boundary nodes?",
-    "text": "How about the boundary nodes?\n\\[ \\small\n\\underbrace{\n\\begin{bmatrix}\nu^{(2)}_0 \\\\\nu^{(2)}_1 \\\\\nu^{(2)}_2 \\\\\n\\vdots \\\\\nu^{(2)}_{N-2} \\\\\nu^{(2)}_{N-1} \\\\\nu^{(2)}_{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{u}^{(2)}} =\n\\underbrace{\n  \\frac{1}{h^2} \\begin{bmatrix}\n? & ? & ? & ?  & ? & ? & ? & ?  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n? & ? & ? & ?  & ? & ? & ? & ? \\\\\n\\end{bmatrix}\n}_{D^{(2)}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-1} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n\\]\nWhat to do with the first and last rows? The central stencils do not work here.\nWe still want to compute \\(u_0^{(2)}=u''(t_0)\\) and \\(u_N^{(2)}=u''(t_N)\\). How?\n\nForward and backward stencils will do"
+    "text": "How about the boundary nodes?\n\\[ \\small\n\\underbrace{\n\\begin{bmatrix}\nu^{(2)}_0 \\\\\nu^{(2)}_1 \\\\\nu^{(2)}_2 \\\\\n\\vdots \\\\\nu^{(2)}_{N-2} \\\\\nu^{(2)}_{N-1} \\\\\nu^{(2)}_{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{u}^{(2)}} =\n\\underbrace{\n  \\frac{1}{h^2} \\begin{bmatrix}\n? & ? & ? & ?  & ? & ? & ? & ?  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n\\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\cdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n? & ? & ? & ?  & ? & ? & ? & ? \\\\\n\\end{bmatrix}\n}_{D^{(2)}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-1} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n\\]\nWhat to do with the first and last rows? The central stencils do not work here.\nWe still want to compute \\(u_0^{(2)}=u''(t_0)\\) and \\(u_N^{(2)}=u''(t_N)\\). How?\n\nForward and backward stencils will do"
   },
   {
     "objectID": "finitedifferences.html#we-can-do-a-forward-difference-at-n0",
@@ -2279,7 +2279,7 @@
     "href": "finitedifferences.html#we-get-a-second-derivative-matrix",
     "title": "The finite difference method",
     "section": "We get a second derivative matrix",
-    "text": "We get a second derivative matrix\n\\[\nD^{(2)} = \\frac{1}{h^2} \\begin{bmatrix}\n1 & -2 & 1 & 0  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -2 & 1 \\\\\n\\end{bmatrix}\n\\]\nbut with merely first order accuracy at the boundaries. Can we do better?\n\nYes! Of course, just use more points near the boundaries!"
+    "text": "We get a second derivative matrix\n\\[\nD^{(2)} = \\frac{1}{h^2} \\begin{bmatrix}\n1 & -2 & 1 & 0  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n\\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\cdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -2 & 1 \\\\\n\\end{bmatrix}\n\\]\nbut with merely first order accuracy at the boundaries. Can we do better?\n\nYes! Of course, just use more points near the boundaries!"
   },
   {
     "objectID": "finitedifferences.html#use-three-forward-points-small-un1-un2-un3-to-get-a-second-order-forward-stencil",
@@ -2293,7 +2293,7 @@
     "href": "finitedifferences.html#fully-second-order-d2",
     "title": "The finite difference method",
     "section": "Fully second order \\(D^{(2)}\\)",
-    "text": "Fully second order \\(D^{(2)}\\)\n\\[\nD^{(2)} = \\frac{1}{h^2} \\begin{bmatrix}\n2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\\\\n\\end{bmatrix}\n\\]"
+    "text": "Fully second order \\(D^{(2)}\\)\n\\[\nD^{(2)} = \\frac{1}{h^2} \\begin{bmatrix}\n2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n\\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\cdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\\\\n\\end{bmatrix}\n\\]"
   },
   {
     "objectID": "finitedifferences.html#assemble-in-python",
@@ -2335,7 +2335,7 @@
     "href": "finitedifferences.html#with-forward-and-backward-on-the-edges-we-get-a-second-order-first-derivative-matrix",
     "title": "The finite difference method",
     "section": "With forward and backward on the edges we get a second order first derivative matrix",
-    "text": "With forward and backward on the edges we get a second order first derivative matrix\n\\[ \\small\nD^{(1)} = \\frac{1}{2 h}\\begin{bmatrix}\n-3 & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 0 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 0 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  -1& 0& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& -1& 0& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3 \\\\\n\\end{bmatrix}\n\\]\n\nD1 = sparse.diags([-1, 1], np.array([-1, 1]), (N+1, N+1), 'lil')\nD1[0, :3] = -3, 4, -1\nD1[-1, -3:] = 1, -4, 3\nD1 *= (1/(2*dt))\nf = t\nD1 @ f\n\narray([1., 1., 1., 1., 1., 1., 1., 1., 1.])"
+    "text": "With forward and backward on the edges we get a second order first derivative matrix\n\\[ \\small\nD^{(1)} = \\frac{1}{2 h}\\begin{bmatrix}\n-3 & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 0 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 0 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n\\cdots & 0 & 0 & 0 &  -1& 0& 1& 0 \\\\\n\\cdots & 0 & 0& 0& 0& -1& 0& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3 \\\\\n\\end{bmatrix}\n\\]\n\nD1 = sparse.diags([-1, 1], np.array([-1, 1]), (N+1, N+1), 'lil')\nD1[0, :3] = -3, 4, -1\nD1[-1, -3:] = 1, -4, 3\nD1 *= (1/(2*dt))\nf = t\nD1 @ f\n\narray([1., 1., 1., 1., 1., 1., 1., 1., 1.])"
   },
   {
     "objectID": "finitedifferences.html#is-d2-the-same-as-d1d1",
@@ -2384,14 +2384,14 @@
     "href": "finitedifferences.html#apply-boundary-condition-by-modifying-both-the-coefficient-matrix-a-and-the-rhs-vector-boldsymbolb",
     "title": "The finite difference method",
     "section": "Apply boundary condition by modifying both the coefficient matrix \\(A\\) and the rhs vector \\(\\boldsymbol{b}\\)",
-    "text": "Apply boundary condition by modifying both the coefficient matrix \\(A\\) and the rhs vector \\(\\boldsymbol{b}\\)\nWith just the derivative matrix we have the problem\n\\[\nA \\boldsymbol{u} = \\boldsymbol{b}, \\quad \\text{for} \\quad \\boldsymbol{b}\\in \\mathbb{R}^{N+1}\n\\]\n\\[ \\small\n\\underbrace{\n  \\frac{1}{2h} \\begin{bmatrix}\n-3+2ah & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 2ah & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 2ah & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah\n\\end{bmatrix}\n}_{D^{(1)}+a\\mathbb{I}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-2} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n=\n\\underbrace{\n\\begin{bmatrix}\nb^0 \\\\\nb^1 \\\\\nb^2 \\\\\n\\vdots \\\\\nb^{N-2} \\\\\nb^{N-1} \\\\\nb^{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{b}} =\n\\]\nIn order to enforce that \\(u(0)= u^0 = I\\), we can modify the first row of the coefficient matrix \\(A\\) and the right hand side vector \\(\\boldsymbol{b}\\)"
+    "text": "Apply boundary condition by modifying both the coefficient matrix \\(A\\) and the rhs vector \\(\\boldsymbol{b}\\)\nWith just the derivative matrix we have the problem\n\\[\nA \\boldsymbol{u} = \\boldsymbol{b}, \\quad \\text{for} \\quad \\boldsymbol{b}\\in \\mathbb{R}^{N+1}\n\\]\n\\[ \\small\n\\underbrace{\n  \\frac{1}{2h} \\begin{bmatrix}\n-3+2ah & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 2ah & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 2ah & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n\\cdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\\\\n\\cdots & 0 & 0& 0& 0& -1& -2ah& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah\n\\end{bmatrix}\n}_{D^{(1)}+a\\mathbb{I}}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-2} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n=\n\\underbrace{\n\\begin{bmatrix}\nb^0 \\\\\nb^1 \\\\\nb^2 \\\\\n\\vdots \\\\\nb^{N-2} \\\\\nb^{N-1} \\\\\nb^{N} \\\\\n\\end{bmatrix}}_{\\boldsymbol{b}} =\n\\]\nIn order to enforce that \\(u(0)= u^0 = I\\), we can modify the first row of the coefficient matrix \\(A\\) and the right hand side vector \\(\\boldsymbol{b}\\)"
   },
   {
     "objectID": "finitedifferences.html#modify-a-and-boldsymbolb-to-enforce-boundary-conditions",
     "href": "finitedifferences.html#modify-a-and-boldsymbolb-to-enforce-boundary-conditions",
     "title": "The finite difference method",
     "section": "Modify \\(A\\) and \\(\\boldsymbol{b}\\) to enforce boundary conditions",
-    "text": "Modify \\(A\\) and \\(\\boldsymbol{b}\\) to enforce boundary conditions\n\\[ \\small\n\\underbrace{\n  \\frac{1}{2h} \\begin{bmatrix}\n2h & 0 & 0 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 2ah & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 2ah & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah\n\\end{bmatrix}\n}_{A}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-2} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n=\n\\underbrace{\n\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n\\vdots \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n\\end{bmatrix}}_{\\boldsymbol{b}}\n\\]\nNow the equation in the first row states that \\(u^0 = I\\), whereas the remaining rows are unchanged and solve the central and implicit problem for row \\(n\\) (row \\(N\\) is slightly different)\n\\[\n\\frac{u^{n+1}-u^{n-1}}{2h} + au^n = 0\n\\]"
+    "text": "Modify \\(A\\) and \\(\\boldsymbol{b}\\) to enforce boundary conditions\n\\[ \\small\n\\underbrace{\n  \\frac{1}{2h} \\begin{bmatrix}\n2h & 0 & 0 & 0  & 0 & 0 & 0 & 0  \\\\\n-1 & 2ah & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & -1 & 2ah & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n\\cdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\\\\n\\cdots & 0 & 0& 0& 0& -1& -2ah& 1 \\\\\n0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah\n\\end{bmatrix}\n}_{A}\n\\underbrace{\\begin{bmatrix}\nu^0 \\\\\nu^1 \\\\\nu^2 \\\\\n\\vdots \\\\\nu^{N-2} \\\\\nu^{N-1} \\\\\nu^{N}\n\\end{bmatrix}}_{\\boldsymbol{u}}\n=\n\\underbrace{\n\\begin{bmatrix}\nI \\\\\n0 \\\\\n0 \\\\\n\\vdots \\\\\n0 \\\\\n0 \\\\\n0 \\\\\n\\end{bmatrix}}_{\\boldsymbol{b}}\n\\]\nNow the equation in the first row states that \\(u^0 = I\\), whereas the remaining rows are unchanged and solve the central and implicit problem for row \\(n\\) (row \\(N\\) is slightly different)\n\\[\n\\frac{u^{n+1}-u^{n-1}}{2h} + au^n = 0\n\\]"
   },
   {
     "objectID": "finitedifferences.html#implement-decay-problem",
@@ -2433,7 +2433,7 @@
     "href": "finitedifferences.html#generic-finite-difference-stencils",
     "title": "The finite difference method",
     "section": "Generic finite difference stencils",
-    "text": "Generic finite difference stencils\nWe have seen that it is quite simple to develop finite difference stencils for any derivative, using either forward or backward points. Can this be generalized?\n\nYes! Of course it can. The generic Taylor expansion around \\(x=x_0\\) reads\n\\[\nu(x) = \\sum_{i=0}^{M} \\frac{(x-x_0)^i}{i!} u^{(i)}(x_0) + \\mathcal{O}((x-x_0)^{M}),\n\\]\nwhere \\(u^{(i)}(x_0) = \\frac{d^{i}u}{dx^{i}}|_{x=x_0}\\) and the are \\(M+1\\) terms in the expansion.\nUse only \\(x=x_0+ph\\), where \\(p\\) is an integer and \\(h\\) is a constant (\\(\\Delta t\\) or \\(\\Delta x\\))\n\\[\nu^{n+p} = \\sum_{i=0}^{M} \\frac{(ph)^i}{i!} u^{(i)}(x_0) + \\mathcal{O}(h^{M+1}),\n\\]\nwhere \\(u^{n+p} = u(x_0+ph)\\)"
+    "text": "Generic finite difference stencils\nWe have seen that it is quite simple to develop finite difference stencils for any derivative, using either forward or backward points. Can this be generalized?\n\nYes! Of course it can. The generic Taylor expansion around \\(x_0\\) reads\n\\[\nu(x) = \\sum_{i=0}^{M} \\frac{(x-x_0)^i}{i!} u^{(i)}(x_0) + \\mathcal{O}((x-x_0)^{M}),\n\\]\nwhere \\(u^{(i)}(x_0) = \\frac{d^{i}u}{dx^{i}}|_{x=x_0}\\) and the are \\(M+1\\) terms in the expansion.\nUse only \\(x=x_0+ph\\), where \\(p\\) is an integer and \\(h\\) is a constant (\\(\\Delta t\\) or \\(\\Delta x\\))\n\\[\nu^{n+p} = \\sum_{i=0}^{M} \\frac{(ph)^i}{i!} u^{(i)}(x_0) + \\mathcal{O}(h^{M+1}),\n\\]\nwhere \\(u^{n+p} = u(x_0+ph)\\)"
   },
   {
     "objectID": "finitedifferences.html#generic-fd",
