@@ -195,14 +195,11 @@ There are many different ways to achieve this. We will not be very concerned wit
 
 ```{python}
 #| echo : true
-N = 8
 a = 2
-I = 1
 theta = 0.5
 dt = 0.5
-T = N*dt
-t = np.linspace(0, N*dt, N+1)
-u = np.zeros(N+1)
+I = 1
+N = 8
 g = (1 - (1-theta) * a * dt)/(1 + theta * a * dt)
 ```
 
@@ -212,6 +209,7 @@ Assemble
 from scipy import sparse
 A = sparse.diags([-g, 1], np.array([-1, 0]), (N+1, N+1), 'csr')
 b = np.zeros(N+1); b[0] = I
+u = np.zeros(N+1)
 ```
 
 ## Solve and compare with recurrence {.smaller}
@@ -464,9 +462,9 @@ u^{(2)}_{N} \\
 ? & ? & ? & ?  & ? & ? & ? & ?  \\
 1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
 0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+\vdots & & & \ddots &  & & &\vdots \\
+\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
 ? & ? & ? & ?  & ? & ? & ? & ? \\
 \end{bmatrix}
 }_{D^{(2)}}
@@ -501,9 +499,9 @@ u^{(2)}_{N} \\
 ? & ? & ? & ?  & ? & ? & ? & ?  \\
 1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
 0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+\vdots & & & \ddots &  & & &\vdots \\
+\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
 ? & ? & ? & ?  & ? & ? & ? & ? \\
 \end{bmatrix}
 }_{D^{(2)}}
@@ -581,9 +579,9 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 1 & -2 & 1 & 0  & 0 & 0 & 0 & 0  \\
 1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
 0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+\vdots & & & \ddots &  & & &\vdots \\
+\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
 0 & 0 & 0 & 0  & 0 & 1 & -2 & 1 \\
 \end{bmatrix}
 $$
@@ -626,9 +624,9 @@ D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
 2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\
 1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
 0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
+\vdots & & & \ddots &  & & &\vdots \\
+\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
+\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
 0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\
 \end{bmatrix}
 $$
@@ -751,9 +749,9 @@ D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
 -3 & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\
 -1 & 0 & 1 & 0 & 0 & 0 & 0 & \cdots \\
 0 & -1 & 0 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  -1& 0& 1& 0 \\
-\vdots & 0 & 0& 0& 0& -1& 0& 1 \\
+\vdots & & & \ddots &  & & &\vdots \\
+\cdots & 0 & 0 & 0 &  -1& 0& 1& 0 \\
+\cdots & 0 & 0& 0& 0& -1& 0& 1 \\
 0 & 0 & 0 & 0  & 0 & 1 & -4 & 3 \\
 \end{bmatrix}
 $$
@@ -912,9 +910,9 @@ $$ \small
 -3+2ah & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\
 -1 & 2ah & 1 & 0 & 0 & 0 & 0 & \cdots \\
 0 & -1 & 2ah & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
-\vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
+\vdots & & & \ddots &  & & &\vdots \\
+\cdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
+\cdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
 0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah
 \end{bmatrix}
 }_{D^{(1)}+a\mathbb{I}}
@@ -950,9 +948,9 @@ $$ \small
 2h & 0 & 0 & 0  & 0 & 0 & 0 & 0  \\
 -1 & 2ah & 1 & 0 & 0 & 0 & 0 & \cdots \\
 0 & -1 & 2ah & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
-\vdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
+\vdots & & & \ddots &  & & &\vdots \\
+\cdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
+\cdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
 0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah
 \end{bmatrix}
 }_{A}
@@ -1085,7 +1083,7 @@ We have seen that it is quite simple to develop finite difference stencils for a
 
 ::: {.fragment}
 
-Yes! Of course it can. The generic Taylor expansion around $x=x_0$ reads
+Yes! Of course it can. The generic Taylor expansion around $x_0$ reads
 
 $$
 u(x) = \sum_{i=0}^{M} \frac{(x-x_0)^i}{i!} u^{(i)}(x_0) + \mathcal{O}((x-x_0)^{M}),
