@@ -282,7 +282,7 @@ t_n = n \Delta t, \quad n = 0, 1, \ldots, N_t
 <p><span class="math display">\[
 x_j = j \Delta x, \quad j = 0, 1, \ldots, N
 \]</span></p>
-<div id="92a5de82" class="cell" data-execution_count="1">
+<div id="0d2cdd8c" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -313,7 +313,7 @@ u^n = (u^n_0, u^n_1, \ldots, u^n_N)^T,
 <h2>The finite difference stencil makes use of 5 neighboring points</h2>
 <div class="columns">
 <div class="column">
-<div id="4ed650ea" class="cell" data-execution_count="2">
+<div id="4830ca36" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -333,7 +333,7 @@ u^n = (u^n_0, u^n_1, \ldots, u^n_N)^T,
 <h2>The finite difference stencil is not used at the spatial boundary</h2>
 <div class="columns">
 <div class="column">
-<div id="97508046" class="cell" data-execution_count="3">
+<div id="6b4dacf2" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -449,7 +449,7 @@ D^{(2)} = \begin{bmatrix}
 <section id="in-python" class="slide level2 smaller">
 <h2>In Python</h2>
 <p>Set up solver</p>
-<div id="11e7d54e" class="cell" data-execution_count="4">
+<div id="3f903f8d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
 <span id="cb1-3"><a></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
@@ -467,7 +467,7 @@ D^{(2)} = \begin{bmatrix}
 <span id="cb1-15"><a></a>u0 <span class="op">=</span> sp.exp(<span class="op">-</span><span class="dv">200</span><span class="op">*</span>(x<span class="op">-</span>L<span class="op">/</span><span class="dv">2</span><span class="op">+</span>t)<span class="op">**</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Solve by marching method</p>
-<div id="b444d466" class="cell" data-execution_count="5">
+<div id="661b9ebf" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb2-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj)</span>
 <span id="cb2-3"><a></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(Nt):</span>
@@ -480,7 +480,7 @@ D^{(2)} = \begin{bmatrix}
 </section>
 <section id="store-results-at-intermediate-intervals-for-plotting" class="slide level2 smaller">
 <h2>Store results at intermediate intervals for plotting</h2>
-<div id="58708e99" class="cell" data-execution_count="6">
+<div id="973f299e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb3-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj)</span>
 <span id="cb3-3"><a></a>plotdata <span class="op">=</span> {<span class="dv">0</span>: unm1.copy()}</span>
@@ -498,7 +498,7 @@ D^{(2)} = \begin{bmatrix}
 <section id="create-animation-after-the-simulation-is-finished" class="slide level2 smaller">
 <h2>Create animation after the simulation is finished</h2>
 <p><img src="https://rawcdn.githack.com/MATMEK-4270/matmek4270-pres/6406baaf8be23232cb706f9ac69903403bf897b1/figures/wavemovie.png?min=1" alt="Animated Image" width="600" height="300"></p>
-<div id="4e593b80" class="cell" data-execution_count="7">
+<div id="de28f7a4" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="kw">def</span> animation(data):</span>
 <span id="cb4-2"><a></a>  <span class="im">from</span> matplotlib <span class="im">import</span> animation</span>
 <span id="cb4-3"><a></a>  fig, ax <span class="op">=</span> plt.subplots()</span>
@@ -524,7 +524,7 @@ u^0 = I(x)
 u^0_j = I(x_j), \quad \forall \, j=0, 1, \ldots, N
 \]</span></p>
 <div class="fragment">
-<div id="f85ed26a" class="cell" data-execution_count="8">
+<div id="4da2246d" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>u0 <span class="op">=</span> sp.exp(<span class="op">-</span><span class="dv">200</span><span class="op">*</span>(x<span class="op">-</span>L<span class="op">/</span><span class="dv">2</span><span class="op">+</span>t)<span class="op">**</span><span class="dv">2</span>)</span>
 <span id="cb5-2"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -653,13 +653,13 @@ u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
 <p>Set <span class="math inline">\(u^0=I(x)\)</span> and define a modified differentiation matrix</p>
 <p><span class="math display">\[\small
 \tilde{D}^{(2)} = \begin{bmatrix}
-\color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0  \\
-1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots \\
-0 &amp; 1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots \\
-\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\cdots \\
-\vdots &amp; 0 &amp; 0 &amp; 0 &amp;  1&amp; -2&amp; 1&amp; 0 \\
-\vdots &amp; 0 &amp; 0&amp; 0&amp; 0&amp; 1&amp; -2&amp; 1 \\
-\color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0 \\
+\color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}\cdots &amp; \color{red}0  \\
+1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\
+0 &amp; 1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\
+\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\vdots \\
+0 &amp; \cdots &amp; 0 &amp; 0 &amp;  1&amp; -2&amp; 1&amp; 0 \\
+0 &amp; \cdots &amp; 0&amp; 0&amp; 0&amp; 1&amp; -2&amp; 1 \\
+\color{red}0 &amp; \color{red}\cdots &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0 \\
 \end{bmatrix}
 \]</span></p>
 <p>Now boundary conditions will be ok at all time steps simply by:</p>
@@ -721,7 +721,7 @@ u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
 <p><span class="math display">\[
 \frac{\partial u}{\partial x}(0, t_n) = \frac{u^{n}_1 - u^n_{-1}}{2 \Delta x} = 0 \rightarrow u^n_{-1} = u^{n}_{1}
 \]</span></p>
-<div id="8b4574c7" class="cell" data-execution_count="9">
+<div id="b227613b" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -781,13 +781,13 @@ u^{1}_0 = u^{0}_0 +\frac{\underline{c}^2}{2}(2u^n_{1}-2u^n_0) \quad \text{and} \
 <p>Set <span class="math inline">\(u^0=I(x)\)</span> and define a modified differentiation matrix</p>
 <p><span class="math display">\[\small
 \tilde{D}^{(2)} = \begin{bmatrix}
-\color{red}-2 &amp; \color{red}2 &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0  \\
-1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots \\
-0 &amp; 1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots \\
-\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\cdots \\
-\vdots &amp; 0 &amp; 0 &amp; 0 &amp;  1&amp; -2&amp; 1&amp; 0 \\
-\vdots &amp; 0 &amp; 0&amp; 0&amp; 0&amp; 1&amp; -2&amp; 1 \\
-\color{red}0 &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}2 &amp; \color{red}-2 \\
+\color{red}-2 &amp; \color{red}2 &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}\cdots &amp; \color{red}0  \\
+1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\
+0 &amp; 1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\
+\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\vdots \\
+0 &amp; \cdots &amp; 0 &amp; 0 &amp;  1&amp; -2&amp; 1&amp; 0 \\
+0 &amp; \cdots &amp; 0&amp; 0&amp; 0&amp; 1&amp; -2&amp; 1 \\
+\color{red}0 &amp; \color{red}\cdots &amp; \color{red}0 &amp; \color{red}0  &amp; \color{red}0 &amp; \color{red}0 &amp; \color{red}2 &amp; \color{red}-2 \\
 \end{bmatrix}
 \]</span></p>
 <p>Now boundary conditions will be ok at all time steps simply by:</p>
@@ -894,7 +894,7 @@ u^{n+1} = 2u^n-u^{n-1} + \underline{c}^2 D^{(2)} u^n
 <section id="periodic-boundary-conditions" class="slide level2 smaller">
 <h2>Periodic boundary conditions</h2>
 <p>A periodic solution is a solution that is repeating itself indefinitely. For example <span class="math inline">\(u(x) = \sin(2\pi x)\)</span>:</p>
-<div id="fee637a2" class="cell" data-execution_count="10">
+<div id="916a230e" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -952,13 +952,13 @@ u''(t_{N-1}) \approx \frac{\color{red}u^N \color{black} - 2u^{N-1} + u^{N-2}}{h^
 <h2>Periodic boundary conditions can be implemented in the matrix <span class="math inline">\(D^{(2)} \in \mathbb{R}^{N+1 \times N+1}\)</span></h2>
 <p><span class="math display">\[\small
 \tilde{D}^{(2)} = \begin{bmatrix}
-\color{red}-2 &amp; \color{red}1 &amp; 0 &amp; 0  &amp; 0 &amp; 0 &amp; \color{red}1 &amp; 0  \\
-1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots \\
-0 &amp; 1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots \\
-\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\cdots \\
-\vdots &amp; 0 &amp; 0 &amp; 0 &amp;  1&amp; -2&amp; 1&amp; 0 \\
-\vdots &amp; 0 &amp; 0&amp; 0&amp; 0&amp; 1&amp; -2&amp; 1 \\
-0 &amp; 0 &amp; 0 &amp; 0  &amp; 0 &amp; 0 &amp; 1 &amp; -2 \\
+\color{red}-2 &amp; \color{red}1 &amp; 0 &amp; 0  &amp; 0 &amp; \cdots &amp; \color{red}1 &amp; 0  \\
+1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp;\cdots  &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; -2 &amp; 1 &amp; 0 &amp;\cdots  &amp; 0 &amp; 0\\
+\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\vdots \\
+0 &amp; \cdots &amp; 0 &amp; 0 &amp;  1&amp; -2&amp; 1&amp; 0 \\
+0 &amp; \cdots &amp; 0&amp; 0&amp; 0&amp; 1&amp; -2&amp; 1 \\
+0 &amp; \cdots &amp; 0 &amp; 0  &amp; 0 &amp; 0 &amp; 1 &amp; -2 \\
 \end{bmatrix}
 \]</span></p>
 <p>Note that the matrix expects <span class="math inline">\(\boldsymbol{u} = (u^0, u^1, \ldots, u^{N-1}, u^N)\)</span>, even though <span class="math inline">\(u^0=u^N\)</span>. The last row in <span class="math inline">\(\tilde{D}^{(2)}\)</span> is thus irrelevant, because we wil set <span class="math inline">\(u^0=u^N\)</span> manually.</p>
@@ -1126,7 +1126,7 @@ C \le 1
 </div><div class="column">
 <p><img data-src="./figures/wavestable.apng"></p>
 </div></div>
-<div id="8643226f" class="cell" data-execution_count="11">
+<div id="6e185844" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>unm1[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, <span class="dv">0</span>))(xj)</span>
 <span id="cb6-2"><a></a>un[:] <span class="op">=</span> sp.lambdify(x, u0.subs(t, dt))(xj)</span>
 <span id="cb6-3"><a></a>plotdata <span class="op">=</span> {<span class="dv">0</span>: unm1.copy()}</span>
