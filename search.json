@@ -830,7 +830,7 @@
     "href": "wave.html#stability-1",
     "title": "Finite difference methods for the wave equation",
     "section": "Stability",
-    "text": "Stability\n\\[\nA + A^{-1} = 2 + C^2 (e^{ik \\Delta x} - 2 + e^{-ik\\Delta x})\n\\]\nUse \\(e^{ix}+e^{-ix}=2\\cos x\\) to obtain\n\\[\nA + A^{-1} = 2 + 2 C^2(\\cos k\\Delta x - 1)\n\\]\n\nThis is a quadratic equation to solve for A. Using \\(\\beta=2(1+C^2 (\\cos(k\\Delta x)-1))\\) we get that\n\\[\nA = \\frac{\\beta \\pm \\sqrt{\\beta^2-4}}{2}\n\\]\nWe see that \\(|A| = 1\\) for any real numbers \\(-2 \\le \\beta \\le 2\\). (Also, \\(\\beta &lt; -2 \\rightarrow\\) negative \\(A\\)).\n\n\n\n\n\n\nFor all real numbers \\(-2 \\le \\beta \\le 2\\)\n\n\n\\[\n|\\beta \\pm \\sqrt{\\beta^2-4}| = 2\n\\] since \\(|\\beta \\pm \\sqrt{\\beta^2-4}| = |\\beta + i \\sqrt{4-\\beta^2}| = \\sqrt{\\beta^2 + 4 - \\beta^2} = 2\\)"
+    "text": "Stability\n\\[\nA + A^{-1} = 2 + C^2 (e^{ik \\Delta x} - 2 + e^{-ik\\Delta x})\n\\]\nUse \\(e^{ix}+e^{-ix}=2\\cos x\\) to obtain\n\\[\nA + A^{-1} = 2 + 2 C^2(\\cos k\\Delta x - 1)\n\\]\n\nThis is a quadratic equation to solve for A. Using \\(\\beta=2(1+C^2 (\\cos(k\\Delta x)-1))\\) we get that\n\\[\nA = \\frac{\\beta \\pm \\sqrt{\\beta^2-4}}{2}\n\\]\nWe see that \\(|A| = 1\\) for any real numbers \\(-2 \\le \\beta \\le 2\\).\n\n\n\n\n\n\nFor all real numbers \\(-2 \\le \\beta \\le 2\\)\n\n\n\\[\n|\\beta \\pm \\sqrt{\\beta^2-4}| = 2\n\\] since \\(|\\beta \\pm \\sqrt{\\beta^2-4}| = |\\beta + i \\sqrt{4-\\beta^2}| = \\sqrt{\\beta^2 + 4 - \\beta^2} = 2\\)"
   },
   {
     "objectID": "wave.html#for-a-1-and-stability-we-need--2-le-beta-le-2-and-thus",
