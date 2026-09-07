@@ -621,13 +621,13 @@ Set $u^0=I(x)$ and define a modified differentiation matrix
 
 $$\small
 \tilde{D}^{(2)} = \begin{bmatrix}
-\color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  \\
-1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
-\color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}0 & \color{red}0 \\
+\color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}\cdots & \color{red}0  \\
+1 & -2 & 1 & 0 & 0 & 0 & \cdots & 0 \\
+0 & 1 & -2 & 1 & 0 & 0 & \cdots & 0 \\
+\vdots & & & \ddots &  & & &\vdots \\
+0 & \cdots & 0 & 0 &  1& -2& 1& 0 \\
+0 & \cdots & 0& 0& 0& 1& -2& 1 \\
+\color{red}0 & \color{red}\cdots & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}0 & \color{red}0 \\
 \end{bmatrix}
 $$
 
@@ -761,13 +761,13 @@ Set $u^0=I(x)$ and define a modified differentiation matrix
 
 $$\small
 \tilde{D}^{(2)} = \begin{bmatrix}
-\color{red}-2 & \color{red}2 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  \\
-1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
-\color{red}0 & \color{red}0 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}2 & \color{red}-2 \\
+\color{red}-2 & \color{red}2 & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}\cdots & \color{red}0  \\
+1 & -2 & 1 & 0 & 0 & 0 & \cdots & 0 \\
+0 & 1 & -2 & 1 & 0 & 0 & \cdots & 0 \\
+\vdots & & & \ddots &  & & &\vdots \\
+0 & \cdots & 0 & 0 &  1& -2& 1& 0 \\
+0 & \cdots & 0& 0& 0& 1& -2& 1 \\
+\color{red}0 & \color{red}\cdots & \color{red}0 & \color{red}0  & \color{red}0 & \color{red}0 & \color{red}2 & \color{red}-2 \\
 \end{bmatrix}
 $$
 
@@ -934,13 +934,13 @@ $$
 
 $$\small
 \tilde{D}^{(2)} = \begin{bmatrix}
-\color{red}-2 & \color{red}1 & 0 & 0  & 0 & 0 & \color{red}1 & 0  \\
-1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\cdots \\
-\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\vdots & 0 & 0& 0& 0& 1& -2& 1 \\
-0 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\
+\color{red}-2 & \color{red}1 & 0 & 0  & 0 & \cdots & \color{red}1 & 0  \\
+1 & -2 & 1 & 0 & 0 &\cdots  & 0 & 0 \\
+0 & 1 & -2 & 1 & 0 &\cdots  & 0 & 0\\
+\vdots & & & \ddots &  & & &\vdots \\
+0 & \cdots & 0 & 0 &  1& -2& 1& 0 \\
+0 & \cdots & 0& 0& 0& 1& -2& 1 \\
+0 & \cdots & 0 & 0  & 0 & 0 & 1 & -2 \\
 \end{bmatrix}
 $$
 
@@ -1098,7 +1098,7 @@ $$
 A = \frac{\beta \pm \sqrt{\beta^2-4}}{2}
 $$
 
-We see that $|A| = 1$ for any real numbers $-2 \le \beta \le 2$. (Also, $\beta < -2 \rightarrow$ negative $A$).
+We see that $|A| = 1$ for any real numbers $-2 \le \beta \le 2$.
 
 ::: {.callout-note}
 # For all real numbers $-2 \le \beta \le 2$

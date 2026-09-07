@@ -459,13 +459,13 @@ u^{(2)}_{N} \\
  \end{bmatrix}}_{\boldsymbol{u}^{(2)}} =
 \underbrace{
   \frac{1}{h^2} \begin{bmatrix}
-? & ? & ? & ?  & ? & ? & ? & ?  \\
-1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\vdots \\
-\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
-? & ? & ? & ?  & ? & ? & ? & ? \\
+? & ? & ? & ?  & ? & \cdots & ?  \\
+1 & -2 & 1 & 0 & 0 & \cdots & 0 \\
+0 & 1 & -2 & 1 & 0 &  \cdots & 0  \\
+\vdots & & \ddots & \ddots & \ddots & & \vdots \\
+0 & \cdots & 0 &  1& -2& 1& 0 \\
+0 & \cdots & 0& 0& 1& -2& 1 \\
+? & \cdots & ?  & ? & ? & ? & ? \\
 \end{bmatrix}
 }_{D^{(2)}}
 \underbrace{\begin{bmatrix}
@@ -496,13 +496,13 @@ u^{(2)}_{N} \\
  \end{bmatrix}}_{\boldsymbol{u}^{(2)}} =
 \underbrace{
   \frac{1}{h^2} \begin{bmatrix}
-? & ? & ? & ?  & ? & ? & ? & ?  \\
-1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\vdots \\
-\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
-? & ? & ? & ?  & ? & ? & ? & ? \\
+? & ? & ? & ?  & ? & \cdots & ?  \\
+1 & -2 & 1 & 0 & 0 & \cdots & 0 \\
+0 & 1 & -2 & 1 & 0 &  \cdots & 0  \\
+\vdots & & \ddots & \ddots & \ddots & & \vdots \\
+0 & \cdots & 0 &  1& -2& 1& 0 \\
+0 & \cdots & 0& 0& 1& -2& 1 \\
+? & \cdots & ?  & ? & ? & ? & ? \\
 \end{bmatrix}
 }_{D^{(2)}}
 \underbrace{\begin{bmatrix}
@@ -576,13 +576,13 @@ $$
 
 $$
 D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
-1 & -2 & 1 & 0  & 0 & 0 & 0 & 0  \\
-1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\vdots \\
-\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
-0 & 0 & 0 & 0  & 0 & 1 & -2 & 1 \\
+1 & -2 & 1 & 0  & 0 & \cdots & 0  \\
+1 & -2 & 1 & 0 & 0 & \cdots & 0 \\
+0 & 1 & -2 & 1 & 0 &  \cdots & 0  \\
+\vdots & & \ddots & \ddots & \ddots & & \vdots \\
+0 & \cdots & 0 &  1& -2& 1& 0 \\
+0 & \cdots & 0& 0& 1& -2& 1 \\
+0 & \cdots & 0  & 0 & 1 & -2 & 1 \\
 \end{bmatrix}
 $$
 
@@ -621,13 +621,13 @@ $$
 
 $$
 D^{(2)} = \frac{1}{h^2} \begin{bmatrix}
-2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\
-1 & -2 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & 1 & -2 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\vdots \\
-\cdots & 0 & 0 & 0 &  1& -2& 1& 0 \\
-\cdots & 0 & 0& 0& 0& 1& -2& 1 \\
-0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\
+2 & -5 & 4 & -1  & 0 & \cdots & 0  \\
+1 & -2 & 1 & 0 & 0 & \cdots & 0 \\
+0 & 1 & -2 & 1 & 0 &  \cdots & 0  \\
+\vdots & & \ddots & \ddots & \ddots & & \vdots \\
+0 & \cdots & 0 &  1& -2& 1& 0 \\
+0 & \cdots & 0& 0& 1& -2& 1 \\
+0 & \cdots & 0  & -1 & 4 & -5 & 2 \\
 \end{bmatrix}
 $$
 
@@ -746,13 +746,13 @@ $$
 
 $$ \small
 D^{(1)} = \frac{1}{2 h}\begin{bmatrix}
--3 & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\
--1 & 0 & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & -1 & 0 & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\vdots \\
-\cdots & 0 & 0 & 0 &  -1& 0& 1& 0 \\
-\cdots & 0 & 0& 0& 0& -1& 0& 1 \\
-0 & 0 & 0 & 0  & 0 & 1 & -4 & 3 \\
+-3 & 4 & -1 & 0  & 0 & \cdots & 0  \\
+-1 & 0 & 1 & 0 & 0 & \cdots & 0 \\
+0 & -1 & 0 & 1 & 0 & \cdots & 0 \\
+\vdots & & & \ddots &  & &\vdots \\
+0 & \cdots & 0 &  -1& 0& 1& 0 \\
+0 & \cdots & 0& 0& -1& 0& 1 \\
+0 & \cdots & 0  & 0 & 1 & -4 & 3 \\
 \end{bmatrix}
 $$
 
@@ -907,13 +907,13 @@ $$
 $$ \small
  \underbrace{
   \frac{1}{2h} \begin{bmatrix}
--3+2ah & 4 & -1 & 0  & 0 & 0 & 0 & 0  \\
--1 & 2ah & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & -1 & 2ah & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\vdots \\
-\cdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
-\cdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
-0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah
+-3+2ah & 4 & -1 & 0  & 0 & \cdots & 0  \\
+-1 & 2ah & 1 & 0 & 0 & \cdots & 0  \\
+0 & -1 & 2ah & 1 & 0 & \cdots & 0  \\
+\vdots & & & \ddots &  &  &\vdots \\
+0 & \cdots &  0 &  -1& 2ah& 1& 0 \\
+0 & \cdots &  0 & 0& -1& 2ah& 1 \\
+0 & \cdots &  0 & 0 & 1 & -4 & 3+2ah
 \end{bmatrix}
 }_{D^{(1)}+a\mathbb{I}}
 \underbrace{\begin{bmatrix}
@@ -945,13 +945,13 @@ In order to enforce that $u(0)= u^0 = I$, we can modify the first row of the coe
 $$ \small
  \underbrace{
   \frac{1}{2h} \begin{bmatrix}
-2h & 0 & 0 & 0  & 0 & 0 & 0 & 0  \\
--1 & 2ah & 1 & 0 & 0 & 0 & 0 & \cdots \\
-0 & -1 & 2ah & 1 & 0 & 0 & 0 & \cdots \\
-\vdots & & & \ddots &  & & &\vdots \\
-\cdots & 0 & 0 & 0 &  -1& 2ah& 1& 0 \\
-\cdots & 0 & 0& 0& 0& -1& -2ah& 1 \\
-0 & 0 & 0 & 0  & 0 & 1 & -4 & 3+2ah
+2h & 0 & 0 & 0  & 0 & \cdots & 0  \\
+-1 & 2ah & 1 & 0 & 0 & \cdots & 0  \\
+0 & -1 & 2ah & 1 & 0 & \cdots & 0  \\
+\vdots & & & \ddots &  &  &\vdots \\
+0 & \cdots &  0 &  -1& 2ah& 1& 0 \\
+0 & \cdots &  0 & 0& -1& 2ah& 1 \\
+0 & \cdots &  0 & 0 & 1 & -4 & 3+2ah
 \end{bmatrix}
 }_{A}
 \underbrace{\begin{bmatrix}
