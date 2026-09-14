@@ -1572,7 +1572,7 @@
     "href": "two-dimensional.html#derivative-matrices-in-2d",
     "title": "Two-dimensional problems",
     "section": "Derivative matrices in 2D",
-    "text": "Derivative matrices in 2D\nThe second order second derivative matrix can be written as\n\\[\nD_x^{(2)} = \\frac{1}{\\Delta x^2}\\begin{bmatrix}\n2 & -5 & 4 & -1  & 0 & 0 & 0 & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & \\cdots \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & \\cdots \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n\\vdots & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n\\vdots & 0 & 0& 0& 0& 1& -2& 1 \\\\\n0 & 0 & 0 & 0  & -1 & 4 & -5 & 2 \\\\\n\\end{bmatrix}\n\\]\nWe use \\(D^{(2)} = \\Delta x^2 D^{(2)}_x\\) for an unscaled matrix.\nHence, for \\(y\\)-direction \\(D^{(2)}_y = \\frac{1}{\\Delta y^2} D^{(2)}\\)."
+    "text": "Derivative matrices in 2D\nThe second order second derivative matrix can be written as\n\\[\nD_x^{(2)} = \\frac{1}{\\Delta x^2}\\begin{bmatrix}\n2 & -5 & 4 & -1  & 0 & 0 & \\cdots & 0  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & \\cdots & 0 \\\\\n0 & 1 & -2 & 1 & 0 & 0 & \\cdots & 0 \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n0 & \\cdots & 0 & 0 &  1& -2& 1& 0 \\\\\n0 & \\cdots & 0 & 0& 0& 1& -2& 1 \\\\\n0 & \\cdots & 0 & 0  & -1 & 4 & -5 & 2 \\\\\n\\end{bmatrix}\n\\]\nWe use \\(D^{(2)} = \\Delta x^2 D^{(2)}_x\\) for an unscaled matrix.\nHence, for \\(y\\)-direction \\(D^{(2)}_y = \\frac{1}{\\Delta y^2} D^{(2)}\\)."
   },
   {
     "objectID": "two-dimensional.html#compute-unscaled-matrix-using-scipy.sparse",
