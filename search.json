@@ -3441,7 +3441,7 @@
     "href": "postprocessing.html#lagrange-interpolation-polynomial",
     "title": "Postprocessing and Interpolation",
     "section": "Lagrange interpolation polynomial",
-    "text": "Lagrange interpolation polynomial\nWith the basis we can now compute the Lagrange interpolation polynomial\n\\[\nL(x) = \\sum_{j=0}^k u^j \\ell_j(x)\n\\]\n\n\n\ndef Lagrangefunction(u, basis):\n  \"\"\"Return Lagrange polynomial\n\n  Parameters\n  ----------\n  u : array\n    Mesh function values\n  basis : tuple of Lagrange basis functions\n    Output from Lagrangebasis\n  \"\"\"\n  f = 0\n  for j, uj in enumerate(u):\n    f += basis[j]*uj\n  return f\n\n\n\nL = Lagrangefunction(u[3:5], ell)\nxf = np.linspace(xj[3]-0.1, xj[4]+0.1, 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g')\nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
+    "text": "Lagrange interpolation polynomial\nWith the basis we can now compute the Lagrange interpolation polynomial\n\\[\nL(x) = \\sum_{j=0}^k u^j \\ell_j(x)\n\\]\n\n\n\ndef Lagrangefunction(u, basis):\n  \"\"\"Return Lagrange polynomial\n\n  Parameters\n  ----------\n  u : array\n    Mesh function values\n  basis : tuple of Lagrange basis functions\n    Output from Lagrangebasis\n  \"\"\"\n  f = 0\n  for lj, uj in zip(basis, u):\n    f += lj*uj\n  return f\n\n\n\nL = Lagrangefunction(u[3:5], ell)\nxf = np.linspace(xj[3]-0.1, xj[4]+0.1, 10)\nplt.figure(figsize=(6, 3))\nplt.plot(xj, u, 'bo')\nplt.plot(xf, sp.lambdify(x, L)(xf), 'g')\nplt.plot(0.75, L.subs(x, 0.75), 'ko')"
   },
   {
     "objectID": "postprocessing.html#we-can-choose-any-points-and-any-number-of-basis-functions",
