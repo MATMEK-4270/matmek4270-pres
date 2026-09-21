@@ -3539,21 +3539,21 @@
     "href": "postprocessing.html#numerical-midpoint-integration-tested",
     "title": "Postprocessing and Interpolation",
     "section": "Numerical midpoint integration tested",
-    "text": "Numerical midpoint integration tested\n\nN = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um*dx*dy))\n\nI(U, 1/N, 1/N)\n\nnp.float64(0.2696557024695919)\n\n\nCompared to the exact integral\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue, (y, 0, 1)), (x, 0, 1))).n())\n\n0.26995448271292816\n\n\n\nThe error norm \\(\\|u-u^{e}\\|_{L^2} = \\sqrt{I((u-u^{e})^2)}\\) is\n\nnp.sqrt(I((U-sp.lambdify((x, y), ue)(xij, yij))**2, 1/N, 1/N))\n\nnp.float64(3.1759481967064892e-09)\n\n\nwhich is very small because the Lagrange interpolator happens to be close to exact for all the midpoints for this function. It is not zero in general."
+    "text": "Numerical midpoint integration tested\n\nN = 20\nxij, yij = mesh2D(N, N, 1, 1, False)\nU = np.cos(xij)*(1-xij)*np.sin(yij)*(1-yij)\nue = sp.cos(x)*(1-x)*sp.sin(y)*(1-y)\n\ndef I(u, dx, dy):\n  um = (u[:-1, :-1]+u[1:, :-1]+u[:-1, 1:]+u[1:, 1:])/4\n  return np.sqrt(np.sum(um*dx*dy))\n\nI(U, 1/N, 1/N)\n\n0.2696557024695919\n\n\nCompared to the exact integral\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue, (y, 0, 1)), (x, 0, 1))).n())\n\n0.26995448271292816\n\n\n\nThe error norm \\(\\|u-u^{e}\\|_{L^2} = \\sqrt{I((u-u^{e})^2)}\\) is\n\nnp.sqrt(I((U-sp.lambdify((x, y), ue)(xij, yij))**2, 1/N, 1/N))\n\n3.1759481967064892e-09\n\n\nwhich is very small because the Lagrange interpolator happens to be close to exact for all the midpoints for this function. It is not zero in general."
   },
   {
     "objectID": "postprocessing.html#numerical-integration-can-also-for-example-use-the-trapezoidal-or-simpson-methods",
     "href": "postprocessing.html#numerical-integration-can-also-for-example-use-the-trapezoidal-or-simpson-methods",
     "title": "Postprocessing and Interpolation",
     "section": "Numerical integration can also, for example, use the trapezoidal or Simpson methods",
-    "text": "Numerical integration can also, for example, use the trapezoidal or Simpson methods\nTrapezoidal:\n\ndef I_trapz(u, dx, dy):\n  return np.sqrt(np.trapz(np.trapz(u**2, dx=dy, axis=1), dx=dx))\nI_trapz(U, 1/N, 1/N)\n\nnp.float64(0.09592899344305951)\n\n\nSimpson’s rule:\n\ndef I_simps(u, dx, dy):\n  from scipy.integrate import simpson as simp\n  return np.sqrt(simp(simp(u**2, dx=dy, axis=1), dx=dx))\nI_simps(U, 1/N, 1/N)\n\nnp.float64(0.09586418448463656)\n\n\nExact:\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))).n())\n\n0.09586332023451888"
+    "text": "Numerical integration can also, for example, use the trapezoidal or Simpson methods\nTrapezoidal:\n\ndef I_trapz(u, dx, dy):\n  return np.sqrt(np.trapezoid(np.trapezoid(u**2, dx=dy, axis=1), dx=dx))\nI_trapz(U, 1/N, 1/N)\n\n0.09592899344305951\n\n\nSimpson’s rule:\n\ndef I_simps(u, dx, dy):\n  from scipy.integrate import simpson as simp\n  return np.sqrt(simp(simp(u**2, dx=dy, axis=1), dx=dx))\nI_simps(U, 1/N, 1/N)\n\n0.09586418448463656\n\n\nExact:\n\nfloat(sp.sqrt(sp.integrate(sp.integrate(ue**2, (y, 0, 1)), (x, 0, 1))).n())\n\n0.09586332023451888"
   },
   {
     "objectID": "postprocessing.html#just-like-for-the-1d-case-there-is-a-simplification-for-l2-using-the-small-ell2-norm-instead",
     "href": "postprocessing.html#just-like-for-the-1d-case-there-is-a-simplification-for-l2-using-the-small-ell2-norm-instead",
     "title": "Postprocessing and Interpolation",
     "section": "Just like for the 1D case there is a simplification for \\(L^2\\) using the small \\(\\ell^2\\) norm instead",
-    "text": "Just like for the 1D case there is a simplification for \\(L^2\\) using the small \\(\\ell^2\\) norm instead\n\\[\n\\|(u-u_e)\\|_{\\ell^2} = \\sqrt{ \\Delta x \\Delta y \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} (u_{ij}-u^{e}_{ij})^2 }.\n\\]\nThis is an approximation of the numerical integration using the trapezoidal method\nImplementation:\n\ndef l2_error(u, dx, dy):\n  return np.sqrt(dx*dy*np.sum(u**2))\nl2_error(U-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)\n\nnp.float64(1.00866469481632e-17)"
+    "text": "Just like for the 1D case there is a simplification for \\(L^2\\) using the small \\(\\ell^2\\) norm instead\n\\[\n\\|(u-u_e)\\|_{\\ell^2} = \\sqrt{ \\Delta x \\Delta y \\sum_{i=0}^{N_x}\\sum_{j=0}^{N_y} (u_{ij}-u^{e}_{ij})^2 }.\n\\]\nThis is an approximation of the numerical integration using the trapezoidal method\nImplementation:\n\ndef l2_error(u, dx, dy):\n  return np.sqrt(dx*dy*np.sum(u**2))\nl2_error(U-sp.lambdify((x, y), ue)(xij, yij), 1/N, 1/N)\n\n1.00866469481632e-17"
   },
   {
     "objectID": "postprocessing.html#integration-over-boundary",
@@ -3567,14 +3567,14 @@
     "href": "postprocessing.html#our-computational-domain-is-simpler-and-boundary-integrals-are-simpler-as-well",
     "title": "Postprocessing and Interpolation",
     "section": "Our computational domain is simpler and boundary integrals are simpler as well",
-    "text": "Our computational domain is simpler and boundary integrals are simpler as well\n\n\n\n\n\n\n\n\n\n\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} u(x=L_x, y) dy\n\\]\n\nnp.trapz(U[-1], dx=1/N, axis=0)\n\nnp.float64(0.0)\n\n\nIntegrate over boundary at \\(y=L_y\\)\n\\[\n\\int_{0}^{L_x} u(x, y=L_y) dx\n\\]\n\nnp.trapz(U[:, -1], dx=1/N, axis=0)\n\nnp.float64(0.0)"
+    "text": "Our computational domain is simpler and boundary integrals are simpler as well\n\n\n\n\n\n\n\n\n\n\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} u(x=L_x, y) dy\n\\]\n\nnp.trapz(U[-1], dx=1/N, axis=0)\n\n0.0\n\n\nIntegrate over boundary at \\(y=L_y\\)\n\\[\n\\int_{0}^{L_x} u(x, y=L_y) dx\n\\]\n\nnp.trapz(U[:, -1], dx=1/N, axis=0)\n\n0.0"
   },
   {
     "objectID": "postprocessing.html#friction-requires-derivatives",
     "href": "postprocessing.html#friction-requires-derivatives",
     "title": "Postprocessing and Interpolation",
     "section": "Friction requires derivatives",
-    "text": "Friction requires derivatives\n\n\n\n\n\n\n\n\n\n\n\nGradient in normal direction\n\\[\n\\int_{\\Gamma} \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\n\\]\n\nIntegrate gradient at \\(y=0\\)\n\\[\n\\int_{0}^{L_x} \\frac{\\partial u}{\\partial y}(x, y=0) dx\n\\]\n\ndudy = (N/2)*(-3*U[:, 0] + 4*U[:, 1] - U[:, 2])\nnp.trapz(dudy, dx=1/N)\n\nnp.float64(0.4601188642377852)\n\n\n\ndudye = sp.diff(ue, y)\nfloat(sp.integrate(dudye.subs(y, 0), (x, 0, 1)).n())\n\n0.4596976941318603\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} \\frac{\\partial u}{\\partial x}(x=L_x, y) dy\n\\]\n\ndudx = (N/2)*(3*U[-1] - 4*U[-2] + U[-3])\nnp.trapz(dudx, dx=1/N)\n\nnp.float64(-0.08567622273572727)"
+    "text": "Friction requires derivatives\n\n\n\n\n\n\n\n\n\n\n\nGradient in normal direction\n\\[\n\\int_{\\Gamma} \\nabla u \\cdot \\boldsymbol{n} d\\Gamma\n\\]\n\nIntegrate gradient at \\(y=0\\)\n\\[\n\\int_{0}^{L_x} \\frac{\\partial u}{\\partial y}(x, y=0) dx\n\\]\n\ndudy = (N/2)*(-3*U[:, 0] + 4*U[:, 1] - U[:, 2])\nnp.trapz(dudy, dx=1/N)\n\n0.4601188642377852\n\n\n\ndudye = sp.diff(ue, y)\nfloat(sp.integrate(dudye.subs(y, 0), (x, 0, 1)).n())\n\n0.4596976941318603\n\n\nIntegrate over boundary at \\(x=L_x\\)\n\\[\n\\int_{0}^{L_y} \\frac{\\partial u}{\\partial x}(x=L_x, y) dy\n\\]\n\ndudx = (N/2)*(3*U[-1] - 4*U[-2] + U[-3])\nnp.trapz(dudx, dx=1/N)\n\n-0.08567622273572727"
   },
   {
     "objectID": "postprocessing.html#two-dimensional-wave-equation-1",
