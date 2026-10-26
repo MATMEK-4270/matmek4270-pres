@@ -220,7 +220,7 @@ u_N(x) = \sum_{j=0}^N \hat{u}_j \psi_j(x)
 a_{ij} = (\psi_j, \psi_i) = \sum_{e=0}^{N_e-1} \int_{\Omega^{(e)}} \psi_j \psi_i d\Omega = \sum_{e=0}^{N_e-1} A_e
 \]</span></li>
 <li class="fragment">It is very common to use Lagrange polynomials for basis functions</li>
-<li class="fragment">PDEs are normally not solved using tensor products in multiple dimensions</li>
+<li class="fragment">PDEs are normally <strong>not</strong> solved using tensor products in multiple dimensions</li>
 </ul>
 </section>
 <section id="solving-pdes-with-fem" class="slide level2 smaller">
@@ -319,7 +319,7 @@ u(L) = u_N(x_N) = \sum_{j=0}^N \hat{u}_j \psi_j(x_N) = \psi_N(x_N) \hat{u}_N = \
 \begin{bmatrix}
 1 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\
 s_{10} &amp; s_{11}&amp; s_{12} &amp; \cdots &amp; s_{1N} \\
-\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \cdots \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 s_{N-1, 0} &amp; s_{N-1, 1}&amp; s_{N-1, 2}&amp; \cdots &amp; s_{N-1,N} \\
 0 &amp; \cdots &amp; 0 &amp; 0 &amp; 1
 \end{bmatrix}
