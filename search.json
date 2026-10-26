@@ -3925,5 +3925,12 @@
     "title": "Function approximation by the finite element method",
     "section": "Summary",
     "text": "Summary\n\nThe finite element method (FEM) is a variational method using local basis functions.\nThe FEM uses the same Galerkin method as the methods using global basis functions.\nThe FEM is assembled by running over all elements and assembling local matrices and vectors that are subsequently added to global matrices and vectors.\nSince all assembly work is performed elementwise, the FEM is very well suited for unstructured meshes."
+  },
+  {
+    "objectID": "fempdes.html#assemble-right-hand-side-lecture-10-and-solve",
+    "href": "fempdes.html#assemble-right-hand-side-lecture-10-and-solve",
+    "title": "Solving PDEs with the FEM",
+    "section": "Assemble right hand side (lecture 10) and solve",
+    "text": "Assemble right hand side (lecture 10) and solve\n\nue = sp.besselj(0, x)\nf = ue.diff(x, 2) + alpha*ue\ndef assemble_b(u, xj, d=1):\n    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)\n    N = len(xj)-1\n    b = np.zeros(N+1)\n    for elem in range(N//d):\n        hj = get_element_length(xj, elem, d=d)\n        us = sp.lambdify(x, map_u_true_domain(u, xj, elem, d=d))\n        integ = lambda xj, r: us(xj)*l[r](xj)\n        for r in range(d+1):\n            b[d*elem+r] += hj/2*quad(integ, -1, 1, args=(r,))[0]\n    return b\nb = assemble_b(f, xj, d=d)\nb[0], b[-1] = ue.subs(x, 0), ue.subs(x, 10)    # specify u(0) and u(L)\nA = -S+alpha*M\nA[0, :] = 0; A[0, 0] = 1    # ident first row for bc at u(0)\nA[-1, :] = 0; A[-1, -1] = 1 # ident last row for bc at u(L)\nuh = np.linalg.solve(A, b)"
   }
 ]

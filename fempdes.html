@@ -633,8 +633,8 @@ u''+\alpha u = f, \quad x \in (0, 10)
 (-S + \alpha M)\boldsymbol{\hat{u}} = \boldsymbol{b}
 \]</span></p>
 </section>
-<section id="assemble-right-hand-side-and-solve" class="slide level2 smaller">
-<h2>Assemble right hand side and solve</h2>
+<section id="assemble-right-hand-side-lecture-10-and-solve" class="slide level2 smaller">
+<h2>Assemble right hand side (lecture 10) and solve</h2>
 <div id="91329a21" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>ue <span class="op">=</span> sp.besselj(<span class="dv">0</span>, x)</span>
 <span id="cb12-2"><a></a>f <span class="op">=</span> ue.diff(x, <span class="dv">2</span>) <span class="op">+</span> alpha<span class="op">*</span>ue</span>
