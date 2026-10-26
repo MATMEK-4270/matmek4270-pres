@@ -898,8 +898,8 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 \text{2D Cartesian mesh: } \quad d\Omega = dxdy, \quad d\tilde{\Omega} = dXdY, \quad \det J = \frac{\partial x}{\partial X}\frac{\partial y}{\partial Y} - \frac{\partial x}{\partial Y}\frac{\partial y}{\partial X}
 \]</span></p>
 </section>
-<section id="stiffness-matrix" class="slide level2 smaller">
-<h2>Stiffness matrix</h2>
+<section id="element-stiffness-matrix-1" class="slide level2 smaller">
+<h2>Element stiffness matrix</h2>
 <p><span class="math display">\[
 \int_{\Omega^{(e)}} \nabla \psi_j(\boldsymbol{x}) \cdot \nabla \psi_i(\boldsymbol{x}) \, d\Omega
 \]</span></p>
@@ -915,8 +915,8 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 \frac{\partial \tilde{\psi}_r}{\partial X_n}\frac{\partial X_n}{\partial x_m} = J_{mn}^{-1}  \frac{\partial \tilde{\psi}_r}{\partial X_n}
 \]</span></p>
 </section>
-<section id="stiffness-matrix-continued" class="slide level2 smaller">
-<h2>Stiffness matrix continued</h2>
+<section id="element-stiffness-matrix-continued" class="slide level2 smaller">
+<h2>Element stiffness matrix continued</h2>
 <p>We can also define this on matrix form using notation</p>
 <p><span class="math display">\[
 \nabla  u= \begin{bmatrix} \frac{\partial u}{\partial x} \\[0.1cm]
@@ -931,7 +931,7 @@ u_N(x, y, z) = \sum_{j=0}^N \hat{u}_j \psi_j(x, y, z)
 <p><span class="math display">\[
 \nabla \psi_{q(e, r)} = J^{-1} \cdot \nabla_X \tilde{\psi}_r
 \]</span></p>
-<p>and the stiffness matrix</p>
+<p>and the element stiffness matrix</p>
 <p><span class="math display">\[
 \boxed{
 \int_{\Omega^{(e)}} \nabla \psi_{q(e, s)}(\boldsymbol{x}) \cdot \nabla \psi_{q(e, r)}(\boldsymbol{x}) \, d\Omega = \int_{\tilde{\Omega}} \left(J^{-1} \cdot \nabla_X \tilde{\psi}_s(\boldsymbol{X})\right) \cdot \left(J^{-1} \cdot \nabla_X \tilde{\psi}_r(\boldsymbol{X})\right) \, \text{det}J\, d\tilde{\Omega}}

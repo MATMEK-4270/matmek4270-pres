@@ -3932,5 +3932,19 @@
     "title": "Solving PDEs with the FEM",
     "section": "Assemble right hand side (lecture 10) and solve",
     "text": "Assemble right hand side (lecture 10) and solve\n\nue = sp.besselj(0, x)\nf = ue.diff(x, 2) + alpha*ue\ndef assemble_b(u, xj, d=1):\n    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)\n    N = len(xj)-1\n    b = np.zeros(N+1)\n    for elem in range(N//d):\n        hj = get_element_length(xj, elem, d=d)\n        us = sp.lambdify(x, map_u_true_domain(u, xj, elem, d=d))\n        integ = lambda xj, r: us(xj)*l[r](xj)\n        for r in range(d+1):\n            b[d*elem+r] += hj/2*quad(integ, -1, 1, args=(r,))[0]\n    return b\nb = assemble_b(f, xj, d=d)\nb[0], b[-1] = ue.subs(x, 0), ue.subs(x, 10)    # specify u(0) and u(L)\nA = -S+alpha*M\nA[0, :] = 0; A[0, 0] = 1    # ident first row for bc at u(0)\nA[-1, :] = 0; A[-1, -1] = 1 # ident last row for bc at u(L)\nuh = np.linalg.solve(A, b)"
+  },
+  {
+    "objectID": "fempdes.html#element-stiffness-matrix-1",
+    "href": "fempdes.html#element-stiffness-matrix-1",
+    "title": "Solving PDEs with the FEM",
+    "section": "Element stiffness matrix",
+    "text": "Element stiffness matrix\n\\[\n\\int_{\\Omega^{(e)}} \\nabla \\psi_j(\\boldsymbol{x}) \\cdot \\nabla \\psi_i(\\boldsymbol{x}) \\, d\\Omega\n\\]\nThe gradient of \\(\\psi_j\\) on index form is \\[\n(\\nabla \\psi_j)_m = \\frac{\\partial \\psi_j}{ \\partial x_m}\n\\]\nand with transformation to the reference domain (with summation on repeated indices)\n\\[\n\\frac{\\partial \\psi_{q(e, r)}(\\boldsymbol{x})}{\\partial x_m} =\\frac{\\partial \\tilde{\\psi}_r(\\boldsymbol{X})}{\\partial x_m} = \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m}\n\\]\nUsing the inverse Jacobian we can write the last term as\n\\[\n\\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m} = J_{mn}^{-1}  \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\n\\]"
+  },
+  {
+    "objectID": "fempdes.html#element-stiffness-matrix-continued",
+    "href": "fempdes.html#element-stiffness-matrix-continued",
+    "title": "Solving PDEs with the FEM",
+    "section": "Element stiffness matrix continued",
+    "text": "Element stiffness matrix continued\nWe can also define this on matrix form using notation\n\\[\n\\nabla  u= \\begin{bmatrix} \\frac{\\partial u}{\\partial x} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial z}\n\\end{bmatrix} \\quad \\text{and} \\quad\n\\nabla_X  u = \\begin{bmatrix} \\frac{\\partial u}{\\partial X} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Z} \\end{bmatrix}\n\\]\nWe then get\n\\[\n\\nabla \\psi_{q(e, r)} = J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r\n\\]\nand the element stiffness matrix\n\\[\n\\boxed{\n\\int_{\\Omega^{(e)}} \\nabla \\psi_{q(e, s)}(\\boldsymbol{x}) \\cdot \\nabla \\psi_{q(e, r)}(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_s(\\boldsymbol{X})\\right) \\cdot \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r(\\boldsymbol{X})\\right) \\, \\text{det}J\\, d\\tilde{\\Omega}}\n\\]"
   }
 ]
