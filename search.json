@@ -112,11 +112,11 @@
     "text": "Solve any linear differential equation\nFor example the Helmholtz equation: \\[\nu''+\\alpha u = f, \\quad x \\in (0, 10)\n\\]\nFind \\(u_N \\in V_N\\) such that\n\\[\n-(u'_N, v') + \\alpha (u_N, v) = (f, v) - [u'_Nv]_{x=0}^{x=10}, \\quad \\forall \\, v \\in V_N\n\\]\nAssume manufactured solution \\(u(x)=J_0(x)\\), where \\(J_0(x)\\) is the 0 order Bessel function of the first kind. Use Dirichlet boundary conditions, \\(u(0)=J_0(0)\\) and \\(u(10)=J_0(10)\\), and thus neglect \\([u'_Nv]_{x=0}^{x=10}\\).\n\nN = 20\nxj = np.linspace(0, 10, N+1)\nd = 1\nS = assemble_q(xj, d=d, m=1, n=1)\nM = assemble_q(xj, d=d, m=0, n=0)\nalpha = 10\n\n\\[\n(-S + \\alpha M)\\boldsymbol{\\hat{u}} = \\boldsymbol{b}\n\\]"
   },
   {
-    "objectID": "fempdes.html#assemble-right-hand-side-and-solve",
-    "href": "fempdes.html#assemble-right-hand-side-and-solve",
+    "objectID": "fempdes.html#assemble-right-hand-side-lecture-10-and-solve",
+    "href": "fempdes.html#assemble-right-hand-side-lecture-10-and-solve",
     "title": "Solving PDEs with the FEM",
-    "section": "Assemble right hand side and solve",
-    "text": "Assemble right hand side and solve\n\nue = sp.besselj(0, x)\nf = ue.diff(x, 2) + alpha*ue\ndef assemble_b(u, xj, d=1):\n    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)\n    N = len(xj)-1\n    b = np.zeros(N+1)\n    for elem in range(N//d):\n        hj = get_element_length(xj, elem, d=d)\n        us = sp.lambdify(x, map_u_true_domain(u, xj, elem, d=d))\n        integ = lambda xj, r: us(xj)*l[r](xj)\n        for r in range(d+1):\n            b[d*elem+r] += hj/2*quad(integ, -1, 1, args=(r,))[0]\n    return b\nb = assemble_b(f, xj, d=d)\nb[0], b[-1] = ue.subs(x, 0), ue.subs(x, 10)    # specify u(0) and u(L)\nA = -S+alpha*M\nA[0, :] = 0; A[0, 0] = 1    # ident first row for bc at u(0)\nA[-1, :] = 0; A[-1, -1] = 1 # ident last row for bc at u(L)\nuh = np.linalg.solve(A, b)"
+    "section": "Assemble right hand side (lecture 10) and solve",
+    "text": "Assemble right hand side (lecture 10) and solve\n\nue = sp.besselj(0, x)\nf = ue.diff(x, 2) + alpha*ue\ndef assemble_b(u, xj, d=1):\n    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)\n    N = len(xj)-1\n    b = np.zeros(N+1)\n    for elem in range(N//d):\n        hj = get_element_length(xj, elem, d=d)\n        us = sp.lambdify(x, map_u_true_domain(u, xj, elem, d=d))\n        integ = lambda xj, r: us(xj)*l[r](xj)\n        for r in range(d+1):\n            b[d*elem+r] += hj/2*quad(integ, -1, 1, args=(r,))[0]\n    return b\nb = assemble_b(f, xj, d=d)\nb[0], b[-1] = ue.subs(x, 0), ue.subs(x, 10)    # specify u(0) and u(L)\nA = -S+alpha*M\nA[0, :] = 0; A[0, 0] = 1    # ident first row for bc at u(0)\nA[-1, :] = 0; A[-1, -1] = 1 # ident last row for bc at u(L)\nuh = np.linalg.solve(A, b)"
   },
   {
     "objectID": "fempdes.html#use-neumann-boundary-conditions-instead",
@@ -196,18 +196,18 @@
     "text": "Assembly on the reference domain\n\n\n\n\n\n\n\n\n\n\\[ \\small\n\\int_{\\Omega^{(e)}} \\psi_j(\\boldsymbol{x}) \\cdot \\psi_i(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\tilde{\\psi}_s(\\boldsymbol{X}) \\cdot \\tilde{\\psi}_r(\\boldsymbol{X}) \\det J d\\tilde{\\Omega}\n\\] We here use the Jacobian \\(J\\) of the transformation, defined such that (where \\((m, n)\\) runs over the number of coordinates, 2 in 2D and 3 in 3D) \\[ \\small\n(J)_{mn} = \\frac{\\partial x_m}{\\partial X_n}, \\quad (J^{-1})_{mn} = \\frac{\\partial X_n}{\\partial x_m}\n\\] \\[\n\\text{2D Cartesian mesh: } \\quad d\\Omega = dxdy, \\quad d\\tilde{\\Omega} = dXdY, \\quad \\det J = \\frac{\\partial x}{\\partial X}\\frac{\\partial y}{\\partial Y} - \\frac{\\partial x}{\\partial Y}\\frac{\\partial y}{\\partial X}\n\\]"
   },
   {
-    "objectID": "fempdes.html#stiffness-matrix",
-    "href": "fempdes.html#stiffness-matrix",
+    "objectID": "fempdes.html#element-stiffness-matrix-1",
+    "href": "fempdes.html#element-stiffness-matrix-1",
     "title": "Solving PDEs with the FEM",
-    "section": "Stiffness matrix",
-    "text": "Stiffness matrix\n\\[\n\\int_{\\Omega^{(e)}} \\nabla \\psi_j(\\boldsymbol{x}) \\cdot \\nabla \\psi_i(\\boldsymbol{x}) \\, d\\Omega\n\\]\nThe gradient of \\(\\psi_j\\) on index form is \\[\n(\\nabla \\psi_j)_m = \\frac{\\partial \\psi_j}{ \\partial x_m}\n\\]\nand with transformation to the reference domain (with summation on repeated indices)\n\\[\n\\frac{\\partial \\psi_{q(e, r)}(\\boldsymbol{x})}{\\partial x_m} =\\frac{\\partial \\tilde{\\psi}_r(\\boldsymbol{X})}{\\partial x_m} = \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m}\n\\]\nUsing the inverse Jacobian we can write the last term as\n\\[\n\\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m} = J_{mn}^{-1}  \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\n\\]"
+    "section": "Element stiffness matrix",
+    "text": "Element stiffness matrix\n\\[\n\\int_{\\Omega^{(e)}} \\nabla \\psi_j(\\boldsymbol{x}) \\cdot \\nabla \\psi_i(\\boldsymbol{x}) \\, d\\Omega\n\\]\nThe gradient of \\(\\psi_j\\) on index form is \\[\n(\\nabla \\psi_j)_m = \\frac{\\partial \\psi_j}{ \\partial x_m}\n\\]\nand with transformation to the reference domain (with summation on repeated indices)\n\\[\n\\frac{\\partial \\psi_{q(e, r)}(\\boldsymbol{x})}{\\partial x_m} =\\frac{\\partial \\tilde{\\psi}_r(\\boldsymbol{X})}{\\partial x_m} = \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m}\n\\]\nUsing the inverse Jacobian we can write the last term as\n\\[\n\\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m} = J_{mn}^{-1}  \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\n\\]"
   },
   {
-    "objectID": "fempdes.html#stiffness-matrix-continued",
-    "href": "fempdes.html#stiffness-matrix-continued",
+    "objectID": "fempdes.html#element-stiffness-matrix-continued",
+    "href": "fempdes.html#element-stiffness-matrix-continued",
     "title": "Solving PDEs with the FEM",
-    "section": "Stiffness matrix continued",
-    "text": "Stiffness matrix continued\nWe can also define this on matrix form using notation\n\\[\n\\nabla  u= \\begin{bmatrix} \\frac{\\partial u}{\\partial x} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial z}\n\\end{bmatrix} \\quad \\text{and} \\quad\n\\nabla_X  u = \\begin{bmatrix} \\frac{\\partial u}{\\partial X} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Z} \\end{bmatrix}\n\\]\nWe then get\n\\[\n\\nabla \\psi_{q(e, r)} = J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r\n\\]\nand the stiffness matrix\n\\[\n\\boxed{\n\\int_{\\Omega^{(e)}} \\nabla \\psi_{q(e, s)}(\\boldsymbol{x}) \\cdot \\nabla \\psi_{q(e, r)}(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_s(\\boldsymbol{X})\\right) \\cdot \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r(\\boldsymbol{X})\\right) \\, \\text{det}J\\, d\\tilde{\\Omega}}\n\\]"
+    "section": "Element stiffness matrix continued",
+    "text": "Element stiffness matrix continued\nWe can also define this on matrix form using notation\n\\[\n\\nabla  u= \\begin{bmatrix} \\frac{\\partial u}{\\partial x} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial z}\n\\end{bmatrix} \\quad \\text{and} \\quad\n\\nabla_X  u = \\begin{bmatrix} \\frac{\\partial u}{\\partial X} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Z} \\end{bmatrix}\n\\]\nWe then get\n\\[\n\\nabla \\psi_{q(e, r)} = J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r\n\\]\nand the element stiffness matrix\n\\[\n\\boxed{\n\\int_{\\Omega^{(e)}} \\nabla \\psi_{q(e, s)}(\\boldsymbol{x}) \\cdot \\nabla \\psi_{q(e, r)}(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_s(\\boldsymbol{X})\\right) \\cdot \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r(\\boldsymbol{X})\\right) \\, \\text{det}J\\, d\\tilde{\\Omega}}\n\\]"
   },
   {
     "objectID": "fempdes.html#implementation-2",
@@ -896,11 +896,11 @@
     "text": "Recap - stability of the diffusion equation\n\\[\n\\frac{\\partial u(x, t)}{\\partial t} = \\frac{\\partial^2 u(x, t)}{\\partial x^2}\n\\]\nUse forward Euler in time and central difference in space\n\\[\nu_j^{n+1} - u_j^n = \\frac{\\Delta t}{\\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})\n\\]\nwhere \\(u^n_j = u(j\\Delta x, n\\Delta t)\\) and \\(x_j=j\\Delta x\\) and \\(t_n=n\\Delta t\\). Make the ansatz as always\n\\[\nu^{n+1}_j = g u^{n}_j \\rightarrow u^{n}_j = g^n u^0_j\n\\]\nand let the initial condition be a periodic Fourier wave with wavenumber \\(k\\)\n\\[\nu^0_j = e^{\\hat{\\imath}k x_j}\n\\]\nwhere \\(\\hat{\\imath}=\\sqrt{-1}\\)."
   },
   {
-    "objectID": "timevar.html#write-the-equation-in-matrix-form",
-    "href": "timevar.html#write-the-equation-in-matrix-form",
+    "objectID": "timevar.html#write-the-equation-on-matrix-form",
+    "href": "timevar.html#write-the-equation-on-matrix-form",
     "title": "Time-dependent variational methods",
-    "section": "Write the equation in matrix form",
-    "text": "Write the equation in matrix form\n\\[\nu_j^{n+1} - u_j^n = \\frac{\\Delta t}{\\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})\n\\]\n\\[\n\\boldsymbol{u}^n = (u^n_j)_{j=0}^N\n\\]\n\\[\n\\boldsymbol{u}^{n+1}-\\boldsymbol{u}^n = \\frac{\\Delta t}{\\Delta x^2}\\tilde{D}^{(2)} \\boldsymbol{u}^n\n\\]\n\\[\nD^{(2)} = \\frac{1}{\\Delta x^2} \\tilde{D}^{(2)} = \\frac{1}{\\Delta x^2} \\underbrace{\\begin{bmatrix}\n-2 & 1 & 0 & 0  & 0 & 0 & 0 & 1  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & 0 \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & 0 \\\\\n\\vdots & & & \\ddots &  & & &\\cdots \\\\\n0 & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n0 & 0 & 0& 0& 0& 1& -2& 1 \\\\\n1 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\\\\n\\end{bmatrix}}_{\\tilde{D}^{(2)}}\n\\]"
+    "section": "Write the equation on matrix form",
+    "text": "Write the equation on matrix form\n\\[\nu_j^{n+1} - u_j^n = \\frac{\\Delta t}{\\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})\n\\]\n\\[\n\\boldsymbol{u}^n = (u^n_j)_{j=0}^N\n\\]\n\\[\n\\boldsymbol{u}^{n+1}-\\boldsymbol{u}^n = \\frac{\\Delta t}{\\Delta x^2}\\tilde{D}^{(2)} \\boldsymbol{u}^n\n\\]\n\\[\nD^{(2)} = \\frac{1}{\\Delta x^2} \\tilde{D}^{(2)} = \\frac{1}{\\Delta x^2} \\underbrace{\\begin{bmatrix}\n-2 & 1 & 0 & 0  & 0 & 0 & 0 & 1  \\\\\n1 & -2 & 1 & 0 & 0 & 0 & 0 & 0 \\\\\n0 & 1 & -2 & 1 & 0 & 0 & 0 & 0 \\\\\n\\vdots & & & \\ddots &  & & &\\vdots \\\\\n0 & 0 & 0 & 0 &  1& -2& 1& 0 \\\\\n0 & 0 & 0& 0& 0& 1& -2& 1 \\\\\n1 & 0 & 0 & 0  & 0 & 0 & 1 & -2 \\\\\n\\end{bmatrix}}_{\\tilde{D}^{(2)}}\n\\]"
   },
   {
     "objectID": "timevar.html#find-the-amplification-factor",
@@ -949,7 +949,7 @@
     "href": "timevar.html#derive-the-linear-algebra-form",
     "title": "Time-dependent variational methods",
     "section": "Derive the linear algebra form",
-    "text": "Derive the linear algebra form\nInsert for \\(u^0_N = \\sum_{j=0}^N \\hat{u}^0_j \\psi_j\\) and \\(v=\\psi_i\\) to obtain\n\\[\ng \\sum_{j=0}^N \\left(\\psi_j, \\psi_i \\right) \\hat{u}^0_j = \\sum_{j=0}^N \\left(\\psi_j, \\psi_i\\right)\\hat{u}^0_j + \\Delta t \\sum_{j=0}^N\\left(\\mathcal{L}(\\psi_j), \\psi_i\\right) \\hat{u}^0_j\n\\]\nIn matrix form this is\n\\[\ng A \\boldsymbol{\\hat{u}}^0 = A \\boldsymbol{\\hat{u}}^0 + \\Delta t M \\boldsymbol{\\hat{u}}^0\n\\]\nwhere \\(a_{ij}=(\\psi_j, \\psi_i)\\) and \\(m_{ij} = \\left( \\mathcal{L}(\\psi_j), \\psi_i\\right)\\). Multiply from the left by \\(A^{-1}\\) to obtain\n\\[\ng \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0 + \\Delta t A^{-1}M \\boldsymbol{\\hat{u}}^0\n\\]\n\nCompute the eigenvalues \\(\\lambda\\) of the matrix \\(H = A^{-1}M\\) such that \\(H \\boldsymbol{\\hat{u}}^0 = \\lambda \\boldsymbol{\\hat{u}}^0\\) and\n\\[\ng \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0 + \\lambda \\Delta t \\boldsymbol{\\hat{u}}^0 \\Rightarrow \\boxed{g = 1 + \\lambda \\Delta t}\n\\]\n\\[\n\\text{Stability limit:}\\quad |g| = |1+\\lambda \\Delta t| \\le 1\n\\]"
+    "text": "Derive the linear algebra form\nInsert for \\(u^0_N = \\sum_{j=0}^N \\hat{u}^0_j \\psi_j\\) and \\(v=\\psi_i\\) to obtain\n\\[\ng \\sum_{j=0}^N \\left(\\psi_j, \\psi_i \\right) \\hat{u}^0_j = \\sum_{j=0}^N \\left(\\psi_j, \\psi_i\\right)\\hat{u}^0_j + \\Delta t \\sum_{j=0}^N\\left(\\mathcal{L}(\\psi_j), \\psi_i\\right) \\hat{u}^0_j\n\\]\nOn matrix form this is\n\\[\ng A \\boldsymbol{\\hat{u}}^0 = A \\boldsymbol{\\hat{u}}^0 + \\Delta t M \\boldsymbol{\\hat{u}}^0\n\\]\nwhere \\(a_{ij}=(\\psi_j, \\psi_i)\\) and \\(m_{ij} = \\left( \\mathcal{L}(\\psi_j), \\psi_i\\right)\\). Multiply from the left by \\(A^{-1}\\) to obtain\n\\[\ng \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0 + \\Delta t A^{-1}M \\boldsymbol{\\hat{u}}^0\n\\]\n\nCompute the eigenvalues \\(\\lambda\\) of the matrix \\(H = A^{-1}M\\) such that \\(H \\boldsymbol{\\hat{u}}^0 = \\lambda \\boldsymbol{\\hat{u}}^0\\) and\n\\[\ng \\boldsymbol{\\hat{u}}^0 = \\boldsymbol{\\hat{u}}^0 + \\lambda \\Delta t \\boldsymbol{\\hat{u}}^0 \\Rightarrow \\boxed{g = 1 + \\lambda \\Delta t}\n\\]\n\\[\n\\text{Stability limit:}\\quad |g| = |1+\\lambda \\Delta t| \\le 1\n\\]"
   },
   {
     "objectID": "timevar.html#complete-worked-example-the-diffusion-equation",
@@ -1383,7 +1383,7 @@
     "href": "chebyshev.html#slow-chebyshev-transforms-implementation",
     "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
     "section": "Slow Chebyshev transforms implementation",
-    "text": "Slow Chebyshev transforms implementation\n\nN = 10\nT = np.polynomial.chebyshev.chebvander(np.cos(np.arange(N)*np.pi/(N-1)), N)\nuhat = np.random.random(N+1)\nu = T @ uhat\nprint(u)\n\n[ 4.64284178 -0.43856959  1.47038167 -0.56337988  0.69346913 -0.22584404\n  0.15285093  0.23987647  0.73757497  1.61868196]\n\n\nSlow because you use \\(\\mathcal{O}(N^2)\\) floating point operations and memory demanding because you need a matrix \\(\\boldsymbol{T} \\in \\mathbb{R}^{(N+1)\\times (N+1)}\\).\nLets describe a faster way to compute \\(\\boldsymbol{u}=(u_N(x_i))_{i=0}^N\\) from \\(\\boldsymbol{\\hat{u}}=(\\hat{u}_i)_{i=0}^N\\)"
+    "text": "Slow Chebyshev transforms implementation\n\nN = 10\nT = np.polynomial.chebyshev.chebvander(np.cos(np.arange(N)*np.pi/(N-1)), N)\nuhat = np.random.random(N+1)\nu = T @ uhat\nprint(u)\n\n[ 7.28578813 -0.2468443   3.17271976 -1.6120857   0.61068047  0.81130778\n  0.68691309  1.19123119  0.29159973  0.84590396]\n\n\nSlow because you use \\(\\mathcal{O}(N^2)\\) floating point operations and memory demanding because you need a matrix \\(\\boldsymbol{T} \\in \\mathbb{R}^{(N+1)\\times (N+1)}\\).\nLets describe a faster way to compute \\(\\boldsymbol{u}=(u_N(x_i))_{i=0}^N\\) from \\(\\boldsymbol{\\hat{u}}=(\\hat{u}_i)_{i=0}^N\\)"
   },
   {
     "objectID": "chebyshev.html#fast-cosine-transform",
@@ -1411,7 +1411,7 @@
     "href": "chebyshev.html#fast-implementation",
     "title": "Function approximation with Chebyshev polynomials and in 2 dimensions",
     "section": "Fast implementation",
-    "text": "Fast implementation\n\n\n\\[\n\\boldsymbol{u} = \\frac{DCT^1(\\boldsymbol{\\hat{u}}) + \\hat{u}_0 + I_m \\hat{u}_N}{2}\n\\]\nwhere\n\\[\nI_m = ((-1)^{i})_{i=0}^N\n\\]\n\n\nimport scipy\n\ndef evaluate_cheb_1(uhat):\n  N = len(uhat)\n  uj = scipy.fft.dct(uhat, type=1)\n  uj += uhat[0]\n  uj[::2] += uhat[-1]\n  uj[1::2] -= uhat[-1]\n  uj *= 0.5\n  return uj\n\nN = 1000\nxi = np.cos(np.arange(N+1)*np.pi/N)\nT = np.polynomial.chebyshev.chebvander(xi, N)\nuhat = np.ones(N+1)\nuj = T @ uhat\nuj_fast = evaluate_cheb_1(uhat)\nassert np.allclose(uj, uj_fast)\n\n\n\n\n\nTiming of regular transform:\n\n%timeit -q -o -n 10 uj = T @ uhat\n\n&lt;TimeitResult : 147 μs ± 47 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;\n\n\n\nTiming of fast transform:\n\n%timeit -q -o -n 10 uj_fast = evaluate_cheb_1(uhat)\n\n&lt;TimeitResult : 20.7 μs ± 17.7 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;"
+    "text": "Fast implementation\n\n\n\\[\n\\boldsymbol{u} = \\frac{DCT^1(\\boldsymbol{\\hat{u}}) + \\hat{u}_0 + I_m \\hat{u}_N}{2}\n\\]\nwhere\n\\[\nI_m = ((-1)^{i})_{i=0}^N\n\\]\n\n\nimport scipy\n\ndef evaluate_cheb_1(uhat):\n  N = len(uhat)\n  uj = scipy.fft.dct(uhat, type=1)\n  uj += uhat[0]\n  uj[::2] += uhat[-1]\n  uj[1::2] -= uhat[-1]\n  uj *= 0.5\n  return uj\n\nN = 1000\nxi = np.cos(np.arange(N+1)*np.pi/N)\nT = np.polynomial.chebyshev.chebvander(xi, N)\nuhat = np.ones(N+1)\nuj = T @ uhat\nuj_fast = evaluate_cheb_1(uhat)\nassert np.allclose(uj, uj_fast)\n\n\n\n\n\nTiming of regular transform:\n\n%timeit -q -o -n 10 uj = T @ uhat\n\n&lt;TimeitResult : 140 μs ± 34.3 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;\n\n\n\nTiming of fast transform:\n\n%timeit -q -o -n 10 uj_fast = evaluate_cheb_1(uhat)\n\n&lt;TimeitResult : 18.4 μs ± 15.5 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)&gt;"
   },
   {
     "objectID": "two-dimensional.html#important-topics-todays-lecture",
@@ -2111,21 +2111,21 @@
     "href": "intro.html#why-vectorization-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Why vectorization? Timings",
-    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I\n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.39 μs ± 130 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 3.63 μs ± 1.35 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 11"
+    "text": "Why vectorization? Timings\n\ndef f0(u, I, theta, a, dt):\n    u[0] = I\n    u[1:] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)\n    u[:] = np.cumprod(u)\n\ndef f1(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nLets try some timings:\n\n%timeit -q -o -n 1000 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.38 μs ± 78.2 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\n%timeit -q -o -n 1000 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 2.06 μs ± 123 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)&gt;\n\n\n\nHmm. Not really what’s expected. Why? Because the array u is really short! Lets try a longer array\n\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 11"
   },
   {
     "objectID": "intro.html#longer-array-timings",
     "href": "intro.html#longer-array-timings",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Longer array timings",
-    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.74 μs ± 95 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 20.1 μs ± 905 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 5.35 μs ± 1.4 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 202 μs ± 3.14 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
+    "text": "Longer array timings\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 101\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.64 μs ± 83.8 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 19.6 μs ± 930 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nEven longer array:\n\ndt = dt/10\nu, t = solver(I, a, T, dt, theta)\nprint(f\"Length of u = {u.shape[0]}\")\n\nLength of u = 1001\n\n\n\n%timeit -q -o -n 100 f0(u, I, theta, a, dt)\n\n&lt;TimeitResult : 4.18 μs ± 1.23 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n%timeit -q -o -n 100 f1(u, I, theta, a, dt)\n\n&lt;TimeitResult : 197 μs ± 3.68 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nVectorized code takes the same time! Only overhead costs, not the actual computation."
   },
   {
     "objectID": "intro.html#what-else-is-there-numba",
     "href": "intro.html#what-else-is-there-numba",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "What else is there? Numba",
-    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 275 μs ± 671 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.15 μs ± 7.5 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
+    "text": "What else is there? Numba\n\nimport numba as nb\n@nb.jit\ndef f2(u,  I, theta, a, dt):\n    u[0] = I\n    for n in range(0, len(u)-1):\n        u[n+1] = (1 - (1-theta)*a*dt)/(1 + theta*dt*a)*u[n]\n\nTime it once\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 260 μs ± 635 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\nSlow because the code needs to be compiled. Try again\n\n%timeit -q -o -n 100 f2(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.16 μs ± 11.3 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nThat is even faster than the vectorized code!"
   },
   {
     "objectID": "intro.html#what-else-cython",
@@ -2139,14 +2139,14 @@
     "href": "intro.html#cython-timing",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "Cython timing",
-    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.25 μs ± 88.4 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
+    "text": "Cython timing\n\n%timeit -q -o -n 100 f3(u, I, theta, a, dt)\n\n&lt;TimeitResult : 1.24 μs ± 83 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\n\n\n\n\n\n\nCython and Numba are both fast!\n\n\nCython and Numba are both as fast as pure C. Either one can be used to speed up critical routines with very little additional effort!\n\n\n\n\n\n\n\n\n\nNote\n\n\nCython is very easy to use in notebooks, but requires some additional steps to be compiled used as extension modules with regular python programs."
   },
   {
     "objectID": "intro.html#jax",
     "href": "intro.html#jax",
     "title": "Algorithms and implementations for exponential decay models",
     "section": "JAX",
-    "text": "JAX\nJAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.\n\nimport jax\nimport jax.numpy as jnp\njax.config.update(\"jax_enable_x64\", True)\n\n@jax.jit(static_argnums=0)\ndef f4(N: int, I: float, A: float):\n\n    def step(un: float, i: int):\n        unp1 = jax.lax.cond(i == 0, lambda: un, lambda: un * A)\n        return unp1, unp1\n\n    return jax.lax.scan(step, I, jnp.arange(N))[1]\n\nA: float = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a)\nN: int = u.shape[0]\nassert jnp.linalg.norm(f4(N, float(I), A) - u) &lt; 1e-8\n\n\n%timeit -q -o -n 100 f4(N, float(I), A)\n\n&lt;TimeitResult : 13.5 μs ± 1.91 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nJAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython."
+    "text": "JAX\nJAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.\n\nimport jax\nimport jax.numpy as jnp\njax.config.update(\"jax_enable_x64\", True)\n\n@jax.jit(static_argnums=0)\ndef f4(N: int, I: float, A: float):\n\n    def step(un: float, i: int):\n        unp1 = jax.lax.cond(i == 0, lambda: un, lambda: un * A)\n        return unp1, unp1\n\n    return jax.lax.scan(step, I, jnp.arange(N))[1]\n\nA: float = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a)\nN: int = u.shape[0]\nassert jnp.linalg.norm(f4(N, float(I), A) - u) &lt; 1e-8\n\n\n%timeit -q -o -n 100 f4(N, float(I), A)\n\n&lt;TimeitResult : 13.1 μs ± 1.63 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)&gt;\n\n\nJAX is more efficient for larger arrays, because the overhead of calling the function is larger than Numpy/Numba/Cython."
   },
   {
     "objectID": "finitedifferences.html#initial-or-boundary-value-problems",
@@ -2195,7 +2195,7 @@
     "href": "finitedifferences.html#solve-and-compare-with-recurrence",
     "title": "The finite difference method",
     "section": "Solve and compare with recurrence",
-    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n]\n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I)\n\n775 ns ± 12.4 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b)\n\n19.2 μs ± 3 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Solve and compare with recurrence\nRecurrence:\n\nu[0] = I\nfor n in range(N):\n  u[n+1] = g * u[n]\n\nMatrix\n\num = sparse.linalg.spsolve(A, b)\nprint(u-um)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\nOk, no difference. There’s really no advantage of assembling the explicit exponential decay problem.\nBut which is faster?\n\n\ndef reccsolve(u, N, I):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nu = np.zeros(N+1)\n%timeit -n100 reccsolve(u, N, I)\n\n804 ns ± 31.6 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\n%timeit -n100 um = sparse.linalg.spsolve(A, b)\n\n18.3 μs ± 1.73 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse",
@@ -2209,14 +2209,14 @@
     "href": "finitedifferences.html#try-to-speed-up-by-computing-the-inverse-1",
     "title": "The finite difference method",
     "section": "Try to speed up by computing the inverse",
-    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True)\nAi = np.linalg.inv(A.toarray())\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b\n\n524 ns ± 58.4 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
+    "text": "Try to speed up by computing the inverse\nA unit lower triangular matrix has a unit lower triangular inverse\n\nnp.set_printoptions(precision=3, suppress=True)\nAi = np.linalg.inv(A.toarray())\n\nNow solve directly using \\(A^{-1}\\)\n\nui = Ai @ b\n\nCompare with previous - still the same\n\num = sparse.linalg.spsolve(A, b)\nprint(um-ui)\n\n[0. 0. 0. 0. 0. 0. 0. 0. 0.]\n\n\n\nbut it seems to be very fast\n\n%timeit -n 100 ui = Ai @ b\n\n584 ns ± 52.6 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)"
   },
   {
     "objectID": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "href": "finitedifferences.html#until-we-try-numba-on-the-explicit-solver",
     "title": "The finite difference method",
     "section": "Until we try Numba on the explicit solver",
-    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb\n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n156 ns ± 27.6 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
+    "text": "Until we try Numba on the explicit solver\n\nimport numba as nb\n\n@nb.jit\ndef nbreccsolve(u, N, I, g):\n  u[0] = I\n  for n in range(N):\n    u[n+1] = g * u[n]\nnbreccsolve(u, N, I, g)\n%timeit -n 100 nbreccsolve(u, N, I, g)\n\n128 ns ± 8.72 ns per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n\nBottom line - explicit marching methods are very fast! Unfortunately, they may be unstable and cannot be used for BVPs."
   },
   {
     "objectID": "finitedifferences.html#the-bv-vibration-problem",
@@ -2510,7 +2510,7 @@
     "href": "pdes.html#define-a-new-error-measure-the-residual-that-we-ultimately-want-to-be-zero",
     "title": "Solving PDEs with the method of weighted residuals",
     "section": "Define a new error measure (the residual) that we ultimately want to be zero",
-    "text": "Define a new error measure (the residual) that we ultimately want to be zero\n\\[\n\\mathcal{R} = \\mathcal{L}(u)-f\n\\]\nand create a “numerical” residual by inserting for \\(u = u_N\\)\n\\[\n\\mathcal{R}_N = \\mathcal{L}(u_N)-f\n\\]\nThe task now is to minmize \\(\\mathcal{R}_N\\) in order to find the unknowns that are still \\(\\{\\hat{u}_j\\}_{j=0}^N\\).\n\n\n\n\n\n\nNote\n\n\nFor function approximation \\(\\mathcal{R}_N = e = u_N - f = u_N - u\\)."
+    "text": "Define a new error measure (the residual) that we ultimately want to be zero\n\\[\n\\mathcal{R} = \\mathcal{L}(u)-f\n\\]\nand create a “numerical” residual by inserting for \\(u = u_N\\)\n\\[\n\\mathcal{R}_N = \\mathcal{L}(u_N)-f\n\\]\nThe task now is to minimize \\(\\mathcal{R}_N\\) in order to find the unknowns that are still \\(\\{\\hat{u}_j\\}_{j=0}^N\\).\n\n\n\n\n\n\nNote\n\n\nFor function approximation \\(\\mathcal{R}_N = e = u_N - f = u_N - u\\)."
   },
   {
     "objectID": "pdes.html#the-method-of-weighted-residuals-mwr",
@@ -2587,7 +2587,7 @@
     "href": "pdes.html#another-alternating-oddeven-basis-can-be-created-from-legendre-polynomials-p_jx",
     "title": "Solving PDEs with the method of weighted residuals",
     "section": "Another alternating odd/even basis can be created from Legendre polynomials \\(P_j(x)\\)",
-    "text": "Another alternating odd/even basis can be created from Legendre polynomials \\(P_j(x)\\)\n\n\n\\[\n\\begin{align}\n\\psi_j(x) &= P_j(x) - P_{j+2}(x)\\\\\n\\psi_j(\\pm 1) &= 0\n\\end{align}\n\\]\n\n\n\n\n\n\n\n\n\n\n\nRemember that\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1) = 1.\n\\]\nHence for any \\(j\\) all basis functions are zero\n\\[\n\\begin{align}\nP_j(-1) - P_{j+2}(-1) &= (-1)^j - (-1)^{j+2} = 0 \\\\\nP_j(1)-P_{j+2}(1) & =1-1=0\n\\end{align}\n\\]"
+    "text": "Another alternating odd/even basis can be created from Legendre polynomials \\(P_j(x)\\)\n\n\n\\[\n\\begin{align}\n\\psi_j(x) &= P_j(x) - P_{j+2}(x)\\\\\n\\psi_j(\\pm 1) &= 0\n\\end{align}\n\\]\n\n\n\n\n\n\n\n\n\n\n\nRemember that\n\\[\nP_j(-1) = (-1)^j \\quad \\text{and} \\quad P_j(1) = 1.\n\\]\nHence for any \\(j\\) all basis functions are zero at the boundaries\n\\[\n\\begin{align}\nP_j(-1) - P_{j+2}(-1) &= (-1)^j - (-1)^{j+2} = 0 \\\\\nP_j(1)-P_{j+2}(1) & =1-1=0\n\\end{align}\n\\]"
   },
   {
     "objectID": "pdes.html#solve-poissons-equation-with-composite-legendre-basis",
@@ -3925,26 +3925,5 @@
     "title": "Function approximation by the finite element method",
     "section": "Summary",
     "text": "Summary\n\nThe finite element method (FEM) is a variational method using local basis functions.\nThe FEM uses the same Galerkin method as the methods using global basis functions.\nThe FEM is assembled by running over all elements and assembling local matrices and vectors that are subsequently added to global matrices and vectors.\nSince all assembly work is performed elementwise, the FEM is very well suited for unstructured meshes."
-  },
-  {
-    "objectID": "fempdes.html#assemble-right-hand-side-lecture-10-and-solve",
-    "href": "fempdes.html#assemble-right-hand-side-lecture-10-and-solve",
-    "title": "Solving PDEs with the FEM",
-    "section": "Assemble right hand side (lecture 10) and solve",
-    "text": "Assemble right hand side (lecture 10) and solve\n\nue = sp.besselj(0, x)\nf = ue.diff(x, 2) + alpha*ue\ndef assemble_b(u, xj, d=1):\n    l = Lagrangebasis(np.linspace(-1, 1, d+1), sympy=False)\n    N = len(xj)-1\n    b = np.zeros(N+1)\n    for elem in range(N//d):\n        hj = get_element_length(xj, elem, d=d)\n        us = sp.lambdify(x, map_u_true_domain(u, xj, elem, d=d))\n        integ = lambda xj, r: us(xj)*l[r](xj)\n        for r in range(d+1):\n            b[d*elem+r] += hj/2*quad(integ, -1, 1, args=(r,))[0]\n    return b\nb = assemble_b(f, xj, d=d)\nb[0], b[-1] = ue.subs(x, 0), ue.subs(x, 10)    # specify u(0) and u(L)\nA = -S+alpha*M\nA[0, :] = 0; A[0, 0] = 1    # ident first row for bc at u(0)\nA[-1, :] = 0; A[-1, -1] = 1 # ident last row for bc at u(L)\nuh = np.linalg.solve(A, b)"
-  },
-  {
-    "objectID": "fempdes.html#element-stiffness-matrix-1",
-    "href": "fempdes.html#element-stiffness-matrix-1",
-    "title": "Solving PDEs with the FEM",
-    "section": "Element stiffness matrix",
-    "text": "Element stiffness matrix\n\\[\n\\int_{\\Omega^{(e)}} \\nabla \\psi_j(\\boldsymbol{x}) \\cdot \\nabla \\psi_i(\\boldsymbol{x}) \\, d\\Omega\n\\]\nThe gradient of \\(\\psi_j\\) on index form is \\[\n(\\nabla \\psi_j)_m = \\frac{\\partial \\psi_j}{ \\partial x_m}\n\\]\nand with transformation to the reference domain (with summation on repeated indices)\n\\[\n\\frac{\\partial \\psi_{q(e, r)}(\\boldsymbol{x})}{\\partial x_m} =\\frac{\\partial \\tilde{\\psi}_r(\\boldsymbol{X})}{\\partial x_m} = \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m}\n\\]\nUsing the inverse Jacobian we can write the last term as\n\\[\n\\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\\frac{\\partial X_n}{\\partial x_m} = J_{mn}^{-1}  \\frac{\\partial \\tilde{\\psi}_r}{\\partial X_n}\n\\]"
-  },
-  {
-    "objectID": "fempdes.html#element-stiffness-matrix-continued",
-    "href": "fempdes.html#element-stiffness-matrix-continued",
-    "title": "Solving PDEs with the FEM",
-    "section": "Element stiffness matrix continued",
-    "text": "Element stiffness matrix continued\nWe can also define this on matrix form using notation\n\\[\n\\nabla  u= \\begin{bmatrix} \\frac{\\partial u}{\\partial x} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial z}\n\\end{bmatrix} \\quad \\text{and} \\quad\n\\nabla_X  u = \\begin{bmatrix} \\frac{\\partial u}{\\partial X} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Y} \\\\[0.1cm]\n\\frac{\\partial u}{\\partial Z} \\end{bmatrix}\n\\]\nWe then get\n\\[\n\\nabla \\psi_{q(e, r)} = J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r\n\\]\nand the element stiffness matrix\n\\[\n\\boxed{\n\\int_{\\Omega^{(e)}} \\nabla \\psi_{q(e, s)}(\\boldsymbol{x}) \\cdot \\nabla \\psi_{q(e, r)}(\\boldsymbol{x}) \\, d\\Omega = \\int_{\\tilde{\\Omega}} \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_s(\\boldsymbol{X})\\right) \\cdot \\left(J^{-1} \\cdot \\nabla_X \\tilde{\\psi}_r(\\boldsymbol{X})\\right) \\, \\text{det}J\\, d\\tilde{\\Omega}}\n\\]"
   }
 ]

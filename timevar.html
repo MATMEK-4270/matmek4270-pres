@@ -369,8 +369,8 @@ u^0_j = e^{\hat{\imath}k x_j}
 \]</span></p>
 <p>where <span class="math inline">\(\hat{\imath}=\sqrt{-1}\)</span>.</p>
 </section>
-<section id="write-the-equation-in-matrix-form" class="slide level2 smaller">
-<h2>Write the equation in matrix form</h2>
+<section id="write-the-equation-on-matrix-form" class="slide level2 smaller">
+<h2>Write the equation on matrix form</h2>
 <p><span class="math display">\[
 u_j^{n+1} - u_j^n = \frac{\Delta t}{\Delta x^2} (u^n_{j+1}-2u^n_j+u^n_{j-1})
 \]</span></p>
@@ -385,7 +385,7 @@ D^{(2)} = \frac{1}{\Delta x^2} \tilde{D}^{(2)} = \frac{1}{\Delta x^2} \underbrac
 -2 &amp; 1 &amp; 0 &amp; 0  &amp; 0 &amp; 0 &amp; 0 &amp; 1  \\
 1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
 0 &amp; 1 &amp; -2 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
-\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\cdots \\
+\vdots &amp; &amp; &amp; \ddots &amp;  &amp; &amp; &amp;\vdots \\
 0 &amp; 0 &amp; 0 &amp; 0 &amp;  1&amp; -2&amp; 1&amp; 0 \\
 0 &amp; 0 &amp; 0&amp; 0&amp; 0&amp; 1&amp; -2&amp; 1 \\
 1 &amp; 0 &amp; 0 &amp; 0  &amp; 0 &amp; 0 &amp; 1 &amp; -2 \\
@@ -529,7 +529,7 @@ g \left(u^{0}_N, v\right) = \left(u^{0}_N, v\right) + \Delta t \left(\mathcal{L}
 <p><span class="math display">\[
 g \sum_{j=0}^N \left(\psi_j, \psi_i \right) \hat{u}^0_j = \sum_{j=0}^N \left(\psi_j, \psi_i\right)\hat{u}^0_j + \Delta t \sum_{j=0}^N\left(\mathcal{L}(\psi_j), \psi_i\right) \hat{u}^0_j
 \]</span></p>
-<p>In matrix form this is</p>
+<p>On matrix form this is</p>
 <p><span class="math display">\[
 g A \boldsymbol{\hat{u}}^0 = A \boldsymbol{\hat{u}}^0 + \Delta t M \boldsymbol{\hat{u}}^0
 \]</span></p>
